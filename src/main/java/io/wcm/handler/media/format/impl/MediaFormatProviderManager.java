@@ -17,20 +17,23 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl;
+package io.wcm.handler.media.format.impl;
 
-import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.spi.MediaFormatProvider;
+
+import java.util.SortedSet;
 
 /**
- * Handles resolving DAM renditions and resizing for media handler.
+ * Collects all media format definitions provided by applications via {@link MediaFormatProvider} interface.
  */
-interface RenditionHandler {
+public interface MediaFormatProviderManager {
 
   /**
-   * Get rendition (probably virtual) for given media arguments.
-   * @param mediaArgs Media arguments
-   * @return Rendition or null if none is matching
+   * Get all media format definitions for application.
+   * @param applicationId Application id
+   * @return Media format definitions
    */
-  RenditionMetadata getRendition(MediaArgsType mediaArgs);
+  SortedSet<MediaFormat> getMediaFormats(String applicationId);
 
 }

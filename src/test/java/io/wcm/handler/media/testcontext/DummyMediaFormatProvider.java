@@ -17,20 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl;
+package io.wcm.handler.media.testcontext;
 
-import io.wcm.handler.media.args.MediaArgsType;
+import io.wcm.handler.media.spi.MediaFormatProvider;
+import io.wcm.handler.media.spi.helpers.AbstractMediaFormatProvider;
 
-/**
- * Handles resolving DAM renditions and resizing for media handler.
- */
-interface RenditionHandler {
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 
-  /**
-   * Get rendition (probably virtual) for given media arguments.
-   * @param mediaArgs Media arguments
-   * @return Rendition or null if none is matching
-   */
-  RenditionMetadata getRendition(MediaArgsType mediaArgs);
+@Component(immediate = true)
+@Service(MediaFormatProvider.class)
+public class DummyMediaFormatProvider extends AbstractMediaFormatProvider {
+
+  public DummyMediaFormatProvider() {
+    super(DummyMediaFormats.class);
+  }
 
 }
