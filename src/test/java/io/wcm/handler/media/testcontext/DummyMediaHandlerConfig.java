@@ -20,14 +20,11 @@
 package io.wcm.handler.media.testcontext;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
-import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
@@ -43,18 +40,9 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
       InlineMediaSource.class
       );
 
-  private static final Set<MediaFormat> DOWNLOAD_MEDIA_FORMATS = ImmutableSet.of(
-      DummyMediaFormats.DOWNLOAD
-      );
-
   @Override
   public List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
-  }
-
-  @Override
-  public Set<MediaFormat> getDownloadMediaFormats() {
-    return DOWNLOAD_MEDIA_FORMATS;
   }
 
   @Override
