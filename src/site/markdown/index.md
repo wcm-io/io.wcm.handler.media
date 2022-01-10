@@ -64,6 +64,11 @@ To use this module you have to deploy also:
 | [wcm.io URL Handler](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.url) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.url/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.url) |
 
 
+### GitHub Repository
+
+Sources: https://github.com/wcm-io/io.wcm.handler.media
+
+
 [usage]: usage.html
 [general-concepts]: general-concepts.html
 [graniteui-components]: graniteui-components.html
