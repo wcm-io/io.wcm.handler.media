@@ -233,8 +233,7 @@ public enum MediaFileType {
       return false;
     }
     return fileTypes.stream()
-        .filter(type -> type.getExtensions().contains(StringUtils.lowerCase(fileExtension)))
-        .findFirst().isPresent();
+        .anyMatch(type -> type.getExtensions().contains(StringUtils.lowerCase(fileExtension)));
   }
 
   private static Set<String> getFileExtensions(@NotNull EnumSet<MediaFileType> fileTypes) {

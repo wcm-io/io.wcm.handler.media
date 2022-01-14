@@ -110,7 +110,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @return Video profiles
    */
   protected List<VideoProfile> getVideoProfiles() {
-    List<VideoProfile> profiles = new ArrayList<VideoProfile>();
+    List<VideoProfile> profiles = new ArrayList<>();
     for (String profileName : getVideoProfileNames()) {
       VideoProfile profile = getVideoProfile(profileName);
       if (profile != null) {
@@ -218,12 +218,12 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
     object.setAttribute("height", Long.toString(dimension.getHeight()));
 
     // get flashvars
-    Map<String, String> flashvars = new HashMap<String, String>();
+    Map<String, String> flashvars = new HashMap<>();
     flashvars.put("src", renditionUrl);
     flashvars.putAll(getAdditionalFlashPlayerFlashVars(media, dimension));
 
     // get flash parameters
-    Map<String, String> parameters = new HashMap<String, String>();
+    Map<String, String> parameters = new HashMap<>();
     parameters.put("movie", playerUrl);
     parameters.put("flashvars", buildFlashVarsString(flashvars));
     parameters.putAll(getAdditionalFlashPlayerParameters(media, dimension));
@@ -272,7 +272,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @return Set of key/value pairs
    */
   protected Map<String, String> getAdditionalFlashPlayerParameters(Media media, Dimension dimension) {
-    Map<String, String> parameters = new HashMap<String, String>();
+    Map<String, String> parameters = new HashMap<>();
 
     parameters.put("allowFullScreen", "true");
     parameters.put("wmode", "opaque");
@@ -287,7 +287,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @return Set of key/value pairs
    */
   protected Map<String, String> getAdditionalFlashPlayerFlashVars(Media media, Dimension dimension) {
-    Map<String, String> flashvars = new HashMap<String, String>();
+    Map<String, String> flashvars = new HashMap<>();
 
     flashvars.put("autoPlay", "false");
     flashvars.put("loop", "false");

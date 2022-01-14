@@ -260,7 +260,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
           .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
               || Ratio.matches(mediaFormat.getRatio(), 0d))
               && rendition.getWidth() == width)
-          .map(rendition -> rendition.getUrl())
+          .map(Rendition::getUrl)
           .findFirst();
       if (url.isPresent()) {
         if (srcset.length() > 0) {

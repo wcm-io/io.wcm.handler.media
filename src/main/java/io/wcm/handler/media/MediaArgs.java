@@ -109,7 +109,7 @@ public final class MediaArgs implements Cloneable {
     if (this.mediaFormatOptions != null) {
       MediaFormat[] result = Arrays.stream(this.mediaFormatOptions)
           .filter(option -> option.getMediaFormatName() == null)
-          .map(option -> option.getMediaFormat())
+          .map(MediaFormatOption::getMediaFormat)
           .toArray(size -> new MediaFormat[size]);
       if (result.length > 0) {
         return result;
@@ -182,8 +182,7 @@ public final class MediaArgs implements Cloneable {
       return false;
     }
     return !Arrays.stream(this.mediaFormatOptions)
-        .filter(option -> !option.isMandatory())
-        .findFirst().isPresent();
+        .anyMatch(option -> !option.isMandatory());
   }
 
   /**
@@ -208,7 +207,7 @@ public final class MediaArgs implements Cloneable {
     if (this.mediaFormatOptions != null) {
       String[] result = Arrays.stream(this.mediaFormatOptions)
           .filter(option -> option.getMediaFormatName() != null)
-          .map(option -> option.getMediaFormatName())
+          .map(MediaFormatOption::getMediaFormatName)
           .toArray(size -> new String[size]);
       if (result.length > 0) {
         return result;
@@ -721,7 +720,7 @@ public final class MediaArgs implements Cloneable {
   @NotNull
   public ValueMap getProperties() {
     if (this.properties == null) {
-      this.properties = new ValueMapDecorator(new HashMap<String, Object>());
+      this.properties = new ValueMapDecorator(new HashMap<>());
     }
     return this.properties;
   }
@@ -840,7 +839,7 @@ public final class MediaArgs implements Cloneable {
     clone.ipeRatioCustomize = this.ipeRatioCustomize;
     clone.dynamicMediaDisabled = this.dynamicMediaDisabled;
     if (this.properties != null) {
-      clone.properties = new ValueMapDecorator(new HashMap<String, Object>(this.properties));
+      clone.properties = new ValueMapDecorator(new HashMap<>(this.properties));
     }
 
     return clone;
