@@ -51,13 +51,13 @@ public final class MediaFormatSupport {
    */
   public static @Nullable String[] getRequestedFileExtensions(@NotNull MediaArgs mediaArgs) {
     // get file extension defined in media args
-    Set<String> mediaArgsFileExtensions = new HashSet<String>();
+    Set<String> mediaArgsFileExtensions = new HashSet<>();
     if (mediaArgs.getFileExtensions() != null && mediaArgs.getFileExtensions().length > 0) {
       mediaArgsFileExtensions.addAll(ImmutableList.copyOf(mediaArgs.getFileExtensions()));
     }
 
     // get file extensions from media formats
-    final Set<String> mediaFormatFileExtensions = new HashSet<String>();
+    final Set<String> mediaFormatFileExtensions = new HashSet<>();
     visitMediaFormats(mediaArgs, new MediaFormatVisitor<Object>() {
       @Override
       public @Nullable Object visit(@NotNull MediaFormat mediaFormat) {

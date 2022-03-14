@@ -55,6 +55,12 @@ public enum MediaInvalidReason {
   /**
    * One or all of the given media format names are invalid.
    */
-  INVALID_MEDIA_FORMAT
+  INVALID_MEDIA_FORMAT,
+
+  /**
+   * Media is invalid due to a check from a pre- or post processor.
+   * The actual message error message can be retrieved from {@link Media#getMediaInvalidReasonCustomMessage()}.
+   */
+  CUSTOM
 
 }

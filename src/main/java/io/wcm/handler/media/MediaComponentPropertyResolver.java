@@ -156,12 +156,12 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return List of media formats with and without mandatory setting.
    */
-  @SuppressWarnings("PMD.ReturnEmptyArrayRatherThanNull")
+  @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
   public @NotNull String @Nullable [] getMediaFormatNames() {
     MediaFormatOption[] mediaFormatOptions = getMediaFormatOptions();
     if (mediaFormatOptions != null) {
       String[] result = Arrays.stream(mediaFormatOptions)
-          .map(option -> option.getMediaFormatName())
+          .map(MediaFormatOption::getMediaFormatName)
           .filter(Objects::nonNull)
           .toArray(size -> new String[size]);
       if (result.length > 0) {
@@ -174,13 +174,13 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return List of media formats with and without mandatory setting.
    */
-  @SuppressWarnings("PMD.ReturnEmptyArrayRatherThanNull")
+  @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
   public @NotNull String @Nullable [] getMandatoryMediaFormatNames() {
     MediaFormatOption[] mediaFormatOptions = getMediaFormatOptions();
     if (mediaFormatOptions != null) {
       String[] result = Arrays.stream(mediaFormatOptions)
           .filter(MediaFormatOption::isMandatory)
-          .map(option -> option.getMediaFormatName())
+          .map(MediaFormatOption::getMediaFormatName)
           .filter(Objects::nonNull)
           .toArray(size -> new String[size]);
       if (result.length > 0) {

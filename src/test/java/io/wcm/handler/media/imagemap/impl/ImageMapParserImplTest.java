@@ -42,6 +42,7 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("java:S5786") // fields are re-used in other classes
 public class ImageMapParserImplTest {
 
   private static final String EXTERNAL_REF = "http://myhost";

@@ -237,7 +237,7 @@ public class ResourceMedia {
    */
   private void setCustomProperties(MediaBuilder builder) {
     getCustomPropertiesFromRequestAttributes()
-        .forEach((name, value) -> builder.property(name, value));
+        .forEach(builder::property);
   }
 
   /**

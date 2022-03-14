@@ -28,19 +28,31 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_STAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.Model;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.osgi.framework.Constants;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.day.cq.dam.api.Asset;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaInvalidReason;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaProcessor;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -59,6 +71,7 @@ class MediaFormatValidateServletTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testValid() throws Exception {
     Asset asset = context.create().asset("/content/dam/sample.jpg",
         (int)EDITORIAL_1COL.getWidth(),
@@ -92,6 +105,7 @@ class MediaFormatValidateServletTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testValid_MultipleFormats_Optional() throws Exception {
     Asset asset = context.create().asset("/content/dam/sample.jpg",
         (int)EDITORIAL_1COL.getWidth(),
@@ -108,6 +122,7 @@ class MediaFormatValidateServletTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testInvalid() throws Exception {
     Asset asset = context.create().asset("/content/dam/sample.jpg",
         10,
@@ -124,9 +139,45 @@ class MediaFormatValidateServletTest {
         + "'reasonTitle':'io.wcm.handler.media.assetInvalid'}");
   }
 
+  @Test
+  @SuppressWarnings("null")
+  void testInvalid_CustomMessageKey() throws Exception {
+    context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
+      @Override
+      public @NotNull List<Class<? extends MediaProcessor>> getPreProcessors() {
+        return ImmutableList.of(AllInvalidMediaPreProcessor.class);
+      }
+    }, Constants.SERVICE_RANKING, 1000);
+
+    Asset asset = context.create().asset("/content/dam/sample.jpg",
+        (int)EDITORIAL_1COL.getWidth(),
+        (int)EDITORIAL_1COL.getHeight(),
+        ContentType.JPEG);
+
+    context.request().setParameterMap(ImmutableMap.of(
+        RP_MEDIA_FORMATS, EDITORIAL_1COL.getName(),
+        RP_MEDIA_REF, asset.getPath()));
+    underTest.service(context.request(), context.response());
+
+    assertResponse("{'valid':false,"
+        + "'reason':'custom-invalid',"
+        + "'reasonTitle':'io.wcm.handler.media.assetInvalid'}");
+  }
+
   private void assertResponse(String expectedJson) throws JSONException {
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
+  }
+
+  @Model(adaptables = { SlingHttpServletRequest.class, Resource.class })
+  public static class AllInvalidMediaPreProcessor implements MediaProcessor {
+    @Override
+    public @NotNull Media process(@NotNull Media media) {
+      // mark all assets as invalid with custom message
+      media.setMediaInvalidReason(MediaInvalidReason.CUSTOM);
+      media.setMediaInvalidReasonCustomMessage("custom-invalid");
+      return media;
+    }
   }
 
 }

@@ -180,36 +180,44 @@ public final class MediaHandlerImpl implements MediaHandler {
       }
     }
 
-    // resolve media request
-    media = mediaSource.resolveMedia(media);
-    if (media == null) {
-      throw new RuntimeException("MediaType '" + mediaSource + "' returned null, request: " + mediaRequest);
-    }
+    if (media.getMediaInvalidReason() == null) {
 
-    // generate markup (if markup builder is available) - first accepting wins
-    List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMarkupBuilders();
-    if (mediaMarkupBuilders != null) {
-      for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
-        MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
-        if (mediaMarkupBuilder.accepts(media)) {
-          log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
-          media.setElement(mediaMarkupBuilder.build(media));
-          break;
+      // resolve media request
+      media = mediaSource.resolveMedia(media);
+      if (media == null) {
+        throw new RuntimeException("MediaType '" + mediaSource + "' returned null, request: " + mediaRequest);
+      }
+
+      // generate markup (if markup builder is available) - first accepting wins
+      List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMarkupBuilders();
+      if (mediaMarkupBuilders != null) {
+        for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
+          MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
+          if (mediaMarkupBuilder.accepts(media)) {
+            log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
+            media.setElement(mediaMarkupBuilder.build(media));
+            break;
+          }
         }
       }
-    }
 
-    // postprocess media request after resolving
-    List<Class<? extends MediaProcessor>> mediaPostProcessors = mediaHandlerConfig.getPostProcessors();
-    if (mediaPostProcessors != null) {
-      for (Class<? extends MediaProcessor> processorClass : mediaPostProcessors) {
-        log.trace("Apply post processor ({}): {}", processorClass, mediaRequest);
-        MediaProcessor processor = AdaptTo.notNull(adaptable, processorClass);
-        media = processor.process(media);
-        if (media == null) {
-          throw new RuntimeException("MediaPostProcessor '" + processor + "' returned null, request: " + mediaRequest);
+      // postprocess media request after resolving
+      List<Class<? extends MediaProcessor>> mediaPostProcessors = mediaHandlerConfig.getPostProcessors();
+      if (mediaPostProcessors != null) {
+        for (Class<? extends MediaProcessor> processorClass : mediaPostProcessors) {
+          log.trace("Apply post processor ({}): {}", processorClass, mediaRequest);
+          MediaProcessor processor = AdaptTo.notNull(adaptable, processorClass);
+          media = processor.process(media);
+          if (media == null) {
+            throw new RuntimeException("MediaPostProcessor '" + processor + "' returned null, request: " + mediaRequest);
+          }
         }
       }
+
+    }
+    else {
+      log.trace("Skip media resolving because media was set to invalid by prepocessor. reason={}, message={}",
+          media.getMediaInvalidReason(), media.getMediaInvalidReasonCustomMessage());
     }
 
     log.debug("Finished media processing: {}", media);

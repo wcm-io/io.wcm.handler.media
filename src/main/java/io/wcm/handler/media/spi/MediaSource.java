@@ -313,7 +313,7 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config
    * @return Rotation value or null if not set or invalid
    */
-  @SuppressWarnings({ "null", "unchecked" })
+  @SuppressWarnings({ "null", "unchecked", "PMD.ReturnEmptyCollectionRatherThanNull" })
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected final @Nullable List<ImageMapArea> getMediaMap(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {

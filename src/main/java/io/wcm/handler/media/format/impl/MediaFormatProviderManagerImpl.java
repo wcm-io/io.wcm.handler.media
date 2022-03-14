@@ -83,7 +83,7 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
     try {
       return cache.get(key, () -> result.getServices()
           .flatMap(provider -> provider.getMediaFormats().stream())
-          .collect(Collectors.toCollection(() -> new TreeSet<MediaFormat>())));
+          .collect(Collectors.toCollection(TreeSet::new)));
     }
     catch (ExecutionException ex) {
       throw new RuntimeException("Error accessing media format provider result cache.", ex);

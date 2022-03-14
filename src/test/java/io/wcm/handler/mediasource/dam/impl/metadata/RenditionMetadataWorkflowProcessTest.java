@@ -55,7 +55,7 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
 @ExtendWith(MockitoExtension.class)
-public class RenditionMetadataWorkflowProcessTest {
+class RenditionMetadataWorkflowProcessTest {
 
   private final AemContext context = AppAemContext.newAemContext(ResourceResolverType.JCR_MOCK);
 

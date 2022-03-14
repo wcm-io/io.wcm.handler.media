@@ -214,6 +214,7 @@ public final class DamMediaSource extends MediaSource {
   }
 
   @Override
+  @SuppressWarnings({ "PMD.AvoidAccessibilityAlteration", "java:S3011" })
   public void setCustomIPECropRatios(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
@@ -258,7 +259,7 @@ public final class DamMediaSource extends MediaSource {
   private Optional<String> getMediaDropTargetID() {
     return componentContext.getEditContext().getEditConfig().getDropTargets().values().stream()
         .filter(item -> ArrayUtils.contains(item.getGroups(), "media"))
-        .map(item -> item.getId())
+        .map(DropTarget::getId)
         .findFirst();
   }
 
@@ -266,7 +267,7 @@ public final class DamMediaSource extends MediaSource {
     Component componentDefinition = WCMUtils.getComponent(resource);
 
     // set drop target - with path of current component as default resource type
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, String> params = new HashMap<>();
     if (componentDefinition != null) {
       params.put("./" + ResourceResolver.PROPERTY_RESOURCE_TYPE, componentDefinition.getPath());
 
