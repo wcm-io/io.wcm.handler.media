@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.14.0" date="not released">
+      <action type="add" dev="sseifert">
+        Enable media handler pre- and post-processor by setting media as invalid via a MediaInvalidReason.CUSTOM accompanied with a custom message.
+      </action>
       <action type="update" dev="sseifert">
         Switch to AEM 6.5 as minimum version.
       </action>

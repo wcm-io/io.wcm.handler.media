@@ -47,6 +47,7 @@ import com.day.cq.wcm.api.PageManager;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.request.RequestParam;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -116,8 +117,7 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
       result.put("valid", media.isValid());
       if (!media.isValid()) {
         I18n i18n = getI18n(request);
-        result.put("reason", getI18nText(i18n,
-            MEDIA_INVALID_REASON_I18N_PREFIX + media.getMediaInvalidReason().name()));
+        result.put("reason", getI18nText(i18n, getMediaInvalidReasonI18nKeyOrMessage(media)));
         result.put("reasonTitle", getI18nText(i18n, ASSET_INVALID_I18N_KEY));
       }
       response.setContentType(ContentType.JSON);
@@ -125,6 +125,15 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
     }
     catch (JSONException ex) {
       throw new ServletException(ex);
+    }
+  }
+
+  private String getMediaInvalidReasonI18nKeyOrMessage(@NotNull Media media) {
+    if (media.getMediaInvalidReason() == MediaInvalidReason.CUSTOM) {
+      return media.getMediaInvalidReasonCustomMessage();
+    }
+    else {
+      return MEDIA_INVALID_REASON_I18N_PREFIX + media.getMediaInvalidReason().name();
     }
   }
 
