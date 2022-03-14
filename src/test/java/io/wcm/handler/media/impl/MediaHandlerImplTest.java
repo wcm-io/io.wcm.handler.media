@@ -285,6 +285,30 @@ class MediaHandlerImplTest {
     assertFalse(media.isValid());
   }
 
+  @Test
+  void testInvalidViaPreProcessor() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/invalid-pre/item1", new MediaArgs().urlMode(UrlModes.DEFAULT));
+    Media media = mediaHandler.get(mediaRequest).build();
+
+    assertFalse(media.isValid());
+    assertEquals(MediaInvalidReason.CUSTOM, media.getMediaInvalidReason());
+    assertEquals("Invalid via TestPreProcessor", media.getMediaInvalidReasonCustomMessage());
+  }
+
+  @Test
+  void testInvalidViaPostProcessor() {
+    MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
+
+    MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/invalid-post/item1", new MediaArgs().urlMode(UrlModes.DEFAULT));
+    Media media = mediaHandler.get(mediaRequest).build();
+
+    assertFalse(media.isValid());
+    assertEquals(MediaInvalidReason.CUSTOM, media.getMediaInvalidReason());
+    assertEquals("Invalid via TestPostProcessor", media.getMediaInvalidReasonCustomMessage());
+  }
+
 
   public static class TestMediaHandlerConfig extends MediaHandlerConfig {
 
@@ -319,6 +343,14 @@ class MediaHandlerImplTest {
     @Override
     public Media process(Media media) {
       MediaRequest request = media.getMediaRequest();
+
+      // simulate validation of media references in a pre-processor. do not accept a media reference with "invalid-pre" in the string
+      if (StringUtils.contains(request.getMediaRef(), "invalid-pre")) {
+        media.setMediaInvalidReason(MediaInvalidReason.CUSTOM);
+        media.setMediaInvalidReasonCustomMessage("Invalid via TestPreProcessor");
+        return media;
+      }
+
       String mediaRef = request.getMediaRef() != null ? request.getMediaRef() + "/pre1" : null;
       MediaArgs mediaArgs = request.getMediaArgs().urlMode(UrlModes.FULL_URL);
       media.setMediaRequest(new MediaRequest(
@@ -400,6 +432,15 @@ class MediaHandlerImplTest {
   public static class TestPostProcessor implements MediaProcessor {
     @Override
     public Media process(Media media) {
+      MediaRequest request = media.getMediaRequest();
+
+      // simulate validation of media references in a post-processor. do not accept a media reference with "invalid-post" in the string
+      if (StringUtils.contains(request.getMediaRef(), "invalid-post")) {
+        media.setMediaInvalidReason(MediaInvalidReason.CUSTOM);
+        media.setMediaInvalidReasonCustomMessage("Invalid via TestPostProcessor");
+        return media;
+      }
+
       String mediaUrl = StringUtils.replace(media.getUrl(), "/dummymedia/", "/dummymedia.post1/");
       media.setUrl(mediaUrl);
       return media;

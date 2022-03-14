@@ -56,6 +56,7 @@ public final class Media {
   private Integer rotation;
   private List<ImageMapArea> map;
   private MediaInvalidReason mediaInvalidReason;
+  private String mediaInvalidReasonCustomMessage;
   private String markup;
 
   /**
@@ -255,6 +256,22 @@ public final class Media {
    */
   public void setMediaInvalidReason(MediaInvalidReason mediaInvalidReason) {
     this.mediaInvalidReason = mediaInvalidReason;
+  }
+
+  /**
+   * @return Custom message when {@link #getMediaInvalidReason()} is set to {@link MediaInvalidReason#CUSTOM}.
+   *         Message is interpreted as i18n key.
+   */
+  public String getMediaInvalidReasonCustomMessage() {
+    return this.mediaInvalidReasonCustomMessage;
+  }
+
+  /**
+   * @param mediaInvalidReasonCustomMessage Custom message when {@link #getMediaInvalidReason()} is set to
+   *          {@link MediaInvalidReason#CUSTOM}. Message is interpreted as i18n key.
+   */
+  public void setMediaInvalidReasonCustomMessage(String mediaInvalidReasonCustomMessage) {
+    this.mediaInvalidReasonCustomMessage = mediaInvalidReasonCustomMessage;
   }
 
   @Override
