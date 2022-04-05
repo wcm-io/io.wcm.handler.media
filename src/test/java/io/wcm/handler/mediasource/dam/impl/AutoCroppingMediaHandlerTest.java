@@ -160,6 +160,7 @@ class AutoCroppingMediaHandlerTest {
     Rendition rendition = media.getRendition();
     assertEquals(320, rendition.getWidth());
     assertEquals(200, rendition.getHeight());
+    assertFalse(rendition.isFallback());
     assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.320.200.40,0,360,200.file/test.jpg", media.getUrl());
   }
 
