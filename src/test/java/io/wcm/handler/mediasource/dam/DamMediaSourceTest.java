@@ -50,6 +50,7 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -689,18 +690,22 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
     assertEquals(SHOWROOM_CONTROLS, renditions.get(0).getMediaFormat());
-
-    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
-        renditions.get(1).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+    assertFalse(renditions.get(0).isFallback());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.1333.1000.134,0,1467,1000.file/sixteen-ten.jpg",
-        renditions.get(2).getUrl(), "rendition.mediaUrl.1");
-    assertEquals(RATIO2, renditions.get(2).getMediaFormat());
+        renditions.get(1).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(RATIO2, renditions.get(1).getMediaFormat());
+    assertFalse(renditions.get(1).isFallback());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.960.150.0,375,1600,625.file/sixteen-ten.jpg",
-        renditions.get(3).getUrl(), "rendition.mediaUrl.1");
-    assertEquals(EDITORIAL_STAGE_SMALL, renditions.get(3).getMediaFormat());
+        renditions.get(2).getUrl(), "rendition.mediaUrl.1");
+    assertEquals(EDITORIAL_STAGE_SMALL, renditions.get(2).getMediaFormat());
+    assertFalse(renditions.get(2).isFallback());
+
+    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
+            renditions.get(3).getUrl(), "rendition.mediaUrl.2");
+    assertEquals(RATIO, renditions.get(3).getMediaFormat());
+    assertTrue(renditions.get(3).isFallback());
   }
 
   /**
