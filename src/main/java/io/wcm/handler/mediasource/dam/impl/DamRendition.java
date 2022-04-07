@@ -83,7 +83,9 @@ class DamRendition extends SlingAdaptable implements Rendition {
           renditionHandler = new DefaultRenditionHandler(damContext);
           resolvedRendition = renditionHandler.getRendition(mediaArgs);
         }
-        fallback = true;
+        if (resolvedRendition != null) {
+          fallback = true;
+        }
       }
     }
 
