@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.14.2" date="not released">
+    <release version="1.14.2" date="2022-04-07">
       <action type="fix" dev="cnagel" issue="WHAN-51">
         Autocropped DAM renditions should not have fallback flag.
       </action>
