@@ -74,7 +74,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
   @ObjectClassDefinition(
       name = "wcm.io Media Handler Rendition Metadata Service",
       description = "Extracts additional metadata like width and height for AEM asset renditions.")
-  static @interface Config {
+  @interface Config {
 
     @AttributeDefinition(name = "Enabled", description = "Switch to enable or disable this service.")
     boolean enabled() default true;
