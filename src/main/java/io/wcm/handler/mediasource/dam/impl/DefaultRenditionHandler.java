@@ -105,10 +105,12 @@ class DefaultRenditionHandler implements RenditionHandler {
       return;
     }
     // ignore AEM-generated web renditions unless allowed via mediaargs
-    boolean isIncludeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions() != null
-        ? mediaArgs.isIncludeAssetWebRenditions()
-        : true;
+    boolean isIncludeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions() == null || mediaArgs.isIncludeAssetWebRenditions();
     if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
+      return;
+    }
+    // skip all non-original rendition for dynamic media assets. dynamic media does not support them.
+    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset() && !AssetRendition.isOriginal(rendition)) {
       return;
     }
     RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);

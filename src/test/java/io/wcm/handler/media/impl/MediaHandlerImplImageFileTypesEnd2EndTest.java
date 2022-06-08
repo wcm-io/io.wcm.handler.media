@@ -114,6 +114,15 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   }
 
   @Test
+  void testAsset_JPEG_CropWithExplicitRendition() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/square.jpg./square.jpg",
+        ContentType.JPEG);
+  }
+
+  @Test
   void testFileUpload_JPEG_Original() {
     Resource resource = createSampleFileUpload("/filetype/sample.jpg");
     buildAssertMedia(resource, 100, 50,

@@ -19,8 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
-import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
-
 import java.io.InputStream;
 
 import org.apache.commons.io.FilenameUtils;
@@ -81,13 +79,6 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       this.width = 0;
       this.height = 0;
     }
-  }
-
-  /**
-   * @return true if rendition is the original file that was uploaded initially
-   */
-  protected boolean isOriginalRendition() {
-    return StringUtils.equals(getRendition().getName(), ORIGINAL_FILE);
   }
 
   /**
@@ -306,8 +297,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
 
     // always prefer original rendition
-    boolean thisIsOriginalRendition = isOriginalRendition();
-    boolean otherIsOriginalRendition = obj.isOriginalRendition();
+    boolean thisIsOriginalRendition = AssetRendition.isOriginal(getRendition());
+    boolean otherIsOriginalRendition = AssetRendition.isOriginal(obj.getRendition());
     if (thisIsOriginalRendition && !otherIsOriginalRendition) {
       return -1;
     }

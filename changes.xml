@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Switch to AEM 6.5.7 as minimum version.
       </action>
+      <action type="fix" dev="sseifert">
+        Ignore non-original renditions for dynamic media assets - they are not supported and should not be considered as candidates when resolving media.
+      </action>
     </release>
 
     <release version="1.14.2" date="2022-04-07">

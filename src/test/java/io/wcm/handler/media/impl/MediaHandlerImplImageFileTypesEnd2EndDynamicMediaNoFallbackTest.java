@@ -77,6 +77,15 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaNoFallbackTest extends Me
 
   @Override
   @Test
+  void testAsset_JPEG_CropWithExplicitRendition() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
+    Media media = mediaHandler.get(asset.getPath()).build();
+    assertFalse(media.isValid());
+  }
+
+  @Override
+  @Test
   void testAsset_JPEG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     Media media = mediaHandler.get(asset.getPath()).build();

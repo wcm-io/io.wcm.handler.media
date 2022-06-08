@@ -39,6 +39,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * scene7 is actually used.
  */
 @ExtendWith(AemContextExtension.class)
+@SuppressWarnings("java:S2699") // all tests have assertions
 class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
 
   @Override
@@ -89,6 +90,16 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Test
   void testAsset_JPEG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
+        ContentType.JPEG);
+  }
+
+  @Override
+  @Test
+  void testAsset_JPEG_CropWithExplicitRendition() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
         ContentType.JPEG);
