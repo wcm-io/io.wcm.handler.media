@@ -84,11 +84,10 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   /**
-   * @param value DAM rendition
    * @return true if rendition is the original file that was uploaded initially
    */
-  private boolean isOriginalRendition(Rendition value) {
-    return StringUtils.equals(value.getName(), ORIGINAL_FILE);
+  protected boolean isOriginalRendition() {
+    return StringUtils.equals(getRendition().getName(), ORIGINAL_FILE);
   }
 
   /**
@@ -307,8 +306,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
 
     // always prefer original rendition
-    boolean thisIsOriginalRendition = isOriginalRendition(getRendition());
-    boolean otherIsOriginalRendition = isOriginalRendition(obj.getRendition());
+    boolean thisIsOriginalRendition = isOriginalRendition();
+    boolean otherIsOriginalRendition = obj.isOriginalRendition();
     if (thisIsOriginalRendition && !otherIsOriginalRendition) {
       return -1;
     }
