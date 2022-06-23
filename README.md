@@ -1,7 +1,7 @@
 <img src="https://wcm.io/images/favicon-16@2x.png"/> Media Handler
 ======
 [![Build](https://github.com/wcm-io/io.wcm.handler.media/workflows/Build/badge.svg?branch=develop)](https://github.com/wcm-io/io.wcm.handler.media/actions?query=workflow%3ABuild+branch%3Adevelop)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.media/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm/io.wcm.handler.media)
+[![Maven Central](https://img.shields.io/maven-central/v/io.wcm/io.wcm.handler.media)](https://repo1.maven.org/maven2/io/wcm/io.wcm.handler.media/)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=wcm-io_io.wcm.handler.media&metric=coverage)](https://sonarcloud.io/summary/new_code?id=wcm-io_io.wcm.handler.media)
 
 Media resolving, processing and markup generation.
