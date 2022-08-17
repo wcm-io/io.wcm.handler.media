@@ -318,7 +318,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void testAsset_SVG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
     buildAssertMedia(asset, 100, 50,
-        "/content/dam/sample.svg/_jcr_content/renditions/original./sample.svg",
+        "/content/dam/sample.svg/_jcr_content/renditions/original.media_file.file/sample.svg",
         ContentType.SVG);
   }
 
@@ -334,7 +334,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void testAsset_SVG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/content/dam/sample.svg/_jcr_content/renditions/original./sample.svg",
+        "/content/dam/sample.svg/_jcr_content/renditions/original.media_file.file/sample.svg",
         ContentType.SVG);
   }
 
