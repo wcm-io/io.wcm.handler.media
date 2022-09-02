@@ -127,7 +127,7 @@ public final class DamContext implements Adaptable {
    */
   public @Nullable String getDynamicMediaServerUrl() {
     if (dynamicMediaServerUrl == null) {
-      dynamicMediaServerUrl = dynamicMediaSupportService.getDynamicMediaServerUrl(asset, urlMode);
+      dynamicMediaServerUrl = dynamicMediaSupportService.getDynamicMediaServerUrl(asset, urlMode, adaptable);
     }
     return dynamicMediaServerUrl;
   }
