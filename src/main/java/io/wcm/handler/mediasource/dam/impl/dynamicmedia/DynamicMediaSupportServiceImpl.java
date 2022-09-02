@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -49,6 +50,7 @@ import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.url.SiteConfig;
+import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -188,13 +190,15 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   }
 
   @Override
-  public @Nullable String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode) {
+  public @Nullable String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode, @NotNull Adaptable adaptable) {
     Resource assetResource = AdaptTo.notNull(asset, Resource.class);
     if (authorPreviewMode && !forcePublishMode(urlMode)) {
       // route dynamic media requests through author instance for preview
       // return configured author URL, or empty string if none configured
-      SiteConfig siteConfig = AdaptTo.notNull(assetResource, SiteConfig.class);
-      return StringUtils.defaultString(siteConfig.siteUrlAuthor());
+      SiteConfig siteConfig = AdaptTo.notNull(adaptable, SiteConfig.class);
+      String siteUrlAUthor = StringUtils.defaultString(siteConfig.siteUrlAuthor());
+      UrlHandler urlHandler = AdaptTo.notNull(adaptable, UrlHandler.class);
+      return urlHandler.applySiteUrlAutoDetection(siteUrlAUthor);
     }
     try {
       String[] productionAssetUrls = dynamicMediaPublishUtils.externalizeImageDeliveryAsset(assetResource);

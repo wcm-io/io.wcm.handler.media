@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
+import org.apache.sling.api.adapter.Adaptable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,10 +70,12 @@ public interface DynamicMediaSupportService {
   /**
    * Get scene7 host/URL prefix for publish environment.
    * @param asset DAM asset
+   * @param urlMode URL mode
+   * @param adaptable Adaptable
    * @return Protocol and hostname of scene7 host or null.
    *         If author preview mode is enabled, returns empty string.
    */
   @Nullable
-  String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode);
+  String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode, @NotNull Adaptable adaptable);
 
 }
