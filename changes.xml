@@ -23,6 +23,10 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.14.8" date="not released">
+      <action type="fix" dev="sseifert">Dynamic Media Support: Make use of smart-cropped image rendition also in the case if the original image has same ratio as the requested ratio.</action>
+    </release>
+
     <release version="1.14.6" date="2022-09-02">
       <action type="fix" dev="sseifert"><![CDATA[
         Dynamic Media Support: Apply Site URL detection with <code>&lt;auto&gt;</code> when building Dynamic Media URLs in author instance.

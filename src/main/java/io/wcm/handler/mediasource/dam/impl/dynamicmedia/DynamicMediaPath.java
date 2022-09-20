@@ -114,8 +114,9 @@ public final class DynamicMediaPath {
     StringBuilder result = new StringBuilder();
     result.append(IMAGE_SERVER_PATH).append(encodeDynamicMediaObject(damContext));
 
-    if (cropDimension != null && cropDimension.isAutoCrop() && rotation == null) {
-      // auto-crop applied - check for matching image profile and use predefined cropping preset if match found
+    // check for smart cropping when no cropping was applied by default, or auto-crop is enabled
+    if ((cropDimension == null || cropDimension.isAutoCrop()) && rotation == null) {
+      // check for matching image profile and use predefined cropping preset if match found
       Optional<NamedDimension> smartCroppingDef = getSmartCropDimension(damContext, width, height);
       if (smartCroppingDef.isPresent()) {
         result.append("%3A").append(smartCroppingDef.get().getName()).append("?")
