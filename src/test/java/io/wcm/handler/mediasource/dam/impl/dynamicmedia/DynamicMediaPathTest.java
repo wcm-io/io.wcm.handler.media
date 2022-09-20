@@ -73,8 +73,14 @@ class DynamicMediaPathTest {
 
   @Test
   void testWidthHeight() {
+    String result = DynamicMediaPath.buildImage(damContext, 30, 25);
+    assertEquals("/is/image/DummyFolder/test?wid=30&hei=25&fit=stretch", result);
+  }
+
+  @Test
+  void testWidthHeight_ImplicitSmartCrop() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20);
-    assertEquals("/is/image/DummyFolder/test?wid=30&hei=20&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test%3ACrop-1?wid=30&hei=20&fit=stretch", result);
   }
 
   @Test
