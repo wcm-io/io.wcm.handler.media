@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.14.10" date="not released">
+    <release version="1.14.10" date="2022-09-27">
       <action type="update" dev="sseifert">Dynamic Media Support: Introduce OSGi configuration parameter dmCapabilityDetection to switch from auto-detection to enable or disable Dynamic Media capability via configuration.</action>
     </release>
 
