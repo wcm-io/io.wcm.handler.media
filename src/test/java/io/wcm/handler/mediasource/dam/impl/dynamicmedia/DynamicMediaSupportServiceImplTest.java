@@ -72,6 +72,21 @@ class DynamicMediaSupportServiceImplTest {
   }
 
   @Test
+  void testDefaultConfig_FeatureDisabled_EnabledViaConfig() {
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
+        "dmCapabilityDetection", DynamicMediaCapabilityDetection.ON.toString());
+    assertTrue(underTest.isDynamicMediaEnabled());
+  }
+
+  @Test
+  void testDefaultConfig_FeatureEnabled_DisabledViaConfig() {
+    activateDynamicMediaFeature();
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
+        "dmCapabilityDetection", DynamicMediaCapabilityDetection.OFF.toString());
+    assertFalse(underTest.isDynamicMediaEnabled());
+  }
+
+  @Test
   void testDefaultConfig() {
     activateDynamicMediaFeature();
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
