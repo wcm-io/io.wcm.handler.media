@@ -23,6 +23,10 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.14.10" date="2022-09-27">
+      <action type="update" dev="sseifert">Dynamic Media Support: Introduce OSGi configuration parameter dmCapabilityDetection to switch from auto-detection to enable or disable Dynamic Media capability via configuration.</action>
+    </release>
+
     <release version="1.14.8" date="2022-09-20">
       <action type="fix" dev="sseifert">Dynamic Media Support: Make use of smart-cropped image rendition also in the case if the original image has same ratio as the requested ratio.</action>
     </release>

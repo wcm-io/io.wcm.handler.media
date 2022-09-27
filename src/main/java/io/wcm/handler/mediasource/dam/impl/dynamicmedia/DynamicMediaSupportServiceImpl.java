@@ -70,8 +70,14 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     @AttributeDefinition(
         name = "Enabled",
         description = "Enable support for dynamic media. "
-            + "Only gets active when dynamic media is actually configured for the instance.")
+            + "Only gets active when dynamic media is actually enabled for the instance.")
     boolean enabled() default true;
+
+    @AttributeDefinition(
+        name = "Dynamic Media Capability",
+        description = "Whether to detect automatically if Dynamic Media is actually enabled for the instance. "
+            + "Setting to ON disables the auto-detection via feature-flag and assumes it is enabled, setting to OFF assumes it is disabled.")
+    DynamicMediaCapabilityDetection dmCapabilityDetection() default DynamicMediaCapabilityDetection.AUTO;
 
     @AttributeDefinition(
         name = "Author Preview Mode",
@@ -110,6 +116,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   private ResourceResolverFactory resourceResolverFactory;
 
   private boolean enabled;
+  private DynamicMediaCapabilityDetection dmCapabilityDetection;
   private boolean authorPreviewMode;
   private boolean disableAemFallback;
   private Dimension imageSizeLimit;
@@ -122,14 +129,34 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Activate
   private void activate(Config config) {
     this.enabled = config.enabled();
+    this.dmCapabilityDetection = config.dmCapabilityDetection();
     this.authorPreviewMode = config.authorPreviewMode();
     this.disableAemFallback = config.disableAemFallback();
     this.imageSizeLimit = new Dimension(config.imageSizeLimitWidth(), config.imageSizeLimitHeight());
+
+    if (this.enabled && log.isInfoEnabled()) {
+      log.info("DynamicMediaSupport: enabled={}, capabilityEnabled={}, capabilityDetection={}, "
+          + "authorPreviewMode={}, disableAemFallback={}, imageSizeLimit={}",
+          isDynamicMediaEnabled(), isDynamicMediaCapabilityEnabled(), this.dmCapabilityDetection,
+          this.authorPreviewMode, this.disableAemFallback, this.imageSizeLimit);
+    }
   }
 
   @Override
   public boolean isDynamicMediaEnabled() {
-    return this.enabled && featureFlagService.isEnabled(ASSETS_SCENE7_FEATURE_FLAG_PID);
+    return this.enabled && isDynamicMediaCapabilityEnabled();
+  }
+
+  private boolean isDynamicMediaCapabilityEnabled() {
+    switch (dmCapabilityDetection) {
+      case AUTO:
+        return featureFlagService.isEnabled(ASSETS_SCENE7_FEATURE_FLAG_PID);
+      case ON:
+        return true;
+      case OFF:
+      default:
+        return false;
+    }
   }
 
   @Override
