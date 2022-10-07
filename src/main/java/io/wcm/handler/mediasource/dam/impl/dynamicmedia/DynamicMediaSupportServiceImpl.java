@@ -31,7 +31,6 @@ import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.featureflags.Features;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
@@ -103,13 +102,6 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
 
   }
 
-  /**
-   * Feature flag signaling activation of DM on AEM instance.
-   */
-  public static final String ASSETS_SCENE7_FEATURE_FLAG_PID = "com.adobe.dam.asset.scene7.feature.flag";
-
-  @Reference
-  private Features featureFlagService;
   @Reference
   private PublishUtils dynamicMediaPublishUtils;
   @Reference
@@ -134,23 +126,24 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     this.disableAemFallback = config.disableAemFallback();
     this.imageSizeLimit = new Dimension(config.imageSizeLimitWidth(), config.imageSizeLimitHeight());
 
-    if (this.enabled && log.isInfoEnabled()) {
+    if (this.enabled) {
       log.info("DynamicMediaSupport: enabled={}, capabilityEnabled={}, capabilityDetection={}, "
           + "authorPreviewMode={}, disableAemFallback={}, imageSizeLimit={}",
-          isDynamicMediaEnabled(), isDynamicMediaCapabilityEnabled(), this.dmCapabilityDetection,
+          this.enabled, this.dmCapabilityDetection, this.dmCapabilityDetection,
           this.authorPreviewMode, this.disableAemFallback, this.imageSizeLimit);
     }
   }
 
   @Override
   public boolean isDynamicMediaEnabled() {
-    return this.enabled && isDynamicMediaCapabilityEnabled();
+    return this.enabled;
   }
 
-  private boolean isDynamicMediaCapabilityEnabled() {
+  @Override
+  public boolean isDynamicMediaCapabilityEnabled(boolean isDynamicMediaAsset) {
     switch (dmCapabilityDetection) {
       case AUTO:
-        return featureFlagService.isEnabled(ASSETS_SCENE7_FEATURE_FLAG_PID);
+        return isDynamicMediaAsset;
       case ON:
         return true;
       case OFF:

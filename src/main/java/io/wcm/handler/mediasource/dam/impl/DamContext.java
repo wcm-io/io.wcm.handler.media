@@ -94,7 +94,8 @@ public final class DamContext implements Adaptable {
    * @return Whether dynamic media is enabled on this AEM instance
    */
   public boolean isDynamicMediaEnabled() {
-    return dynamicMediaSupportService.isDynamicMediaEnabled();
+    return dynamicMediaSupportService.isDynamicMediaEnabled()
+        && dynamicMediaSupportService.isDynamicMediaCapabilityEnabled(isDynamicMediaAsset());
   }
 
   /**

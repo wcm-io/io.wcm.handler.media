@@ -19,11 +19,13 @@
  */
 package io.wcm.handler.mediasource.dam;
 
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl.ASSETS_SCENE7_FEATURE_FLAG_PID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.apache.commons.io.FilenameUtils;
-import org.apache.sling.featureflags.impl.ConfiguredFeature;
+import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,16 +53,15 @@ class DamUriTemplateTest {
   final AemContext context = AppAemContext.newAemContext();
 
   private MediaHandler mediaHandler;
-  private Asset asset;
 
   @BeforeEach
   void setUp() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-    asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
   }
 
   @Test
   void testGetUriTemplate_CropCenter() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     Media media = mediaHandler.get(asset.getPath()).build();
 
     UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
@@ -72,6 +73,7 @@ class DamUriTemplateTest {
 
   @Test
   void testGetUriTemplate_CropCenter_EnforceOutputFileExtension() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     Media media = mediaHandler.get(asset.getPath())
         .enforceOutputFileExtension(FileExtension.PNG)
         .build();
@@ -85,6 +87,7 @@ class DamUriTemplateTest {
 
   @Test
   void testGetUriTemplate_ScaleWidth() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     Media media = mediaHandler.get(asset.getPath()).build();
 
     UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_WIDTH);
@@ -96,6 +99,7 @@ class DamUriTemplateTest {
 
   @Test
   void testGetUriTemplate_ScaleHeight() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     Media media = mediaHandler.get(asset.getPath()).build();
 
     UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_HEIGHT);
@@ -108,9 +112,7 @@ class DamUriTemplateTest {
   @Test
   void testGetUriTemplate_CropCenter_DynamicMedia() {
     // activate dynamic media
-    context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
-        "enabled", true);
+    Asset asset = createSampleAssetWithDynamicMedia("/filetype/sample.jpg", ContentType.JPEG);
 
     Media media = mediaHandler.get(asset.getPath()).build();
 
@@ -124,9 +126,7 @@ class DamUriTemplateTest {
   @Test
   void testGetUriTemplate_ScaleWidth_DynamicMedia() {
     // activate dynamic media
-    context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
-        "enabled", true);
+    Asset asset = createSampleAssetWithDynamicMedia("/filetype/sample.jpg", ContentType.JPEG);
 
     Media media = mediaHandler.get(asset.getPath()).build();
 
@@ -140,9 +140,7 @@ class DamUriTemplateTest {
   @Test
   void testGetUriTemplate_ScaleHeight_DynamicMedia() {
     // activate dynamic media
-    context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
-        "enabled", true);
+    Asset asset = createSampleAssetWithDynamicMedia("/filetype/sample.jpg", ContentType.JPEG);
 
     Media media = mediaHandler.get(asset.getPath()).build();
 
@@ -154,9 +152,23 @@ class DamUriTemplateTest {
   }
 
   Asset createSampleAsset(String classpathResource, String contentType) {
+    return createSampleAsset(classpathResource, contentType, false);
+  }
+
+  Asset createSampleAssetWithDynamicMedia(String classpathResource, String contentType) {
+    return createSampleAsset(classpathResource, contentType, true);
+  }
+
+  Asset createSampleAsset(String classpathResource, String contentType, boolean dmMetadata) {
     String fileName = FilenameUtils.getName(classpathResource);
-    return context.create().asset("/content/dam/" + fileName, classpathResource, contentType,
-        Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
+    Map<String, Object> metadata;
+    if (dmMetadata) {
+      metadata = MapUtil.toMap(Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
+    }
+    else {
+      metadata = Collections.emptyMap();
+    }
+    return context.create().asset("/content/dam/" + fileName, classpathResource, contentType, metadata);
   }
 
 }

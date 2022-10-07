@@ -20,7 +20,6 @@
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl.ASSETS_SCENE7_FEATURE_FLAG_PID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.stream.Stream;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.featureflags.impl.ConfiguredFeature;
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,46 +64,40 @@ class DynamicMediaSupportServiceImplTest {
   }
 
   @Test
-  void testDefaultConfig_FeatureDisabled() {
-    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
-    assertFalse(underTest.isDynamicMediaEnabled());
-  }
-
-  @Test
-  void testDefaultConfig_FeatureDisabled_EnabledViaConfig() {
-    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
-        "dmCapabilityDetection", DynamicMediaCapabilityDetection.ON.toString());
-    assertTrue(underTest.isDynamicMediaEnabled());
-  }
-
-  @Test
-  void testDefaultConfig_FeatureEnabled_DisabledViaConfig() {
-    activateDynamicMediaFeature();
-    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
-        "dmCapabilityDetection", DynamicMediaCapabilityDetection.OFF.toString());
-    assertFalse(underTest.isDynamicMediaEnabled());
-  }
-
-  @Test
   void testDefaultConfig() {
-    activateDynamicMediaFeature();
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
     assertTrue(underTest.isDynamicMediaEnabled());
     assertEquals(new Dimension(2000, 2000), underTest.getImageSizeLimit());
     assertEquals("https://dummy.scene7.com", underTest.getDynamicMediaServerUrl(asset, null, context.request()));
+    assertTrue(underTest.isDynamicMediaCapabilityEnabled(true));
+    assertFalse(underTest.isDynamicMediaCapabilityEnabled(false));
   }
 
   @Test
   void testConfigDisabled() {
-    activateDynamicMediaFeature();
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
         "enabled", false);
     assertFalse(underTest.isDynamicMediaEnabled());
   }
 
   @Test
+  void testConfigDMCapability_OFF() {
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
+        "dmCapabilityDetection", "OFF");
+    assertFalse(underTest.isDynamicMediaCapabilityEnabled(true));
+    assertFalse(underTest.isDynamicMediaCapabilityEnabled(false));
+  }
+
+  @Test
+  void testConfigDMCapability_ON() {
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
+        "dmCapabilityDetection", "ON");
+    assertTrue(underTest.isDynamicMediaCapabilityEnabled(true));
+    assertTrue(underTest.isDynamicMediaCapabilityEnabled(false));
+  }
+
+  @Test
   void testAuthorPreviewMode() {
-    activateDynamicMediaFeature();
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
         "authorPreviewMode", true,
         "imageSizeLimitWidth", 4000,
@@ -117,8 +109,6 @@ class DynamicMediaSupportServiceImplTest {
 
   @Test
   void testAuthorPreviewMode_SiteConfig() {
-    activateDynamicMediaFeature();
-
     MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
     MockContextAwareConfig.writeConfiguration(context, AppAemContext.ROOTPATH_CONTENT, SiteConfig.class,
         "siteUrlAuthor", "https://author-dm");
@@ -138,8 +128,6 @@ class DynamicMediaSupportServiceImplTest {
     context.request().setServerName("servername-dm");
     context.request().setServerPort(8443);
     context.request().setScheme("https");
-
-    activateDynamicMediaFeature();
 
     MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
     MockContextAwareConfig.writeConfiguration(context, AppAemContext.ROOTPATH_CONTENT, SiteConfig.class,
@@ -162,8 +150,6 @@ class DynamicMediaSupportServiceImplTest {
     context.request().setServerName("servername-dm");
     context.request().setServerPort(8443);
     context.request().setScheme("https");
-
-    activateDynamicMediaFeature();
 
     MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
     MockContextAwareConfig.writeConfiguration(context, AppAemContext.ROOTPATH_CONTENT, SiteConfig.class,
@@ -231,8 +217,6 @@ class DynamicMediaSupportServiceImplTest {
   @ParameterizedTest
   @MethodSource("forcePublicshUrlModes")
   void testAuthorPreviewMode_SiteConfig_FourcePublish(UrlMode urlMode) {
-    activateDynamicMediaFeature();
-
     MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
     MockContextAwareConfig.writeConfiguration(context, "/content/dam", SiteConfig.class,
         "siteUrlAuthor", "https://author");
@@ -250,12 +234,6 @@ class DynamicMediaSupportServiceImplTest {
         Arguments.of(UrlModes.FULL_URL_PUBLISH_FORCENONSECURE),
         Arguments.of(UrlModes.FULL_URL_PUBLISH_FORCESECURE),
         Arguments.of(UrlModes.FULL_URL_PUBLISH_PROTOCOLRELATIVE));
-  }
-
-  private void activateDynamicMediaFeature() {
-    context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
-        "enabled", true);
   }
 
 }
