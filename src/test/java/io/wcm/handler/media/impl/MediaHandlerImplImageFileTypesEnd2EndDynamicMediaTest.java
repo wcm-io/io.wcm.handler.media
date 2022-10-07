@@ -19,10 +19,6 @@
  */
 package io.wcm.handler.media.impl;
 
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl.ASSETS_SCENE7_FEATURE_FLAG_PID;
-
-import org.apache.sling.featureflags.impl.ConfiguredFeature;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -43,13 +39,9 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
 
   @Override
-  @BeforeEach
-  void setUp() {
-    // activate dynamic media
-    context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
-        "enabled", true);
-    super.setUp();
+  boolean isCreateAssetWithDynamicMediaMetadata() {
+    // enable dynamic media metadata in asset
+    return true;
   }
 
   @Override

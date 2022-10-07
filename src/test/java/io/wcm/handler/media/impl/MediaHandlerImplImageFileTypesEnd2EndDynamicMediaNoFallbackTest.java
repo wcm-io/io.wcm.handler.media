@@ -19,11 +19,9 @@
  */
 package io.wcm.handler.media.impl;
 
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl.ASSETS_SCENE7_FEATURE_FLAG_PID;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.sling.featureflags.impl.ConfiguredFeature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,15 +44,18 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaNoFallbackTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
 
   @Override
+  boolean isCreateAssetWithDynamicMediaMetadata() {
+    // enable dynamic media metadata in asset
+    return true;
+  }
+
+  @Override
   @BeforeEach
   void setUp() {
-    // activate dynamic media
-    context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
-        "enabled", true);
-    // disable AEM fallback
+    // explicitly activate DM capability, disable AEM fallback,
     context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
         Constants.SERVICE_RANKING, 100,
+        "dmCapabilityDetection", "ON",
         "disableAemFallback", true);
     super.setUp();
   }

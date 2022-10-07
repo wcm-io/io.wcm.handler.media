@@ -40,6 +40,12 @@ public interface DynamicMediaSupportService {
   boolean isDynamicMediaEnabled();
 
   /**
+   * @param isDynamicMediaAsset true if given asset has DM metadata properties available.
+   * @return Whether dynamic media capability is enabled for the given asset
+   */
+  boolean isDynamicMediaCapabilityEnabled(boolean isDynamicMediaAsset);
+
+  /**
    * @return Whether a transparent fallback to Media Handler-based rendering of renditions is allowed
    *         if the appropriate Dynamic Media metadata is not preset for an asset.
    */
