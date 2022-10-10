@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.14.12" date="not released">
+    <release version="1.14.12" date="2022-10-10">
       <action type="update" dev="sseifert">
         Dynamic Media Support: Do not rely on Dynamic Media feature flag to detect DM capability on publish instances. In "AUTO" mode only the availability of DM metadata on a given asset is checked.
       </action>
