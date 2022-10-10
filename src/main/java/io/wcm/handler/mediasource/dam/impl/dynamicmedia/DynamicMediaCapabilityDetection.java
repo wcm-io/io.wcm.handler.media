@@ -20,23 +20,26 @@
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 /**
- * Modes to detect if Dynamic Media capability is available on a author/publish instance.
+ * Modes to detect if Dynamic Media is available for a given asset.
  */
 enum DynamicMediaCapabilityDetection {
 
   /**
-   * Default: Auto-detect if Dynamic Media capability is available on author/publish instance by
-   * checking for the feature flag com.adobe.dam.asset.scene7.feature.flag.
+   * Default: Auto-detect if Dynamic Media is available for a given asset.
+   * If a property <code>dam:scene7File</code> exists in the metadata of the asset, Dynamic Media is considered
+   * available. If the property does not exist, the asset is treated as non-DM asset and renditions
+   * are rendered within AEM.
    */
   AUTO,
 
   /**
-   * Assume Dynamic Media capability is not available without doing any auto-detection.
+   * Disables the detection of Dynamic Media. Dynamic Media is never used.
+   * All renditions are rendered within AEM.
    */
   OFF,
 
   /**
-   * Assume Dynamic Media capability is available without doing any auto-detection.
+   * Configures that Dynamic Media is available for the environment and should be used for all assets.
    */
   ON
 

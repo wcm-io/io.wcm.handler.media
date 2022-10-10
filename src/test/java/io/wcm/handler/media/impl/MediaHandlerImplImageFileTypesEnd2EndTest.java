@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,6 +82,10 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
     imageFileServlet = context.registerInjectActivateService(new ImageFileServlet());
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+  }
+
+  boolean isCreateAssetWithDynamicMediaMetadata() {
+    return false;
   }
 
   @Test
@@ -377,8 +384,14 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   Asset createSampleAsset(String classpathResource, String contentType) {
     String fileName = FilenameUtils.getName(classpathResource);
     String fileExtension = FilenameUtils.getExtension(classpathResource);
-    Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType,
-        Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
+    Map<String, Object> metadata;
+    if (isCreateAssetWithDynamicMediaMetadata()) {
+      metadata = MapUtil.toMap(Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
+    }
+    else {
+      metadata = Collections.emptyMap();
+    }
+    Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType, metadata);
     context.create().assetRendition(asset, "cq5dam.web.sample." + fileExtension, classpathResource, contentType);
     return asset;
   }
