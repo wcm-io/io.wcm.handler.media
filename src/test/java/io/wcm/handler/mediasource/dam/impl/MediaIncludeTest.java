@@ -82,6 +82,8 @@ class MediaIncludeTest {
 
   @Test
   void testResponsiveImageWithInclude() {
+
+    // component with three asset references (two using custom attributes), two of them with manual cropping defined
     Resource resource = context.create().resource("/content/test",
         "sling:resourceType", "app1/components/comp1",
         MediaNameConstants.PN_MEDIA_REF, asset.getPath(),
@@ -90,6 +92,7 @@ class MediaIncludeTest {
         "crop2", new CropDimension(0, 0, 200, 150).getCropString(),
         "ref3", asset3.getPath());
 
+    // prepare media builder providing custom properties for asset 2 and 3
     MediaBuilder media2Builder = mediaHandler.get(resource)
         .refProperty("ref2")
         .cropProperty("crop2");
@@ -97,6 +100,7 @@ class MediaIncludeTest {
         .refProperty("ref3")
         .autoCrop(true);
 
+    // generate responsive image with providing preferred renditions from asset 2 and 3 for certian media foramts
     Media media = mediaHandler.get(resource)
         .pictureSource(new PictureSource(RATIO).media("media1").widths(80))
         .pictureSource(new PictureSource(RATIO2).media("media2").widths(100))
