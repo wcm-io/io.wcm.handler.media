@@ -374,7 +374,8 @@ final class MediaBuilderImpl implements MediaBuilder {
     if (this.mediaArgs.getImageSizes() != null && this.mediaArgs.getPictureSources() != null) {
       throw new IllegalArgumentException("Image sizes must not be used together with pictures source sets.");
     }
-    MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs, this.mediaPropertyNames);
+    MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
+        this.mediaPropertyNames, this.includes);
     return mediaHandler.processRequest(request);
   }
 

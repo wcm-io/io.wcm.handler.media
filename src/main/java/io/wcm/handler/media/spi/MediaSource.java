@@ -47,11 +47,14 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
+import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.MediaRequest.MediaInclude;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.imagemap.ImageMapParser;
 
@@ -426,7 +429,7 @@ public abstract class MediaSource {
 
     // resolve main media formats (ignore responsive child formats)
     List<MediaFormatOption> parentMediaFormatOptions = getParentMediaFormats(mediaArgs);
-    allMandatoryResolved = resolveRenditionsWithMediaFormats(asset, mediaArgs, parentMediaFormatOptions, resolvedRenditions);
+    allMandatoryResolved = resolveRenditionsWithMediaFormats(media, asset, mediaArgs, parentMediaFormatOptions, resolvedRenditions);
 
     if (allMandatoryResolved) {
       final List<MediaFormat> resolvedMediaFormats;
@@ -448,7 +451,7 @@ public abstract class MediaSource {
 
       for (MediaFormat mediaFormat : resolvedMediaFormats) {
         List<MediaFormatOption> childMediaFormatOptions = getChildMediaFormats(mediaArgs, mediaFormat);
-        allMandatoryResolved = resolveRenditionsWithMediaFormats(asset, mediaArgs, childMediaFormatOptions, resolvedRenditions) && allMandatoryResolved;
+        allMandatoryResolved = resolveRenditionsWithMediaFormats(media, asset, mediaArgs, childMediaFormatOptions, resolvedRenditions) && allMandatoryResolved;
       }
     }
 
@@ -462,7 +465,7 @@ public abstract class MediaSource {
     return anyResolved && allMandatoryResolved;
   }
 
-  private boolean resolveRenditionsWithMediaFormats(@NotNull Asset asset, @NotNull MediaArgs mediaArgs,
+  private boolean resolveRenditionsWithMediaFormats(@NotNull Media media, @NotNull Asset asset, @NotNull MediaArgs mediaArgs,
       @NotNull List<MediaFormatOption> mediaFormatOptions, @NotNull List<Rendition> resolvedRenditions) {
 
     // collect "fallback" renditions that do not fully fulfill the media request (e.g. ignored explicit cropping)
@@ -471,9 +474,15 @@ public abstract class MediaSource {
 
     boolean allMandatoryResolved = true;
     for (MediaFormatOption mediaFormatOption : mediaFormatOptions) {
-      MediaArgs renditionMediaArgs = mediaArgs.clone();
-      renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
-      Rendition rendition = asset.getRendition(renditionMediaArgs);
+
+      // check for preferred rendition from include definitions
+      Rendition rendition = getRenditionFromIncluded(media, mediaFormatOption);
+      if (rendition == null) {
+        // otherwise get rendition from this asset
+        MediaArgs renditionMediaArgs = mediaArgs.clone();
+        renditionMediaArgs.mediaFormat(mediaFormatOption.getMediaFormat());
+        rendition = asset.getRendition(renditionMediaArgs);
+      }
       if (rendition != null) {
         if (rendition.isFallback()) {
           fallbackRenditions.add(rendition);
@@ -488,6 +497,32 @@ public abstract class MediaSource {
     }
     resolvedRenditions.addAll(fallbackRenditions);
     return allMandatoryResolved;
+  }
+
+  /**
+   * Check for preferred renditions provided by media include matching the media format aspect ratio we are looking for.
+   * @param media Media holding include definitions
+   * @param mediaFormatOption Media format options we are looking for
+   * @return Matching rendition or null if none found
+   */
+  private @Nullable Rendition getRenditionFromIncluded(@NotNull Media media, @NotNull MediaFormatOption mediaFormatOption) {
+    List<MediaInclude> includes = media.getMediaRequest().getIncludes();
+    if (includes != null) {
+      for (MediaInclude include : includes) {
+        MediaFormat includeMediaFormat = include.getMediaFormat();
+        MediaFormat requestedMediaFormat = mediaFormatOption.getMediaFormat();
+        if (includeMediaFormat != null && requestedMediaFormat != null && Ratio.matches(includeMediaFormat, requestedMediaFormat)) {
+          // TODO: ensure no nesting include happens / clear includes here?
+          MediaBuilder builder = include.getMediaBuilder();
+          builder.mediaFormatOptions(mediaFormatOption);
+          Media includeMedia = builder.build();
+          if (includeMedia.isValid()) {
+            return includeMedia.getRendition();
+          }
+        }
+      }
+    }
+    return null;
   }
 
   @NotNull
