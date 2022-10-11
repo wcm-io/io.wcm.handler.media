@@ -39,6 +39,8 @@ import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
+import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.MediaRequest.MediaInclude;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.format.MediaFormatHandler;
@@ -60,6 +62,7 @@ final class MediaFormatResolver {
 
   /**
    * Resolve media format names and responsive media formats.
+   * TODO: integrate in {@link #resolve(MediaRequest)}.
    * @param mediaArgs Media args
    * @return true if resolution was successful.
    */
@@ -67,6 +70,15 @@ final class MediaFormatResolver {
     return resolveMediaFormatOptionsByNames(mediaArgs)
         && resolvePictureSourcesByNames(mediaArgs)
         && addResponsiveImageMediaFormats(mediaArgs);
+  }
+
+  /**
+   * Resolve media format names and responsive media formats.
+   * @param mediaRequest Media request
+   * @return true if resolution was successful.
+   */
+  public boolean resolve(MediaRequest mediaRequest) {
+    return resolveMediaIncludesByNames(mediaRequest);
   }
 
   /**
@@ -121,7 +133,7 @@ final class MediaFormatResolver {
       if (pictureSource.getMediaFormat() == null && mediaFormatName != null) {
         MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
         if (mediaFormat == null) {
-          log.warn("Media format name '{}' is invalid.", pictureSource.getMediaFormatName());
+          log.warn("Media format name '{}' is invalid.", mediaFormatName);
           resolutionSuccessful = false;
         }
         else {
@@ -133,6 +145,37 @@ final class MediaFormatResolver {
       }
     }
     mediaArgs.pictureSources(pictureSources);
+
+    return resolutionSuccessful;
+  }
+
+  /**
+   * Resolve media format names to media formats in media includes.
+   * @param mediaRequest Media request
+   * @return true if resolution was successful.
+   */
+  private boolean resolveMediaIncludesByNames(MediaRequest mediaRequest) {
+    List<MediaInclude> includes = mediaRequest.getIncludes();
+    if (includes == null) {
+      return true;
+    }
+
+    // resolve media format options that have only a name set
+    boolean resolutionSuccessful = true;
+    for (MediaInclude include : includes) {
+      String mediaFormatName = include.getMediaFormatName();
+      if (include.getMediaFormat() == null && mediaFormatName != null) {
+        MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatName);
+        if (mediaFormat == null) {
+          log.warn("Media format name '{}' is invalid.", mediaFormatName);
+          resolutionSuccessful = false;
+        }
+        else {
+          include.setMediaFormat(mediaFormat);
+          include.setMediaFormatName(null);
+        }
+      }
+    }
 
     return resolutionSuccessful;
   }

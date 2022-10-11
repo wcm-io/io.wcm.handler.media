@@ -45,7 +45,7 @@ public final class MediaRequest {
   private final String mediaRef;
   private final MediaArgs mediaArgs;
   private final MediaPropertyNames mediaPropertyNames;
-  private List<MediaInclude> includes;
+  private final List<MediaInclude> includes;
 
   private ValueMap resourceProperties;
 
@@ -309,7 +309,7 @@ public final class MediaRequest {
 
     private MediaFormat mediaFormat;
     private String mediaFormatName;
-    private MediaBuilder mediaBuilder;
+    private final MediaBuilder mediaBuilder;
 
     /**
      * @param mediaFormat Renditions with this media format should be resolved preferred from the given media builder
@@ -334,8 +334,16 @@ public final class MediaRequest {
       return this.mediaFormat;
     }
 
+    public void setMediaFormat(@Nullable MediaFormat mediaFormat) {
+      this.mediaFormat = mediaFormat;
+    }
+
     public @Nullable String getMediaFormatName() {
       return this.mediaFormatName;
+    }
+
+    public void setMediaFormatName(@Nullable String mediaFormatName) {
+      this.mediaFormatName = mediaFormatName;
     }
 
     public @NotNull MediaBuilder getMediaBuilder() {
