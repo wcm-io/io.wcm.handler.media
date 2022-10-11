@@ -20,6 +20,7 @@
 package io.wcm.handler.media;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,6 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
+import io.wcm.handler.media.format.MediaFormat;
+
 /**
  * Holds all properties that are part of a media handling request.
  */
@@ -41,6 +45,7 @@ public final class MediaRequest {
   private final String mediaRef;
   private final MediaArgs mediaArgs;
   private final MediaPropertyNames mediaPropertyNames;
+  private List<MediaInclude> includes;
 
   private ValueMap resourceProperties;
 
@@ -49,7 +54,7 @@ public final class MediaRequest {
    * @param mediaArgs Additional arguments affection media resolving
    */
   public MediaRequest(@NotNull Resource resource, @Nullable MediaArgs mediaArgs) {
-    this(resource, null, mediaArgs, null, null, null);
+    this(resource, null, mediaArgs, (MediaPropertyNames)null, null);
   }
 
   /**
@@ -57,7 +62,7 @@ public final class MediaRequest {
    * @param mediaArgs Additional arguments affection media resolving
    */
   public MediaRequest(@NotNull String mediaRef, @Nullable MediaArgs mediaArgs) {
-    this(null, mediaRef, mediaArgs, null, null, null);
+    this(null, mediaRef, mediaArgs, (MediaPropertyNames)null, null);
   }
 
   /**
@@ -102,10 +107,22 @@ public final class MediaRequest {
    */
   public MediaRequest(@Nullable Resource resource, @Nullable String mediaRef, @Nullable MediaArgs mediaArgs,
       @Nullable MediaPropertyNames mediaPropertyNames) {
+    this(resource, mediaRef, mediaArgs, mediaPropertyNames, null);
+  }
+
+  /**
+   * @param resource Resource containing reference to media asset
+   * @param mediaRef Reference to media item
+   * @param mediaArgs Additional arguments affection media resolving
+   * @param mediaPropertyNames Defines property names to read media parameters from for this media request.
+   */
+  public MediaRequest(@Nullable Resource resource, @Nullable String mediaRef, @Nullable MediaArgs mediaArgs,
+      @Nullable MediaPropertyNames mediaPropertyNames, @Nullable List<MediaInclude> includes) {
     this.resource = resource;
     this.mediaRef = mediaRef;
     this.mediaArgs = mediaArgs != null ? mediaArgs : new MediaArgs();
     this.mediaPropertyNames = mediaPropertyNames != null ? mediaPropertyNames : new MediaPropertyNames();
+    this.includes = includes;
   }
 
   /**
@@ -134,6 +151,13 @@ public final class MediaRequest {
    */
   public @NotNull MediaPropertyNames getMediaPropertyNames() {
     return this.mediaPropertyNames;
+  }
+
+  /**
+   * @return Defines to include renditions from additional media builders.
+   */
+  public @Nullable List<MediaInclude> getIncludes() {
+    return this.includes;
   }
 
   /**
@@ -272,6 +296,58 @@ public final class MediaRequest {
     @Override
     public String toString() {
       return ToStringBuilder.reflectionToString(this, io.wcm.wcm.commons.util.ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
+    }
+
+  }
+
+  /**
+   * Defines to include renditions from other media builder for a specific media format
+   * in media resolving process.
+   */
+  @ProviderType
+  public static final class MediaInclude {
+
+    private MediaFormat mediaFormat;
+    private String mediaFormatName;
+    private MediaBuilder mediaBuilder;
+
+    /**
+     * @param mediaFormat Renditions with this media format should be resolved preferred from the given media builder
+     * @param mediaBuilder Media builder
+     */
+    public MediaInclude(@NotNull MediaFormat mediaFormat, @NotNull MediaBuilder mediaBuilder) {
+      this.mediaFormat = mediaFormat;
+      this.mediaBuilder = mediaBuilder;
+    }
+
+    /**
+     * @param mediaFormatName Renditions with this media format should be resolved preferred from the given media
+     *          builder
+     * @param mediaBuilder Media builder
+     */
+    public MediaInclude(@NotNull String mediaFormatName, @NotNull MediaBuilder mediaBuilder) {
+      this.mediaFormatName = mediaFormatName;
+      this.mediaBuilder = mediaBuilder;
+    }
+
+    public @Nullable MediaFormat getMediaFormat() {
+      return this.mediaFormat;
+    }
+
+    public @Nullable String getMediaFormatName() {
+      return this.mediaFormatName;
+    }
+
+    public @NotNull MediaBuilder getMediaBuilder() {
+      return this.mediaBuilder;
+    }
+
+    @Override
+    public String toString() {
+      ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+      sb.append("mediaFormat", MediaFormatOption.mediaFormatToString(mediaFormat, mediaFormatName, true));
+      sb.append("mediaBuilder", mediaBuilder);
+      return sb.build();
     }
 
   }

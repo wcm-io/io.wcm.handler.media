@@ -38,6 +38,7 @@ import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaComponentPropertyResolver;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.MediaRequest.MediaInclude;
 import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
@@ -57,6 +58,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private MediaArgs mediaArgs = new MediaArgs();
   private MediaPropertyNames mediaPropertyNames = new MediaPropertyNames();
   private List<PictureSource> pictureSourceSets = new ArrayList<>();
+  private List<MediaInclude> includes;
 
   private static final Logger log = LoggerFactory.getLogger(MediaBuilderImpl.class);
 
@@ -352,6 +354,15 @@ final class MediaBuilderImpl implements MediaBuilder {
   @Override
   public @NotNull MediaBuilder mapProperty(@NotNull String value) {
     this.mediaPropertyNames.mapProperty(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder include(@NotNull MediaInclude include) {
+    if (includes == null) {
+      this.includes = new ArrayList<>();
+    }
+    this.includes.add(include);
     return this;
   }
 
