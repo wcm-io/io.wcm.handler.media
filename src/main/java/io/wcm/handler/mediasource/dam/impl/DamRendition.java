@@ -103,12 +103,9 @@ class DamRendition extends SlingAdaptable implements Rendition {
       }
     }
 
-    // if DM with smart cropping is used: ensure the chosen area of image is large enough to fill the requested size
-    if (damContext.isDynamicMediaEnabled()) {
-      if (log.isTraceEnabled()) {
-        log.trace("DamRendition: resolvedRendition={}, mediaArgs={}, cropDimension={}, rotation={}",
-            resolvedRendition, mediaArgs, cropDimension, rotation);
-      }
+    if (log.isTraceEnabled()) {
+      log.trace("DamRendition: resolvedRendition={}, mediaArgs={}, cropDimension={}, rotation={}",
+          resolvedRendition, mediaArgs, cropDimension, rotation);
     }
 
     this.rendition = resolvedRendition;
