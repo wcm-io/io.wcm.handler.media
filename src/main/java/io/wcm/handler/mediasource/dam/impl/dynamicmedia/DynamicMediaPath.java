@@ -22,7 +22,6 @@ package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -115,11 +114,11 @@ public final class DynamicMediaPath {
     result.append(IMAGE_SERVER_PATH).append(encodeDynamicMediaObject(damContext));
 
     // check for smart cropping when no cropping was applied by default, or auto-crop is enabled
-    if ((cropDimension == null || cropDimension.isAutoCrop()) && rotation == null) {
+    if (SmartCrop.canApply(cropDimension, rotation)) {
       // check for matching image profile and use predefined cropping preset if match found
-      Optional<NamedDimension> smartCroppingDef = getSmartCropDimension(damContext, width, height);
-      if (smartCroppingDef.isPresent()) {
-        result.append("%3A").append(smartCroppingDef.get().getName()).append("?")
+      NamedDimension smartCroppingDef = SmartCrop.getDimension(damContext, width, height);
+      if (smartCroppingDef != null) {
+        result.append("%3A").append(smartCroppingDef.getName()).append("?")
             .append("wid=").append(dimension.getWidth()).append("&")
             .append("hei=").append(dimension.getHeight()).append("&")
             // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
@@ -172,18 +171,6 @@ public final class DynamicMediaPath {
       return new Dimension(newWidth, newHeight);
     }
     return new Dimension(width, height);
-  }
-
-  private static Optional<@NotNull NamedDimension> getSmartCropDimension(@NotNull DamContext damContext, long width, long height) {
-    Double requestedRatio = Ratio.get(width, height);
-    ImageProfile imageProfile = damContext.getImageProfile();
-    if (imageProfile == null) {
-      return Optional.empty();
-    }
-    Optional<NamedDimension> matchingDimension = imageProfile.getSmartCropDefinitions().stream()
-        .filter(def -> Ratio.matches(Ratio.get(def), requestedRatio))
-        .findFirst();
-    return matchingDimension.map(def -> new NamedDimension(def.getName(), width, height));
   }
 
   /**
