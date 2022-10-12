@@ -93,7 +93,7 @@ public final class DynamicMediaPath {
    * @param height Height
    * @return Media path
    */
-  public static @NotNull String buildImage(@NotNull DamContext damContext, long width, long height) {
+  public static @Nullable String buildImage(@NotNull DamContext damContext, long width, long height) {
     return buildImage(damContext, width, height, null, null);
   }
 
@@ -106,7 +106,7 @@ public final class DynamicMediaPath {
    * @param rotation Rotation
    * @return Media path
    */
-  public static @NotNull String buildImage(@NotNull DamContext damContext, long width, long height,
+  public static @Nullable String buildImage(@NotNull DamContext damContext, long width, long height,
       @Nullable CropDimension cropDimension, @Nullable Integer rotation) {
     Dimension dimension = calcWidthHeight(damContext, width, height);
 
@@ -116,9 +116,14 @@ public final class DynamicMediaPath {
     // check for smart cropping when no cropping was applied by default, or auto-crop is enabled
     if (SmartCrop.canApply(cropDimension, rotation)) {
       // check for matching image profile and use predefined cropping preset if match found
-      NamedDimension smartCroppingDef = SmartCrop.getDimension(damContext, width, height);
-      if (smartCroppingDef != null) {
-        result.append("%3A").append(smartCroppingDef.getName()).append("?")
+      NamedDimension smartCropDef = SmartCrop.getDimension(damContext, width, height);
+      if (smartCropDef != null) {
+        if (!SmartCrop.isMatchingSize(damContext, smartCropDef, width, height)) {
+          // smart crop should be applied, but selected area is too small, treat as invalid
+          logResult(damContext, "<too small>");
+          return null;
+        }
+        result.append("%3A").append(smartCropDef.getName()).append("?")
             .append("wid=").append(dimension.getWidth()).append("&")
             .append("hei=").append(dimension.getHeight()).append("&")
             // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
@@ -143,7 +148,7 @@ public final class DynamicMediaPath {
     return result.toString();
   }
 
-  private static void logResult(@NotNull DamContext damContext, @NotNull StringBuilder result) {
+  private static void logResult(@NotNull DamContext damContext, @NotNull CharSequence result) {
     if (log.isTraceEnabled()) {
       log.trace("Build dynamic media path for {}: {}", damContext.getAsset().getPath(), result);
     }

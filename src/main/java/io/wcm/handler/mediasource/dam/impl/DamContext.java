@@ -23,7 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -159,6 +162,21 @@ public final class DamContext implements Adaptable {
     }
     else {
       return imageProfile;
+    }
+  }
+
+  /**
+   * @return Resource resolver from current context
+   */
+  public @NotNull ResourceResolver getResourceResolver() {
+    if (adaptable instanceof Resource) {
+      return ((Resource)adaptable).getResourceResolver();
+    }
+    else if (adaptable instanceof SlingHttpServletRequest) {
+      return ((SlingHttpServletRequest)adaptable).getResourceResolver();
+    }
+    else {
+      throw new IllegalStateException("Adaptable is neither Resoucre nor SlingHttpServletRequest");
     }
   }
 

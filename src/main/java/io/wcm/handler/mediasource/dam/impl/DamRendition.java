@@ -103,9 +103,12 @@ class DamRendition extends SlingAdaptable implements Rendition {
       }
     }
 
-    if (log.isTraceEnabled()) {
-      log.trace("DamRendition: resolvedRendition={}, mediaArgs={}, cropDimension={}, rotation={}",
-          resolvedRendition, mediaArgs, cropDimension, rotation);
+    // if DM with smart cropping is used: ensure the chosen area of image is large enough to fill the requested size
+    if (damContext.isDynamicMediaEnabled()) {
+      if (log.isTraceEnabled()) {
+        log.trace("DamRendition: resolvedRendition={}, mediaArgs={}, cropDimension={}, rotation={}",
+            resolvedRendition, mediaArgs, cropDimension, rotation);
+      }
     }
 
     this.rendition = resolvedRendition;
@@ -118,28 +121,31 @@ class DamRendition extends SlingAdaptable implements Rendition {
     }
     String url = null;
     boolean dynamicMediaEnabled = damContext.isDynamicMediaEnabled() && !mediaArgs.isDynamicMediaDisabled();
-    if (dynamicMediaEnabled && damContext.isDynamicMediaAsset()) {
-      // if DM is enabled: try to get rendition URL from dynamic media
-      String dynamicMediaPath = this.rendition.getDynamicMediaPath(this.mediaArgs.isContentDispositionAttachment(), damContext);
-      String productionAssetUrl = damContext.getDynamicMediaServerUrl();
-      if (productionAssetUrl != null) {
-        url = productionAssetUrl + dynamicMediaPath;
+    if (dynamicMediaEnabled) {
+      if (damContext.isDynamicMediaAsset()) {
+        // if DM is enabled: try to get rendition URL from dynamic media
+        String dynamicMediaPath = this.rendition.getDynamicMediaPath(this.mediaArgs.isContentDispositionAttachment(), damContext);
+        String productionAssetUrl = damContext.getDynamicMediaServerUrl();
+        if (dynamicMediaPath != null && productionAssetUrl != null) {
+          url = productionAssetUrl + dynamicMediaPath;
+        }
+        if (url == null) {
+          // asset is valid DM asset, but rendition (probably smart-cropped) it too small for the requested size
+          return null;
+        }
       }
-    }
-    if (url == null) {
-      if (dynamicMediaEnabled) {
+      else {
+        // DM is enabled, but given asset is not a DM asset
         if (damContext.isDynamicMediaAemFallbackDisabled()) {
-          if (log.isWarnEnabled()) {
-            log.warn("Asset is not a valid DM asset, fallback disabled, rendition invalid: {}", this.rendition.getRendition().getPath());
-          }
+          log.warn("Asset is not a valid DM asset, fallback disabled, rendition invalid: {}", this.rendition.getRendition().getPath());
           return null;
         }
         else {
-          if (log.isTraceEnabled()) {
-            log.trace("Asset is not a valid DM asset, fallback to AEM-rendered rendition: {}", this.rendition.getRendition().getPath());
-          }
+          log.trace("Asset is not a valid DM asset, fallback to AEM-rendered rendition: {}", this.rendition.getRendition().getPath());
         }
       }
+    }
+    if (url == null) {
       // Render renditions in AEM: build externalized URL
       UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
       String mediaPath = this.rendition.getMediaPath(this.mediaArgs.isContentDispositionAttachment());
