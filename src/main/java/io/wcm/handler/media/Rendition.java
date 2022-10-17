@@ -168,4 +168,17 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    *         rendition is returned that fulfills all other media format restrictions, this flag is set to true.
    */
   boolean isFallback();
+
+  /**
+   * Generate an URI template for the rendition.
+   * The URI template ignores the actual resolution of this rendition and allows to scale the rendition
+   * to any size within the maximum range of width/height, respecting both the original image and probably
+   * configured cropping parameters.
+   * @param type URI template type
+   * @return URI template
+   * @throws UnsupportedOperationException if the original rendition is not an image or it is a vector image.
+   */
+  @NotNull
+  UriTemplate getUriTemplate(@NotNull UriTemplateType type);
+
 }

@@ -35,6 +35,8 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -278,6 +280,12 @@ class DamRendition extends SlingAdaptable implements Rendition {
   @Override
   public boolean isFallback() {
     return fallback;
+  }
+
+  @Override
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
+    // TODO: implement URI template generation
+    throw new UnsupportedOperationException();
   }
 
   @Override
