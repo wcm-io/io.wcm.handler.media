@@ -117,7 +117,7 @@ public interface Asset extends Adaptable {
    * asset and the max. width/height of it's original rendition.
    * @param type URI template type
    * @return URI template
-   * @throws UnsupportedOperationException if the original rendition is not an image or a vector image.
+   * @throws UnsupportedOperationException if the original rendition is not an image or it is a vector image.
    */
   @NotNull
   UriTemplate getUriTemplate(@NotNull UriTemplateType type);
