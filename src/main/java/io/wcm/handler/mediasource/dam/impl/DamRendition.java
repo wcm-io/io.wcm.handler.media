@@ -284,8 +284,10 @@ class DamRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
-    // TODO: implement URI template generation
-    throw new UnsupportedOperationException();
+    if (this.rendition == null) {
+      throw new IllegalStateException("Rendition is not valid.");
+    }
+    return this.rendition.getUriTemplate(type, damContext, mediaArgs);
   }
 
   @Override

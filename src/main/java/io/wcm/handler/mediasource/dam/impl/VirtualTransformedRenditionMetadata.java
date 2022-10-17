@@ -30,8 +30,13 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 
 /**
@@ -120,6 +125,20 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   protected InputStream getInputStream() {
     // currently not supported for virtual renditions
     return null;
+  }
+
+  @Override
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type,
+      @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
+    if (!isImage() || isVectorImage()) {
+      throw new UnsupportedOperationException("Unable to build URI template for rendition: " + getRendition().getPath());
+    }
+    // TODO: apply the (probably smart) cropping parameters to both detection of max dimension and URI template
+    Dimension dimension = AssetRendition.getDimension(getRendition());
+    if (dimension == null) {
+      throw new IllegalArgumentException("Unable to get dimension for rendition: " + getRendition().getPath());
+    }
+    return new DamUriTemplate(type, dimension, damContext, mediaArgs);
   }
 
   @Override
