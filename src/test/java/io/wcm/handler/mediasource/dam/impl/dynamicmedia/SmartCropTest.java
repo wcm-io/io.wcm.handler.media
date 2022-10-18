@@ -129,9 +129,9 @@ class SmartCropTest {
   }
 
   private void setSmartCropRenditionNormalizedSize(double normalizedWith, double normalizedHeight) {
-    String renditionPath = asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER
+    String smartCropRenditionPath = asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER
         + "/" + dimension16_10.getName() + "/" + JCR_CONTENT;
-    context.create().resource(renditionPath,
+    context.create().resource(smartCropRenditionPath,
         PN_NORMALIZED_WIDTH, normalizedWith,
         PN_NORMALIZED_HEIGHT, normalizedHeight);
   }
