@@ -117,7 +117,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
       return null;
     }
     String url = null;
-    boolean dynamicMediaEnabled = damContext.isDynamicMediaEnabled() && !mediaArgs.isDynamicMediaDisabled();
+    boolean dynamicMediaEnabled = damContext.isDynamicMediaEnabled();
     if (dynamicMediaEnabled && damContext.isDynamicMediaAsset()) {
       // if DM is enabled: try to get rendition URL from dynamic media
       String dynamicMediaPath = this.rendition.getDynamicMediaPath(this.mediaArgs.isContentDispositionAttachment(), damContext);
