@@ -316,7 +316,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
         String thisPath = getRendition().getPath();
         String otherPath = obj.getRendition().getPath();
         if (!StringUtils.equals(thisPath, otherPath)) {
-          // same with/height - compare paths as last resort
+          // same width/height - compare paths as last resort
           return thisPath.compareTo(otherPath);
         }
         else {
