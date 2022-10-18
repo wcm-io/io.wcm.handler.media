@@ -333,7 +333,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    */
   private RenditionMetadata getVirtualRendition(final Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
 
-    // get from fixed with/height
+    // get from fixed width/height
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
       long destWidth = mediaArgs.getFixedWidth();
       long destHeight = mediaArgs.getFixedHeight();

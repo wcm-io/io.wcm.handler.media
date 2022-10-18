@@ -213,7 +213,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
   /**
    * Returns the ratio defined in the media format definition.
-   * If no ratio is defined an the media format has a fixed with/height it is calculated automatically.
+   * If no ratio is defined an the media format has a fixed width/height it is calculated automatically.
    * Otherwise 0 is returned.
    * @return Ratio
    */
@@ -505,7 +505,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
       List<String> extParts = new ArrayList<>();
 
-      // with/height restrictions
+      // width/height restrictions
       if (minWidthHeight != 0) {
         extParts.add("min. " + minWidthHeight + "px width/height");
       }
