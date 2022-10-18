@@ -40,13 +40,20 @@ import io.wcm.handler.mediasource.dam.AssetRendition;
 /**
  * Apply Dynamic Media Smart Cropping.
  */
-final class SmartCrop {
+public final class SmartCrop {
+
+  /**
+   * Normalized width (double value 0..1 as percentage of original image).
+   */
+  public static final String PN_NORMALIZED_WIDTH = "normalizedWidth";
+
+  /**
+   * Normalized height (double value 0..1 as percentage of original image).
+   */
+  public static final String PN_NORMALIZED_HEIGHT = "normalizedHeight";
 
   private static final double MIN_NORMALIZED_WIDTH_HEIGHT = 0.0001;
   private static final Logger log = LoggerFactory.getLogger(SmartCrop.class);
-
-  static final String PN_NORMALIZED_WIDTH = "normalizedWidth";
-  static final String PN_NORMALIZED_HEIGHT = "normalizedHeight";
 
   private SmartCrop() {
     // static methods only
