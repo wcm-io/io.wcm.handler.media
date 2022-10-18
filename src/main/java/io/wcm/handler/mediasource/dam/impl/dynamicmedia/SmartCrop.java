@@ -20,21 +20,22 @@
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
+import static com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.dam.api.DamConstants;
+import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.mediasource.dam.AssetRendition;
-import io.wcm.handler.mediasource.dam.impl.DamContext;
 
 /**
  * Apply Dynamic Media Smart Cropping.
@@ -43,6 +44,9 @@ final class SmartCrop {
 
   private static final double MIN_NORMALIZED_WIDTH_HEIGHT = 0.0001;
   private static final Logger log = LoggerFactory.getLogger(SmartCrop.class);
+
+  static final String PN_NORMALIZED_WIDTH = "normalizedWidth";
+  static final String PN_NORMALIZED_HEIGHT = "normalizedHeight";
 
   private SmartCrop() {
     // static methods only
@@ -61,13 +65,12 @@ final class SmartCrop {
 
   /**
    * Checks DM image profile for a smart cropping definition matching the ratio of the requested width/height.
-   * @param damContext DAM context
+   * @param imageProfile Image profile from DAM context (null if no is defined)
    * @param width Width
    * @param height Height
    * @return Smart cropping definition with requested with/height - or null if no match
    */
-  static @Nullable NamedDimension getDimension(@NotNull DamContext damContext, long width, long height) {
-    ImageProfile imageProfile = damContext.getImageProfile();
+  static @Nullable NamedDimension getDimension(@Nullable ImageProfile imageProfile, long width, long height) {
     if (imageProfile == null) {
       return null;
     }
@@ -87,21 +90,23 @@ final class SmartCrop {
   /**
    * Verifies that the actual image area picked in smart cropping (either automatic or manual) results in
    * a renditions size that fulfills at least the requested width/height.
-   * @param damContext DAM context
+   * @param asset DAM asset
+   * @param resourceResolver Resource resolve
    * @param smartCropDef Smart cropping dimension
    * @param width Requested with
    * @param height Requested height
    * @return true if size is matching, or no width/height information for the cropped area is available
    */
   @SuppressWarnings("java:S1075") // no filesystem paths
-  static boolean isMatchingSize(@NotNull DamContext damContext, @NotNull NamedDimension smartCropDef, long width, long height) {
+  static boolean isMatchingSize(@NotNull Asset asset, @NotNull ResourceResolver resourceResolver,
+      @NotNull NamedDimension smartCropDef, long width, long height) {
     // at this path smart cropping parameters may be stored for each ratio (esp. if manual cropping was applied)
-    String smartCropRenditionPath = damContext.getAsset().getPath()
+    String smartCropRenditionPath = asset.getPath()
         + "/" + JCR_CONTENT
-        + "/" + DamConstants.RENDITIONS_FOLDER
+        + "/" + RENDITIONS_FOLDER
         + "/" + smartCropDef.getName()
         + "/" + JCR_CONTENT;
-    Resource smartCropRendition = damContext.getResourceResolver().getResource(smartCropRenditionPath);
+    Resource smartCropRendition = resourceResolver.getResource(smartCropRenditionPath);
     if (smartCropRendition == null) {
       // if this rendition is not found in repository, we assume the size should be fine
       // on AEMaaCS this path should always exist, in AEMaaCS SDK it seems to be created only when manual cropping
@@ -109,21 +114,22 @@ final class SmartCrop {
       return true;
     }
     ValueMap props = smartCropRendition.getValueMap();
-    double normalizedWidth = props.get("normalizedWidth", 0d);
-    double normalizedHeight = props.get("normalizedHeight", 0d);
-    Dimension originalDimension = AssetRendition.getDimension(damContext.getAsset().getOriginal());
+    double normalizedWidth = props.get(PN_NORMALIZED_WIDTH, 0d);
+    double normalizedHeight = props.get(PN_NORMALIZED_HEIGHT, 0d);
+    Dimension originalDimension = AssetRendition.getDimension(asset.getOriginal());
     if (normalizedWidth < MIN_NORMALIZED_WIDTH_HEIGHT || normalizedHeight < MIN_NORMALIZED_WIDTH_HEIGHT
         || originalDimension == null) {
       // skip further validation if dimensions are not found
       return true;
     }
 
+    // check if smart cropping area is large enough
     long croppedWidth = Math.round(originalDimension.getWidth() * normalizedWidth);
     long croppedHeight = Math.round(originalDimension.getHeight() * normalizedHeight);
     boolean isMatchingSize = (croppedWidth >= width || croppedHeight >= height);
     if (!isMatchingSize) {
       log.debug("Smart cropping area '{}' for asset {} is too small ({} x {}) for requested size {} x {}.",
-          smartCropDef.getName(), damContext.getAsset().getPath(), croppedWidth, croppedHeight, width, height);
+          smartCropDef.getName(), asset.getPath(), croppedWidth, croppedHeight, width, height);
     }
     return isMatchingSize;
   }
