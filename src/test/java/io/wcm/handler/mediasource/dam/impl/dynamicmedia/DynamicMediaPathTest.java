@@ -35,6 +35,7 @@ import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.DamContext;
@@ -67,7 +68,7 @@ class DynamicMediaPathTest {
 
     Asset asset = context.create().asset(assetFolder.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test");
-    damContext = new DamContext(asset, null, mediaHandlerConfig,
+    damContext = new DamContext(asset, new MediaArgs(), mediaHandlerConfig,
         dynamicMediaSupportService, context.request());
   }
 
@@ -147,7 +148,7 @@ class DynamicMediaPathTest {
   void testBuildImage_SpecialChars() {
     Asset assetSpecialChars = context.create().asset(assetFolder.getPath() + "/test with spaces äöüß€.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test with spaces äöüß€");
-    damContext = new DamContext(assetSpecialChars, null, mediaHandlerConfig,
+    damContext = new DamContext(assetSpecialChars, new MediaArgs(), mediaHandlerConfig,
         dynamicMediaSupportService, context.request());
 
     String result = DynamicMediaPath.buildContent(damContext, false);

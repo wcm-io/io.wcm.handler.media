@@ -52,7 +52,7 @@ class DamUriTemplate implements UriTemplate {
   private static String buildUriTemplate(@NotNull UriTemplateType type, @NotNull DamContext damContext,
       @NotNull MediaArgs mediaArgs) {
     String url = null;
-    if (!mediaArgs.isDynamicMediaDisabled() && damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
       // if DM is enabled: try to get rendition URL from dynamic media
       String productionAssetUrl = damContext.getDynamicMediaServerUrl();
       if (productionAssetUrl != null) {
