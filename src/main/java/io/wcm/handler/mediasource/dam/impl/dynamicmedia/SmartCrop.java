@@ -75,7 +75,7 @@ public final class SmartCrop {
    * @param imageProfile Image profile from DAM context (null if no is defined)
    * @param width Width
    * @param height Height
-   * @return Smart cropping definition with requested with/height - or null if no match
+   * @return Smart cropping definition with requested width/height - or null if no match
    */
   static @Nullable NamedDimension getDimension(@Nullable ImageProfile imageProfile, long width, long height) {
     if (imageProfile == null) {
@@ -96,11 +96,11 @@ public final class SmartCrop {
 
   /**
    * Verifies that the actual image area picked in smart cropping (either automatic or manual) results in
-   * a renditions size that fulfills at least the requested width/height.
+   * a rendition size that fulfills at least the requested width/height.
    * @param asset DAM asset
    * @param resourceResolver Resource resolve
    * @param smartCropDef Smart cropping dimension
-   * @param width Requested with
+   * @param width Requested width
    * @param height Requested height
    * @return true if size is matching, or no width/height information for the cropped area is available
    */
