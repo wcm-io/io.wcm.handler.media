@@ -36,9 +36,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Executes the same "end-to-end" as {@link MediaHandlerImplImageFileTypesEnd2EndTest}, but
- * with rendering via dynamic media. As for some cases that are not suited for dynamic media
- * standard media handling delivery is used, this method overrides only the test cases where
- * scene7 is actually used.
+ * with rendering via dynamic media. The fallback to AEM-rendered renditions is disabled.
  */
 @ExtendWith(AemContextExtension.class)
 class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaNoFallbackTest extends MediaHandlerImplImageFileTypesEnd2EndTest {

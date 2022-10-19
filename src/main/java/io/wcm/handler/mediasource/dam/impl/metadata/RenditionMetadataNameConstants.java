@@ -30,7 +30,7 @@ public final class RenditionMetadataNameConstants {
   public static final String NN_RENDITIONS_METADATA = "renditionsMetadata";
 
   /**
-   * Property for image with in pixels
+   * Property for image width in pixels
    */
   public static final String PN_IMAGE_WIDTH = "imageWidth";
 

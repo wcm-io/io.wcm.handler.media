@@ -94,7 +94,7 @@ public final class AssetRendition {
    * </p>
    * @param rendition Rendition
    * @param suppressLogWarningNoRenditionsMetadata If set to true, no log warnings is generated when
-   *          renditions metadata containing the with/height of the rendition does not exist (yet).
+   *          renditions metadata containing the width/height of the rendition does not exist (yet).
    * @return Dimension or null if dimension could not be detected, not even in fallback mode
    */
   public static @Nullable Dimension getDimension(@NotNull Rendition rendition,
@@ -172,7 +172,7 @@ public final class AssetRendition {
    * Fallback: Read dimension by loading image binary into memory.
    * @param rendition Rendition
    * @param suppressLogWarningNoRenditionsMetadata If set to true, no log warnings is generated when
-   *          renditions metadata containing the with/height of the rendition does not exist (yet).
+   *          renditions metadata containing the width/height of the rendition does not exist (yet).
    * @return Dimension or null
    */
   @SuppressWarnings("PMD.GuardLogStatement")
@@ -202,7 +202,7 @@ public final class AssetRendition {
   }
 
   /**
-   * Convert with/height to dimension
+   * Convert width/height to dimension
    * @param width Width
    * @param height Height
    * @return Dimension or null if width or height are not valid
