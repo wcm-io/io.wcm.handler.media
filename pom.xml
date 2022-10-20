@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>1.14.12</version>
+  <version>1.14.14</version>
   <packaging>jar</packaging>
 
   <name>Media Handler</name>
@@ -49,7 +49,7 @@
     <site.url.module.prefix>handler/media</site.url.module.prefix>
 
     <!-- Enable reproducible builds -->
-    <project.build.outputTimestamp>2022-10-10T08:22:12Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2022-10-20T15:25:23Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -131,7 +131,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
-      <version>5.0.0</version>
+      <version>5.1.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -161,7 +161,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.wcm-io-mock.caconfig</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

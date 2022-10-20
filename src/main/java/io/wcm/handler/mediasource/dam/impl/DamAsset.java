@@ -70,7 +70,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
     this.cropDimension = media.getCropDimension();
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
-    this.damContext = new DamContext(damAsset, defaultMediaArgs.getUrlMode(), mediaHandlerConfig,
+    this.damContext = new DamContext(damAsset, defaultMediaArgs, mediaHandlerConfig,
         dynamicMediaSupportService, adaptable);
   }
 

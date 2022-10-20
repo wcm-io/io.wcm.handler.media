@@ -20,10 +20,14 @@
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
+import static com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER;
 import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.CROP_TYPE_SMART;
 import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_BANNER;
 import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_CROP_TYPE;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_NORMALIZED_HEIGHT;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_NORMALIZED_WIDTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +39,7 @@ import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.DamContext;
@@ -52,6 +57,7 @@ class DynamicMediaPathTest {
   private MediaHandlerConfig mediaHandlerConfig;
   private DynamicMediaSupportService dynamicMediaSupportService;
   private Resource assetFolder;
+  private Asset asset;
 
   @BeforeEach
   void setUp() {
@@ -65,9 +71,9 @@ class DynamicMediaPathTest {
     assetFolder = context.create().resource("/content/dam/folder1");
     context.create().resource(assetFolder, JCR_CONTENT, DamConstants.IMAGE_PROFILE, profile1.getPath());
 
-    Asset asset = context.create().asset(assetFolder.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
+    asset = context.create().asset(assetFolder.getPath() + "/test.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test");
-    damContext = new DamContext(asset, null, mediaHandlerConfig,
+    damContext = new DamContext(asset, new MediaArgs(), mediaHandlerConfig,
         dynamicMediaSupportService, context.request());
   }
 
@@ -81,6 +87,17 @@ class DynamicMediaPathTest {
   void testWidthHeight_ImplicitSmartCrop() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20);
     assertEquals("/is/image/DummyFolder/test%3ACrop-1?wid=30&hei=20&fit=stretch", result);
+  }
+
+  @Test
+  void testWidthHeight_ImplicitSmartCrop_CroppingAreaTooSmall() {
+    String smartCropRenditionPath = asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER
+        + "/Crop-1/" + JCR_CONTENT;
+    context.create().resource(smartCropRenditionPath,
+        PN_NORMALIZED_WIDTH, 0.5d,
+        PN_NORMALIZED_HEIGHT, 0.5666d);
+
+    assertNull(DynamicMediaPath.buildImage(damContext, 30, 20));
   }
 
   @Test
@@ -147,7 +164,7 @@ class DynamicMediaPathTest {
   void testBuildImage_SpecialChars() {
     Asset assetSpecialChars = context.create().asset(assetFolder.getPath() + "/test with spaces äöüß€.jpg", 50, 30, ContentType.JPEG,
         Scene7Constants.PN_S7_FILE, "DummyFolder/test with spaces äöüß€");
-    damContext = new DamContext(assetSpecialChars, null, mediaHandlerConfig,
+    damContext = new DamContext(assetSpecialChars, new MediaArgs(), mediaHandlerConfig,
         dynamicMediaSupportService, context.request());
 
     String result = DynamicMediaPath.buildContent(damContext, false);

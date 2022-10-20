@@ -80,7 +80,7 @@ public final class DummyImageServlet extends AbstractImageServlet {
     int height = parser.get(SUFFIX_HEIGHT, 0);
     String name = parser.get(SUFFIX_MEDIA_FORMAT_NAME, String.class);
 
-    // validate with/height
+    // validate width/height
     if (width < 1 || height < 1) {
       return new Layer(1, 1, null);
     }
