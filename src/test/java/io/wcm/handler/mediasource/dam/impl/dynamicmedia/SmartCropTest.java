@@ -156,13 +156,13 @@ class SmartCropTest {
     assertEquals(expectedHeight, namedDimension.getHeight());
   }
 
-  private void prepareSmartCropRendition(double left, double top, double normalizedWith, double normalizedHeight) {
+  private void prepareSmartCropRendition(double left, double top, double normalizedWidth, double normalizedHeight) {
     String smartCropRenditionPath = asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER
         + "/" + dimension16_10.getName() + "/" + JCR_CONTENT;
     context.create().resource(smartCropRenditionPath,
         PN_LEFT, left,
         PN_TOP, top,
-        PN_NORMALIZED_WIDTH, normalizedWith,
+        PN_NORMALIZED_WIDTH, normalizedWidth,
         PN_NORMALIZED_HEIGHT, normalizedHeight);
   }
 
