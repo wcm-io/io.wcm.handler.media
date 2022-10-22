@@ -246,10 +246,10 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
       // calculate missing width/height from ratio if not specified
       if (requestedWidth == 0 && requestedHeight > 0) {
-        requestedWidth = (int)Math.round(requestedHeight * imageRatio);
+        requestedWidth = Math.round(requestedHeight * imageRatio);
       }
       else if (requestedWidth > 0 && requestedHeight == 0) {
-        requestedHeight = (int)Math.round(requestedWidth / imageRatio);
+        requestedHeight = Math.round(requestedWidth / imageRatio);
       }
 
       // calculate requested ratio
