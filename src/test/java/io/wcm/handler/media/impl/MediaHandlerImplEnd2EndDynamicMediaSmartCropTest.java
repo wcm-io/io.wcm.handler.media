@@ -90,7 +90,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
   }
 
   @Test
-  void testValidSmartCroppedRendition() {
+  void testValidSmartCroppedRenditionAndWidths() {
     Media media = getMediaWithWidths(80, 40);
     assertTrue(media.isValid());
 
@@ -114,9 +114,26 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
   }
 
+  @Test
+  void testValidSmartCroppedRenditionOnlyRatio() {
+    Media media = getMediaWithRatio();
+    assertTrue(media.isValid());
+
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    assertEquals(1, renditions.size());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(0).getUrl());
+  }
+
   private Media getMediaWithWidths(long... widths) {
     return mediaHandler.get(asset.getPath())
         .pictureSource(new PictureSource(DummyMediaFormats.RATIO2).widths(widths))
+        .autoCrop(true)
+        .build();
+  }
+
+  private Media getMediaWithRatio() {
+    return mediaHandler.get(asset.getPath())
+        .mediaFormat(DummyMediaFormats.RATIO2)
         .autoCrop(true)
         .build();
   }
