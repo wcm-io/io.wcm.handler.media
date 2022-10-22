@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.14.16" date="not released">
+    <release version="1.14.16" date="2022-10-22">
       <action type="update" dev="sseifert">
         DAM Media Source: Use cropping dimension based on original rendition internally. Re-calculate webenabled rendition-based cropping coordinates when loading them from repository before starting the media processing, and not only when doing the actual cropping.
       </action>
