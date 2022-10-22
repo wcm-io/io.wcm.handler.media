@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.format.Ratio;
 
 /**
  * Extended rendition handler supporting cropping and rotating of images.
@@ -102,36 +101,10 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
     if (original == null || original.isVectorImage()) {
       return null;
     }
-    Double scaleFactor = getCropScaleFactor(original);
-    long scaledLeft = Math.round(cropDimension.getLeft() * scaleFactor);
-    long scaledTop = Math.round(cropDimension.getTop() * scaleFactor);
-    long scaledWidth = Math.round(cropDimension.getWidth() * scaleFactor);
-    if (scaledWidth > original.getWidth()) {
-      scaledWidth = original.getWidth();
-    }
-    long scaledHeight = Math.round(cropDimension.getHeight() * scaleFactor);
-    if (scaledHeight > original.getHeight()) {
-      scaledHeight = original.getHeight();
-    }
-    CropDimension scaledCropDimension = new CropDimension(scaledLeft, scaledTop, scaledWidth, scaledHeight,
-        cropDimension.isAutoCrop());
     return new VirtualTransformedRenditionMetadata(original.getRendition(),
-        rotateMapWidth(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),
-        rotateMapHeight(scaledCropDimension.getWidth(), scaledCropDimension.getHeight(), rotation),
-        mediaArgs.getEnforceOutputFileExtension(), scaledCropDimension, rotation);
-  }
-
-  /**
-   * The cropping coordinates are stored with coordinates relating to the web-enabled rendition. But we want
-   * to crop the original image, so we have to scale those values to match the coordinates in the original image.
-   * @return Scale factor
-   */
-  private double getCropScaleFactor(RenditionMetadata original) {
-    RenditionMetadata webEnabled = DamAutoCropping.getWebRenditionForCropping(getAsset());
-    if (original == null || webEnabled == null || original.getWidth() == 0 || webEnabled.getWidth() == 0) {
-      return 1d;
-    }
-    return Ratio.get(original.getWidth(), webEnabled.getWidth());
+        rotateMapWidth(cropDimension.getWidth(), cropDimension.getHeight(), rotation),
+        rotateMapHeight(cropDimension.getWidth(), cropDimension.getHeight(), rotation),
+        mediaArgs.getEnforceOutputFileExtension(), cropDimension, rotation);
   }
 
 }
