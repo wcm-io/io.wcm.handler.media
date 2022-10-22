@@ -74,7 +74,7 @@ class TransformedRenditionHandlerTest {
     // generate web-enabled rendition
     webRendition = context.create().assetRenditionWebEnabled(asset, 200, 150);
 
-    cropDimension = new CropDimension(20, 10, 100, 30);
+    cropDimension = new CropDimension(40, 20, 200, 60);
   }
 
   @Test
@@ -95,7 +95,7 @@ class TransformedRenditionHandlerTest {
     TransformedRenditionHandler underTest = new TransformedRenditionHandler(cropDimension, null, damContext);
     assertEquals(1, underTest.getAvailableRenditions(new MediaArgs()).size());
     RenditionMetadata firstRendition = underTest.getAvailableRenditions(new MediaArgs()).iterator().next();
-    assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.100.30.20,10,120,40.file/cropTest.jpg",
+    assertEquals("/content/dam/cropTest.jpg/jcr:content/renditions/original.image_file.200.60.40,20,240,80.file/cropTest.jpg",
         firstRendition.getMediaPath(false));
   }
 

@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2019 wcm.io
+ * Copyright (C) 2022 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,37 +21,47 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import static com.day.cq.dam.api.DamConstants.PREFIX_ASSET_WEB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.Rendition;
 
+import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
-class DamAutoCroppingTest {
+class WebEnabledRenditionCroppingTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
   @Test
-  @SuppressWarnings("null")
-  void testGetWebRenditionForCropping() {
+  void testGetCropDimensionForOriginal() {
     Asset asset = context.create().asset("/content/dam/asset1.jpg", 160, 90, "image/jpeg");
-    Rendition webRendition = context.create().assetRendition(asset, PREFIX_ASSET_WEB + ".80.45.jpg", 80, 45, "image/jpeg");
+    context.create().assetRendition(asset, PREFIX_ASSET_WEB + ".80.45.jpg", 80, 45, "image/jpeg");
 
-    RenditionMetadata result = DamAutoCropping.getWebRenditionForCropping(asset);
-    assertEquals(webRendition.getPath(), result.getRendition().getPath());
+    CropDimension result = WebEnabledRenditionCropping.getCropDimensionForOriginal(asset,
+        new CropDimension(10, 15, 20, 30));
+
+    assertEquals(20, result.getLeft());
+    assertEquals(30, result.getTop());
+    assertEquals(40, result.getWidth());
+    assertEquals(60, result.getHeight());
   }
 
   @Test
-  void testGetWebRenditionNotExisting() {
-    Asset assetWithoutRenditions = context.create().asset("/content/dam/asset2.jpg", 160, 90, "image/jpeg");
-    assertNull(DamAutoCropping.getWebRenditionForCropping(assetWithoutRenditions));
+  void testGetCropDimensionForOriginal_WebEnabledRenditionDoesNotExist() {
+    Asset asset = context.create().asset("/content/dam/asset2.jpg", 160, 90, "image/jpeg");
+
+    CropDimension result = WebEnabledRenditionCropping.getCropDimensionForOriginal(asset,
+        new CropDimension(10, 15, 20, 30));
+
+    assertEquals(10, result.getLeft());
+    assertEquals(15, result.getTop());
+    assertEquals(20, result.getWidth());
+    assertEquals(30, result.getHeight());
   }
 
 }

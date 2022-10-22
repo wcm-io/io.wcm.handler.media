@@ -27,7 +27,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Asset;
 
@@ -35,7 +34,6 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.impl.ImageTransformation;
-import io.wcm.handler.mediasource.dam.AssetRendition;
 
 /**
  * Helper class for calculating crop dimensions for auto-cropping.
@@ -62,28 +60,12 @@ class DamAutoCropping {
   private CropDimension calculateAutoCropDimension(@NotNull MediaFormat mediaFormat) {
     double ratio = mediaFormat.getRatio();
     if (ratio > 0) {
-      RenditionMetadata rendition = DamAutoCropping.getWebRenditionForCropping(asset);
-      if (rendition != null && rendition.getWidth() > 0 && rendition.getHeight() > 0) {
+      RenditionMetadata rendition = new RenditionMetadata(asset.getOriginal());
+      if (rendition.getWidth() > 0 && rendition.getHeight() > 0) {
         return ImageTransformation.calculateAutoCropDimension(rendition.getWidth(), rendition.getHeight(), ratio);
       }
     }
     return null;
-  }
-
-  /**
-   * Get web first rendition for asset.
-   * This is the same logic as implemented in
-   * <code>/libs/cq/gui/components/authoring/editors/clientlibs/core/inlineediting/js/ImageEditor.js</code>.
-   * @param asset Asset
-   * @return Web rendition or null if none found
-   */
-  @SuppressWarnings("null")
-  public static @Nullable RenditionMetadata getWebRenditionForCropping(@NotNull Asset asset) {
-    return asset.getRenditions().stream()
-        .filter(AssetRendition::isWebRendition)
-        .findFirst()
-        .map(rendition -> new RenditionMetadata(rendition))
-        .orElse(null);
   }
 
 }
