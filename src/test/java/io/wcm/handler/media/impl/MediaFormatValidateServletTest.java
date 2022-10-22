@@ -74,8 +74,8 @@ class MediaFormatValidateServletTest {
   @SuppressWarnings("null")
   void testValid() throws Exception {
     Asset asset = context.create().asset("/content/dam/sample.jpg",
-        (int)EDITORIAL_1COL.getWidth(),
-        (int)EDITORIAL_1COL.getHeight(),
+        EDITORIAL_1COL.getWidth(),
+        EDITORIAL_1COL.getHeight(),
         ContentType.JPEG);
 
     context.request().setParameterMap(ImmutableMap.of(
@@ -89,8 +89,8 @@ class MediaFormatValidateServletTest {
   @Test
   void testValid_MultipleFormats() throws Exception {
     Asset asset = context.create().asset("/content/dam/sample.jpg",
-        (int)EDITORIAL_1COL.getWidth(),
-        (int)EDITORIAL_1COL.getHeight(),
+        EDITORIAL_1COL.getWidth(),
+        EDITORIAL_1COL.getHeight(),
         ContentType.JPEG);
 
     context.request().setParameterMap(ImmutableMap.of(
@@ -108,8 +108,8 @@ class MediaFormatValidateServletTest {
   @SuppressWarnings("null")
   void testValid_MultipleFormats_Optional() throws Exception {
     Asset asset = context.create().asset("/content/dam/sample.jpg",
-        (int)EDITORIAL_1COL.getWidth(),
-        (int)EDITORIAL_1COL.getHeight(),
+        EDITORIAL_1COL.getWidth(),
+        EDITORIAL_1COL.getHeight(),
         ContentType.JPEG);
 
     context.request().setParameterMap(ImmutableMap.of(
@@ -150,8 +150,8 @@ class MediaFormatValidateServletTest {
     }, Constants.SERVICE_RANKING, 1000);
 
     Asset asset = context.create().asset("/content/dam/sample.jpg",
-        (int)EDITORIAL_1COL.getWidth(),
-        (int)EDITORIAL_1COL.getHeight(),
+        EDITORIAL_1COL.getWidth(),
+        EDITORIAL_1COL.getHeight(),
         ContentType.JPEG);
 
     context.request().setParameterMap(ImmutableMap.of(

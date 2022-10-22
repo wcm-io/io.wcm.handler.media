@@ -67,11 +67,26 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   public DamAsset(Media media, com.day.cq.dam.api.Asset damAsset, MediaHandlerConfig mediaHandlerConfig,
       DynamicMediaSupportService dynamicMediaSupportService, Adaptable adaptable) {
     this.damAsset = damAsset;
-    this.cropDimension = media.getCropDimension();
+    this.cropDimension = rescaleCropDimension(damAsset, media.getCropDimension());
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
     this.damContext = new DamContext(damAsset, defaultMediaArgs, mediaHandlerConfig,
         dynamicMediaSupportService, adaptable);
+  }
+
+  /**
+   * Crop dimension stored in repository is always calucated against the web-enabled rendition of an asset.
+   * Rescale the crop-dimension here once to calculate it against the original image, which will be used for the actual
+   * cropping.
+   * @param asset Asset
+   * @param cropDimension Crop dimension from repository/input parameters
+   * @return Rescaled crop dimension
+   */
+  private static @Nullable CropDimension rescaleCropDimension(@NotNull com.day.cq.dam.api.Asset asset, @Nullable CropDimension cropDimension) {
+    if (cropDimension == null) {
+      return null;
+    }
+    return WebEnabledRenditionCropping.getCropDimensionForOriginal(asset, cropDimension);
   }
 
   @Override

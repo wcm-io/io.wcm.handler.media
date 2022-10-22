@@ -62,7 +62,7 @@ class ResourceMediaTest {
   @BeforeEach
   void setUp() {
     asset = context.create().asset("/content/dam/asset1.jpg",
-        (int)EDITORIAL_2COL.getWidth(), (int)EDITORIAL_2COL.getHeight(), ContentType.JPEG);
+        EDITORIAL_2COL.getWidth(), EDITORIAL_2COL.getHeight(), ContentType.JPEG);
 
     Resource resource = context.create().resource(ROOTPATH_CONTENT + "/jcr:content/media",
         PROPERTY_RESOURCE_TYPE, "/dummy/resourcetype",

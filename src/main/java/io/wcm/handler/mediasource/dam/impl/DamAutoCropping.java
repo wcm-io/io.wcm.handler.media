@@ -29,27 +29,32 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.day.cq.dam.api.Asset;
-
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.mediasource.dam.AssetRendition;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop;
 
 /**
  * Helper class for calculating crop dimensions for auto-cropping.
  */
 class DamAutoCropping {
 
-  private final Asset asset;
+  private final DamContext damContext;
   private final MediaArgs mediaArgs;
 
-  DamAutoCropping(@NotNull Asset asset, @NotNull MediaArgs mediaArgs) {
-    this.asset = asset;
+  DamAutoCropping(@NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
+    this.damContext = damContext;
     this.mediaArgs = mediaArgs;
   }
 
+  /**
+   * Get possible cropping dimension for all given media formats.
+   * @return List of matching cropping definitions
+   */
   public List<CropDimension> calculateAutoCropDimensions() {
     Stream<MediaFormat> mediaFormats = Arrays.stream(
         ObjectUtils.defaultIfNull(mediaArgs.getMediaFormats(), new MediaFormat[0]));
@@ -59,31 +64,44 @@ class DamAutoCropping {
         .collect(Collectors.toList());
   }
 
-  private CropDimension calculateAutoCropDimension(@NotNull MediaFormat mediaFormat) {
+  /**
+   * Get or calculate cropping dimension for given media format (if it has an actual ratio defined).
+   * @param mediaFormat Media format
+   * @return Cropping dimension or null if not found
+   */
+  private @Nullable CropDimension calculateAutoCropDimension(@NotNull MediaFormat mediaFormat) {
+    CropDimension result = null;
+
     double ratio = mediaFormat.getRatio();
     if (ratio > 0) {
-      RenditionMetadata rendition = DamAutoCropping.getWebRenditionForCropping(asset);
-      if (rendition != null && rendition.getWidth() > 0 && rendition.getHeight() > 0) {
-        return ImageTransformation.calculateAutoCropDimension(rendition.getWidth(), rendition.getHeight(), ratio);
+      // first check is DM is enabled, and a fitting smart crop rendition for this aspect ratio is defined
+      result = getDynamicMediaCropDimension(ratio);
+
+      // otherwise calculate auto-cropping dimension based on original image
+      if (result == null) {
+        Dimension dimension = AssetRendition.getDimension(damContext.getAsset().getOriginal());
+        if (dimension != null && dimension.getWidth() > 0 && dimension.getHeight() > 0) {
+          result = ImageTransformation.calculateAutoCropDimension(dimension.getWidth(), dimension.getHeight(), ratio);
+        }
       }
     }
-    return null;
+
+    return result;
   }
 
   /**
-   * Get web first rendition for asset.
-   * This is the same logic as implemented in
-   * <code>/libs/cq/gui/components/authoring/editors/clientlibs/core/inlineediting/js/ImageEditor.js</code>.
-   * @param asset Asset
-   * @return Web rendition or null if none found
+   * Try to get actual smart crop dimension for the requested ratio for the current asset to be used for auto-cropping.
+   * @param requestedRatio Requested ratio
+   * @return Cropping dimension or null if not found
    */
-  @SuppressWarnings("null")
-  public static @Nullable RenditionMetadata getWebRenditionForCropping(@NotNull Asset asset) {
-    return asset.getRenditions().stream()
-        .filter(AssetRendition::isWebRendition)
-        .findFirst()
-        .map(rendition -> new RenditionMetadata(rendition))
-        .orElse(null);
+  private @Nullable CropDimension getDynamicMediaCropDimension(double requestedRatio) {
+    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+      NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), requestedRatio);
+      if (smartCropDef != null) {
+        return SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
+      }
+    }
+    return null;
   }
 
 }

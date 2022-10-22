@@ -149,8 +149,8 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
 
     Video video = new Video();
-    video.setWidth((int)dimension.getWidth());
-    video.setHeight((int)dimension.getHeight());
+    video.setWidth(dimension.getWidth());
+    video.setHeight(dimension.getHeight());
     video.setControls(true);
 
     // add video sources for each video profile
