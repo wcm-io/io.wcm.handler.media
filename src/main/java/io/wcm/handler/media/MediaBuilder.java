@@ -27,6 +27,7 @@ import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
+import io.wcm.handler.media.MediaRequest.MediaInclude;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.url.UrlMode;
@@ -373,6 +374,15 @@ public interface MediaBuilder {
    */
   @NotNull
   MediaBuilder mapProperty(@NotNull String mapProperty);
+
+  /**
+   * Include renditions from other media builder e.g. containing additional manual croppings
+   * which should be included in the resolution process.
+   * @param include Defines media format and media builder to include in resolution process.
+   * @return Media builder
+   */
+  @NotNull
+  MediaBuilder include(@NotNull MediaInclude include);
 
   /**
    * Resolve media and return metadata objects that contains all results.

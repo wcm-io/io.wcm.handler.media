@@ -38,6 +38,7 @@ import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.MediaComponentPropertyResolver;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.MediaRequest.MediaInclude;
 import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
@@ -57,6 +58,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private MediaArgs mediaArgs = new MediaArgs();
   private MediaPropertyNames mediaPropertyNames = new MediaPropertyNames();
   private List<PictureSource> pictureSourceSets = new ArrayList<>();
+  private List<MediaInclude> includes;
 
   private static final Logger log = LoggerFactory.getLogger(MediaBuilderImpl.class);
 
@@ -356,6 +358,15 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder include(@NotNull MediaInclude include) {
+    if (includes == null) {
+      this.includes = new ArrayList<>();
+    }
+    this.includes.add(include);
+    return this;
+  }
+
+  @Override
   public @NotNull Media build() {
     if (!pictureSourceSets.isEmpty()) {
       this.mediaArgs.pictureSources(pictureSourceSets.toArray(new PictureSource[pictureSourceSets.size()]));
@@ -363,7 +374,8 @@ final class MediaBuilderImpl implements MediaBuilder {
     if (this.mediaArgs.getImageSizes() != null && this.mediaArgs.getPictureSources() != null) {
       throw new IllegalArgumentException("Image sizes must not be used together with pictures source sets.");
     }
-    MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs, this.mediaPropertyNames);
+    MediaRequest request = new MediaRequest(this.resource, this.mediaRef, this.mediaArgs,
+        this.mediaPropertyNames, this.includes);
     return mediaHandler.processRequest(request);
   }
 
