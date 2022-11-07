@@ -118,6 +118,30 @@ class SmartCropTest {
   }
 
   @Test
+  void testGetCropDimensionForAsset_WidthDeviation() {
+    prepareSmartCropRendition(0.1, 0.2, 0.75, 0.5); // results in 120x50 cropping area, treated as 80x50
+    CropDimension cropDimension = getCropDimensionForAsset(asset, context.resourceResolver(), dimension16_10);
+
+    assertNotNull(cropDimension);
+    assertEquals(16, cropDimension.getLeft());
+    assertEquals(20, cropDimension.getTop());
+    assertEquals(80, cropDimension.getWidth());
+    assertEquals(50, cropDimension.getHeight());
+  }
+
+  @Test
+  void testGetCropDimensionForAsset_HeightDeviation() {
+    prepareSmartCropRendition(0.1, 0.2, 0.5, 0.75); // results in 80x75 cropping area, treated as 80x50
+    CropDimension cropDimension = getCropDimensionForAsset(asset, context.resourceResolver(), dimension16_10);
+
+    assertNotNull(cropDimension);
+    assertEquals(16, cropDimension.getLeft());
+    assertEquals(20, cropDimension.getTop());
+    assertEquals(80, cropDimension.getWidth());
+    assertEquals(50, cropDimension.getHeight());
+  }
+
+  @Test
   void testIsMatchingSize_NoRenditionResource() {
     // assume everything is ok if no "16-10" rendition exists (we have no other chance)
     assertTrue(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 80, 50));
@@ -138,6 +162,42 @@ class SmartCropTest {
   @Test
   void testIsMatchingSize_TooSmall() {
     prepareSmartCropRendition(0, 0, 0.5, 0.5); // results in 80x50 cropping area
+    assertFalse(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 120, 75));
+  }
+
+  @Test
+  void testIsMatchingSize_MatchesExact_WidthDeviation() {
+    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 120x50 cropping area, treated as 80x50
+    assertTrue(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 80, 50));
+  }
+
+  @Test
+  void testIsMatchingSize_MatchesSmaller_WidthDeviation() {
+    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 120x50 cropping area, treated as 80x50
+    assertTrue(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 40, 25));
+  }
+
+  @Test
+  void testIsMatchingSize_TooSmall_WidthDeviation() {
+    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 120x50 cropping area, treated as 80x50
+    assertFalse(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 120, 75));
+  }
+
+  @Test
+  void testIsMatchingSize_MatchesExact_HeightDeviation() {
+    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 80x75 cropping area, treated as 80x50
+    assertTrue(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 80, 50));
+  }
+
+  @Test
+  void testIsMatchingSize_MatchesSmaller_HeightDeviation() {
+    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 80x75 cropping area, treated as 80x50
+    assertTrue(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 40, 25));
+  }
+
+  @Test
+  void testIsMatchingSize_TooSmall_HeightDeviation() {
+    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 80x75 cropping area, treated as 80x50
     assertFalse(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 120, 75));
   }
 
