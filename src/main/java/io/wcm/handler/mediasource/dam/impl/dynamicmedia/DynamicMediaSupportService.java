@@ -52,6 +52,12 @@ public interface DynamicMediaSupportService {
   boolean isAemFallbackDisabled();
 
   /**
+   * @return Whether to validate that the renditions defined via smart cropping fulfill the requested image width/height
+   *         to avoid upscaling or white borders.
+   */
+  boolean isValidateSmartCropRenditionSizes();
+
+  /**
    * @return Reply image size limit as configured in dynamic media.
    */
   @NotNull

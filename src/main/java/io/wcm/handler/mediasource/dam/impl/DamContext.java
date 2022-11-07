@@ -141,6 +141,14 @@ public final class DamContext implements Adaptable {
   }
 
   /**
+   * @return Whether to validate that the renditions defined via smart cropping fulfill the requested image width/height
+   *         to avoid upscaling or white borders.
+   */
+  public boolean isDynamicMediaValidateSmartCropRenditionSizes() {
+    return dynamicMediaSupportService.isValidateSmartCropRenditionSizes();
+  }
+
+  /**
    * @return Dynamic media reply image size limit
    */
   public @NotNull Dimension getDynamicMediaImageSizeLimit() {
