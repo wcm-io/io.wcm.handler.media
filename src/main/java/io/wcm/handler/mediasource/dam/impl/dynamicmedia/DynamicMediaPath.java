@@ -118,7 +118,8 @@ public final class DynamicMediaPath {
       // check for matching image profile and use predefined cropping preset if match found
       NamedDimension smartCropDef = SmartCrop.getDimensionForWidthHeight(damContext.getImageProfile(), width, height);
       if (smartCropDef != null) {
-        if (!SmartCrop.isMatchingSize(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef, width, height)) {
+        if (damContext.isDynamicMediaValidateSmartCropRenditionSizes()
+            && !SmartCrop.isMatchingSize(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef, width, height)) {
           // smart crop should be applied, but selected area is too small, treat as invalid
           logResult(damContext, "<too small for " + width + "x" + height + ">");
           return null;
