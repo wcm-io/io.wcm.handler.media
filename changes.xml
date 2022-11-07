@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Dynamic Media Support: Make Smart Crop rendition validation configurable (default: enabled).
       </action>
+      <action type="fix" dev="sseifert">
+        Dynamic Media Support: Apply fail-safe approach when normalized width/height provided by Dynamic Media for smart cropping are not matching the defined aspect ratio.
+      </action>
     </release>
 
     <release version="1.14.16" date="2022-10-22">

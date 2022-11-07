@@ -160,6 +160,21 @@ public final class SmartCrop {
     long top = Math.round(originalHeight * topPercentage);
     long width = Math.round(originalWidth * widthPercentage);
     long height = Math.round(originalHeight * heightPercentage);
+
+    // it may happen that DM provides inconsistent normalizedWidth/normalizedHeight values which results
+    // in renditions not matching the ratio of the cropping definition. In that case use only the one from the
+    // the two which results in the smaller rendition and calculate the missing value from the other
+    double expectedRatio = Ratio.get(smartCropDef.getWidth(), smartCropDef.getHeight());
+    double actualRatio = Ratio.get(width, height);
+    if (!Ratio.matches(expectedRatio, actualRatio)) {
+      if (actualRatio > expectedRatio) {
+        width = Math.round(height * expectedRatio);
+      }
+      else {
+        height = Math.round(width / expectedRatio);
+      }
+    }
+
     return new CropDimension(left, top, width, height, true);
   }
 
@@ -177,7 +192,7 @@ public final class SmartCrop {
       @NotNull NamedDimension smartCropDef, long width, long height) {
     CropDimension cropDimension = getCropDimensionForAsset(asset, resourceResolver, smartCropDef);
     if (cropDimension == null) {
-      // no smart cropping rendition is not found in repository or it contains invalid values,
+      // smart cropping rendition is not found in repository or it contains invalid values,
       // we assume the size should be fine and skip further checking
       return true;
     }
@@ -185,7 +200,7 @@ public final class SmartCrop {
     // check if smart cropping area is large enough
     long croppedWidth = cropDimension.getWidth();
     long croppedHeight = cropDimension.getHeight();
-    boolean isMatchingSize = (cropDimension.getWidth() >= width || croppedHeight >= height);
+    boolean isMatchingSize = (cropDimension.getWidth() >= width && croppedHeight >= height);
     if (!isMatchingSize) {
       log.debug("Smart cropping area '{}' for asset {} is too small ({} x {}) for requested size {} x {}.",
           smartCropDef.getName(), asset.getPath(), croppedWidth, croppedHeight, width, height);
