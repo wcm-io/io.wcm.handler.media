@@ -36,6 +36,7 @@ import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
@@ -49,6 +50,7 @@ import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -98,6 +100,23 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
     assertEquals(2, renditions.size());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(0).getUrl());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=40&hei=30&fit=stretch", renditions.get(1).getUrl());
+  }
+
+  @Test
+  void testValidSmartCroppedRenditionAndWidths_DisableValidateSmartCropRenditionSizes() {
+    context.registerInjectActivateService(DynamicMediaSupportServiceImpl.class,
+        "validateSmartCropRenditionSizes", false,
+        Constants.SERVICE_RANKING, 100);
+    mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    Media media = getMediaWithWidths(100, 80, 40);
+    assertTrue(media.isValid());
+
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    assertEquals(3, renditions.size());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=100&hei=75&fit=stretch", renditions.get(0).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(1).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=40&hei=30&fit=stretch", renditions.get(2).getUrl());
   }
 
   @Test

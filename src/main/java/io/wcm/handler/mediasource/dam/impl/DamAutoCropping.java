@@ -95,7 +95,8 @@ class DamAutoCropping {
    * @return Cropping dimension or null if not found
    */
   private @Nullable CropDimension getDynamicMediaCropDimension(double requestedRatio) {
-    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()
+        && damContext.isDynamicMediaValidateSmartCropRenditionSizes()) {
       NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), requestedRatio);
       if (smartCropDef != null) {
         return SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);

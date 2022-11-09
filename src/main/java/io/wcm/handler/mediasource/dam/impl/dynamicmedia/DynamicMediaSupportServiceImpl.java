@@ -91,6 +91,11 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     boolean disableAemFallback() default false;
 
     @AttributeDefinition(
+        name = "Validte Smart Crop Rendition Sizes",
+        description = "Validates that the renditions defined via smart cropping fulfill the requested image width/height to avoid upscaling or white borders.")
+    boolean validateSmartCropRenditionSizes() default true;
+
+    @AttributeDefinition(
         name = "Image width limit",
         description = "The configured width value for 'Reply Image Size Limit'.")
     long imageSizeLimitWidth() default 2000;
@@ -111,6 +116,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   private DynamicMediaCapabilityDetection dmCapabilityDetection;
   private boolean authorPreviewMode;
   private boolean disableAemFallback;
+  private boolean validateSmartCropRenditionSizes;
   private Dimension imageSizeLimit;
 
   private static final String SERVICEUSER_SUBSERVICE = "dynamic-media-support";
@@ -124,6 +130,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     this.dmCapabilityDetection = config.dmCapabilityDetection();
     this.authorPreviewMode = config.authorPreviewMode();
     this.disableAemFallback = config.disableAemFallback();
+    this.validateSmartCropRenditionSizes = config.validateSmartCropRenditionSizes();
     this.imageSizeLimit = new Dimension(config.imageSizeLimitWidth(), config.imageSizeLimitHeight());
 
     if (this.enabled) {
@@ -155,6 +162,11 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Override
   public boolean isAemFallbackDisabled() {
     return disableAemFallback;
+  }
+
+  @Override
+  public boolean isValidateSmartCropRenditionSizes() {
+    return validateSmartCropRenditionSizes;
   }
 
   @Override
