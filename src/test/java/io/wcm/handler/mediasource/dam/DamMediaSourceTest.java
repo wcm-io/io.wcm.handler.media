@@ -28,8 +28,8 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.IMAGE_UNCONSTRA
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.MATERIAL_TILE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NORATIO_LARGE_MINWIDTH;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_LARGE;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_4_3;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
@@ -661,7 +661,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   void testMultipleMandatoryMediaFormatsWithCropping_AlsoMatchOriginal() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO_16_10);
     Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -674,12 +674,12 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(1).getMediaFormat());
   }
 
   @Test
   void testMultipleMandatoryMediaFormatsWithCropping_AlsoMatchOriginal_AutoCrop() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO, RATIO2, EDITORIAL_STAGE_SMALL)
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO_16_10, RATIO_4_3, EDITORIAL_STAGE_SMALL)
         .autoCrop(true);
     Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
@@ -694,7 +694,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.1333.1000.134,0,1467,1000.file/sixteen-ten.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.1");
-    assertEquals(RATIO2, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_4_3, renditions.get(1).getMediaFormat());
     assertFalse(renditions.get(1).isFallback());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.960.150.0,375,1600,625.file/sixteen-ten.jpg",
@@ -704,7 +704,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
             renditions.get(3).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(3).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(3).getMediaFormat());
     assertTrue(renditions.get(3).isFallback());
   }
 
@@ -715,7 +715,7 @@ class DamMediaSourceTest extends AbstractDamTest {
    */
   @Test
   void testMultipleMediaFormatsWithCropping_PreferCroppingOverFallback() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO, SHOWROOM_CONTROLS);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO_16_10, SHOWROOM_CONTROLS);
     Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -728,7 +728,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(1).getMediaFormat());
   }
 
   @Test
@@ -853,7 +853,7 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   @SuppressWarnings("deprecation")
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO)
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO_16_10)
         .breakpoint("B1", 160, 100)
         .breakpoint("B2", 320, 200)
         .build());
@@ -872,8 +872,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
 
     MediaFormat mediaFormat0 = renditions.get(0).getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat0.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat0.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat0.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat0.getRatio(), 0.001d);
     assertEquals(160, mediaFormat0.getWidth());
     assertEquals(100, mediaFormat0.getHeight());
     assertEquals("B1", mediaFormat0.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
@@ -885,8 +885,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(200, rendition1.getHeight());
 
     MediaFormat mediaFormat1 = renditions.get(1).getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat1.getRatio(), 0.001d);
     assertEquals(320, mediaFormat1.getWidth());
     assertEquals(200, mediaFormat1.getHeight());
     assertEquals("B2", mediaFormat1.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
@@ -895,9 +895,9 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormat(RATIO)
-        .pictureSource(new PictureSource(RATIO).media("media1").widths(160))
-        .pictureSource(new PictureSource(RATIO).media("media2").widths(320))
+        .mediaFormat(RATIO_16_10)
+        .pictureSource(new PictureSource(RATIO_16_10).media("media1").widths(160))
+        .pictureSource(new PictureSource(RATIO_16_10).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");
@@ -913,7 +913,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
 
     MediaFormat mediaFormat0 = rendition0.getMediaFormat();
-    assertEquals(RATIO.getName(), mediaFormat0.getName());
+    assertEquals(RATIO_16_10.getName(), mediaFormat0.getName());
 
     Rendition rendition1 = renditions.get(1);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
@@ -923,8 +923,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
 
     MediaFormat mediaFormat1 = rendition1.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat1.getRatio(), 0.001d);
     assertEquals(160, mediaFormat1.getWidth());
 
     Rendition rendition2 = renditions.get(2);
@@ -934,8 +934,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(200, rendition2.getHeight());
 
     MediaFormat mediaFormat2 = rendition2.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat2.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat2.getRatio(), 0.001d);
     assertEquals(320, mediaFormat2.getWidth());
   }
 
@@ -984,7 +984,7 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMultipleMediaFormats_ImageSizes() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormats(RATIO2, RATIO) // <- only second media format matches
+        .mediaFormats(RATIO_4_3, RATIO_16_10) // <- only second media format matches
         .imageSizes("sizes", 160, 320)
         .build();
 
@@ -1001,7 +1001,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
 
     MediaFormat mediaFormat0 = rendition0.getMediaFormat();
-    assertEquals(RATIO.getName(), mediaFormat0.getName());
+    assertEquals(RATIO_16_10.getName(), mediaFormat0.getName());
 
     Rendition rendition1 = renditions.get(1);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
@@ -1011,8 +1011,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
 
     MediaFormat mediaFormat1 = rendition1.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat1.getRatio(), 0.001d);
     assertEquals(160, mediaFormat1.getWidth());
 
     Rendition rendition2 = renditions.get(2);
@@ -1022,8 +1022,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(200, rendition2.getHeight());
 
     MediaFormat mediaFormat2 = rendition2.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat2.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat2.getRatio(), 0.001d);
     assertEquals(320, mediaFormat2.getWidth());
   }
 
