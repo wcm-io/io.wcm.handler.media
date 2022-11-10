@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.dam;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
+import static com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_CROP;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_REF;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ROTATION;
@@ -29,6 +31,11 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_4_3;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_SQUARE;
 import static io.wcm.handler.media.testcontext.UriTemplateAssert.assertUriTemplate;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.CROP_TYPE_SMART;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_BANNER;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_CROP_TYPE;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_NORMALIZED_HEIGHT;
+import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_NORMALIZED_WIDTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -43,6 +50,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 import com.google.common.collect.ImmutableList;
 
@@ -101,9 +109,9 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 192, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
   }
 
   @Test
@@ -128,9 +136,9 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 120, 90,
-        "/content/dam/sample.jpg/_jcr_content/renditions/rendition43.jpg.image_file.{width}.0.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/rendition43.jpg.image_file.{width}.0.file/sample.jpg");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 120, 90,
-        "/content/dam/sample.jpg/_jcr_content/renditions/rendition43.jpg.image_file.0.{height}.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/rendition43.jpg.image_file.0.{height}.file/sample.jpg");
   }
 
   @Test
@@ -161,22 +169,22 @@ class DamUriTemplateRenditionTest {
     assertEquals(4, renditions.size());
 
     assertUriTemplate(renditions.get(0), SCALE_WIDTH, 192, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
     assertUriTemplate(renditions.get(1), SCALE_WIDTH, 192, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
     assertUriTemplate(renditions.get(2), SCALE_WIDTH, 120, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.36,0,156,120.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.36,0,156,120.file/sample.jpg");
     assertUriTemplate(renditions.get(3), SCALE_WIDTH, 160, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.16,0,176,120.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.16,0,176,120.file/sample.jpg");
 
     assertUriTemplate(renditions.get(0), SCALE_HEIGHT, 192, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
     assertUriTemplate(renditions.get(1), SCALE_HEIGHT, 192, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
     assertUriTemplate(renditions.get(2), SCALE_HEIGHT, 120, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.36,0,156,120.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.36,0,156,120.file/sample.jpg");
     assertUriTemplate(renditions.get(3), SCALE_HEIGHT, 160, 120,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.16,0,176,120.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.16,0,176,120.file/sample.jpg");
   }
 
   @Test
@@ -212,6 +220,53 @@ class DamUriTemplateRenditionTest {
   }
 
   @Test
+  void testMultiple_DynamicMedia_SmartCropping() {
+    Asset asset = createSampleAssetWithDynamicMedia();
+
+    // create image profile and assign it to folder
+    Resource profile1 = context.create().resource("/conf/global/settings/dam/adminui-extension/imageprofile/profile1",
+        PN_CROP_TYPE, CROP_TYPE_SMART,
+        PN_BANNER, "16-10,16,10|4-3,40,30");
+    context.create().resource("/content/dam/folder1/" + JCR_CONTENT, DamConstants.IMAGE_PROFILE, profile1.getPath());
+
+    // create DM smart cropping metadata
+    context.create().resource(asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER + "/16-10/" + JCR_CONTENT,
+        PN_NORMALIZED_WIDTH, 0.9d, // 173px
+        PN_NORMALIZED_HEIGHT, 0.9d); // 108px
+    context.create().resource(asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER + "/4-3/" + JCR_CONTENT,
+        PN_NORMALIZED_WIDTH, 0.6d, // 115px
+        PN_NORMALIZED_HEIGHT, 0.72d); // 86px
+
+    Media media = mediaHandler.get(asset.getPath())
+        .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
+        .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
+        .pictureSource(new PictureSource(RATIO_4_3).widths(60))
+        .autoCrop(true)
+        .build();
+
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    assertEquals(4, renditions.size());
+
+    assertUriTemplate(renditions.get(0), SCALE_WIDTH, 173, 108,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}");
+    assertUriTemplate(renditions.get(1), SCALE_WIDTH, 173, 108,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}");
+    assertUriTemplate(renditions.get(2), SCALE_WIDTH, 120, 120,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&wid={width}");
+    assertUriTemplate(renditions.get(3), SCALE_WIDTH, 115, 86,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?wid={width}");
+
+    assertUriTemplate(renditions.get(0), SCALE_HEIGHT, 173, 108,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}");
+    assertUriTemplate(renditions.get(1), SCALE_HEIGHT, 173, 108,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}");
+    assertUriTemplate(renditions.get(2), SCALE_HEIGHT, 120, 120,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&hei={height}");
+    assertUriTemplate(renditions.get(3), SCALE_HEIGHT, 115, 86,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?hei={height}");
+  }
+
+  @Test
   @SuppressWarnings("null")
   void testManualCroppingRotation() {
     Asset asset = createSampleAsset();
@@ -223,9 +278,9 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 50, 75,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.5,5,80,55.90.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.5,5,80,55.90.file/sample.jpg");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 50, 75,
-        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.5,5,80,55.90.file/sample.jpg");
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.5,5,80,55.90.file/sample.jpg");
   }
 
   @Test
@@ -254,6 +309,8 @@ class DamUriTemplateRenditionTest {
   }
 
   Asset createSampleAsset(boolean dmMetadata) {
+    context.create().resource("/content/dam/folder1");
+
     Map<String, Object> metadata;
     if (dmMetadata) {
       metadata = MapUtil.toMap(Scene7Constants.PN_S7_FILE, "DummyFolder/sample.jpg");
@@ -262,7 +319,7 @@ class DamUriTemplateRenditionTest {
       metadata = Collections.emptyMap();
     }
     // create asset with original in 16:10 and rendition in 4:3 format
-    Asset asset = context.create().asset("/content/dam/sample.jpg", 192, 120, ContentType.JPEG, metadata);
+    Asset asset = context.create().asset("/content/dam/folder1/sample.jpg", 192, 120, ContentType.JPEG, metadata);
     context.create().assetRenditionWebEnabled(asset, 192, 120);
     context.create().assetRendition(asset, "rendition43.jpg", 120, 90, ContentType.JPEG);
     return asset;

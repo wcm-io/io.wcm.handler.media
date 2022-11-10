@@ -228,7 +228,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
     if (dimension == null) {
       throw new IllegalArgumentException("Unable to get dimension for original rendition of asset: " + getPath());
     }
-    return new DamUriTemplate(type, dimension, original, null, null, damContext, defaultMediaArgs);
+    return new DamUriTemplate(type, dimension, original, null, null, null, damContext, defaultMediaArgs);
   }
 
   @Override

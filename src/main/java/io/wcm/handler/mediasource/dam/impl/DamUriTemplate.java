@@ -34,7 +34,6 @@ import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
-import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
@@ -48,31 +47,36 @@ import io.wcm.sling.commons.adapter.AdaptTo;
  */
 class DamUriTemplate implements UriTemplate {
 
-  private final String uriTemplate;
   private final UriTemplateType type;
+  private final String uriTemplate;
   private final Dimension dimension;
 
   DamUriTemplate(@NotNull UriTemplateType type, @NotNull Dimension dimension,
       @NotNull Rendition rendition, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
-      @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
-    this.uriTemplate = buildUriTemplate(type, rendition, cropDimension, rotation, damContext, mediaArgs);
+      @Nullable Double ratio, @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
     this.type = type;
-    this.dimension = dimension;
-  }
 
-  private static String buildUriTemplate(@NotNull UriTemplateType type,
-      @NotNull Rendition rendition, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
-      @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
     String url = null;
+    Dimension validatedDimension = null;
     if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
       // if DM is enabled: try to get rendition URL from dynamic media
-      url = buildUriTemplateDynamicMedia(type, cropDimension, rotation, damContext);
+      NamedDimension smartCropDef = getDynamicMediaSmartCropDef(cropDimension, rotation, ratio, damContext);
+      url = buildUriTemplateDynamicMedia(type, cropDimension, rotation, smartCropDef, damContext);
+      // get actual max. dimension from smart cropping
+      if (smartCropDef != null) {
+        validatedDimension = SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
+      }
     }
     if (url == null && (!damContext.isDynamicMediaEnabled() || !damContext.isDynamicMediaAemFallbackDisabled())) {
       // Render renditions in AEM: build externalized URL
       url = buildUriTemplateDam(type, rendition, cropDimension, rotation, damContext, mediaArgs);
     }
-    return url;
+    this.uriTemplate = url;
+
+    if (validatedDimension == null) {
+      validatedDimension = dimension;
+    }
+    this.dimension = validatedDimension;
   }
 
   private static String buildUriTemplateDam(@NotNull UriTemplateType type,
@@ -111,7 +115,8 @@ class DamUriTemplate implements UriTemplate {
   }
 
   private static @Nullable String buildUriTemplateDynamicMedia(@NotNull UriTemplateType type,
-      @Nullable CropDimension cropDimension, @Nullable Integer rotation, @NotNull DamContext damContext) {
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation, @Nullable NamedDimension smartCropDef,
+      @NotNull DamContext damContext) {
     String productionAssetUrl = damContext.getDynamicMediaServerUrl();
     if (productionAssetUrl == null) {
       return null;
@@ -119,15 +124,11 @@ class DamUriTemplate implements UriTemplate {
     StringBuilder result = new StringBuilder();
     result.append(productionAssetUrl).append(DynamicMediaPath.buildImage(damContext));
 
-    // check for smart cropping when no cropping was applied by default, or auto-crop is enabled
-    if (SmartCrop.canApply(cropDimension, rotation) && cropDimension != null) {
-      // check for matching image profile and use predefined cropping preset if match found
-      NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), Ratio.get(cropDimension));
-      if (smartCropDef != null) {
-        result.append("%3A").append(smartCropDef.getName()).append("?")
-            .append(getDynamicMediaWidthHeightParameters(type));
-        return result.toString();
-      }
+    // build DM URL with smart cropping
+    if (smartCropDef != null) {
+      result.append("%3A").append(smartCropDef.getName()).append("?")
+          .append(getDynamicMediaWidthHeightParameters(type));
+      return result.toString();
     }
 
     // build DM URL without smart cropping
@@ -155,14 +156,23 @@ class DamUriTemplate implements UriTemplate {
     }
   }
 
-  @Override
-  public String getUriTemplate() {
-    return uriTemplate;
+  private static NamedDimension getDynamicMediaSmartCropDef(@Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @Nullable Double ratio, @NotNull DamContext damContext) {
+    if (SmartCrop.canApply(cropDimension, rotation) && ratio != null) {
+      // check for matching image profile and use predefined cropping preset if match found
+      return SmartCrop.getDimensionForRatio(damContext.getImageProfile(), ratio);
+    }
+    return null;
   }
 
   @Override
   public UriTemplateType getType() {
     return type;
+  }
+
+  @Override
+  public String getUriTemplate() {
+    return uriTemplate;
   }
 
   @Override

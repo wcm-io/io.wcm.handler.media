@@ -34,6 +34,7 @@ import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.MediaFileServlet;
@@ -142,8 +143,8 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
       throw new IllegalArgumentException("Unable to get dimension for rendition: " + getRendition().getPath());
     }
     dimension = ImageTransformation.rotateMapDimension(dimension, rotation);
-    // TODO: pass over cropping/rotation parameters
-    return new DamUriTemplate(type, dimension, getRendition(), cropDimension, rotation, damContext, mediaArgs);
+    return new DamUriTemplate(type, dimension, getRendition(), cropDimension, rotation, Ratio.get(dimension),
+        damContext, mediaArgs);
   }
 
   @Override
