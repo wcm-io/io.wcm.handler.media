@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.dam;
 
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_4_3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -40,7 +42,6 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -64,7 +65,7 @@ class DamUriTemplateRenditionTest {
   @Test
   void testOriginal_CropCenter() {
     Asset asset = createSampleAsset();
-    Media media = mediaHandler.get(asset.getPath(), DummyMediaFormats.RATIO).build();
+    Media media = mediaHandler.get(asset.getPath(), RATIO_16_10).build();
     Rendition rendition = media.getRendition();
 
     // CROP_CENTER not supported for renditions
@@ -76,7 +77,7 @@ class DamUriTemplateRenditionTest {
   @Test
   void testOriginal_ScaleWidth() {
     Asset asset = createSampleAsset();
-    Media media = mediaHandler.get(asset.getPath(), DummyMediaFormats.RATIO).build();
+    Media media = mediaHandler.get(asset.getPath(), RATIO_16_10).build();
 
     assertUriTemplate(media.getRendition(), UriTemplateType.SCALE_WIDTH, 160, 100,
         "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
@@ -85,7 +86,7 @@ class DamUriTemplateRenditionTest {
   @Test
   void testOriginal_ScaleHeight() {
     Asset asset = createSampleAsset();
-    Media media = mediaHandler.get(asset.getPath(), DummyMediaFormats.RATIO).build();
+    Media media = mediaHandler.get(asset.getPath(), RATIO_16_10).build();
 
     assertUriTemplate(media.getRendition(), UriTemplateType.SCALE_HEIGHT, 160, 100,
         "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
@@ -94,7 +95,7 @@ class DamUriTemplateRenditionTest {
   @Test
   void testOriginal_ScaleWidth_DynamicMedia() {
     Asset asset = createSampleAssetWithDynamicMedia();
-    Media media = mediaHandler.get(asset.getPath(), DummyMediaFormats.RATIO).build();
+    Media media = mediaHandler.get(asset.getPath(), RATIO_16_10).build();
 
     assertUriTemplate(media.getRendition(), UriTemplateType.SCALE_WIDTH, 160, 100,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}");
@@ -103,7 +104,7 @@ class DamUriTemplateRenditionTest {
   @Test
   void testOriginal_ScaleHeight_DynamicMedia() {
     Asset asset = createSampleAssetWithDynamicMedia();
-    Media media = mediaHandler.get(asset.getPath(), DummyMediaFormats.RATIO).build();
+    Media media = mediaHandler.get(asset.getPath(), RATIO_16_10).build();
 
     assertUriTemplate(media.getRendition(), UriTemplateType.SCALE_HEIGHT, 160, 100,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}");
@@ -112,7 +113,7 @@ class DamUriTemplateRenditionTest {
   @Test
   void testRendition43_ScaleWidth() {
     Asset asset = createSampleAsset();
-    Media media = mediaHandler.get(asset.getPath(), DummyMediaFormats.RATIO2).build();
+    Media media = mediaHandler.get(asset.getPath(), RATIO_4_3).build();
 
     assertUriTemplate(media.getRendition(), UriTemplateType.SCALE_WIDTH, 120, 90,
         "/content/dam/sample.jpg/_jcr_content/renditions/rendition43.jpg.image_file.{width}.0.file/sample.jpg");
@@ -121,7 +122,7 @@ class DamUriTemplateRenditionTest {
   @Test
   void testRendition43_ScaleHeight() {
     Asset asset = createSampleAsset();
-    Media media = mediaHandler.get(asset.getPath(), DummyMediaFormats.RATIO2).build();
+    Media media = mediaHandler.get(asset.getPath(), RATIO_4_3).build();
 
     assertUriTemplate(media.getRendition(), UriTemplateType.SCALE_HEIGHT, 120, 90,
         "/content/dam/sample.jpg/_jcr_content/renditions/rendition43.jpg.image_file.0.{height}.file/sample.jpg");
