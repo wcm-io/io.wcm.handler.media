@@ -53,7 +53,7 @@ class DamUriTemplate implements UriTemplate {
 
   DamUriTemplate(@NotNull UriTemplateType type, @NotNull Dimension dimension,
       @NotNull Rendition rendition, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
-      @Nullable Double ratio, @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
+      @Nullable Double ratio, @NotNull DamContext damContext) {
     this.type = type;
 
     String url = null;
@@ -62,14 +62,14 @@ class DamUriTemplate implements UriTemplate {
       // if DM is enabled: try to get rendition URL from dynamic media
       NamedDimension smartCropDef = getDynamicMediaSmartCropDef(cropDimension, rotation, ratio, damContext);
       url = buildUriTemplateDynamicMedia(type, cropDimension, rotation, smartCropDef, damContext);
-      // get actual max. dimension from smart cropping
-      if (smartCropDef != null) {
+      // get actual max. dimension from smart crop rendition
+      if (url != null && smartCropDef != null) {
         validatedDimension = SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
       }
     }
     if (url == null && (!damContext.isDynamicMediaEnabled() || !damContext.isDynamicMediaAemFallbackDisabled())) {
       // Render renditions in AEM: build externalized URL
-      url = buildUriTemplateDam(type, rendition, cropDimension, rotation, damContext, mediaArgs);
+      url = buildUriTemplateDam(type, rendition, cropDimension, rotation, damContext);
     }
     this.uriTemplate = url;
 
@@ -79,13 +79,14 @@ class DamUriTemplate implements UriTemplate {
     this.dimension = validatedDimension;
   }
 
-  private static String buildUriTemplateDam(@NotNull UriTemplateType type,
-      @NotNull Rendition rendition, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
-      @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
+  private static String buildUriTemplateDam(@NotNull UriTemplateType type, @NotNull Rendition rendition,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @NotNull DamContext damContext) {
     final long DUMMY_WIDTH = 999991;
     final long DUMMY_HEIGHT = 999992;
 
     // build rendition URL with dummy width/height parameters (otherwise externalization will fail)
+    MediaArgs mediaArgs = damContext.getMediaArgs();
     String mediaPath = RenditionMetadata.buildMediaPath(rendition.getPath()
         + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, false)
         + "." + MediaFileServlet.EXTENSION,

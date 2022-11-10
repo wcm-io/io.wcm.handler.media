@@ -143,8 +143,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
       throw new IllegalArgumentException("Unable to get dimension for rendition: " + getRendition().getPath());
     }
     dimension = ImageTransformation.rotateMapDimension(dimension, rotation);
-    return new DamUriTemplate(type, dimension, getRendition(), cropDimension, rotation, Ratio.get(dimension),
-        damContext, mediaArgs);
+    return new DamUriTemplate(type, dimension, getRendition(), cropDimension, rotation, Ratio.get(dimension), damContext);
   }
 
   @Override
