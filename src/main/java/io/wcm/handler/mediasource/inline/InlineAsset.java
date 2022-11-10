@@ -174,7 +174,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
     }
     Rendition originalRendition = getInlineRendition(new MediaArgs());
     return new InlineUriTemplate(type, originalRendition.getWidth(), originalRendition.getHeight(),
-        this.resource, fileName, defaultMediaArgs, adaptable);
+        this.resource, fileName, null, null, defaultMediaArgs, adaptable);
   }
 
   @Override

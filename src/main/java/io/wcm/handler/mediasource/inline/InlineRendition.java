@@ -609,8 +609,16 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
   @Override
   public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
-    // TODO: implement URI template generation
-    throw new UnsupportedOperationException();
+    if (type == UriTemplateType.CROP_CENTER) {
+      throw new IllegalArgumentException("CROP_CENTER not supported for rendition URI templates.");
+    }
+    if (!isImage() || isVectorImage()) {
+      throw new UnsupportedOperationException("Unable to build URI template for " + resource.getPath());
+    }
+
+    // TODO: implement URI template generation - detect max width/height
+    return new InlineUriTemplate(type, 0, 0,
+        this.resource, fileName, null, null, mediaArgs, adaptable);
   }
 
   @Override

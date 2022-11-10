@@ -26,7 +26,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
@@ -44,15 +46,18 @@ class InlineUriTemplate implements UriTemplate {
   private final long height;
 
   InlineUriTemplate(@NotNull UriTemplateType type, long width, long height,
-      @NotNull Resource resource, @NotNull String fileName, @NotNull MediaArgs mediaArgs, @NotNull Adaptable adaptable) {
-    this.uriTemplate = buildUriTemplate(type, resource, fileName, mediaArgs, adaptable);
+      @NotNull Resource resource, @NotNull String fileName,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @NotNull MediaArgs mediaArgs, @NotNull Adaptable adaptable) {
+    this.uriTemplate = buildUriTemplate(type, resource, fileName, cropDimension, rotation, mediaArgs, adaptable);
     this.type = type;
     this.width = width;
     this.height = height;
   }
 
   private static String buildUriTemplate(@NotNull UriTemplateType type, @NotNull Resource resource,
-      @NotNull String fileName, @NotNull MediaArgs mediaArgs, @NotNull Adaptable adaptable) {
+      @NotNull String fileName, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @NotNull MediaArgs mediaArgs, @NotNull Adaptable adaptable) {
     String resourcePath = resource.getPath();
 
     // if parent resource is a nt:file resource, use this one as path for scaled image
@@ -65,10 +70,10 @@ class InlineUriTemplate implements UriTemplate {
     final long DUMMY_WIDTH = 999991;
     final long DUMMY_HEIGHT = 999992;
     String path = resourcePath
-        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, null, null, false)
-        + "." + MediaFileServlet.EXTENSION + "/"
+        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, false)
+        + "." + MediaFileServlet.EXTENSION
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
-        + ImageFileServlet.getImageFileName(fileName, mediaArgs.getEnforceOutputFileExtension());
+        + "/" + ImageFileServlet.getImageFileName(fileName, mediaArgs.getEnforceOutputFileExtension());
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(adaptable, UrlHandler.class);
