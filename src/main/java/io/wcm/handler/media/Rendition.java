@@ -172,10 +172,11 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   /**
    * Generate an URI template for the rendition.
    * The URI template ignores the actual resolution of this rendition and allows to scale the rendition
-   * to any size within the maximum range of width/height, respecting both the original image and probably
-   * configured cropping parameters.
-   * @param type URI template type
+   * to any size within the maximum range of width/height, keeping the aspect ratio and respecting
+   * both the original image and probably configured cropping parameters.
+   * @param type URI template type. It is not supported to use {@link UriTemplateType#CROP_CENTER}.
    * @return URI template
+   * @throws IllegalArgumentException if {@link UriTemplateType#CROP_CENTER} is used
    * @throws UnsupportedOperationException if the original rendition is not an image or it is a vector image.
    */
   @NotNull

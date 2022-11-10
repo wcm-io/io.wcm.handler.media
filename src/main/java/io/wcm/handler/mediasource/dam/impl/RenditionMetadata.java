@@ -362,7 +362,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     if (dimension == null) {
       throw new IllegalArgumentException("Unable to get dimension for rendition: " + getRendition().getPath());
     }
-    return new DamUriTemplate(type, dimension, damContext, mediaArgs);
+    return new DamUriTemplate(type, dimension, rendition, damContext, mediaArgs);
   }
 
   @Override

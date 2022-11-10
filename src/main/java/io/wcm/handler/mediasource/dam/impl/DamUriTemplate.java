@@ -26,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 
+import com.day.cq.dam.api.Rendition;
+
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
@@ -43,14 +45,14 @@ class DamUriTemplate implements UriTemplate {
   private final Dimension dimension;
 
   DamUriTemplate(@NotNull UriTemplateType type, @NotNull Dimension dimension,
-      @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
-    this.uriTemplate = buildUriTemplate(type, damContext, mediaArgs);
+      @NotNull Rendition rendition, @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
+    this.uriTemplate = buildUriTemplate(type, rendition, damContext, mediaArgs);
     this.type = type;
     this.dimension = dimension;
   }
 
-  private static String buildUriTemplate(@NotNull UriTemplateType type, @NotNull DamContext damContext,
-      @NotNull MediaArgs mediaArgs) {
+  private static String buildUriTemplate(@NotNull UriTemplateType type,
+      @NotNull Rendition rendition, @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
     String url = null;
     if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
       // if DM is enabled: try to get rendition URL from dynamic media
@@ -79,7 +81,7 @@ class DamUriTemplate implements UriTemplate {
       final long DUMMY_WIDTH = 999991;
       final long DUMMY_HEIGHT = 999992;
 
-      String mediaPath = RenditionMetadata.buildMediaPath(damContext.getAsset().getOriginal().getPath() + "." + ImageFileServlet.SELECTOR
+      String mediaPath = RenditionMetadata.buildMediaPath(rendition.getPath() + "." + ImageFileServlet.SELECTOR
           + "." + DUMMY_WIDTH + "." + DUMMY_HEIGHT
           + "." + MediaFileServlet.EXTENSION,
           ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));

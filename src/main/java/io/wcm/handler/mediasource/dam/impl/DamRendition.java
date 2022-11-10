@@ -298,6 +298,9 @@ class DamRendition extends SlingAdaptable implements Rendition {
     if (this.rendition == null) {
       throw new IllegalStateException("Rendition is not valid.");
     }
+    if (type == UriTemplateType.CROP_CENTER) {
+      throw new IllegalArgumentException("CROP_CENTER not supported for rendition URI templates.");
+    }
     return this.rendition.getUriTemplate(type, damContext, mediaArgs);
   }
 

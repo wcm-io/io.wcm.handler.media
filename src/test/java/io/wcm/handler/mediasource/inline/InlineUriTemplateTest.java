@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2021 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.inline;
 
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.sling.api.resource.PersistenceException;
@@ -45,7 +46,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
- * Test Inline URI template
+ * Test Inline URI template for assets.
  */
 @ExtendWith(AemContextExtension.class)
 class InlineUriTemplateTest {
@@ -73,13 +74,8 @@ class InlineUriTemplateTest {
   void testGetUriTemplate_CropCenter() {
     Media media = mediaHandler.get(inlineImage).build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
-    assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.jpg",
-        uriTemplate.getUriTemplate());
-    assertEquals(215, uriTemplate.getMaxWidth());
-    assertEquals(102, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
+    assertUriTemplate(media, UriTemplateType.CROP_CENTER, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.jpg");
   }
 
   @Test
@@ -88,45 +84,40 @@ class InlineUriTemplateTest {
         .enforceOutputFileExtension(FileExtension.PNG)
         .build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
-    assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.png",
-        uriTemplate.getUriTemplate());
-    assertEquals(215, uriTemplate.getMaxWidth());
-    assertEquals(102, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
+    assertUriTemplate(media, UriTemplateType.CROP_CENTER, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.png");
   }
 
   @Test
   void testGetUriTemplate_ScaleWidth() {
     Media media = mediaHandler.get(inlineImage).build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample_image_215x102.jpg",
-        uriTemplate.getUriTemplate());
-    assertEquals(215, uriTemplate.getMaxWidth());
-    assertEquals(102, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplate.getType());
+    assertUriTemplate(media, UriTemplateType.SCALE_WIDTH, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample_image_215x102.jpg");
   }
 
   @Test
   void testGetUriTemplate_ScaleHeight() {
     Media media = mediaHandler.get(inlineImage).build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_HEIGHT);
-    assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample_image_215x102.jpg",
-        uriTemplate.getUriTemplate());
-    assertEquals(215, uriTemplate.getMaxWidth());
-    assertEquals(102, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplate.getType());
+    assertUriTemplate(media, UriTemplateType.SCALE_HEIGHT, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample_image_215x102.jpg");
   }
 
   Asset createSampleAsset(String classpathResource, String contentType) {
     String fileName = FilenameUtils.getName(classpathResource);
     return context.create().asset("/content/dam/" + fileName, classpathResource, contentType,
         Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
+  }
+
+  static void assertUriTemplate(Media media, UriTemplateType type,
+      long expectedMaxWith, long expectedMaxHeight, String expectedTemplate) {
+    assertTrue(media.isValid(), "media valid");
+    UriTemplate uriTemplate = media.getAsset().getUriTemplate(type);
+    assertEquals(type, uriTemplate.getType(), "uriTemplateType");
+    assertEquals(expectedMaxWith, uriTemplate.getMaxWidth(), "maxWidth");
+    assertEquals(expectedMaxHeight, uriTemplate.getMaxHeight(), "maxHeight");
+    assertEquals(expectedTemplate, uriTemplate.getUriTemplate(), "uriTemplate");
   }
 
 }
