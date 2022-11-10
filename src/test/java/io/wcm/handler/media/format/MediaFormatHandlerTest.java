@@ -41,7 +41,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_SMALL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_TAB_FULLSIZE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_TAB_SMALL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NORATIO_LARGE_MINWIDTH;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SPECIAL_4COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.WALLPAPER_1024_768;
@@ -398,7 +398,7 @@ class MediaFormatHandlerTest {
     assertEquals("showroom_campaign", mediaFormats.first().getName(), "showroom_campaign");
 
     // test ratio match
-    MediaFormat ratioFormat = RATIO;
+    MediaFormat ratioFormat = RATIO_16_10;
     // ratio mismatch
     mediaFormats = underTest.detectMediaFormats("png", 100, 50, 50);
     assertFalse(mediaFormats.contains(ratioFormat), "nonfixed_raw ratio mismatch");

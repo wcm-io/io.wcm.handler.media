@@ -145,14 +145,14 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
   private Media getMediaWithWidths(long... widths) {
     return mediaHandler.get(asset.getPath())
-        .pictureSource(new PictureSource(DummyMediaFormats.RATIO2).widths(widths))
+        .pictureSource(new PictureSource(DummyMediaFormats.RATIO_4_3).widths(widths))
         .autoCrop(true)
         .build();
   }
 
   private Media getMediaWithRatio() {
     return mediaHandler.get(asset.getPath())
-        .mediaFormat(DummyMediaFormats.RATIO2)
+        .mediaFormat(DummyMediaFormats.RATIO_4_3)
         .autoCrop(true)
         .build();
   }

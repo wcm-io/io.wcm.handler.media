@@ -507,12 +507,12 @@ public final class DummyMediaFormats {
       .build();
 
   /* format for testing ratio validation */
-  public static final MediaFormat RATIO = create("ratio")
+  public static final MediaFormat RATIO_16_10 = create("ratio_16_10")
       .label("Ratio (16:10)")
       .ratio(16, 10)
       .extensions("gif", "jpg", "png")
       .build();
-  public static final MediaFormat RATIO2 = create("ratio2")
+  public static final MediaFormat RATIO_4_3 = create("ratio_4_3")
       .label("Ratio (4:3)")
       .ratio(4, 3)
       .extensions("gif", "jpg", "png")

@@ -23,7 +23,7 @@ import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_REF;
 import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CAMPAIGN;
 import static org.apache.sling.api.resource.ResourceResolver.PROPERTY_RESOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -108,7 +108,7 @@ class ResourceMediaTest {
 
   @Test
   void testWithRefCropProperty() {
-    context.request().setAttribute("mediaFormat", RATIO.getName());
+    context.request().setAttribute("mediaFormat", RATIO_16_10.getName());
     context.request().setAttribute("refProperty", "myRefProp");
     context.request().setAttribute("cropProperty", "myCropProp");
 
