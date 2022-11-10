@@ -301,7 +301,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
     if (type == UriTemplateType.CROP_CENTER) {
       throw new IllegalArgumentException("CROP_CENTER not supported for rendition URI templates.");
     }
-    return this.rendition.getUriTemplate(type, damContext, mediaArgs);
+    return this.rendition.getUriTemplate(type, damContext);
   }
 
   @Override

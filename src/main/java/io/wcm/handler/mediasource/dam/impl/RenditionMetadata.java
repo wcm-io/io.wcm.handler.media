@@ -35,7 +35,6 @@ import com.day.image.Layer;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
@@ -353,8 +352,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     return this.rendition.adaptTo(Resource.class).adaptTo(InputStream.class);
   }
 
-  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type,
-      @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type, @NotNull DamContext damContext) {
     if (!isImage() || isVectorImage()) {
       throw new UnsupportedOperationException("Unable to build URI template for rendition: " + getRendition().getPath());
     }

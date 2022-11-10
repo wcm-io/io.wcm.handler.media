@@ -31,7 +31,6 @@ import com.day.image.Layer;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.Ratio;
@@ -130,8 +129,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type,
-      @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type, @NotNull DamContext damContext) {
     if (!isImage() || isVectorImage()) {
       throw new UnsupportedOperationException("Unable to build URI template for rendition: " + getRendition().getPath());
     }
