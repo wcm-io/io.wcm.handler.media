@@ -100,7 +100,7 @@ class AutoCroppingMediaHandlerTest {
     Rendition rendition = media.getRendition();
     assertEquals(215, rendition.getWidth());
     assertEquals(102, rendition.getHeight());
-    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.215.102.0,5,400,194.file/test.jpg", media.getUrl());
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.215.102.0,5,400,195.file/test.jpg", media.getUrl());
   }
 
   @Test
@@ -112,7 +112,7 @@ class AutoCroppingMediaHandlerTest {
     Rendition rendition = media.getRendition();
     assertEquals(215, rendition.getWidth());
     assertEquals(102, rendition.getHeight());
-    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.215.102.0,5,400,194.file/test.jpg", media.getUrl());
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.215.102.0,6,400,195.file/test.jpg", media.getUrl());
   }
 
   @Test

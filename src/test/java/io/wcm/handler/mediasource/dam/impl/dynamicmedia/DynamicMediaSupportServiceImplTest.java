@@ -67,6 +67,7 @@ class DynamicMediaSupportServiceImplTest {
   void testDefaultConfig() {
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
     assertTrue(underTest.isDynamicMediaEnabled());
+    assertTrue(underTest.isValidateSmartCropRenditionSizes());
     assertEquals(new Dimension(2000, 2000), underTest.getImageSizeLimit());
     assertEquals("https://dummy.scene7.com", underTest.getDynamicMediaServerUrl(asset, null, context.request()));
     assertTrue(underTest.isDynamicMediaCapabilityEnabled(true));
@@ -100,9 +101,11 @@ class DynamicMediaSupportServiceImplTest {
   void testAuthorPreviewMode() {
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
         "authorPreviewMode", true,
+        "validateSmartCropRenditionSizes", false,
         "imageSizeLimitWidth", 4000,
         "imageSizeLimitHeight", 3000);
     assertTrue(underTest.isDynamicMediaEnabled());
+    assertFalse(underTest.isValidateSmartCropRenditionSizes());
     assertEquals(new Dimension(4000, 3000), underTest.getImageSizeLimit());
     assertEquals("https://author.dummysite.org", underTest.getDynamicMediaServerUrl(asset, null, context.request()));
   }
@@ -216,7 +219,7 @@ class DynamicMediaSupportServiceImplTest {
 
   @ParameterizedTest
   @MethodSource("forcePublicshUrlModes")
-  void testAuthorPreviewMode_SiteConfig_FourcePublish(UrlMode urlMode) {
+  void testAuthorPreviewMode_SiteConfig_ForcePublish(UrlMode urlMode) {
     MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
     MockContextAwareConfig.writeConfiguration(context, "/content/dam", SiteConfig.class,
         "siteUrlAuthor", "https://author");

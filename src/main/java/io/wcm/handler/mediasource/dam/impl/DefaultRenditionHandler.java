@@ -282,11 +282,11 @@ class DefaultRenditionHandler implements RenditionHandler {
         @Override
         public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
           for (RenditionMetadata candidate : candidates) {
-            if (candidate.matches((int)mediaFormat.getEffectiveMinWidth(),
-                (int)mediaFormat.getEffectiveMinHeight(),
-                (int)mediaFormat.getEffectiveMaxWidth(),
-                (int)mediaFormat.getEffectiveMaxHeight(),
-                (int)mediaFormat.getMinWidthHeight(),
+            if (candidate.matches(mediaFormat.getEffectiveMinWidth(),
+                mediaFormat.getEffectiveMinHeight(),
+                mediaFormat.getEffectiveMaxWidth(),
+                mediaFormat.getEffectiveMaxHeight(),
+                mediaFormat.getMinWidthHeight(),
                 mediaFormat.getRatio())) {
               candidate.setMediaFormat(mediaFormat);
               return candidate;
@@ -349,9 +349,9 @@ class DefaultRenditionHandler implements RenditionHandler {
     return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
       @Override
       public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
-        int destWidth = (int)mediaFormat.getEffectiveMinWidth();
-        int destHeight = (int)mediaFormat.getEffectiveMinHeight();
-        int minWidthHeight = (int)mediaFormat.getMinWidthHeight();
+        long destWidth = mediaFormat.getEffectiveMinWidth();
+        long destHeight = mediaFormat.getEffectiveMinHeight();
+        long minWidthHeight = mediaFormat.getMinWidthHeight();
         double destRatio = mediaFormat.getRatio();
         // try to find matching rendition, otherwise check for next media format
         RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, minWidthHeight, destRatio,
@@ -423,12 +423,12 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // if height is missing - calculate from width
     if (height == 0 && width > 0) {
-      height = (int)Math.round(width / ratio);
+      height = Math.round(width / ratio);
     }
 
     // if width is missing - calculate from height
     if (width == 0 && height > 0) {
-      width = (int)Math.round(height * ratio);
+      width = Math.round(height * ratio);
     }
 
     // return virtual rendition

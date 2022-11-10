@@ -95,7 +95,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
     // if no match was found and auto-cropping is enabled, try to build a transformed rendition
     // with automatically devised cropping parameters
     if (resolvedRendition == null && mediaArgs.isAutoCrop()) {
-      DamAutoCropping autoCropping = new DamAutoCropping(damContext.getAsset(), mediaArgs);
+      DamAutoCropping autoCropping = new DamAutoCropping(damContext, mediaArgs);
       List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
       for (CropDimension autoCropDimension : autoCropDimensions) {
         RenditionHandler renditionHandler = new TransformedRenditionHandler(autoCropDimension, rotation, damContext);
