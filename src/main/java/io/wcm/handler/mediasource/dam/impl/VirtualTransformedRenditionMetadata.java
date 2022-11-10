@@ -143,7 +143,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
     }
     dimension = ImageTransformation.rotateMapDimension(dimension, rotation);
     // TODO: pass over cropping/rotation parameters
-    return new DamUriTemplate(type, dimension, getRendition(), damContext, mediaArgs);
+    return new DamUriTemplate(type, dimension, getRendition(), cropDimension, rotation, damContext, mediaArgs);
   }
 
   @Override
