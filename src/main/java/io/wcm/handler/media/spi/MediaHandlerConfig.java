@@ -20,6 +20,7 @@
 package io.wcm.handler.media.spi;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,7 @@ import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
+import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 import io.wcm.sling.commons.caservice.ContextAwareService;
@@ -245,6 +247,14 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
    */
   public boolean enforceVirtualRenditions() {
     return false;
+  }
+
+  /**
+   * @return Allowed editor types for image IPE (in-place editor).
+   *         By default, only the OOTB "image" editor type is supported.
+   */
+  public @NotNull Set<String> allowedIpeEditorTypes() {
+    return MediaMarkupBuilderUtil.DEFAULT_ALLOWED_IPE_EDITOR_TYPES;
   }
 
   /**
