@@ -619,7 +619,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       throw new UnsupportedOperationException("Unable to build URI template for " + resource.getPath());
     }
     if (this.maxImageDimension == null) {
-      throw new IllegalStateException("Invalid rendition.");
+      throw new IllegalStateException("Unable to detect dimension for inline image: " + resource.getPath());
     }
 
     Dimension dimension = ImageTransformation.rotateMapDimension(maxImageDimension, rotation);
