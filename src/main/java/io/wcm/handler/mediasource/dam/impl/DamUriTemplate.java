@@ -128,7 +128,8 @@ class DamUriTemplate implements UriTemplate {
     // build DM URL with smart cropping
     if (smartCropDef != null) {
       result.append("%3A").append(smartCropDef.getName()).append("?")
-          .append(getDynamicMediaWidthHeightParameters(type));
+          .append(getDynamicMediaWidthHeightParameters(type))
+          .append("&fit=constrain");
       return result.toString();
     }
 

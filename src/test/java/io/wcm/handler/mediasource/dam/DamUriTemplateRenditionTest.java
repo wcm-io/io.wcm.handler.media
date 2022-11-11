@@ -248,22 +248,22 @@ class DamUriTemplateRenditionTest {
     assertEquals(4, renditions.size());
 
     assertUriTemplate(renditions.get(0), SCALE_WIDTH, 173, 108,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}&fit=constrain");
     assertUriTemplate(renditions.get(1), SCALE_WIDTH, 173, 108,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}&fit=constrain");
     assertUriTemplate(renditions.get(2), SCALE_WIDTH, 120, 120,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&wid={width}");
     assertUriTemplate(renditions.get(3), SCALE_WIDTH, 115, 86,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?wid={width}&fit=constrain");
 
     assertUriTemplate(renditions.get(0), SCALE_HEIGHT, 173, 108,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}&fit=constrain");
     assertUriTemplate(renditions.get(1), SCALE_HEIGHT, 173, 108,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}&fit=constrain");
     assertUriTemplate(renditions.get(2), SCALE_HEIGHT, 120, 120,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&hei={height}");
     assertUriTemplate(renditions.get(3), SCALE_HEIGHT, 115, 86,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?hei={height}&fit=constrain");
   }
 
   @Test
