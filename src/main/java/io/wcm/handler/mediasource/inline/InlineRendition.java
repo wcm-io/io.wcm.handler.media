@@ -76,6 +76,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private final String fileExtension;
   private final String originalFileExtension;
   private final Dimension imageDimension;
+  private final Dimension maxImageDimension;
   private final String url;
   private CropDimension cropDimension;
   private final Integer rotation;
@@ -112,6 +113,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     boolean isVectorImage = MediaFileType.isVectorImage(this.originalFileExtension);
 
     Dimension dimension = null;
+    Dimension maxDimension = null;
     Dimension scaledDimension = null;
     String processedFileName = fileName;
     if (isImage) {
@@ -119,6 +121,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       List<Dimension> dimensionCandidates = getImageOrCroppedDimensions();
       for (int i = 0; i < dimensionCandidates.size(); i++) {
         dimension = dimensionCandidates.get(i);
+        maxDimension = dimension;
         if (isVectorImage && (this.rotation != null || this.cropDimension != null)) {
           // transformation not possible for vector images
           scaledDimension = SCALING_NOT_POSSIBLE_DIMENSION;
@@ -151,6 +154,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
         List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
         for (CropDimension autoCropDimension : autoCropDimensions) {
           scaledDimension = getScaledDimension(autoCropDimension);
+          maxDimension = autoCropDimension;
           if (scaledDimension == null) {
             scaledDimension = autoCropDimension;
           }
@@ -171,6 +175,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     this.fileName = processedFileName;
     this.fileExtension = FilenameUtils.getExtension(processedFileName);
     this.imageDimension = dimension;
+    this.maxImageDimension = maxDimension;
 
     // build media url (it is null if no rendition is available for the given media args)
     this.url = buildMediaUrl(scaledDimension);
@@ -475,10 +480,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // check for dimensions from mediaformat (evaluate only first media format)
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    if (mediaFormats != null && mediaFormats.length > 0) {
-      if (mediaFormats[0].getRatio() > 0) {
-        return mediaFormats[0].getRatio();
-      }
+    if (mediaFormats != null && mediaFormats.length > 0 && mediaFormats[0].getRatio() > 0) {
+      return mediaFormats[0].getRatio();
     }
 
     // no ratio
@@ -615,10 +618,13 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     if (!isImage() || isVectorImage()) {
       throw new UnsupportedOperationException("Unable to build URI template for " + resource.getPath());
     }
+    if (this.maxImageDimension == null) {
+      throw new IllegalStateException("Invalid rendition.");
+    }
 
-    // TODO: implement URI template generation - detect max width/height
-    return new InlineUriTemplate(type, 0, 0,
-        this.resource, fileName, null, null, mediaArgs, adaptable);
+    Dimension dimension = ImageTransformation.rotateMapDimension(maxImageDimension, rotation);
+    return new InlineUriTemplate(type, dimension.getWidth(), dimension.getHeight(),
+        this.resource, fileName, this.cropDimension, this.rotation, mediaArgs, adaptable);
   }
 
   @Override

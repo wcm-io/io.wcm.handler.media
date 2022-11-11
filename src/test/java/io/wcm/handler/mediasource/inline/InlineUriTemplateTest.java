@@ -25,21 +25,15 @@ import static io.wcm.handler.media.UriTemplateType.SCALE_HEIGHT;
 import static io.wcm.handler.media.UriTemplateType.SCALE_WIDTH;
 import static io.wcm.handler.media.testcontext.UriTemplateAssert.assertUriTemplate;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.scene7.api.constants.Scene7Constants;
-
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -58,14 +52,12 @@ class InlineUriTemplateTest {
 
   @BeforeEach
   @SuppressWarnings("null")
-  void setUp() throws PersistenceException {
+  void setUp() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     // prepare inline media object with real image binary data to test scaling
-    inlineImage = context.resourceResolver().create(context.currentPage().getContentResource(), "inlineImage",
-        ImmutableValueMap.builder()
-            .put(NN_MEDIA_INLINE + "Name", "sample_image_215x102.jpg")
-            .build());
+    inlineImage = context.create().resource(context.currentPage(), "inlineImage",
+        NN_MEDIA_INLINE + "Name", "sample.jpg");
     context.load().binaryResource("/sample_image_215x102.jpg",
         inlineImage.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
   }
@@ -75,11 +67,11 @@ class InlineUriTemplateTest {
     Media media = mediaHandler.get(inlineImage).build();
 
     assertUriTemplate(media, CROP_CENTER, 215, 102,
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.jpg");
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample.jpg");
     assertUriTemplate(media, SCALE_WIDTH, 215, 102,
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample_image_215x102.jpg");
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample.jpg");
     assertUriTemplate(media, SCALE_HEIGHT, 215, 102,
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample_image_215x102.jpg");
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample.jpg");
   }
 
   @Test
@@ -89,17 +81,11 @@ class InlineUriTemplateTest {
         .build();
 
     assertUriTemplate(media, CROP_CENTER, 215, 102,
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.png");
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample.png");
     assertUriTemplate(media, SCALE_WIDTH, 215, 102,
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample_image_215x102.png");
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample.png");
     assertUriTemplate(media, SCALE_HEIGHT, 215, 102,
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample_image_215x102.png");
-  }
-
-  Asset createSampleAsset(String classpathResource, String contentType) {
-    String fileName = FilenameUtils.getName(classpathResource);
-    return context.create().asset("/content/dam/" + fileName, classpathResource, contentType,
-        Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample.png");
   }
 
 }
