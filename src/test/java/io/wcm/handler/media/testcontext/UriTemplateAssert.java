@@ -45,6 +45,7 @@ public final class UriTemplateAssert {
     assertEquals(expectedMaxWith, uriTemplate.getMaxWidth(), "maxWidth(" + type + ")");
     assertEquals(expectedMaxHeight, uriTemplate.getMaxHeight(), "maxHeight(" + type + ")");
     assertEquals(expectedTemplate, uriTemplate.getUriTemplate(), "uriTemplate(" + type + ")");
+    assertEquals(expectedTemplate, uriTemplate.toString(), "toString(" + type + ")");
   }
 
   public static void assertUriTemplate(Rendition rendition, UriTemplateType type,
@@ -55,6 +56,7 @@ public final class UriTemplateAssert {
     assertEquals(expectedMaxWith, uriTemplate.getMaxWidth(), "maxWidth(" + type + ")");
     assertEquals(expectedMaxHeight, uriTemplate.getMaxHeight(), "maxHeight(" + type + ")");
     assertEquals(expectedTemplate, uriTemplate.getUriTemplate(), "uriTemplate(" + type + ")");
+    assertEquals(expectedTemplate, uriTemplate.toString(), "toString(" + type + ")");
   }
 
 }

@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
@@ -42,17 +43,16 @@ class InlineUriTemplate implements UriTemplate {
 
   private final String uriTemplate;
   private final UriTemplateType type;
-  private final long width;
-  private final long height;
+  private final Dimension dimension;
 
-  InlineUriTemplate(@NotNull UriTemplateType type, long width, long height,
+  @SuppressWarnings("java:S107") // allow more than 7 params
+  InlineUriTemplate(@NotNull UriTemplateType type, @NotNull Dimension dimension,
       @NotNull Resource resource, @NotNull String fileName,
       @Nullable CropDimension cropDimension, @Nullable Integer rotation,
       @NotNull MediaArgs mediaArgs, @NotNull Adaptable adaptable) {
     this.uriTemplate = buildUriTemplate(type, resource, fileName, cropDimension, rotation, mediaArgs, adaptable);
     this.type = type;
-    this.width = width;
-    this.height = height;
+    this.dimension = dimension;
   }
 
   private static String buildUriTemplate(@NotNull UriTemplateType type, @NotNull Resource resource,
@@ -99,23 +99,23 @@ class InlineUriTemplate implements UriTemplate {
   }
 
   @Override
-  public String getUriTemplate() {
-    return uriTemplate;
-  }
-
-  @Override
   public UriTemplateType getType() {
     return type;
   }
 
   @Override
+  public String getUriTemplate() {
+    return uriTemplate;
+  }
+
+  @Override
   public long getMaxWidth() {
-    return width;
+    return dimension.getWidth();
   }
 
   @Override
   public long getMaxHeight() {
-    return height;
+    return dimension.getHeight();
   }
 
   @Override

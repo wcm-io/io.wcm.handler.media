@@ -623,8 +623,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     }
 
     Dimension dimension = ImageTransformation.rotateMapDimension(maxImageDimension, rotation);
-    return new InlineUriTemplate(type, dimension.getWidth(), dimension.getHeight(),
-        this.resource, fileName, this.cropDimension, this.rotation, mediaArgs, adaptable);
+    return new InlineUriTemplate(type, dimension, this.resource, fileName,
+        this.cropDimension, this.rotation, mediaArgs, adaptable);
   }
 
   @Override
