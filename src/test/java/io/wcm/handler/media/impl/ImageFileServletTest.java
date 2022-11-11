@@ -126,6 +126,28 @@ class ImageFileServletTest {
   }
 
   @Test
+  void testGet_Cropping_OnlyWidth() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.50.0.10,10,110,70");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(50, 30);
+  }
+
+  @Test
+  void testGet_Cropping_OnlyHeight() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.0.30.10,10,110,70");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(50, 30);
+  }
+
+  @Test
   void testGet_Cropping_InvalidSyntax() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102.10,10");
 
