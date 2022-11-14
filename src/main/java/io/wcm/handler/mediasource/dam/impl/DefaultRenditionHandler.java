@@ -22,9 +22,14 @@ package io.wcm.handler.mediasource.dam.impl;
 import static io.wcm.handler.media.format.impl.MediaFormatSupport.getRequestedFileExtensions;
 import static io.wcm.handler.media.format.impl.MediaFormatSupport.visitMediaFormats;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +40,17 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.format.impl.MediaFormatVisitor;
 import io.wcm.handler.mediasource.dam.AssetRendition;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.
@@ -109,12 +118,57 @@ class DefaultRenditionHandler implements RenditionHandler {
     if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
       return;
     }
-    // skip all non-original rendition for dynamic media assets. dynamic media does not support them.
-    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset() && !AssetRendition.isOriginal(rendition)) {
-      return;
+
+    // special handling for dynamic media
+    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+      // skip all non-original renditions for dynamic media assets. dynamic media does not support them.
+      if (!AssetRendition.isOriginal(rendition)) {
+        return;
+      }
+
+      // check if there are matching smart crop renditions for the requested media format(s)
+      // and return those instead of the original rendition for further processing
+      String fileExtension = FilenameUtils.getExtension(damContext.getAsset().getName());
+      if (damContext.isDynamicMediaValidateSmartCropRenditionSizes()
+          && MediaFileType.isImage(fileExtension) && !MediaFileType.isVectorImage(fileExtension)) {
+        List<CropDimension> cropDimensions = getDynamicMediaCropDimensions(mediaArgs);
+        if (!cropDimensions.isEmpty()) {
+          candidates.addAll(cropDimensions.stream()
+              .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
+                  cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension, null))
+              .collect(Collectors.toList()));
+          return;
+        }
+      }
     }
+
     RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
     candidates.add(renditionMetadata);
+  }
+
+  /**
+   * Try to get actual smart crop dimensions for the requested ratio(s) for the current asset.
+   * @param mediaArgs Media Args with requested media formats
+   * @return Cropping dimensions or empty list if not found
+   */
+  private @NotNull List<CropDimension> getDynamicMediaCropDimensions(MediaArgs mediaArgs) {
+    if (mediaArgs.getMediaFormatOptions() == null) {
+      return Collections.emptyList();
+    }
+    List<CropDimension> result = new ArrayList<>();
+    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
+      MediaFormat mediaFormat = mediaFormatOption.getMediaFormat();
+      if (mediaFormat != null && mediaFormat.hasRatio()) {
+        NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), mediaFormat.getRatio());
+        if (smartCropDef != null) {
+          CropDimension cropDimension =  SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
+          if (cropDimension != null) {
+            result.add(cropDimension);
+          }
+        }
+      }
+    }
+    return result;
   }
 
   /**
