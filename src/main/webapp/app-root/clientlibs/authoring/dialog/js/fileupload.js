@@ -96,8 +96,8 @@
     var mimeType = self._detectMimeType(assetPath);
     var thumbnailObject;
     if (mimeType) {
-      var thumbnailUrl = assetPath + "/jcr:content/renditions/cq5dam.thumbnail.319.319.png";
-      thumbnailObject = $("<img src='" + thumbnailUrl + "'>");
+      var thumbnailUrl = assetPath + ".thumb.319.319.png?ck=" + new Date().getTime();
+      thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
     }
     self._$element.trigger($.Event("assetselected", {
       path: assetPath,
@@ -138,6 +138,12 @@
     }
     if (fileExtension == "svg") {
       return "image/svg+xml";
+    }
+    if (fileExtension == "mp4") {
+      return "video/mpeg";
+    }
+    if (fileExtension == "mov") {
+      return "video/quicktime";
     }
     return null;
   };
