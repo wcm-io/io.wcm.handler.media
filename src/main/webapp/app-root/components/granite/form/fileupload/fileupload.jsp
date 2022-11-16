@@ -144,8 +144,14 @@ if (contentResource != null) {
   propFileNameDefault = namePrefix + mediaHandlerConfig.getMediaInlineNodeName() + "Name";
   propFileReferenceDefault = namePrefix + mediaHandlerConfig.getMediaRefProperty();
 
-  // check if any transformations are defined
-  ValueMap contentProps = contentResource.getValueMap();
+  ValueMap contentProps = ValueMap.EMPTY;
+  /* check if namePrefix has a trailing /. If yes that means that we're dealing with a child node */
+  if (namePrefix.lastIndexOf('/') > 2) {
+    Resource childNode = contentResource.getChild(namePrefix.substring(2, namePrefix.length() - 1));
+    contentProps = (childNode != null) ? childNode.getValueMap() : contentProps;
+  }
+  else contentProps = contentResource.getValueMap();
+
   hasTransformation = (contentProps.get(mediaHandlerConfig.getMediaCropProperty(), String.class) != null)
       || (contentProps.get(mediaHandlerConfig.getMediaRotationProperty(), String.class) != null)
       || (contentProps.get(mediaHandlerConfig.getMediaMapProperty(), String.class) != null);
