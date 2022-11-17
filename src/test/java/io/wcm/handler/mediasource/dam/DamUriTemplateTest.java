@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2021 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,10 @@
  */
 package io.wcm.handler.mediasource.dam;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.wcm.handler.media.UriTemplateType.CROP_CENTER;
+import static io.wcm.handler.media.UriTemplateType.SCALE_HEIGHT;
+import static io.wcm.handler.media.UriTemplateType.SCALE_WIDTH;
+import static io.wcm.handler.media.testcontext.UriTemplateAssert.assertUriTemplate;
 
 import java.util.Collections;
 import java.util.Map;
@@ -35,8 +38,6 @@ import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.UriTemplate;
-import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -45,7 +46,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
- * Test DAM URI template
+ * Test DAM URI template for assets.
  */
 @ExtendWith(AemContextExtension.class)
 class DamUriTemplateTest {
@@ -60,15 +61,16 @@ class DamUriTemplateTest {
   }
 
   @Test
-  void testGetUriTemplate_CropCenter() {
+  void testGetUriTemplate() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     Media media = mediaHandler.get(asset.getPath()).build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
-    assertEquals("/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.{height}.file/sample.jpg", uriTemplate.getUriTemplate());
-    assertEquals(100, uriTemplate.getMaxWidth());
-    assertEquals(50, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
+    assertUriTemplate(media, CROP_CENTER, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.{height}.file/sample.jpg");
+    assertUriTemplate(media, SCALE_WIDTH, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
+    assertUriTemplate(media, SCALE_HEIGHT, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
   }
 
   @Test
@@ -78,77 +80,25 @@ class DamUriTemplateTest {
         .enforceOutputFileExtension(FileExtension.PNG)
         .build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
-    assertEquals("/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.{height}.file/sample.png", uriTemplate.getUriTemplate());
-    assertEquals(100, uriTemplate.getMaxWidth());
-    assertEquals(50, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
+    assertUriTemplate(media, CROP_CENTER, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.{height}.file/sample.png");
+    assertUriTemplate(media, SCALE_WIDTH, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.png");
+    assertUriTemplate(media, SCALE_HEIGHT, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.png");
   }
 
   @Test
-  void testGetUriTemplate_ScaleWidth() {
-    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
-    Media media = mediaHandler.get(asset.getPath()).build();
-
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertEquals("/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg", uriTemplate.getUriTemplate());
-    assertEquals(100, uriTemplate.getMaxWidth());
-    assertEquals(50, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplate.getType());
-  }
-
-  @Test
-  void testGetUriTemplate_ScaleHeight() {
-    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
-    Media media = mediaHandler.get(asset.getPath()).build();
-
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_HEIGHT);
-    assertEquals("/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg", uriTemplate.getUriTemplate());
-    assertEquals(100, uriTemplate.getMaxWidth());
-    assertEquals(50, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplate.getType());
-  }
-
-  @Test
-  void testGetUriTemplate_CropCenter_DynamicMedia() {
-    // activate dynamic media
+  void testGetUriTemplate_DynamicMedia() {
     Asset asset = createSampleAssetWithDynamicMedia("/filetype/sample.jpg", ContentType.JPEG);
-
     Media media = mediaHandler.get(asset.getPath()).build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&hei={height}&fit=crop", uriTemplate.getUriTemplate());
-    assertEquals(100, uriTemplate.getMaxWidth());
-    assertEquals(50, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
-  }
-
-  @Test
-  void testGetUriTemplate_ScaleWidth_DynamicMedia() {
-    // activate dynamic media
-    Asset asset = createSampleAssetWithDynamicMedia("/filetype/sample.jpg", ContentType.JPEG);
-
-    Media media = mediaHandler.get(asset.getPath()).build();
-
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}", uriTemplate.getUriTemplate());
-    assertEquals(100, uriTemplate.getMaxWidth());
-    assertEquals(50, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplate.getType());
-  }
-
-  @Test
-  void testGetUriTemplate_ScaleHeight_DynamicMedia() {
-    // activate dynamic media
-    Asset asset = createSampleAssetWithDynamicMedia("/filetype/sample.jpg", ContentType.JPEG);
-
-    Media media = mediaHandler.get(asset.getPath()).build();
-
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_HEIGHT);
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}", uriTemplate.getUriTemplate());
-    assertEquals(100, uriTemplate.getMaxWidth());
-    assertEquals(50, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplate.getType());
+    assertUriTemplate(media, CROP_CENTER, 100, 50,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&hei={height}&fit=crop");
+    assertUriTemplate(media, SCALE_WIDTH, 100, 50,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}");
+    assertUriTemplate(media, SCALE_HEIGHT, 100, 50,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}");
   }
 
   Asset createSampleAsset(String classpathResource, String contentType) {

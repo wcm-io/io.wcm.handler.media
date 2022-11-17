@@ -87,6 +87,13 @@ public final class DamContext implements Adaptable {
   }
 
   /**
+   * @return Media Args from media request
+   */
+  public MediaArgs getMediaArgs() {
+    return mediaArgs;
+  }
+
+  /**
    * @return Media handler config
    */
   public MediaHandlerConfig getMediaHandlerConfig() {
