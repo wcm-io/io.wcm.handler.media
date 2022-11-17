@@ -144,14 +144,8 @@ if (contentResource != null) {
   propFileNameDefault = namePrefix + mediaHandlerConfig.getMediaInlineNodeName() + "Name";
   propFileReferenceDefault = namePrefix + mediaHandlerConfig.getMediaRefProperty();
 
-  ValueMap contentProps = ValueMap.EMPTY;
-  /* check if namePrefix has a trailing /. If yes that means that we're dealing with a child node */
-  if (namePrefix.lastIndexOf('/') > 2) {
-    Resource childNode = contentResource.getChild(namePrefix.substring(2, namePrefix.length() - 1));
-    contentProps = (childNode != null) ? childNode.getValueMap() : contentProps;
-  }
-  else contentProps = contentResource.getValueMap();
-
+  // check if any transformations are defined
+  ValueMap contentProps = getPropertiesContentResource(contentResource, namePrefix).getValueMap();
   hasTransformation = (contentProps.get(mediaHandlerConfig.getMediaCropProperty(), String.class) != null)
       || (contentProps.get(mediaHandlerConfig.getMediaRotationProperty(), String.class) != null)
       || (contentProps.get(mediaHandlerConfig.getMediaMapProperty(), String.class) != null);
@@ -234,4 +228,25 @@ if (!dataProps.isEmpty()) {
 dispatcher = slingRequest.getRequestDispatcher(pathField);
 dispatcher.include(slingRequest, slingResponse);
 
+%><%!
+/**
+ * With setting nameprefix to a subnode like "./mySubNode/" it's possible to store the media reference
+ * and the related transformation paramters in another node. This method tries to detect this, and
+ * returns the child node where the properties are stored in.
+ * @param contentResource Content resource of the current edit dialog
+ * @return Sub node content resource or the current content resource
+ */
+Resource getPropertiesContentResource(Resource contentResource, String namePrefix) {
+  // the prefix is expected to prefix existing property names. use a dummy property name to get the parent path -
+  // which may be the same path of the content resource, or pointint to a sub resource
+  String dummyPropertyPath = namePrefix + "dummy";
+  String subResourcePath = ResourceUtil.getParent(dummyPropertyPath);
+  Resource propertiesContentResource = contentResource.getChild(subResourcePath);
+  if (propertiesContentResource != null) {
+    return propertiesContentResource;
+  }
+  else {
+    return contentResource;
+  }
+}
 %>
