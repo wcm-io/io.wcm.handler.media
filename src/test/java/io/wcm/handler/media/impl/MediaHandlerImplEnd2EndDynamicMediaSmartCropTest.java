@@ -21,6 +21,8 @@ package io.wcm.handler.media.impl;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_4_3;
 import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.CROP_TYPE_SMART;
 import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_BANNER;
 import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfileImpl.PN_CROP_TYPE;
@@ -48,8 +50,8 @@ import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -82,18 +84,20 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
     // original asset size is 160x100px
     // the 4-3 smart crop rendition defines a cropping area of 80x60px
-    String smartCropRenditionPath = asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER
-        + "/4-3/" + JCR_CONTENT;
-    context.create().resource(smartCropRenditionPath,
+    context.create().resource(asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER + "/4-3/" + JCR_CONTENT,
         PN_NORMALIZED_WIDTH, 0.5d,
         PN_NORMALIZED_HEIGHT, 0.6d);
+    // the 16-10 smart crop rendition defines a cropping area of 120x75px
+    context.create().resource(asset.getPath() + "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER + "/16-10/" + JCR_CONTENT,
+        PN_NORMALIZED_WIDTH, 0.75d,
+        PN_NORMALIZED_HEIGHT, 0.75d);
 
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
   }
 
   @Test
   void testValidSmartCroppedRenditionAndWidths() {
-    Media media = getMediaWithWidths(80, 40);
+    Media media = getMediaWithWidths(RATIO_4_3, 80, 40);
     assertTrue(media.isValid());
 
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
@@ -109,7 +113,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
         Constants.SERVICE_RANKING, 100);
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    Media media = getMediaWithWidths(100, 80, 40);
+    Media media = getMediaWithWidths(RATIO_4_3, 100, 80, 40);
     assertTrue(media.isValid());
 
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
@@ -121,21 +125,21 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
   @Test
   void testInvalidSmartCroppedRendition() {
-    Media media = getMediaWithWidths(100);
+    Media media = getMediaWithWidths(RATIO_4_3, 100);
     assertFalse(media.isValid());
     assertEquals(MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason());
   }
 
   @Test
   void testSomeInvalidSmartCroppedRendition() {
-    Media media = getMediaWithWidths(100, 80, 40);
+    Media media = getMediaWithWidths(RATIO_4_3, 100, 80, 40);
     assertFalse(media.isValid());
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
   }
 
   @Test
-  void testValidSmartCroppedRenditionOnlyRatio() {
-    Media media = getMediaWithRatio();
+  void testValidSmartCroppedRendition_OnlyRatio() {
+    Media media = getMediaWithRatio(RATIO_4_3);
     assertTrue(media.isValid());
 
     List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
@@ -143,16 +147,26 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(0).getUrl());
   }
 
-  private Media getMediaWithWidths(long... widths) {
+  @Test
+  void testValidSmartCroppedRenditionOnlyRatio_MatchingOriginalRatio() {
+    Media media = getMediaWithRatio(RATIO_16_10);
+    assertTrue(media.isValid());
+
+    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    assertEquals(1, renditions.size());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A16-10?wid=120&hei=75&fit=stretch", renditions.get(0).getUrl());
+  }
+
+  private Media getMediaWithWidths(MediaFormat mediaFormat, long... widths) {
     return mediaHandler.get(asset.getPath())
-        .pictureSource(new PictureSource(DummyMediaFormats.RATIO_4_3).widths(widths))
+        .pictureSource(new PictureSource(mediaFormat).widths(widths))
         .autoCrop(true)
         .build();
   }
 
-  private Media getMediaWithRatio() {
+  private Media getMediaWithRatio(MediaFormat mediaFormat) {
     return mediaHandler.get(asset.getPath())
-        .mediaFormat(DummyMediaFormats.RATIO_4_3)
+        .mediaFormat(mediaFormat)
         .autoCrop(true)
         .build();
   }
