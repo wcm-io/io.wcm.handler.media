@@ -159,7 +159,7 @@ fileUploadProps.put("fileReferenceParameter", cfg.get("fileReferenceParameter", 
 // default values for allowUpload and mimeTypes
 fileUploadProps.put("allowUpload", ex.getBoolean(cfg.get("allowUpload", String.class)));
 fileUploadProps.put("mimeTypes", cfg.get("mimeTypes", new String[] {
-    "image/gif","image/jpeg","image/png","image/tiff","image/svg+xml" }));
+    "image/gif","image/jpeg","image/png","image/tiff","image/svg+xml","video/mpeg","video/quicktime"}));
 
 // media format properties for validation of associated media reference
 String[] mediaFormats = null;

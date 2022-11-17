@@ -27,6 +27,12 @@
       <action type="add" dev="sseifert">
         Add Rendition.getUriTemplate method to build URI templates for getting scaled or auto-cropped renditions of an asset with the restrictions of the rendition e.g. aspect ratio.
       </action>
+      <action type="update" dev="sseifert" issue="WHAN-53">
+        File Upload Granite UI Widget: Allow video/mpeg and video/quicktime by default and support updating thumbnails.
+      </action>
+      <action type="fix" dev="sseifert">
+        Dynamic Media Support: Fix smart-cropping rendition validation in case unconstrained media formats are used (without exact size, e.g. only minimum width) and the original image ratio excaclty matches the requested ratio.
+      </action>
     </release>
 
     <release version="1.14.18" date="2022-11-09">
