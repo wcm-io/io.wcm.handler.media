@@ -36,6 +36,8 @@ import com.day.image.Layer;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaFileType;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
@@ -348,6 +350,17 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected InputStream getInputStream() {
     return this.rendition.adaptTo(Resource.class).adaptTo(InputStream.class);
+  }
+
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type, @NotNull DamContext damContext) {
+    if (!isImage() || isVectorImage()) {
+      throw new UnsupportedOperationException("Unable to build URI template for rendition: " + getRendition().getPath());
+    }
+    Dimension dimension = AssetRendition.getDimension(getRendition());
+    if (dimension == null) {
+      throw new IllegalArgumentException("Unable to get dimension for rendition: " + getRendition().getPath());
+    }
+    return new DamUriTemplate(type, dimension, rendition, null, null, Ratio.get(dimension), damContext);
   }
 
   @Override

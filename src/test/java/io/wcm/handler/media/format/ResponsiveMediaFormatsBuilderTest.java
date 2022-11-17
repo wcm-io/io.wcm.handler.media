@@ -32,23 +32,23 @@ class ResponsiveMediaFormatsBuilderTest {
 
   @Test
   void testBuild() {
-    MediaFormat[] mediaFormats = new ResponsiveMediaFormatsBuilder(DummyMediaFormats.RATIO)
+    MediaFormat[] mediaFormats = new ResponsiveMediaFormatsBuilder(DummyMediaFormats.RATIO_16_10)
     .breakpoint("B1", 160, 100)
     .breakpoint("B2", 320, 200)
     .build();
 
-    assertEquals(ResponsiveMediaFormatsBuilder.buildCombinedName(DummyMediaFormats.RATIO, "B1", 160, 100), mediaFormats[0].getName());
-    assertEquals(DummyMediaFormats.RATIO.getLabel(), mediaFormats[0].getLabel());
-    assertArrayEquals(DummyMediaFormats.RATIO.getExtensions(), mediaFormats[0].getExtensions());
-    assertEquals(DummyMediaFormats.RATIO.getRatio(), mediaFormats[0].getRatio(), 0.001d);
+    assertEquals(ResponsiveMediaFormatsBuilder.buildCombinedName(DummyMediaFormats.RATIO_16_10, "B1", 160, 100), mediaFormats[0].getName());
+    assertEquals(DummyMediaFormats.RATIO_16_10.getLabel(), mediaFormats[0].getLabel());
+    assertArrayEquals(DummyMediaFormats.RATIO_16_10.getExtensions(), mediaFormats[0].getExtensions());
+    assertEquals(DummyMediaFormats.RATIO_16_10.getRatio(), mediaFormats[0].getRatio(), 0.001d);
     assertEquals(160, mediaFormats[0].getWidth());
     assertEquals(100, mediaFormats[0].getHeight());
     assertEquals("B1", mediaFormats[0].getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
 
-    assertEquals(ResponsiveMediaFormatsBuilder.buildCombinedName(DummyMediaFormats.RATIO, "B2", 320, 200), mediaFormats[1].getName());
-    assertEquals(DummyMediaFormats.RATIO.getLabel(), mediaFormats[1].getLabel());
-    assertArrayEquals(DummyMediaFormats.RATIO.getExtensions(), mediaFormats[1].getExtensions());
-    assertEquals(DummyMediaFormats.RATIO.getRatio(), mediaFormats[1].getRatio(), 0.001d);
+    assertEquals(ResponsiveMediaFormatsBuilder.buildCombinedName(DummyMediaFormats.RATIO_16_10, "B2", 320, 200), mediaFormats[1].getName());
+    assertEquals(DummyMediaFormats.RATIO_16_10.getLabel(), mediaFormats[1].getLabel());
+    assertArrayEquals(DummyMediaFormats.RATIO_16_10.getExtensions(), mediaFormats[1].getExtensions());
+    assertEquals(DummyMediaFormats.RATIO_16_10.getRatio(), mediaFormats[1].getRatio(), 0.001d);
     assertEquals(320, mediaFormats[1].getWidth());
     assertEquals(200, mediaFormats[1].getHeight());
     assertEquals("B2", mediaFormats[1].getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
