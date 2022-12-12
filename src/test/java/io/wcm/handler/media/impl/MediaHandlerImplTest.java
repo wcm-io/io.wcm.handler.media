@@ -105,9 +105,9 @@ class MediaHandlerImplTest {
     assertTrue(media.isValid());
     assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.getUrl());
     assertNotNull(media.getElement());
-    assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", media.getElement().getAttributeValue("src"));
+    assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.getElement().getAttributeValue("src"));
 
-    assertEquals("<img src=\"http://xyz/content/dummymedia/item1/pre1.gif\" />", media.getMarkup());
+    assertEquals("<img src=\"http://xyz/content/dummymedia.post1/item1/pre1.gif\" />", media.getMarkup());
   }
 
   @Test

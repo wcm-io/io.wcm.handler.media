@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.15.2" date="not released">
+      <action type="update" dev="sseifert">
+        MediaHandler: Build HTML element markup on-demand based on the current status of media when the element is requested. This allows to react on results of media post processors, and avoids building the element if not required.
+      </action>
       <action type="fix" dev="amey-tripathi">
         File Upload Granite UI component: Fix "Clear Transformation" button when namePrefix with sub-node is used.
       </action>

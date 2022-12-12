@@ -68,6 +68,7 @@ class MediaTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   void testElement() {
     Div div = new Div();
     div.setText("test");
@@ -75,6 +76,16 @@ class MediaTest {
     underTest.setElement(div);
     assertSame(div, underTest.getElement());
     assertEquals("<div>test</div>", underTest.getMarkup());
+  }
+
+  @Test
+  void testElementBuilder() {
+    Div div = new Div();
+    div.setText("test");
+
+    underTest.setElementBuilder(m -> div.setTitle("title1"));
+    assertSame(div, underTest.getElement());
+    assertEquals("<div title=\"title1\">test</div>", underTest.getMarkup());
   }
 
   @Test
