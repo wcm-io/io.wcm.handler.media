@@ -191,14 +191,16 @@ public final class MediaHandlerImpl implements MediaHandler {
       // generate markup (if markup builder is available) - first accepting wins
       List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMarkupBuilders();
       if (mediaMarkupBuilders != null) {
-        for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
-          MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
-          if (mediaMarkupBuilder.accepts(media)) {
-            log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
-            media.setElement(mediaMarkupBuilder.build(media));
-            break;
+        media.setElementBuilder(m -> {
+          for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
+            MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
+            if (mediaMarkupBuilder.accepts(m)) {
+              log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
+              return mediaMarkupBuilder.build(m);
+            }
           }
-        }
+          return null;
+        });
       }
 
       // postprocess media request after resolving

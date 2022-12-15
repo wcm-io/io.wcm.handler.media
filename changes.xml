@@ -23,6 +23,15 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.15.2" date="2022-12-15">
+      <action type="update" dev="sseifert">
+        MediaHandler: Build HTML element markup on-demand based on the current status of media when the element is requested. This allows to react on results of media post processors, and avoids building the element if not required.
+      </action>
+      <action type="fix" dev="amey-tripathi">
+        File Upload Granite UI component: Fix "Clear Transformation" button when namePrefix with sub-node is used.
+      </action>
+    </release>
+
     <release version="1.15.0" date="2022-11-17">
       <action type="add" dev="sseifert">
         Add Rendition.getUriTemplate method to build URI templates for getting scaled or auto-cropped renditions of an asset with the restrictions of the rendition e.g. aspect ratio.
@@ -157,7 +166,7 @@
         Add support for properties "altValueFromDAM"/"mediaForceAltValueFromAsset". If set to true, it is forced to use the alt. text from asset description (otherwise it's the fallback behavior).
       </action>
       <action type="update" dev="sseifert"><![CDATA[
-        <strong>Change default behavior of alt text lookup from DAM</strong>: Use asset description if avalailable as alt. text, fallback to asset title if not description is set.
+        <strong>Change default behavior of alt text lookup from DAM</strong>: Use asset description if available, fallback to asset title if no description is set.
       ]]></action>
     </release>
 
