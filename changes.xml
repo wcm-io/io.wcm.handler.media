@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.15.2" date="not released">
+    <release version="1.15.2" date="2022-12-15">
       <action type="update" dev="sseifert">
         MediaHandler: Build HTML element markup on-demand based on the current status of media when the element is requested. This allows to react on results of media post processors, and avoids building the element if not required.
       </action>
