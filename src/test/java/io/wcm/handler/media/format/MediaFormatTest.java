@@ -31,8 +31,6 @@ import java.util.TreeSet;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.common.collect.ImmutableList;
-
 class MediaFormatTest {
 
   @Test
@@ -207,7 +205,7 @@ class MediaFormatTest {
     set.add(create("mf3").build());
     set.add(create("mf2").build());
 
-    List<MediaFormat> result = ImmutableList.copyOf(set);
+    List<MediaFormat> result = List.copyOf(set);
     assertEquals("mf1", result.get(0).getName());
     assertEquals("mf2", result.get(1).getName());
     assertEquals("mf3", result.get(2).getName());

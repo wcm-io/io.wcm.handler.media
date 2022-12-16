@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
-import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
@@ -88,7 +87,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         addRendition(candidates, rendition, mediaArgs);
       }
       candidates = postProcessCandidates(candidates, mediaArgs);
-      this.renditions = ImmutableSet.<RenditionMetadata>copyOf(candidates);
+      this.renditions = Collections.unmodifiableSet(candidates);
     }
     return this.renditions;
   }

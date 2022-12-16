@@ -61,7 +61,6 @@ import org.osgi.framework.Constants;
 
 import com.day.cq.wcm.api.Page;
 import com.day.image.Layer;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
@@ -763,7 +762,7 @@ class InlineMediaSourceTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
@@ -788,7 +787,7 @@ class InlineMediaSourceTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(4, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
@@ -822,7 +821,7 @@ class InlineMediaSourceTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
@@ -871,7 +870,7 @@ class InlineMediaSourceTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline./sample_image_215x102.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -895,7 +894,7 @@ class InlineMediaSourceTest {
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.205.97.file/sample_image_215x102.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -919,7 +918,7 @@ class InlineMediaSourceTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals(
@@ -962,7 +961,7 @@ class InlineMediaSourceTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",

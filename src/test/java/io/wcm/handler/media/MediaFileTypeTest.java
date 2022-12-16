@@ -23,9 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Test;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
+import org.junit.jupiter.api.Test;
 
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -44,12 +44,12 @@ class MediaFileTypeTest {
 
   @Test
   void testGetImageFileExtensions() {
-    assertEquals(ImmutableSet.of("jpg", "jpeg", "gif", "png", "svg", "tif", "tiff"), MediaFileType.getImageFileExtensions());
+    assertEquals(Set.of("jpg", "jpeg", "gif", "png", "svg", "tif", "tiff"), MediaFileType.getImageFileExtensions());
   }
 
   @Test
   void testGetImageContentTypes() {
-    assertEquals(ImmutableSet.of(ContentType.JPEG, ContentType.GIF, ContentType.PNG, ContentType.SVG, ContentType.TIFF),
+    assertEquals(Set.of(ContentType.JPEG, ContentType.GIF, ContentType.PNG, ContentType.SVG, ContentType.TIFF),
         MediaFileType.getImageContentTypes());
   }
 
@@ -66,12 +66,12 @@ class MediaFileTypeTest {
 
   @Test
   void testGetBrowserImageFileExtensions() {
-    assertEquals(ImmutableSet.of("jpg", "jpeg", "gif", "png", "svg"), MediaFileType.getBrowserImageFileExtensions());
+    assertEquals(Set.of("jpg", "jpeg", "gif", "png", "svg"), MediaFileType.getBrowserImageFileExtensions());
   }
 
   @Test
   void testGetBrowserImageContentTypes() {
-    assertEquals(ImmutableSet.of(ContentType.JPEG, ContentType.GIF, ContentType.PNG, ContentType.SVG),
+    assertEquals(Set.of(ContentType.JPEG, ContentType.GIF, ContentType.PNG, ContentType.SVG),
         MediaFileType.getBrowserImageContentTypes());
   }
 
@@ -85,12 +85,12 @@ class MediaFileTypeTest {
 
   @Test
   void testGetVectorImageFileExtensions() {
-    assertEquals(ImmutableSet.of("svg"), MediaFileType.getVectorImageFileExtensions());
+    assertEquals(Set.of("svg"), MediaFileType.getVectorImageFileExtensions());
   }
 
   @Test
   void testGetVectorImageContentTypes() {
-    assertEquals(ImmutableSet.of(ContentType.SVG), MediaFileType.getVectorImageContentTypes());
+    assertEquals(Set.of(ContentType.SVG), MediaFileType.getVectorImageContentTypes());
   }
 
   @Test
@@ -104,13 +104,13 @@ class MediaFileTypeTest {
   @Test
   @SuppressWarnings("deprecation")
   void testGetFlashFileExtensions() {
-    assertEquals(ImmutableSet.of("swf"), MediaFileType.getFlashFileExtensions());
+    assertEquals(Set.of("swf"), MediaFileType.getFlashFileExtensions());
   }
 
   @Test
   @SuppressWarnings("deprecation")
   void testGetFlashContentTypes() {
-    assertEquals(ImmutableSet.of(ContentType.SWF), MediaFileType.getFlashContentTypes());
+    assertEquals(Set.of(ContentType.SWF), MediaFileType.getFlashContentTypes());
   }
 
 }

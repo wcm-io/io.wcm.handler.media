@@ -44,7 +44,6 @@ import com.adobe.granite.workflow.exec.WorkItem;
 import com.adobe.granite.workflow.exec.WorkflowData;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.wcm.api.Page;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -133,7 +132,7 @@ class WorkflowProcessUtilTest {
 
   @SuppressWarnings("null")
   private void assertPaths(String payloadPaths, String primaryTypeResourceType, String... expectedPaths) {
-    List<String> expected = ImmutableList.copyOf(expectedPaths);
+    List<String> expected = List.of(expectedPaths);
     List<String> result = WorkflowProcessUtil.getPayloadResourcePaths(payloadPaths, primaryTypeResourceType,
         context.resourceResolver(), context.getService(ResourceCollectionManager.class));
     assertEquals(expected, result);

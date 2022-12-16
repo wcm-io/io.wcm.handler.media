@@ -30,6 +30,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.jcr.Node;
 
@@ -50,7 +51,6 @@ import com.day.cq.wcm.api.components.ComponentManager;
 import com.day.cq.wcm.api.components.EditConfig;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.format.MediaFormatHandler;
@@ -120,7 +120,7 @@ class IPEConfigResourceProviderTest {
   @SuppressWarnings("null")
   void testCustomIPEConfig() {
     String path = IPEConfigResourceProvider.buildPath(componentContentResource.getPath(),
-        ImmutableSet.of(EDITORIAL_1COL.getName(), SHOWROOM_STANDARD.getName(), NONFIXED_RAW.getName()));
+        Set.of(EDITORIAL_1COL.getName(), SHOWROOM_STANDARD.getName(), NONFIXED_RAW.getName()));
 
     Resource ipeConfig = context.resourceResolver().getResource(path);
     assertNotNull(ipeConfig);

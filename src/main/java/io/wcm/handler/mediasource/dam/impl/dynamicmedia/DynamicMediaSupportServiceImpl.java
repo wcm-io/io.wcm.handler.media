@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.s7dam.utils.PublishUtils;
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.url.SiteConfig;
@@ -177,7 +177,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Override
   public @Nullable ImageProfile getImageProfile(@NotNull String profilePath) {
     try (ResourceResolver resourceResolver = resourceResolverFactory
-        .getServiceResourceResolver(ImmutableMap.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
+        .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
       Resource profileResource = resourceResolver.getResource(profilePath);
       if (profileResource != null) {
         log.debug("Loaded image profile: {}", profilePath);

@@ -52,7 +52,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs.PictureSource;
@@ -165,7 +164,7 @@ class DamUriTemplateRenditionTest {
         .autoCrop(true)
         .build();
 
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(4, renditions.size());
 
     assertUriTemplate(renditions.get(0), SCALE_WIDTH, 192, 120,
@@ -197,7 +196,7 @@ class DamUriTemplateRenditionTest {
         .autoCrop(true)
         .build();
 
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(4, renditions.size());
 
     assertUriTemplate(renditions.get(0), SCALE_WIDTH, 192, 120,
@@ -244,7 +243,7 @@ class DamUriTemplateRenditionTest {
         .autoCrop(true)
         .build();
 
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(4, renditions.size());
 
     assertUriTemplate(renditions.get(0), SCALE_WIDTH, 173, 108,

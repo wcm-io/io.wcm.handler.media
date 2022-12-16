@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Test;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
+import org.junit.jupiter.api.Test;
 
 class PathParserTest {
 
@@ -42,10 +42,10 @@ class PathParserTest {
 
   @Test
   void testValidPath() {
-    PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1", "mf2")));
+    PathParser underTest = new PathParser(buildPath("/my/path", Set.of("mf1", "mf2")));
     assertTrue(underTest.isValid());
     assertEquals("/my/path", underTest.getComponentContentPath());
-    assertEquals(ImmutableSet.of("mf1", "mf2"), underTest.getMediaFormatNames());
+    assertEquals(Set.of("mf1", "mf2"), underTest.getMediaFormatNames());
     assertNull(underTest.getRelativeConfigPath());
 
     assertFalse(underTest.isPluginsCropNode());
@@ -56,10 +56,10 @@ class PathParserTest {
 
   @Test
   void testPluginsCropNode() {
-    PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop");
+    PathParser underTest = new PathParser(buildPath("/my/path", Set.of("mf1")) + "/plugins/crop");
     assertTrue(underTest.isValid());
     assertEquals("/my/path", underTest.getComponentContentPath());
-    assertEquals(ImmutableSet.of("mf1"), underTest.getMediaFormatNames());
+    assertEquals(Set.of("mf1"), underTest.getMediaFormatNames());
     assertEquals("/plugins/crop", underTest.getRelativeConfigPath());
 
     assertTrue(underTest.isPluginsCropNode());
@@ -70,10 +70,10 @@ class PathParserTest {
 
   @Test
   void testAspectRatiosNode() {
-    PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop/aspectRatios");
+    PathParser underTest = new PathParser(buildPath("/my/path", Set.of("mf1")) + "/plugins/crop/aspectRatios");
     assertTrue(underTest.isValid());
     assertEquals("/my/path", underTest.getComponentContentPath());
-    assertEquals(ImmutableSet.of("mf1"), underTest.getMediaFormatNames());
+    assertEquals(Set.of("mf1"), underTest.getMediaFormatNames());
     assertEquals("/plugins/crop/aspectRatios", underTest.getRelativeConfigPath());
 
     assertFalse(underTest.isPluginsCropNode());
@@ -84,10 +84,10 @@ class PathParserTest {
 
   @Test
   void testAspectRatioItem() {
-    PathParser underTest = new PathParser(buildPath("/my/path", ImmutableSet.of("mf1")) + "/plugins/crop/aspectRatios/mf2");
+    PathParser underTest = new PathParser(buildPath("/my/path", Set.of("mf1")) + "/plugins/crop/aspectRatios/mf2");
     assertTrue(underTest.isValid());
     assertEquals("/my/path", underTest.getComponentContentPath());
-    assertEquals(ImmutableSet.of("mf1"), underTest.getMediaFormatNames());
+    assertEquals(Set.of("mf1"), underTest.getMediaFormatNames());
     assertEquals("/plugins/crop/aspectRatios/mf2", underTest.getRelativeConfigPath());
 
     assertFalse(underTest.isPluginsCropNode());
