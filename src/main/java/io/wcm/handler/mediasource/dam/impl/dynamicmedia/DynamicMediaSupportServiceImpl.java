@@ -74,8 +74,8 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
 
     @AttributeDefinition(
         name = "Dynamic Media Capability",
-        description = "Whether to detect automatically if Dynamic Media is actually enabled for the instance. "
-            + "Setting to ON disables the auto-detection via feature-flag and assumes it is enabled, setting to OFF assumes it is disabled.")
+        description = "Whether to detect automatically if Dynamic Media is actually for a given asset by looking for existing DM metadata. "
+            + "Setting to ON disables the auto-detection and forces it to enabled for all asssets, setting to OFF forced it to disabled.")
     DynamicMediaCapabilityDetection dmCapabilityDetection() default DynamicMediaCapabilityDetection.AUTO;
 
     @AttributeDefinition(
