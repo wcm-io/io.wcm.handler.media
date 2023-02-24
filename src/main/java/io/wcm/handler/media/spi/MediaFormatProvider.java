@@ -20,12 +20,11 @@
 package io.wcm.handler.media.spi;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.osgi.annotation.versioning.ConsumerType;
-
-import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.sling.commons.caservice.ContextAwareService;
@@ -79,7 +78,7 @@ public abstract class MediaFormatProvider implements ContextAwareService {
     catch (IllegalArgumentException | IllegalAccessException ex) {
       throw new RuntimeException("Unable to access fields of " + type.getName(), ex);
     }
-    return ImmutableSet.copyOf(params);
+    return Collections.unmodifiableSet(params);
   }
 
 }

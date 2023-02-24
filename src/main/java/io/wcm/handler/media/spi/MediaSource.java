@@ -38,8 +38,6 @@ import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Asset;
@@ -403,7 +401,7 @@ public abstract class MediaSource {
     Rendition rendition = asset.getRendition(mediaArgs);
     boolean renditionFound = false;
     if (rendition != null) {
-      media.setRenditions(ImmutableList.of(rendition));
+      media.setRenditions(List.of(rendition));
       media.setUrl(rendition.getUrl());
       renditionFound = true;
     }

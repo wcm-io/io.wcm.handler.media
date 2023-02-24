@@ -43,7 +43,6 @@ import org.osgi.framework.Constants;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs.PictureSource;
@@ -100,7 +99,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
     Media media = getMediaWithWidths(RATIO_4_3, 80, 40);
     assertTrue(media.isValid());
 
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(2, renditions.size());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(0).getUrl());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=40&hei=30&fit=stretch", renditions.get(1).getUrl());
@@ -116,7 +115,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
     Media media = getMediaWithWidths(RATIO_4_3, 100, 80, 40);
     assertTrue(media.isValid());
 
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(3, renditions.size());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=100&hei=75&fit=stretch", renditions.get(0).getUrl());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(1).getUrl());
@@ -142,7 +141,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
     Media media = getMediaWithRatio(RATIO_4_3);
     assertTrue(media.isValid());
 
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(1, renditions.size());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(0).getUrl());
   }
@@ -152,7 +151,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
     Media media = getMediaWithRatio(RATIO_16_10);
     assertTrue(media.isValid());
 
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(1, renditions.size());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A16-10?wid=120&hei=75&fit=stretch", renditions.get(0).getUrl());
   }

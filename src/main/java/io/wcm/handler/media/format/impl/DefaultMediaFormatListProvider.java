@@ -20,6 +20,7 @@
 package io.wcm.handler.media.format.impl;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.servlet.Servlet;
@@ -34,8 +35,6 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
-
-import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
@@ -100,7 +99,7 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
       return mediaFormatHandler.getMediaFormats();
     }
     else {
-      return ImmutableSet.of();
+      return Collections.emptySet();
     }
   }
 

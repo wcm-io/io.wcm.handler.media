@@ -29,6 +29,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.HOME_STAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,8 +45,6 @@ import org.osgi.framework.Constants;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.day.cq.dam.api.Asset;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaInvalidReason;
@@ -78,7 +77,7 @@ class MediaFormatValidateServletTest {
         EDITORIAL_1COL.getHeight(),
         ContentType.JPEG);
 
-    context.request().setParameterMap(ImmutableMap.of(
+    context.request().setParameterMap(Map.of(
         RP_MEDIA_FORMATS, EDITORIAL_1COL.getName(),
         RP_MEDIA_REF, asset.getPath()));
     underTest.service(context.request(), context.response());
@@ -93,7 +92,7 @@ class MediaFormatValidateServletTest {
         EDITORIAL_1COL.getHeight(),
         ContentType.JPEG);
 
-    context.request().setParameterMap(ImmutableMap.of(
+    context.request().setParameterMap(Map.of(
         RP_MEDIA_FORMATS, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
         RP_MEDIA_FORMATS_MANDATORY, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
         RP_MEDIA_REF, asset.getPath()));
@@ -112,7 +111,7 @@ class MediaFormatValidateServletTest {
         EDITORIAL_1COL.getHeight(),
         ContentType.JPEG);
 
-    context.request().setParameterMap(ImmutableMap.of(
+    context.request().setParameterMap(Map.of(
         RP_MEDIA_FORMATS, HOME_STAGE.getName() + "," + EDITORIAL_1COL.getName(),
         RP_MEDIA_FORMATS_MANDATORY, EDITORIAL_1COL.getName(),
         RP_MEDIA_REF, asset.getPath()));
@@ -129,7 +128,7 @@ class MediaFormatValidateServletTest {
         10,
         ContentType.JPEG);
 
-    context.request().setParameterMap(ImmutableMap.of(
+    context.request().setParameterMap(Map.of(
         RP_MEDIA_FORMATS, EDITORIAL_1COL.getName(),
         RP_MEDIA_REF, asset.getPath()));
     underTest.service(context.request(), context.response());
@@ -145,7 +144,7 @@ class MediaFormatValidateServletTest {
     context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
       @Override
       public @NotNull List<Class<? extends MediaProcessor>> getPreProcessors() {
-        return ImmutableList.of(AllInvalidMediaPreProcessor.class);
+        return List.of(AllInvalidMediaPreProcessor.class);
       }
     }, Constants.SERVICE_RANKING, 1000);
 
@@ -154,7 +153,7 @@ class MediaFormatValidateServletTest {
         EDITORIAL_1COL.getHeight(),
         ContentType.JPEG);
 
-    context.request().setParameterMap(ImmutableMap.of(
+    context.request().setParameterMap(Map.of(
         RP_MEDIA_FORMATS, EDITORIAL_1COL.getName(),
         RP_MEDIA_REF, asset.getPath()));
     underTest.service(context.request(), context.response());

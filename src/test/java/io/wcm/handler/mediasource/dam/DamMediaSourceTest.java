@@ -44,13 +44,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -63,8 +63,6 @@ import com.day.cq.wcm.api.components.DropTarget;
 import com.day.cq.wcm.api.components.EditConfig;
 import com.day.cq.wcm.api.components.EditContext;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -626,7 +624,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -648,7 +646,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.2,2,86,42.file/standard.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -666,7 +664,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -685,7 +683,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(4, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -720,7 +718,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -739,7 +737,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -760,7 +758,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.2");
@@ -783,7 +781,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg.image_file.500.237.file/cq5dam.web.685.325.jpg",
         renditions.get(0).getUrl(), "Virtual rendition for width option 500px should match");
@@ -837,7 +835,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     // ensure a custom ipe config with a path pointing to IPEConfigResourceProvider is set
     String expectedPath = IPEConfigResourceProvider.buildPath(parStandardMediaRef.getPath(),
-        ImmutableSet.of("editorial_1col"));
+        Set.of("editorial_1col"));
     doAnswer(new Answer<Object>() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -862,7 +860,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
@@ -903,7 +901,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
@@ -950,7 +948,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
@@ -991,7 +989,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
@@ -1037,7 +1035,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
@@ -1082,7 +1080,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",

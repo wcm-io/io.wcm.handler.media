@@ -33,8 +33,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.google.common.collect.ImmutableSet;
-
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.format.MediaFormat;
@@ -87,7 +85,7 @@ class CroppingRatiosTest {
 
     Set<String> result = underTest.getMediaFormatsForCropping(mediaRequest);
 
-    assertEquals(ImmutableSet.of("ratio16_9", "ratio32_10", "ratio2_1a"), result);
+    assertEquals(Set.of("ratio16_9", "ratio32_10", "ratio2_1a"), result);
   }
 
   @Test
@@ -96,7 +94,7 @@ class CroppingRatiosTest {
 
     Set<String> result = underTest.getMediaFormatsForCropping(mediaRequest);
 
-    assertEquals(ImmutableSet.of(MEDIAFORMAT_FREE_CROP.getName(), "ratio16_9", "ratio4_3", "ratio32_10", "ratio2_1c"), result);
+    assertEquals(Set.of(MEDIAFORMAT_FREE_CROP.getName(), "ratio16_9", "ratio4_3", "ratio32_10", "ratio2_1c"), result);
   }
 
   private MediaFormat addMediaFormat(MediaFormatBuilder mediaFormatBuilder) {

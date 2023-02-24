@@ -28,8 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
-import com.google.common.collect.ImmutableSet;
-
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
@@ -74,9 +72,10 @@ public enum MediaFileType {
   private final Set<String> contentTypes;
   private final Set<String> extensions;
 
+  @SuppressWarnings("null")
   MediaFileType(@NotNull String @NotNull [] contentTypes, @NotNull String @NotNull [] extensions) {
-    this.contentTypes = ImmutableSet.copyOf(contentTypes);
-    this.extensions = ImmutableSet.copyOf(extensions);
+    this.contentTypes = Set.of(contentTypes);
+    this.extensions = Set.of(extensions);
   }
 
   /**

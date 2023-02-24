@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.format.impl;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +34,6 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import com.google.common.collect.ImmutableSortedSet;
 
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.format.MediaFormat;
@@ -106,7 +105,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
   public @NotNull SortedSet<MediaFormat> getMediaFormats(@NotNull Comparator<MediaFormat> comparator) {
     SortedSet<MediaFormat> set = new TreeSet<>(comparator);
     set.addAll(getMediaFormatsForCurrentResource());
-    return ImmutableSortedSet.copyOf(set);
+    return Collections.unmodifiableSortedSet(set);
   }
 
   /**

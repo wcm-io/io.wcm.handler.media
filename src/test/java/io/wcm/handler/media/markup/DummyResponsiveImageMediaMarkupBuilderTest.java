@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.json.JSONArray;
@@ -35,7 +37,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.wcm.api.WCMMode;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
@@ -89,7 +90,7 @@ class DummyResponsiveImageMediaMarkupBuilderTest {
 
     mediaRequest.getMediaArgs().mandatoryMediaFormats(DummyMediaFormats.RESPONSIVE_32_9_L1, DummyMediaFormats.RESPONSIVE_32_9_M1);
 
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     assertFalse(underTest.accepts(media));
     media.setRenditions(null);
 
@@ -113,7 +114,7 @@ class DummyResponsiveImageMediaMarkupBuilderTest {
 
     assertTrue(underTest.accepts(media));
 
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     assertFalse(underTest.accepts(media));
 
     media.setRenditions(null);
@@ -138,7 +139,7 @@ class DummyResponsiveImageMediaMarkupBuilderTest {
 
     assertTrue(underTest.accepts(media));
 
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     assertFalse(underTest.accepts(media));
 
     media.setRenditions(null);

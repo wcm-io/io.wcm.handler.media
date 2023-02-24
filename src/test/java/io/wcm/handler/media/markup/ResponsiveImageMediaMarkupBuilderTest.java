@@ -27,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
@@ -36,7 +38,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.wcm.api.WCMMode;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
@@ -87,7 +88,7 @@ class ResponsiveImageMediaMarkupBuilderTest {
 
     assertFalse(underTest.accepts(media), "no rendition");
 
-    media.setRenditions(ImmutableList.of(renditionL));
+    media.setRenditions(List.of(renditionL));
 
     assertFalse(underTest.accepts(media),"media format not mandatory");
 
@@ -99,7 +100,7 @@ class ResponsiveImageMediaMarkupBuilderTest {
 
     assertFalse(underTest.accepts(media),"only one rendition");
 
-    media.setRenditions(ImmutableList.of(renditionL, renditionS));
+    media.setRenditions(List.of(renditionL, renditionS));
 
     assertTrue(underTest.accepts(media));
 
@@ -116,7 +117,7 @@ class ResponsiveImageMediaMarkupBuilderTest {
     Media media = new Media(mediaSource, mediaRequest);
     mediaRequest.getMediaArgs().mandatoryMediaFormats(DummyMediaFormats.RESPONSIVE_32_9_L1, DummyMediaFormats.RESPONSIVE_32_9_M1);
 
-    media.setRenditions(ImmutableList.of(renditionL, renditionS));
+    media.setRenditions(List.of(renditionL, renditionS));
     when(renditionL.getUrl()).thenReturn("/media/dummy/1920x600png");
     when(renditionL.getMediaFormat()).thenReturn(DummyMediaFormats.RESPONSIVE_32_9_L1);
     when(renditionS.getUrl()).thenReturn("/media/dummy/120x100png");
@@ -158,7 +159,7 @@ class ResponsiveImageMediaMarkupBuilderTest {
     Media media = new Media(mediaSource, mediaRequest);
     mediaRequest.getMediaArgs().mandatoryMediaFormats(DummyMediaFormats.RESPONSIVE_32_9_L1, DummyMediaFormats.RESPONSIVE_32_9_M1);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(renditionL, renditionS));
+    media.setRenditions(List.of(renditionL, renditionS));
     when(renditionL.getUrl()).thenReturn("/media/dummy/1920x600png");
     when(renditionL.getMediaFormat()).thenReturn(DummyMediaFormats.RESPONSIVE_32_9_L1);
     when(renditionS.getUrl()).thenReturn("/media/dummy/120x100png");
@@ -179,7 +180,7 @@ class ResponsiveImageMediaMarkupBuilderTest {
     Media media = new Media(mediaSource, mediaRequest);
     mediaRequest.getMediaArgs().mandatoryMediaFormats(DummyMediaFormats.RESPONSIVE_32_9_L1, DummyMediaFormats.RESPONSIVE_32_9_M1);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(renditionL, renditionS));
+    media.setRenditions(List.of(renditionL, renditionS));
     when(renditionL.getUrl()).thenReturn("/media/dummy/1920x600png");
     when(renditionL.getMediaFormat()).thenReturn(DummyMediaFormats.RESPONSIVE_32_9_L1);
     when(renditionS.getUrl()).thenReturn("/media/dummy/120x100png");

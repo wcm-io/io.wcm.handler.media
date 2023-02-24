@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam.impl.metadata;
 import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
 
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +53,6 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.DamEvent;
 import com.day.cq.dam.api.DamEvent.Type;
 import com.day.cq.dam.api.handler.store.AssetStore;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.wcm.handler.media.MediaFileType;
@@ -223,7 +223,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
       try {
         // open service user session for reading/writing rendition metadata
         serviceResourceResolver = resourceResolverFactory
-            .getServiceResourceResolver(ImmutableMap.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE));
+            .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE));
 
         // make sure asset resource exists
         Resource assetResource = serviceResourceResolver.getResource(assetPath);

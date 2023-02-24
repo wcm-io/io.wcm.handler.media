@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
     <relativePath/>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>1.15.2</version>
+  <version>1.15.4</version>
   <packaging>jar</packaging>
 
   <name>Media Handler</name>
@@ -49,7 +49,7 @@
     <site.url.module.prefix>handler/media</site.url.module.prefix>
 
     <!-- Enable reproducible builds -->
-    <project.build.outputTimestamp>2022-12-15T11:31:48Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-02-24T15:01:16Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -225,7 +225,11 @@
             Sling-Initial-Content: \
               SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media
 
-            Sling-Namespaces: wcmio=http://wcm.io/ns
+            Sling-Namespaces: \
+              wcmio=http://wcm.io/ns,\
+              cq=http://www.day.com/jcr/cq/1.0,\
+              granite=http://www.adobe.com/jcr/granite/1.0,\
+              sling=http://sling.apache.org/jcr/sling/1.0
 
             Import-Package: \
               <!-- For build compatibility with Java 11 -->\

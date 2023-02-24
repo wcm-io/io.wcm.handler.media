@@ -39,8 +39,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.google.common.collect.ImmutableList;
-
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaHandler;
@@ -121,7 +119,7 @@ class InlineUriTemplateRenditionTest {
         .autoCrop(true)
         .build();
 
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(4, renditions.size());
 
     assertUriTemplate(renditions.get(0), SCALE_WIDTH, 400, 250,

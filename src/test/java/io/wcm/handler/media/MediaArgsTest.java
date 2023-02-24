@@ -34,8 +34,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
@@ -130,7 +128,7 @@ class MediaArgsTest {
 
   @Test
   void testGetProperties() {
-    Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
+    Map<String, Object> props = Map.of("prop1", "value1");
 
     MediaArgs mediaArgs = new MediaArgs()
     .property("prop3", "value3")
