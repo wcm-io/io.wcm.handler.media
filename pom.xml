@@ -245,6 +245,7 @@
               com.day.cq.dam.api.handler;version="[1.0,3)",\
               <!-- Guava is embedded -->\
               !com.google.common.*,\
+              !com.google.thirdparty.*,\
               *
           </bnd>
         </configuration>
@@ -271,6 +272,8 @@
           <artifactSet>
             <includes>
               <include>com.google.guava:guava</include>
+              <include>com.google.guava:failureaccess</include>
+              <include>com.google.guava:listenablefuture</include>
             </includes>
           </artifactSet>
           <relocations>
@@ -285,7 +288,7 @@
           </relocations>
           <filters>
             <filter>
-              <artifact>com.google.guava:guava</artifact>
+              <artifact>com.google.guava:*</artifact>
               <excludes>
                 <exclude>META-INF/**</exclude>
               </excludes>
