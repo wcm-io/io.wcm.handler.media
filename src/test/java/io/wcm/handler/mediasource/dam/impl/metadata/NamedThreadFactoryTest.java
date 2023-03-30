@@ -19,30 +19,27 @@
  */
 package io.wcm.handler.mediasource.dam.impl.metadata;
 
-import java.util.concurrent.Executors;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Creates new threads with a given formatted name, including a counter that is incremented for each new thread.
- */
-class NamedThreadFactory implements ThreadFactory {
+import org.junit.jupiter.api.Test;
 
-  private final String namePrefix;
-  private final AtomicLong counter = new AtomicLong();
+class NamedThreadFactoryTest {
 
-  /**
-   * @param namePrefix Prefix for thread name, will be suffixed with "-{number}".
-   */
-  NamedThreadFactory(String namePrefix) {
-    this.namePrefix = namePrefix;
-  }
+  private static final Runnable NOOP = () -> {
+    // do nothing
+  };
 
-  @Override
-  public Thread newThread(Runnable r) {
-    Thread thread = Executors.defaultThreadFactory().newThread(r);
-    thread.setName(namePrefix + "-" + counter.getAndIncrement());
-    return thread;
+  @Test
+  void testNewThread() {
+    ThreadFactory underTest = new NamedThreadFactory("mythread");
+
+    Thread thread1 = underTest.newThread(NOOP);
+    assertEquals("mythread-0", thread1.getName());
+
+    Thread thread2 = underTest.newThread(NOOP);
+    assertEquals("mythread-1", thread2.getName());
   }
 
 }

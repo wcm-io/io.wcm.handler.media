@@ -129,7 +129,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
     this.synchronousProcessing = config.threadPoolSize() <= 0;
     if (this.enabled && !this.synchronousProcessing) {
       this.executorService = Executors.newScheduledThreadPool(config.threadPoolSize(),
-          new NamedThreadFactory(getClass().getSimpleName() + "-%d"));
+          new NamedThreadFactory(getClass().getSimpleName()));
     }
   }
 
