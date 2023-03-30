@@ -29,7 +29,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.util.concurrent.Striped;
+import io.wcm.handler.mediasource.dam.impl.metadata.concurrency.StripedLazyWeakLock;
 
 /**
  * Synchronized the generation of rendition metadata through the ways (metadata service, workflow process)
@@ -43,11 +43,11 @@ public final class AssetSynchonizationService {
 
   private static final Logger log = LoggerFactory.getLogger(AssetSynchonizationService.class);
 
-  private Striped<Lock> lazyWeakLock;
+  private StripedLazyWeakLock lazyWeakLock;
 
   @Activate
   private void activate() {
-    lazyWeakLock = Striped.lazyWeakLock(STRIPE_COUNT);
+    lazyWeakLock = new StripedLazyWeakLock(STRIPE_COUNT);
   }
 
   @Deactivate
