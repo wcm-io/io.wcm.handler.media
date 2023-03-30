@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.metadata;
+package io.wcm.handler.mediasource.dam.impl.metadata.concurrency;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Creates new threads with a given formatted name, including a counter that is incremented for each new thread.
  */
-class NamedThreadFactory implements ThreadFactory {
+public final class NamedThreadFactory implements ThreadFactory {
 
   private final String namePrefix;
   private final AtomicLong counter = new AtomicLong();
@@ -34,7 +34,7 @@ class NamedThreadFactory implements ThreadFactory {
   /**
    * @param namePrefix Prefix for thread name, will be suffixed with "-{number}".
    */
-  NamedThreadFactory(String namePrefix) {
+  public NamedThreadFactory(String namePrefix) {
     this.namePrefix = namePrefix;
   }
 

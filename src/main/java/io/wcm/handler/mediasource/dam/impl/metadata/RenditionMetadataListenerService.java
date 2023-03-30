@@ -55,6 +55,7 @@ import com.day.cq.dam.api.DamEvent.Type;
 import com.day.cq.dam.api.handler.store.AssetStore;
 
 import io.wcm.handler.media.MediaFileType;
+import io.wcm.handler.mediasource.dam.impl.metadata.concurrency.NamedThreadFactory;
 import io.wcm.wcm.commons.instancetype.InstanceTypeService;
 import io.wcm.wcm.commons.util.RunMode;
 

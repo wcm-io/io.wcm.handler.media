@@ -17,29 +17,21 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.metadata;
+package io.wcm.handler.mediasource.dam.impl.metadata.concurrency;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.locks.Lock;
 
 import org.junit.jupiter.api.Test;
 
-class NamedThreadFactoryTest {
-
-  private static final Runnable NOOP = () -> {
-    // do nothing
-  };
+class StripedLazyWeakLockTest {
 
   @Test
-  void testNewThread() {
-    ThreadFactory underTest = new NamedThreadFactory("mythread");
-
-    Thread thread1 = underTest.newThread(NOOP);
-    assertEquals("mythread-0", thread1.getName());
-
-    Thread thread2 = underTest.newThread(NOOP);
-    assertEquals("mythread-1", thread2.getName());
+  void testGet() {
+    StripedLazyWeakLock underTest = new StripedLazyWeakLock(100);
+    Lock lock = underTest.get("any-key");
+    assertNotNull(lock);
   }
 
 }
