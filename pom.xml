@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>1.15.4</version>
+  <version>1.15.6</version>
   <packaging>jar</packaging>
 
   <name>Media Handler</name>
@@ -49,7 +49,7 @@
     <site.url.module.prefix>handler/media</site.url.module.prefix>
 
     <!-- Enable reproducible builds -->
-    <project.build.outputTimestamp>2023-02-24T15:01:16Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-04-19T11:15:03Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -99,6 +99,13 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+      <version>3.1.5</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.testing.hamcrest</artifactId>
       <scope>test</scope>
@@ -131,7 +138,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
-      <version>5.1.2</version>
+      <version>5.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -149,7 +156,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.wcm-io-mock.sling</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -236,6 +243,8 @@
               javax.annotation;version="[0.0,2)",\
               <!-- Package version change between AEM 6.2 and AEM 6.3 -->\
               com.day.cq.dam.api.handler;version="[1.0,3)",\
+              <!-- Caffeine is embedded -->\
+              !com.github.benmanes.caffeine.*,\
               *
           </bnd>
         </configuration>
@@ -252,6 +261,42 @@
             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
           </archive>
         </configuration>
+      </plugin>
+
+      <!-- Embed shaded version of Caffeine to avoid classpath issues in unit tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <configuration>
+          <artifactSet>
+            <includes>
+              <include>com.github.ben-manes.caffeine:caffeine</include>
+            </includes>
+          </artifactSet>
+          <relocations>
+            <relocation>
+              <pattern>com.github.benmanes.caffeine</pattern>
+              <shadedPattern>io.wcm.handler.media.shaded.com.github.benmanes.caffeine</shadedPattern>
+            </relocation>
+          </relocations>
+          <filters>
+            <filter>
+              <artifact>com.github.ben-manes.caffeine:caffeine</artifact>
+              <excludes>
+                <exclude>module-info.class</exclude>
+                <exclude>META-INF/**</exclude>
+              </excludes>
+            </filter>
+          </filters>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

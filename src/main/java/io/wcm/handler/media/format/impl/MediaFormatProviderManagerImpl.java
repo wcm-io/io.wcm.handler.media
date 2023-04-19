@@ -24,7 +24,6 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -41,8 +40,8 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatProviderManager;
@@ -67,7 +66,7 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
   private BundleContext bundleContext;
 
   // cache resolving of media formats per combined cache key of context-aware services
-  private final Cache<String, SortedSet<MediaFormat>> cache = CacheBuilder.newBuilder()
+  private final Cache<String, SortedSet<MediaFormat>> cache = Caffeine.newBuilder()
       .expireAfterWrite(1, TimeUnit.HOURS)
       .build();
 
@@ -80,14 +79,9 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
   public SortedSet<MediaFormat> getMediaFormats(Resource contextResource) {
     ResolveAllResult<MediaFormatProvider> result = serviceResolver.resolveAll(MediaFormatProvider.class, contextResource);
     String key = result.getCombinedKey();
-    try {
-      return cache.get(key, () -> result.getServices()
-          .flatMap(provider -> provider.getMediaFormats().stream())
-          .collect(Collectors.toCollection(TreeSet::new)));
-    }
-    catch (ExecutionException ex) {
-      throw new RuntimeException("Error accessing media format provider result cache.", ex);
-    }
+    return cache.get(key, theKey -> result.getServices()
+        .flatMap(provider -> provider.getMediaFormats().stream())
+        .collect(Collectors.toCollection(TreeSet::new)));
   }
 
   @Override
