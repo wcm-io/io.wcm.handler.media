@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,8 +55,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   private final Rendition rendition;
   private final String fileName;
   private final String fileExtension;
-  private final long width;
-  private final long height;
+  private Optional<Dimension> dimension;
   private final boolean isImage;
   private final boolean isVectorImage;
   private MediaFormat mediaFormat;
@@ -72,16 +72,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     this.isImage = MediaFileType.isImage(this.fileExtension);
     this.isVectorImage = MediaFileType.isVectorImage(this.fileExtension);
 
-    // get image width/height
-    Dimension dimension = AssetRendition.getDimension(rendition);
-    if (dimension != null) {
-      this.width = dimension.getWidth();
-      this.height = dimension.getHeight();
-    }
-    else {
-      this.width = 0;
-      this.height = 0;
-    }
+
   }
 
   /**
@@ -145,14 +136,22 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @return Image width
    */
   public long getWidth() {
-    return this.width;
+	readDimensions();
+	if (this.dimension.isPresent()) {
+	  return this.dimension.get().getWidth();
+	}
+    return 0;
   }
 
   /**
    * @return Image height
    */
   public long getHeight() {
-    return this.height;
+    readDimensions();
+    if (this.dimension.isPresent()) {
+      return this.dimension.get().getHeight();
+    }
+    return 0;
   }
 
   /**
@@ -367,8 +366,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append(this.rendition.getPath());
-    if (this.width > 0 || this.height > 0) {
-      sb.append(" (").append(Long.toString(this.width)).append("x").append(Long.toString(this.height)).append(")");
+    if (getWidth() > 0 || getHeight() > 0) {
+      sb.append(" (").append(Long.toString(getWidth())).append("x").append(Long.toString(getHeight())).append(")");
     }
     return sb.toString();
   }
@@ -400,5 +399,13 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
     return super.adaptTo(type);
   }
+  
+  //read dimensions on demand, as it can be expensive
+  protected void readDimensions() {
+	if (this.dimension == null) {
+	  this.dimension = Optional.ofNullable(AssetRendition.getDimension(rendition));
+	}
+  }
+  
 
 }
