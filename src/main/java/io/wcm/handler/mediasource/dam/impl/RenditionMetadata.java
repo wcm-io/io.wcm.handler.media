@@ -20,12 +20,12 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import java.io.InputStream;
-import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.jackrabbit.oak.commons.LazyValue;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +55,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   private final Rendition rendition;
   private final String fileName;
   private final String fileExtension;
-  private Optional<Dimension> dimension;
+  private LazyValue<Dimension> dimensionLazyValue;
   private final boolean isImage;
   private final boolean isVectorImage;
   private MediaFormat mediaFormat;
@@ -72,7 +72,18 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     this.isImage = MediaFileType.isImage(this.fileExtension);
     this.isVectorImage = MediaFileType.isVectorImage(this.fileExtension);
 
-
+    // read dimensions on demand, as it can be expensive.
+    // if dimension cannot be obtained use a dimension with width/height=0
+    this.dimensionLazyValue = new LazyValue<>() {
+      @Override
+      protected Dimension createValue() {
+        Dimension result = AssetRendition.getDimension(rendition);
+        if (result == null) {
+          result = new Dimension(0, 0);
+        }
+        return result;
+      }
+    };
   }
 
   /**
@@ -136,22 +147,14 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @return Image width
    */
   public long getWidth() {
-	readDimensions();
-	if (this.dimension.isPresent()) {
-	  return this.dimension.get().getWidth();
-	}
-    return 0;
+    return dimensionLazyValue.get().getWidth();
   }
 
   /**
    * @return Image height
    */
   public long getHeight() {
-    readDimensions();
-    if (this.dimension.isPresent()) {
-      return this.dimension.get().getHeight();
-    }
-    return 0;
+    return dimensionLazyValue.get().getHeight();
   }
 
   /**
@@ -399,13 +402,5 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
     return super.adaptTo(type);
   }
-  
-  //read dimensions on demand, as it can be expensive
-  protected void readDimensions() {
-	if (this.dimension == null) {
-	  this.dimension = Optional.ofNullable(AssetRendition.getDimension(rendition));
-	}
-  }
-  
 
 }
