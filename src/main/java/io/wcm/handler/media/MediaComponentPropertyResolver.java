@@ -299,7 +299,6 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
       this.componentPropertyResolver = componentPropertyResolver;
     }
     @Override
-    @Nullable
     public <T> @Nullable T get(@NotNull String name, @NotNull Class<T> type) {
       return componentPropertyResolver.get(name, type);
     }
@@ -315,7 +314,6 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
       this.valueMap = valueMap;
     }
     @Override
-    @Nullable
     public <T> @Nullable T get(@NotNull String name, @NotNull Class<T> type) {
       return valueMap.get(name, type);
     }
