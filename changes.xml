@@ -27,7 +27,7 @@
       <action type="update" dev="joerghoh" issue="22">
         DAM Renditions: Read width/height of rendition lazy, as this can be expensive when not configured properly or Asset metadata is missing for other reasons.
       </action>
-      <action type="update" dev="sseifert">
+      <action type="update" dev="sseifert" issue="23">
         MediaComponentPropertyResolver: Add option to resolve properties directly from a value map.
       </action>
     </release>
