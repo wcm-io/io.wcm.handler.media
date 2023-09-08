@@ -280,7 +280,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
 
   @Override
   @SuppressWarnings("null")
-  public void close() throws Exception {
+  public void close() {
     if (resolver != null) {
       resolver.close();
     }

@@ -46,7 +46,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Map;
+
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -126,6 +130,15 @@ class MediaComponentPropertyResolverTest {
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
       assertFalse(underTest.isAutoCrop());
+    }
+  }
+
+  @Test
+  void testIsAutoCrop_ValueMap() throws Exception {
+    ValueMap valueMap = new ValueMapDecorator(Map.<String, Object>of(PN_COMPONENT_MEDIA_AUTOCROP, true));
+
+    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(valueMap)) {
+      assertTrue(underTest.isAutoCrop());
     }
   }
 
