@@ -58,6 +58,10 @@ import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
  * Resolves Media Handler component properties for the component associated
  * with the given resource from content policies and properties defined in the component resource.
  * Please make sure to {@link #close()} instances of this class after usage.
+ * <p>
+ * Alternatively, it's possible to use the resolver on a ValueMap. In this case, the properties
+ * are directly read from the provided value map. Picture Sources are not supported for that option.
+ * </p>
  */
 @ProviderType
 @SuppressFBWarnings("NP_NONNULL_RETURN_VIOLATION")
@@ -74,9 +78,11 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   static final String PN_PICTURE_SOURCES_SIZES = "sizes";
   static final String PN_PICTURE_SOURCES_WIDTHS = "widths";
 
-  private final ComponentPropertyResolver resolver;
+  private final @Nullable ComponentPropertyResolver resolver;
+  private final PropertyAccessor propertyAccessor;
 
   /**
+   * Resolves
    * @param resource Resource
    * @param componentPropertyResolverFactory Component property resolver factory
    */
@@ -86,6 +92,15 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
     resolver = componentPropertyResolverFactory.get(resource, true)
         .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
         .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
+    propertyAccessor = new ComponentPropertyResolverPropertyAccessor(resolver);
+  }
+
+  /**
+   * @param valueMap Value map to read properties directly from
+   */
+  public MediaComponentPropertyResolver(@NotNull ValueMap valueMap) {
+    resolver = null;
+    propertyAccessor = new ValueMapPropertyAccessor(valueMap);
   }
 
   /**
@@ -99,13 +114,14 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
     resolver = new ComponentPropertyResolver(resource, true)
         .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
         .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
+    propertyAccessor = new ComponentPropertyResolverPropertyAccessor(resolver);
   }
 
   /**
    * @return AutoCrop state
    */
   public boolean isAutoCrop() {
-    return resolver.get(PN_COMPONENT_MEDIA_AUTOCROP, false);
+    return propertyAccessor.get(PN_COMPONENT_MEDIA_AUTOCROP, false);
   }
 
   /**
@@ -115,8 +131,8 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
     Map<String, MediaFormatOption> mediaFormatOptions = new LinkedHashMap<>();
 
     // media formats with optional mandatory boolean flag(s)
-    String[] mediaFormatNames = resolver.get(PN_COMPONENT_MEDIA_FORMATS, String[].class);
-    Boolean[] mediaFormatsMandatory = resolver.get(PN_COMPONENT_MEDIA_FORMATS_MANDATORY, Boolean[].class);
+    String[] mediaFormatNames = propertyAccessor.get(PN_COMPONENT_MEDIA_FORMATS, String[].class);
+    Boolean[] mediaFormatsMandatory = propertyAccessor.get(PN_COMPONENT_MEDIA_FORMATS_MANDATORY, Boolean[].class);
     if (mediaFormatNames != null) {
       for (int i = 0; i < mediaFormatNames.length; i++) {
         boolean mandatory = false;
@@ -136,7 +152,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
     }
 
     // support additional property with list of media format names that are all rated as mandatory
-    String[] mediaFormatsMandatoryNames = resolver.get(PN_COMPONENT_MEDIA_FORMATS_MANDATORY_NAMES, String[].class);
+    String[] mediaFormatsMandatoryNames = propertyAccessor.get(PN_COMPONENT_MEDIA_FORMATS_MANDATORY_NAMES, String[].class);
     if (mediaFormatsMandatoryNames != null) {
       for (String mediaFormatName : mediaFormatsMandatoryNames) {
         if (StringUtils.isNotBlank(mediaFormatName)) {
@@ -200,15 +216,15 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
       return null;
     }
 
-    String sizes = StringUtils.trimToNull(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
-    WidthOption[] widths = WidthUtils.parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
+    String sizes = StringUtils.trimToNull(propertyAccessor.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
+    WidthOption[] widths = WidthUtils.parseWidths(propertyAccessor.get(NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
     if (sizes != null && widths != null) {
       return new ImageSizes(sizes, widths);
     }
 
     // try to fallback to deprecated constant with node names with typo (backward compatibility)
-    sizes = StringUtils.trimToNull(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
-    widths = WidthUtils.parseWidths(resolver.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
+    sizes = StringUtils.trimToNull(propertyAccessor.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
+    widths = WidthUtils.parseWidths(propertyAccessor.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
     if (sizes != null && widths != null) {
       return new ImageSizes(sizes, widths);
     }
@@ -222,7 +238,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   @SuppressWarnings({ "deprecation", "null" })
   public @NotNull PictureSource @Nullable [] getPictureSources() {
     String responsiveType = getResponsiveType();
-    if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
+    if (resolver == null || responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
       return null;
     }
 
@@ -259,12 +275,54 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   private String getResponsiveType() {
-    return resolver.get(PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, String.class);
+    return propertyAccessor.get(PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, String.class);
   }
 
   @Override
+  @SuppressWarnings("null")
   public void close() throws Exception {
-    resolver.close();
+    if (resolver != null) {
+      resolver.close();
+    }
+  }
+
+  private interface PropertyAccessor {
+    @Nullable
+    <T> T get(@NotNull String name, @NotNull Class<T> type);
+
+    <T> T get(@NotNull String name, @NotNull T defaultValue);
+  }
+
+  private static class ComponentPropertyResolverPropertyAccessor implements PropertyAccessor {
+    private final ComponentPropertyResolver componentPropertyResolver;
+    ComponentPropertyResolverPropertyAccessor(ComponentPropertyResolver componentPropertyResolver) {
+      this.componentPropertyResolver = componentPropertyResolver;
+    }
+    @Override
+    @Nullable
+    public <T> @Nullable T get(@NotNull String name, @NotNull Class<T> type) {
+      return componentPropertyResolver.get(name, type);
+    }
+    @Override
+    public <T> T get(@NotNull String name, @NotNull T defaultValue) {
+      return componentPropertyResolver.get(name, defaultValue);
+    }
+  }
+
+  private static class ValueMapPropertyAccessor implements PropertyAccessor {
+    private final ValueMap valueMap;
+    ValueMapPropertyAccessor(ValueMap valueMap) {
+      this.valueMap = valueMap;
+    }
+    @Override
+    @Nullable
+    public <T> @Nullable T get(@NotNull String name, @NotNull Class<T> type) {
+      return valueMap.get(name, type);
+    }
+    @Override
+    public <T> T get(@NotNull String name, @NotNull T defaultValue) {
+      return valueMap.get(name, defaultValue);
+    }
   }
 
 }
