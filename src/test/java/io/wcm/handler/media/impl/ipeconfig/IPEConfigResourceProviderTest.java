@@ -116,6 +116,7 @@ class IPEConfigResourceProviderTest {
     when(mediaFormatHandler.getMediaFormat(SHOWROOM_STANDARD.getName())).thenReturn(SHOWROOM_STANDARD);
     when(mediaFormatHandler.getMediaFormat(NONFIXED_RAW.getName())).thenReturn(NONFIXED_RAW);
   }
+
   @Test
   @SuppressWarnings("null")
   void testCustomIPEConfig() {
