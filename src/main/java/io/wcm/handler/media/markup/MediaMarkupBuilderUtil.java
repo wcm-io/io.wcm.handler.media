@@ -37,7 +37,6 @@ import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.api.components.EditConfig;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
-import com.google.common.collect.ImmutableSet;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -60,7 +59,7 @@ public final class MediaMarkupBuilderUtil {
   /**
    * List of OOTB IPE editor types for images.
    */
-  public static final Set<String> DEFAULT_ALLOWED_IPE_EDITOR_TYPES = ImmutableSet.of("image");
+  public static final Set<String> DEFAULT_ALLOWED_IPE_EDITOR_TYPES = Set.of("image");
 
   private MediaMarkupBuilderUtil() {
     // static methods only
