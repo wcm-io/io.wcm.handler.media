@@ -23,6 +23,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Set;
@@ -98,7 +99,6 @@ class MediaMarkupBuilderUtilTest {
     when(componentContext.getEditContext()).thenReturn(editContext);
     when(editContext.getEditConfig()).thenReturn(editConfig);
     when(editConfig.getInplaceEditingConfig()).thenReturn(inplaceEditingConfig);
-    when(inplaceEditingConfig.getConfigPath()).thenReturn("/apps/components/comp1");
     when(inplaceEditingConfig.getEditorType()).thenReturn("image");
   }
 
@@ -199,6 +199,21 @@ class MediaMarkupBuilderUtilTest {
   void testCanSetCustomIPECropRatios_AUTO() {
     MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().ipeRatioCustomize(IPERatioCustomize.AUTO));
     assertTrue(MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext));
+  }
+
+  @Test
+  void testCanSetCustomIPECropRatios_AUTO_IPEConfigPath() {
+    MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().ipeRatioCustomize(IPERatioCustomize.AUTO));
+    when(inplaceEditingConfig.getConfigPath()).thenReturn("/apps/components/comp1");
+    assertTrue(MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext));
+  }
+
+  @Test
+  void testCanSetCustomIPECropRatios_AUTO_ExistingRatios() {
+    MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().ipeRatioCustomize(IPERatioCustomize.AUTO));
+    when(inplaceEditingConfig.getConfigPath()).thenReturn("/apps/components/comp1");
+    when(resolver.getResource("/apps/components/comp1/plugins/crop/aspectRatios")).thenReturn(mock(Resource.class));
+    assertFalse(MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext));
   }
 
 }
