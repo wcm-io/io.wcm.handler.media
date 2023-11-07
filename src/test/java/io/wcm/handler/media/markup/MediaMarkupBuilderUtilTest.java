@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import java.util.Set;
+
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -40,6 +42,9 @@ import com.day.cq.commons.DiffService;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.components.ComponentContext;
+import com.day.cq.wcm.api.components.EditConfig;
+import com.day.cq.wcm.api.components.EditContext;
+import com.day.cq.wcm.api.components.InplaceEditingConfig;
 
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Dimension;
@@ -71,6 +76,14 @@ class MediaMarkupBuilderUtilTest {
   private SlingHttpServletRequest request;
   @Mock
   private ComponentContext componentContext;
+  @Mock
+  private Resource componentResource;
+  @Mock
+  private EditContext editContext;
+  @Mock
+  private EditConfig editConfig;
+  @Mock
+  private InplaceEditingConfig inplaceEditingConfig;
 
   @BeforeEach
   @SuppressWarnings("null")
@@ -80,6 +93,13 @@ class MediaMarkupBuilderUtilTest {
     when(request.getResource()).thenReturn(resource);
     when(pageManager.getContainingPage(resource)).thenReturn(page);
     when(request.getParameter(DiffService.REQUEST_PARAM_DIFF_TO)).thenReturn(VERSION_LABEL);
+    when(componentContext.getResource()).thenReturn(componentResource);
+    when(componentResource.getResourceResolver()).thenReturn(resolver);
+    when(componentContext.getEditContext()).thenReturn(editContext);
+    when(editContext.getEditConfig()).thenReturn(editConfig);
+    when(editConfig.getInplaceEditingConfig()).thenReturn(inplaceEditingConfig);
+    when(inplaceEditingConfig.getConfigPath()).thenReturn("/apps/components/comp1");
+    when(inplaceEditingConfig.getEditorType()).thenReturn("image");
   }
 
   @Test
@@ -147,6 +167,38 @@ class MediaMarkupBuilderUtilTest {
     when(componentContext.getResource()).thenReturn(resource);
     mediaRequest = new MediaRequest(resource, new MediaArgs().dragDropSupport(DragDropSupport.AUTO));
     assertTrue(MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext));
+  }
+
+  @Test
+  void testCanSetCustomIPECropRatios_ALWAYS() {
+    MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().ipeRatioCustomize(IPERatioCustomize.ALWAYS));
+    assertTrue(MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext));
+  }
+
+  @Test
+  void testCanSetCustomIPECropRatios_ALWAYS_CustomEditorType_Mismatch() {
+    when(inplaceEditingConfig.getEditorType()).thenReturn("custom");
+    MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().ipeRatioCustomize(IPERatioCustomize.ALWAYS));
+    assertFalse(MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext));
+  }
+
+  @Test
+  void testCanSetCustomIPECropRatios_ALWAYS_CustomEditorType_Match() {
+    when(inplaceEditingConfig.getEditorType()).thenReturn("custom");
+    MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().ipeRatioCustomize(IPERatioCustomize.ALWAYS));
+    assertTrue(MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext, Set.of("image", "custom")));
+  }
+
+  @Test
+  void testCanSetCustomIPECropRatios_NEVER() {
+    MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().ipeRatioCustomize(IPERatioCustomize.NEVER));
+    assertFalse(MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext));
+  }
+
+  @Test
+  void testCanSetCustomIPECropRatios_AUTO() {
+    MediaRequest mediaRequest = new MediaRequest("/content/dam/path", new MediaArgs().ipeRatioCustomize(IPERatioCustomize.AUTO));
+    assertTrue(MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext));
   }
 
 }
