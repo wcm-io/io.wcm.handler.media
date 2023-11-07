@@ -27,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +38,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import com.day.cq.wcm.api.WCMMode;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
@@ -106,7 +107,7 @@ class DummyImageMediaMarkupBuilderTest {
     // test with wcm modes, with rendition, with mediaformat, no suppress
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).dummyImage(true);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     assertFalse(builder.accepts(media));
 
     // test invalid
@@ -140,7 +141,7 @@ class DummyImageMediaMarkupBuilderTest {
     // test with wcm modes, with rendition, with mediaformat, no suppress
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).dummyImage(true);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     assertFalse(builder.accepts(media));
 
     // test invalid
@@ -174,7 +175,7 @@ class DummyImageMediaMarkupBuilderTest {
     // test with wcm modes, with rendition, with mediaformat, no suppress
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT).dummyImage(true);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     assertFalse(builder.accepts(media));
 
     // test invalid

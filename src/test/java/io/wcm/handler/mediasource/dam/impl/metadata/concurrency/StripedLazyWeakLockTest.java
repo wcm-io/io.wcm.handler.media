@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2023 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,21 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Media Handler API.
- */
-@org.osgi.annotation.versioning.Version("1.20")
-package io.wcm.handler.media;
+package io.wcm.handler.mediasource.dam.impl.metadata.concurrency;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.concurrent.locks.Lock;
+
+import org.junit.jupiter.api.Test;
+
+class StripedLazyWeakLockTest {
+
+  @Test
+  void testGet() {
+    StripedLazyWeakLock underTest = new StripedLazyWeakLock(100);
+    Lock lock = underTest.get("any-key");
+    assertNotNull(lock);
+  }
+
+}

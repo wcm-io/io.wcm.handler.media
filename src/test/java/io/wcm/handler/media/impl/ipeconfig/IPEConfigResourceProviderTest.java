@@ -30,9 +30,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.jcr.Node;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.hamcrest.ResourceMatchers;
@@ -49,8 +51,6 @@ import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentManager;
 import com.day.cq.wcm.api.components.EditConfig;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.format.MediaFormatHandler;
@@ -120,19 +120,19 @@ class IPEConfigResourceProviderTest {
   @SuppressWarnings("null")
   void testCustomIPEConfig() {
     String path = IPEConfigResourceProvider.buildPath(componentContentResource.getPath(),
-        ImmutableSet.of(EDITORIAL_1COL.getName(), SHOWROOM_STANDARD.getName(), NONFIXED_RAW.getName()));
+        Set.of(EDITORIAL_1COL.getName(), SHOWROOM_STANDARD.getName(), NONFIXED_RAW.getName()));
 
     Resource ipeConfig = context.resourceResolver().getResource(path);
     assertNotNull(ipeConfig);
 
-    List<Resource> ipeConfigChildren = ImmutableList.copyOf(ipeConfig.listChildren());
+    List<Resource> ipeConfigChildren = IteratorUtils.toList(ipeConfig.listChildren());
     assertEquals(1, ipeConfigChildren.size());
     assertEquals("plugins", ipeConfigChildren.get(0).getName());
 
     Resource aspectRatios = ipeConfig.getChild("plugins/crop/aspectRatios");
     assertNotNull(aspectRatios);
 
-    List<Resource> aspectRatiosChildren = ImmutableList.copyOf(aspectRatios.listChildren());
+    List<Resource> aspectRatiosChildren = IteratorUtils.toList(aspectRatios.listChildren());
     assertEquals(3, aspectRatiosChildren.size());
     assertThat(aspectRatiosChildren.get(0), ResourceMatchers.nameAndProps(EDITORIAL_1COL.getName(),
         "name", EDITORIAL_1COL.getLabel() + " (215:102)", "ratio", 1d / EDITORIAL_1COL.getRatio()));

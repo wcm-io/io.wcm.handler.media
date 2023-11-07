@@ -39,9 +39,9 @@ class RatioTest {
 
   @Test
   void testMatchesMediaFormat() {
-    assertTrue(Ratio.matches(DummyMediaFormats.RATIO, DummyMediaFormats.RATIO));
-    assertFalse(Ratio.matches(DummyMediaFormats.RATIO, DummyMediaFormats.RATIO2));
-    assertFalse(Ratio.matches(DummyMediaFormats.RATIO, DummyMediaFormats.DOWNLOAD));
+    assertTrue(Ratio.matches(DummyMediaFormats.RATIO_16_10, DummyMediaFormats.RATIO_16_10));
+    assertFalse(Ratio.matches(DummyMediaFormats.RATIO_16_10, DummyMediaFormats.RATIO_4_3));
+    assertFalse(Ratio.matches(DummyMediaFormats.RATIO_16_10, DummyMediaFormats.DOWNLOAD));
     assertFalse(Ratio.matches(DummyMediaFormats.DOWNLOAD, DummyMediaFormats.DOWNLOAD));
   }
 

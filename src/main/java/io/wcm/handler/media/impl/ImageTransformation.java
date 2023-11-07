@@ -20,8 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import org.jetbrains.annotations.NotNull;
-
-import com.drew.lang.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;

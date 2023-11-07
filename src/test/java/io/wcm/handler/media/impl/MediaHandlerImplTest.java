@@ -39,8 +39,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.Constants;
 
-import com.google.common.collect.ImmutableList;
-
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.Media;
@@ -105,9 +103,9 @@ class MediaHandlerImplTest {
     assertTrue(media.isValid());
     assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.getUrl());
     assertNotNull(media.getElement());
-    assertEquals("http://xyz/content/dummymedia/item1/pre1.gif", media.getElement().getAttributeValue("src"));
+    assertEquals("http://xyz/content/dummymedia.post1/item1/pre1.gif", media.getElement().getAttributeValue("src"));
 
-    assertEquals("<img src=\"http://xyz/content/dummymedia/item1/pre1.gif\" />", media.getMarkup());
+    assertEquals("<img src=\"http://xyz/content/dummymedia.post1/item1/pre1.gif\" />", media.getMarkup());
   }
 
   @Test
@@ -314,22 +312,22 @@ class MediaHandlerImplTest {
 
     @Override
     public List<Class<? extends MediaProcessor>> getPreProcessors() {
-      return ImmutableList.<Class<? extends MediaProcessor>>of(TestPreProcessor.class);
+      return List.of(TestPreProcessor.class);
     }
 
     @Override
     public List<Class<? extends MediaSource>> getSources() {
-      return ImmutableList.<Class<? extends MediaSource>>of(TestMediaSource.class);
+      return List.of(TestMediaSource.class);
     }
 
     @Override
     public List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
-      return ImmutableList.<Class<? extends MediaMarkupBuilder>>of(TestMediaMarkupBuilder.class);
+      return List.of(TestMediaMarkupBuilder.class);
     }
 
     @Override
     public List<Class<? extends MediaProcessor>> getPostProcessors() {
-      return ImmutableList.<Class<? extends MediaProcessor>>of(TestPostProcessor.class);
+      return List.of(TestPostProcessor.class);
     }
 
   };

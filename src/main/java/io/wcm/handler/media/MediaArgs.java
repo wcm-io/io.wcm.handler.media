@@ -36,8 +36,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
-import com.google.common.collect.ImmutableSet;
-
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
@@ -73,7 +71,7 @@ public final class MediaArgs implements Cloneable {
   private boolean dynamicMediaDisabled;
   private ValueMap properties;
 
-  private static final Set<String> ALLOWED_FORCED_FILE_EXTENSIONS = ImmutableSet.of(
+  private static final Set<String> ALLOWED_FORCED_FILE_EXTENSIONS = Set.of(
       FileExtension.JPEG, FileExtension.PNG);
 
   /**

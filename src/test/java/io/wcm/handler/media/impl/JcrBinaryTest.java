@@ -27,14 +27,14 @@ import static org.mockito.Mockito.when;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.day.cq.commons.jcr.JcrConstants;
-import com.google.common.collect.ImmutableMap;
+
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 @ExtendWith(MockitoExtension.class)
 class JcrBinaryTest {
@@ -74,8 +74,8 @@ class JcrBinaryTest {
   @Test
   void testGetMimeType_Resource() {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_RESOURCE);
-    when(resource.getValueMap()).thenReturn(new ValueMapDecorator(ImmutableMap.<String, Object>builder()
-        .put(JcrConstants.JCR_MIMETYPE, MIMETYPE_GIF).build()));
+    when(resource.getValueMap()).thenReturn(ImmutableValueMap.of(
+        JcrConstants.JCR_MIMETYPE, MIMETYPE_GIF));
 
     assertEquals(MIMETYPE_GIF, JcrBinary.getMimeType(resource));
   }
@@ -93,8 +93,8 @@ class JcrBinaryTest {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_FILE);
     when(resource.getChild(JcrConstants.JCR_CONTENT)).thenReturn(subResource);
     when(subResource.getResourceType()).thenReturn(JcrConstants.NT_RESOURCE);
-    when(subResource.getValueMap()).thenReturn(new ValueMapDecorator(ImmutableMap.<String, Object>builder()
-        .put(JcrConstants.JCR_MIMETYPE, MIMETYPE_GIF).build()));
+    when(subResource.getValueMap()).thenReturn(ImmutableValueMap.of(
+        JcrConstants.JCR_MIMETYPE, MIMETYPE_GIF));
 
     assertEquals(MIMETYPE_GIF, JcrBinary.getMimeType(resource));
   }

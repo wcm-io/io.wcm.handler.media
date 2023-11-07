@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.spi;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
@@ -49,10 +49,10 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
    */
   public static final double DEFAULT_JPEG_QUALITY = 0.98d;
 
-  private static final List<Class<? extends MediaSource>> DEFAULT_MEDIA_SOURCES = ImmutableList.<Class<? extends MediaSource>>of(
+  private static final List<Class<? extends MediaSource>> DEFAULT_MEDIA_SOURCES = List.of(
       DamMediaSource.class);
 
-  private static final List<Class<? extends MediaMarkupBuilder>> DEFAULT_MEDIA_MARKUP_BUILDERS = ImmutableList.<Class<? extends MediaMarkupBuilder>>of(
+  private static final List<Class<? extends MediaMarkupBuilder>> DEFAULT_MEDIA_MARKUP_BUILDERS = List.of(
       SimpleImageMediaMarkupBuilder.class,
       DummyImageMediaMarkupBuilder.class);
 
@@ -75,7 +75,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
    */
   public @NotNull List<Class<? extends MediaProcessor>> getPreProcessors() {
     // no processors
-    return ImmutableList.of();
+    return Collections.emptyList();
   }
 
   /**
@@ -83,7 +83,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
    */
   public @NotNull List<Class<? extends MediaProcessor>> getPostProcessors() {
     // no processors
-    return ImmutableList.of();
+    return Collections.emptyList();
   }
 
   /**

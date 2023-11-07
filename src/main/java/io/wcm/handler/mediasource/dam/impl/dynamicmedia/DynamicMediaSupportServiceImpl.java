@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.s7dam.utils.PublishUtils;
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.url.SiteConfig;
@@ -74,8 +74,8 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
 
     @AttributeDefinition(
         name = "Dynamic Media Capability",
-        description = "Whether to detect automatically if Dynamic Media is actually enabled for the instance. "
-            + "Setting to ON disables the auto-detection via feature-flag and assumes it is enabled, setting to OFF assumes it is disabled.")
+        description = "Whether to detect automatically if Dynamic Media is actually for a given asset by looking for existing DM metadata. "
+            + "Setting to ON disables the auto-detection and forces it to enabled for all asssets, setting to OFF forced it to disabled.")
     DynamicMediaCapabilityDetection dmCapabilityDetection() default DynamicMediaCapabilityDetection.AUTO;
 
     @AttributeDefinition(
@@ -177,7 +177,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Override
   public @Nullable ImageProfile getImageProfile(@NotNull String profilePath) {
     try (ResourceResolver resourceResolver = resourceResolverFactory
-        .getServiceResourceResolver(ImmutableMap.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
+        .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
       Resource profileResource = resourceResolver.getResource(profilePath);
       if (profileResource != null) {
         log.debug("Loaded image profile: {}", profilePath);

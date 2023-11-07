@@ -25,6 +25,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.jackrabbit.oak.commons.LazyValue;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,8 @@ import com.day.image.Layer;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaFileType;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
@@ -52,8 +55,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   private final Rendition rendition;
   private final String fileName;
   private final String fileExtension;
-  private final long width;
-  private final long height;
+  private LazyValue<Dimension> dimensionLazyValue;
   private final boolean isImage;
   private final boolean isVectorImage;
   private MediaFormat mediaFormat;
@@ -70,16 +72,18 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     this.isImage = MediaFileType.isImage(this.fileExtension);
     this.isVectorImage = MediaFileType.isVectorImage(this.fileExtension);
 
-    // get image width/height
-    Dimension dimension = AssetRendition.getDimension(rendition);
-    if (dimension != null) {
-      this.width = dimension.getWidth();
-      this.height = dimension.getHeight();
-    }
-    else {
-      this.width = 0;
-      this.height = 0;
-    }
+    // read dimensions on demand, as it can be expensive.
+    // if dimension cannot be obtained use a dimension with width/height=0
+    this.dimensionLazyValue = new LazyValue<>() {
+      @Override
+      protected Dimension createValue() {
+        Dimension result = AssetRendition.getDimension(rendition);
+        if (result == null) {
+          result = new Dimension(0, 0);
+        }
+        return result;
+      }
+    };
   }
 
   /**
@@ -143,14 +147,14 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @return Image width
    */
   public long getWidth() {
-    return this.width;
+    return dimensionLazyValue.get().getWidth();
   }
 
   /**
    * @return Image height
    */
   public long getHeight() {
-    return this.height;
+    return dimensionLazyValue.get().getHeight();
   }
 
   /**
@@ -350,12 +354,23 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     return this.rendition.adaptTo(Resource.class).adaptTo(InputStream.class);
   }
 
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type, @NotNull DamContext damContext) {
+    if (!isImage() || isVectorImage()) {
+      throw new UnsupportedOperationException("Unable to build URI template for rendition: " + getRendition().getPath());
+    }
+    Dimension dimension = AssetRendition.getDimension(getRendition());
+    if (dimension == null) {
+      throw new IllegalArgumentException("Unable to get dimension for rendition: " + getRendition().getPath());
+    }
+    return new DamUriTemplate(type, dimension, rendition, null, null, Ratio.get(dimension), damContext);
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append(this.rendition.getPath());
-    if (this.width > 0 || this.height > 0) {
-      sb.append(" (").append(Long.toString(this.width)).append("x").append(Long.toString(this.height)).append(")");
+    if (getWidth() > 0 || getHeight() > 0) {
+      sb.append(" (").append(Long.toString(getWidth())).append("x").append(Long.toString(getHeight())).append(")");
     }
     return sb.toString();
   }

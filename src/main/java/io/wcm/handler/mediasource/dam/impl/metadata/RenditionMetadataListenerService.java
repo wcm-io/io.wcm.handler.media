@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam.impl.metadata;
 import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
 
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -52,10 +53,9 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.DamEvent;
 import com.day.cq.dam.api.DamEvent.Type;
 import com.day.cq.dam.api.handler.store.AssetStore;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import io.wcm.handler.media.MediaFileType;
+import io.wcm.handler.mediasource.dam.impl.metadata.concurrency.NamedThreadFactory;
 import io.wcm.wcm.commons.instancetype.InstanceTypeService;
 import io.wcm.wcm.commons.util.RunMode;
 
@@ -130,7 +130,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
     this.synchronousProcessing = config.threadPoolSize() <= 0;
     if (this.enabled && !this.synchronousProcessing) {
       this.executorService = Executors.newScheduledThreadPool(config.threadPoolSize(),
-          new ThreadFactoryBuilder().setNameFormat(getClass().getSimpleName() + "-%d").build());
+          new NamedThreadFactory(getClass().getSimpleName()));
     }
   }
 
@@ -223,7 +223,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
       try {
         // open service user session for reading/writing rendition metadata
         serviceResourceResolver = resourceResolverFactory
-            .getServiceResourceResolver(ImmutableMap.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE));
+            .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE));
 
         // make sure asset resource exists
         Resource assetResource = serviceResourceResolver.getResource(assetPath);

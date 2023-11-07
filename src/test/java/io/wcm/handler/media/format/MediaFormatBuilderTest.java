@@ -30,8 +30,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 @SuppressWarnings("null")
 class MediaFormatBuilderTest {
 
@@ -162,7 +160,7 @@ class MediaFormatBuilderTest {
 
   @Test
   void testProperties() {
-    Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
+    Map<String, Object> props = Map.of("prop1", "value1");
 
     MediaFormat mf = MediaFormatBuilder.create("name1")
         .property("prop3", "value3")

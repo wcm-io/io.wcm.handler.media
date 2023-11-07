@@ -47,7 +47,6 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.commons.util.PrefixRenditionPicker;
 import com.day.cq.dam.video.VideoConstants;
 import com.day.cq.dam.video.VideoProfile;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Video;
@@ -71,7 +70,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   private static final String OGG_PROFILE = "format_ogg";
   private static final String LEGACY_H264_PROFILE = "hq"; // for AEM 6.3
   private static final String LEGACY_OGG_PROFILE = "firefoxhq"; // for AEM 6.3
-  private static final List<String> VIDEO_PROFILE_NAMES = ImmutableList.of(H264_PROFILE, OGG_PROFILE,
+  private static final List<String> VIDEO_PROFILE_NAMES = List.of(H264_PROFILE, OGG_PROFILE,
       LEGACY_H264_PROFILE, LEGACY_OGG_PROFILE);
 
   private static final Logger log = LoggerFactory.getLogger(DamVideoMediaMarkupBuilder.class);

@@ -21,13 +21,12 @@ package io.wcm.handler.media.format.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections4.SetUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.format.MediaFormat;
@@ -53,7 +52,7 @@ public final class MediaFormatSupport {
     // get file extension defined in media args
     Set<String> mediaArgsFileExtensions = new HashSet<>();
     if (mediaArgs.getFileExtensions() != null && mediaArgs.getFileExtensions().length > 0) {
-      mediaArgsFileExtensions.addAll(ImmutableList.copyOf(mediaArgs.getFileExtensions()));
+      mediaArgsFileExtensions.addAll(List.of(mediaArgs.getFileExtensions()));
     }
 
     // get file extensions from media formats
@@ -62,7 +61,7 @@ public final class MediaFormatSupport {
       @Override
       public @Nullable Object visit(@NotNull MediaFormat mediaFormat) {
         if (mediaFormat.getExtensions() != null && mediaFormat.getExtensions().length > 0) {
-          mediaFormatFileExtensions.addAll(ImmutableList.copyOf(mediaFormat.getExtensions()));
+          mediaFormatFileExtensions.addAll(List.of(mediaFormat.getExtensions()));
         }
         return null;
       }
@@ -71,9 +70,9 @@ public final class MediaFormatSupport {
     // if extensions are defined both in mediaargs and media formats use intersection of both
     final String[] fileExtensions;
     if (!mediaArgsFileExtensions.isEmpty() && !mediaFormatFileExtensions.isEmpty()) {
-      Collection<String> intersection = Sets.intersection(mediaArgsFileExtensions, mediaFormatFileExtensions);
+      Collection<String> intersection = SetUtils.intersection(mediaArgsFileExtensions, mediaFormatFileExtensions);
       if (intersection.isEmpty()) {
-        // not intersected file extensions - return null to singal no valid file extension request
+        // not intersected file extensions - return null to signal no valid file extension request
         fileExtensions = null;
       }
       else {

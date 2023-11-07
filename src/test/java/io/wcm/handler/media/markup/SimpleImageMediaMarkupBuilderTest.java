@@ -22,8 +22,8 @@ package io.wcm.handler.media.markup;
 import static io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest.EXPECTED_AREAS_RESOLVED;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NONFIXED_RAW;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_4_3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,7 +45,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import com.day.cq.wcm.api.WCMMode;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.Area;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -103,7 +102,7 @@ class SimpleImageMediaMarkupBuilderTest {
     assertFalse(builder.accepts(media), "no rendition");
 
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
 
     assertFalse(builder.accepts(media), "invalid rendition");
 
@@ -142,7 +141,7 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
 
     assertNull(builder.build(media), "invalid rendition");
   }
@@ -155,7 +154,7 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     HtmlElement<?> element = builder.build(media);
@@ -175,7 +174,7 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     when(rendition.getWidth()).thenReturn(100L);
@@ -199,7 +198,7 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     when(rendition.getWidth()).thenReturn(100L);
@@ -219,12 +218,12 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
-    mediaRequest.getMediaArgs().mediaFormat(RATIO);
+    mediaRequest.getMediaArgs().mediaFormat(RATIO_16_10);
     mediaRequest.getMediaArgs().imageSizes(new ImageSizes("sizes1", 64, 32, 16));
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition(RATIO, 128), rendition(RATIO, 64), rendition(RATIO, 16)));
+    media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 16)));
 
     HtmlElement<?> element = builder.build(media);
     assertTrue(element instanceof Image);
@@ -241,12 +240,12 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
-    mediaRequest.getMediaArgs().mediaFormats(RATIO2, RATIO); // <- only second format resolves
+    mediaRequest.getMediaArgs().mediaFormats(RATIO_4_3, RATIO_16_10); // <- only second format resolves
     mediaRequest.getMediaArgs().imageSizes(new ImageSizes("sizes1", 64, 32, 16));
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition(RATIO, 128), rendition(RATIO, 64), rendition(RATIO, 16)));
+    media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 16)));
 
     HtmlElement<?> element = builder.build(media);
     assertTrue(element instanceof Image);
@@ -267,7 +266,7 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().imageSizes(new ImageSizes("sizes1", 64, 32, 16));
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition(RATIO, 128), rendition(RATIO, 64), rendition(RATIO, 16)));
+    media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 16)));
 
     HtmlElement<?> element = builder.build(media);
     assertTrue(element instanceof Image);
@@ -283,17 +282,17 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
-    mediaRequest.getMediaArgs().mediaFormat(RATIO);
+    mediaRequest.getMediaArgs().mediaFormat(RATIO_16_10);
     mediaRequest.getMediaArgs().pictureSources(new PictureSource[] {
-        new PictureSource(RATIO).media("media1").sizes("sizes1").widths(64, 32),
+        new PictureSource(RATIO_16_10).media("media1").sizes("sizes1").widths(64, 32),
         new PictureSource(EDITORIAL_1COL).media("media2").widths(215),
-        new PictureSource(RATIO2).widths(40),
+        new PictureSource(RATIO_4_3).widths(40),
     });
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition(RATIO, 128), rendition(RATIO, 64), rendition(RATIO, 32), rendition(RATIO, 16),
-        rendition(RATIO2, 40), rendition(RATIO2, 20)));
+    media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 32), rendition(RATIO_16_10, 16),
+        rendition(RATIO_4_3, 40), rendition(RATIO_4_3, 20)));
 
     HtmlElement<?> picture = builder.build(media);
     assertTrue(picture instanceof Picture);
@@ -330,7 +329,7 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     HtmlElement<?> element = builder.build(media);
@@ -348,7 +347,7 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
     builder.build(media);
@@ -363,7 +362,7 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition));
+    media.setRenditions(List.of(rendition));
     media.setMap((List)EXPECTED_AREAS_RESOLVED);
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
@@ -383,17 +382,17 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
-    mediaRequest.getMediaArgs().mediaFormat(RATIO);
+    mediaRequest.getMediaArgs().mediaFormat(RATIO_16_10);
     mediaRequest.getMediaArgs().pictureSources(new PictureSource[] {
-        new PictureSource(RATIO).media("media1").widths(64, 32),
+        new PictureSource(RATIO_16_10).media("media1").widths(64, 32),
         new PictureSource(EDITORIAL_1COL).media("media2").widths(215),
-        new PictureSource(RATIO2).widths(40),
+        new PictureSource(RATIO_4_3).widths(40),
     });
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
-    media.setRenditions(ImmutableList.of(rendition(RATIO, 128), rendition(RATIO, 64), rendition(RATIO, 32), rendition(RATIO, 16),
-        rendition(RATIO2, 40), rendition(RATIO2, 20)));
+    media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 32), rendition(RATIO_16_10, 16),
+        rendition(RATIO_4_3, 40), rendition(RATIO_4_3, 20)));
     media.setMap((List)EXPECTED_AREAS_RESOLVED);
 
     HtmlElement<?> picture = builder.build(media);

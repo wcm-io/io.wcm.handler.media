@@ -27,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.List;
+
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -43,7 +44,6 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
-@SuppressWarnings("null")
 class ImageProfileImplTest {
 
   private final AemContext context = AppAemContext.newAemContext();
@@ -69,7 +69,7 @@ class ImageProfileImplTest {
 
     ImageProfile underTest = dynamicMediaSupportService.getImageProfileForAsset(asset1);
     assertNotNull(underTest);
-    assertEquals(ImmutableList.of(new NamedDimension("Crop-1", 100, 60), new NamedDimension("Crop-2", 50, 30)),
+    assertEquals(List.of(new NamedDimension("Crop-1", 100, 60), new NamedDimension("Crop-2", 50, 30)),
         underTest.getSmartCropDefinitions());
   }
 
@@ -90,7 +90,7 @@ class ImageProfileImplTest {
 
     ImageProfile underTest = dynamicMediaSupportService.getImageProfileForAsset(asset1);
     assertNotNull(underTest);
-    assertEquals(ImmutableList.of(new NamedDimension("Crop-1", 100, 60), new NamedDimension("Crop-2", 50, 30)),
+    assertEquals(List.of(new NamedDimension("Crop-1", 100, 60), new NamedDimension("Crop-2", 50, 30)),
         underTest.getSmartCropDefinitions());
   }
 
@@ -108,7 +108,7 @@ class ImageProfileImplTest {
 
     ImageProfile underTest = dynamicMediaSupportService.getImageProfileForAsset(asset1);
     assertNotNull(underTest);
-    assertEquals(ImmutableList.of(new NamedDimension("Crop-4", 10, 20)), underTest.getSmartCropDefinitions());
+    assertEquals(List.of(new NamedDimension("Crop-4", 10, 20)), underTest.getSmartCropDefinitions());
   }
 
   @Test

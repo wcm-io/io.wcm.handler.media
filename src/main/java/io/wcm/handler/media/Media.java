@@ -20,7 +20,9 @@
 package io.wcm.handler.media;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -32,7 +34,6 @@ import org.osgi.annotation.versioning.ProviderType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Span;
@@ -49,6 +50,7 @@ public final class Media {
   private final @NotNull MediaSource mediaSource;
   private @NotNull MediaRequest mediaRequest;
   private HtmlElement<?> element;
+  private Function<Media, HtmlElement<?>> elementBuilder;
   private String url;
   private Asset asset;
   private Collection<Rendition> renditions;
@@ -96,6 +98,10 @@ public final class Media {
    */
   @JsonIgnore
   public HtmlElement<?> getElement() {
+    if (this.element == null && this.elementBuilder != null) {
+      this.element = this.elementBuilder.apply(this);
+      this.elementBuilder = null;
+    }
     return this.element;
   }
 
@@ -104,17 +110,18 @@ public final class Media {
    */
   @JsonIgnore
   public String getMarkup() {
-    if (markup == null && this.element != null) {
-      if (this.element instanceof Span) {
+    HtmlElement<?> el = getElement();
+    if (markup == null && el != null) {
+      if (el instanceof Span) {
         // in case of span get inner HTML markup, do not include span element itself
         StringBuilder result = new StringBuilder();
-        for (Element child : this.element.getChildren()) {
+        for (Element child : el.getChildren()) {
           result.append(child.toString());
         }
         markup = result.toString();
       }
       else {
-        markup = this.element.toString();
+        markup = el.toString();
       }
     }
     return markup;
@@ -122,9 +129,19 @@ public final class Media {
 
   /**
    * @param value Html element
+   * @deprecated Use {@link #setElementBuilder(Function)} to build anchor on-demand
    */
+  @Deprecated
   public void setElement(HtmlElement<?> value) {
     this.element = value;
+    this.markup = null;
+  }
+
+  /**
+   * @param value Function that builds the HTML element representation on demand
+   */
+  public void setElementBuilder(Function<Media, HtmlElement<?>> value) {
+    this.elementBuilder = value;
     this.markup = null;
   }
 
@@ -176,7 +193,7 @@ public final class Media {
    */
   public Collection<Rendition> getRenditions() {
     if (this.renditions == null) {
-      return ImmutableList.<Rendition>of();
+      return Collections.emptyList();
     }
     else {
       return this.renditions;

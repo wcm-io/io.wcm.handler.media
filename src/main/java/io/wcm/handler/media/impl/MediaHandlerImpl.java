@@ -34,8 +34,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableList;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
@@ -191,14 +189,16 @@ public final class MediaHandlerImpl implements MediaHandler {
       // generate markup (if markup builder is available) - first accepting wins
       List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMarkupBuilders();
       if (mediaMarkupBuilders != null) {
-        for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
-          MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
-          if (mediaMarkupBuilder.accepts(media)) {
-            log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
-            media.setElement(mediaMarkupBuilder.build(media));
-            break;
+        media.setElementBuilder(m -> {
+          for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
+            MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
+            if (mediaMarkupBuilder.accepts(m)) {
+              log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
+              return mediaMarkupBuilder.build(m);
+            }
           }
-        }
+          return null;
+        });
       }
 
       // postprocess media request after resolving
@@ -266,7 +266,7 @@ public final class MediaHandlerImpl implements MediaHandler {
     List<MediaFormat> candidates = new ArrayList<>();
     boolean fallbackToAllMediaFormats = false;
     if (mediaArgs.getMediaFormats() != null) {
-      candidates.addAll(ImmutableList.copyOf(mediaArgs.getMediaFormats()));
+      candidates.addAll(List.of(mediaArgs.getMediaFormats()));
     }
     else {
       candidates.addAll(mediaFormatHandler.getMediaFormats());

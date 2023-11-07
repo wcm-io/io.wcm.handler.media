@@ -31,8 +31,8 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_STANDARD;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_BANNER;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_13PLUS;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_4_3;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT;
@@ -61,7 +61,6 @@ import org.osgi.framework.Constants;
 
 import com.day.cq.wcm.api.Page;
 import com.day.image.Layer;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
@@ -757,13 +756,13 @@ class InlineMediaSourceTest {
     ModifiableValueMap props = mediaInlineSampleImageResource_16_10.adaptTo(ModifiableValueMap.class);
     props.put(PN_MEDIA_CROP, "0,0,320,152");
 
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO_16_10);
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
@@ -772,7 +771,7 @@ class InlineMediaSourceTest {
 
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(1).getMediaFormat());
   }
 
   @Test
@@ -781,14 +780,14 @@ class InlineMediaSourceTest {
     ModifiableValueMap props = mediaInlineSampleImageResource_16_10.adaptTo(ModifiableValueMap.class);
     props.put(PN_MEDIA_CROP, "0,0,320,152");
 
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO, RATIO2, EDITORIAL_1COL)
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO_16_10, RATIO_4_3, EDITORIAL_1COL)
         .autoCrop(true);
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(4, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
@@ -798,7 +797,7 @@ class InlineMediaSourceTest {
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.333.250.34,0,367,250.file/sample_image_400x250.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.1");
-    assertEquals(RATIO2, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_4_3, renditions.get(1).getMediaFormat());
 
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.215.102.0,0,320,152.file/sample_image_400x250.jpg",
@@ -807,7 +806,7 @@ class InlineMediaSourceTest {
 
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
         renditions.get(3).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(3).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(3).getMediaFormat());
   }
 
   @Test
@@ -816,13 +815,13 @@ class InlineMediaSourceTest {
     ModifiableValueMap props = mediaInlineSampleImageResource_16_10.adaptTo(ModifiableValueMap.class);
     props.put(PN_MEDIA_CROP, "0,0,320,152");
 
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO, SHOWROOM_CONTROLS);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO_16_10, SHOWROOM_CONTROLS);
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals(
         "/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline.image_file.84.40.0,0,320,152.file/sample_image_400x250.jpg",
@@ -831,7 +830,7 @@ class InlineMediaSourceTest {
 
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(1).getMediaFormat());
   }
 
   @Test
@@ -871,7 +870,7 @@ class InlineMediaSourceTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline./sample_image_215x102.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -895,7 +894,7 @@ class InlineMediaSourceTest {
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage/mediaInline.image_file.205.97.file/sample_image_215x102.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -910,7 +909,7 @@ class InlineMediaSourceTest {
   @SuppressWarnings("deprecation")
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO)
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO_16_10)
         .breakpoint("B1", 160, 100)
         .breakpoint("B2", 320, 200)
         .build());
@@ -919,7 +918,7 @@ class InlineMediaSourceTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals(
@@ -929,8 +928,8 @@ class InlineMediaSourceTest {
     assertEquals(100, rendition0.getHeight());
 
     MediaFormat mediaFormat0 = renditions.get(0).getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat0.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat0.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat0.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat0.getRatio(), 0.001d);
     assertEquals(160, mediaFormat0.getWidth());
     assertEquals(100, mediaFormat0.getHeight());
     assertEquals("B1", mediaFormat0.getProperties().get(PROP_BREAKPOINT));
@@ -943,8 +942,8 @@ class InlineMediaSourceTest {
     assertEquals(200, rendition1.getHeight());
 
     MediaFormat mediaFormat1 = renditions.get(1).getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat1.getRatio(), 0.001d);
     assertEquals(320, mediaFormat1.getWidth());
     assertEquals(200, mediaFormat1.getHeight());
     assertEquals("B2", mediaFormat1.getProperties().get(PROP_BREAKPOINT));
@@ -954,15 +953,15 @@ class InlineMediaSourceTest {
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10)
-        .mediaFormat(RATIO)
-        .pictureSource(new PictureSource(RATIO).media("media1").widths(160))
-        .pictureSource(new PictureSource(RATIO).media("media2").widths(320))
+        .mediaFormat(RATIO_16_10)
+        .pictureSource(new PictureSource(RATIO_16_10).media("media1").widths(160))
+        .pictureSource(new PictureSource(RATIO_16_10).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/unittest/de_test/brand/de/_jcr_content/resourceMediaInlineSampleImage16_10/mediaInline./sample_image_400x250.jpg",
@@ -972,7 +971,7 @@ class InlineMediaSourceTest {
     assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
 
     MediaFormat mediaFormat0 = rendition0.getMediaFormat();
-    assertEquals(RATIO.getName(), mediaFormat0.getName());
+    assertEquals(RATIO_16_10.getName(), mediaFormat0.getName());
 
     Rendition rendition1 = renditions.get(1);
     assertEquals(
@@ -983,8 +982,8 @@ class InlineMediaSourceTest {
     assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
 
     MediaFormat mediaFormat1 = rendition1.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat1.getRatio(), 0.001d);
     assertEquals(160, mediaFormat1.getWidth());
 
     Rendition rendition2 = renditions.get(2);
@@ -995,8 +994,8 @@ class InlineMediaSourceTest {
     assertEquals(200, rendition2.getHeight());
 
     MediaFormat mediaFormat2 = rendition2.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat2.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat2.getRatio(), 0.001d);
     assertEquals(320, mediaFormat2.getWidth());
   }
 
