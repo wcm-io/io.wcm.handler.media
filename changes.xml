@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert" issue="14">
         MediaHandlerConfig: Make list of allowed IPE editor types configurable (defaults to "image").
       </action>
+      <action type="update" dev="sseifert" issue="26">
+        DefaultMediaFormatListProvider, MediaFormatValidateServlet: Eliminate usage of org.apache.sling.commons.json.
+      </action>
     </release>
 
     <release version="1.15.8" date="2023-09-08">
