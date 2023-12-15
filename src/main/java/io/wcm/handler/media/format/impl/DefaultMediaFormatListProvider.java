@@ -57,6 +57,8 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
   @Override
   protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
     // get list of media formats for current medialib path
@@ -86,7 +88,7 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
 
     // serialize to JSON using Jackson
     response.setContentType(ContentType.JSON);
-    response.getWriter().write(new ObjectMapper().writeValueAsString(mediaFormatList));
+    response.getWriter().write(OBJECT_MAPPER.writeValueAsString(mediaFormatList));
   }
 
   protected Set<MediaFormat> getMediaFormats(SlingHttpServletRequest request) {

@@ -74,6 +74,8 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
   static final String RP_MEDIA_CROPAUTO = "mediaCropAuto";
   static final String RP_MEDIA_REF = "mediaRef";
 
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
   /**
    * Prefix for i18n keys to generated messages for media invalid reasons.
    */
@@ -120,7 +122,7 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
       result.reasonTitle = getI18nText(i18n, ASSET_INVALID_I18N_KEY);
     }
     response.setContentType(ContentType.JSON);
-    response.getWriter().write(new ObjectMapper().writeValueAsString(result));
+    response.getWriter().write(OBJECT_MAPPER.writeValueAsString(result));
   }
 
   private String getMediaInvalidReasonI18nKeyOrMessage(@NotNull Media media) {
