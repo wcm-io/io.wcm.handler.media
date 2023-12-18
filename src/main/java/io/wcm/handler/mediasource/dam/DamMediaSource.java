@@ -221,7 +221,7 @@ public final class DamMediaSource extends MediaSource {
     }
 
     if (componentContext != null
-        && MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext)) {
+        && MediaMarkupBuilderUtil.canSetCustomIPECropRatios(mediaRequest, componentContext, mediaHandlerConfig.allowedIpeEditorTypes())) {
       // overlay IPE config with cropping ratios for each media format with a valid ratio
       CroppingRatios croppingRatios = new CroppingRatios(mediaFormatHandler);
       Set<String> mediaFormatNames = croppingRatios.getMediaFormatsForCropping(mediaRequest);

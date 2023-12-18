@@ -356,6 +356,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  @SuppressWarnings("PMD.OptimizableToArrayCall")
   public @NotNull Media build() {
     if (!pictureSourceSets.isEmpty()) {
       this.mediaArgs.pictureSources(pictureSourceSets.toArray(new PictureSource[pictureSourceSets.size()]));

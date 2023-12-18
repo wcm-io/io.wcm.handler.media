@@ -251,10 +251,10 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
    * @return true if publish mode should be forced
    */
   private boolean forcePublishMode(@Nullable UrlMode urlMode) {
-    return (urlMode == UrlModes.FULL_URL_PUBLISH
-        || urlMode == UrlModes.FULL_URL_PUBLISH_FORCENONSECURE
-        || urlMode == UrlModes.FULL_URL_PUBLISH_FORCESECURE
-        || urlMode == UrlModes.FULL_URL_PUBLISH_PROTOCOLRELATIVE);
+    return urlMode != null && (urlMode.equals(UrlModes.FULL_URL_PUBLISH)
+        || urlMode.equals(UrlModes.FULL_URL_PUBLISH_FORCENONSECURE)
+        || urlMode.equals(UrlModes.FULL_URL_PUBLISH_FORCESECURE)
+        || urlMode.equals(UrlModes.FULL_URL_PUBLISH_PROTOCOLRELATIVE));
   }
 
 }
