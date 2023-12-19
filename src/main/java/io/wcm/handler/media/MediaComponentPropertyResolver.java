@@ -21,8 +21,6 @@ package io.wcm.handler.media;
 
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES;
-import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES;
-import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY;
@@ -209,7 +207,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return Image sizes
    */
-  @SuppressWarnings({ "deprecation", "null" })
+  @SuppressWarnings("null")
   public @Nullable ImageSizes getImageSizes() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {
@@ -222,20 +220,13 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
       return new ImageSizes(sizes, widths);
     }
 
-    // try to fallback to deprecated constant with node names with typo (backward compatibility)
-    sizes = StringUtils.trimToNull(propertyAccessor.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_SIZES, String.class));
-    widths = WidthUtils.parseWidths(propertyAccessor.get(NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES + "/" + PN_IMAGES_SIZES_WIDTHS, String.class));
-    if (sizes != null && widths != null) {
-      return new ImageSizes(sizes, widths);
-    }
-
     return null;
   }
 
   /**
    * @return List of picture sources
    */
-  @SuppressWarnings({ "deprecation", "null" })
+  @SuppressWarnings("null")
   public @NotNull PictureSource @Nullable [] getPictureSources() {
     String responsiveType = getResponsiveType();
     if (resolver == null || responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
@@ -244,11 +235,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
 
     Collection<Resource> sourceResources = resolver.getResources(NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES);
     if (sourceResources == null) {
-      // try to fallback to deprecated constant with node names with typo (backward compatibility)
-      sourceResources = resolver.getResources(NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
-      if (sourceResources == null) {
-        return null;
-      }
+      return null;
     }
 
     List<PictureSource> sources = new ArrayList<>();
