@@ -102,20 +102,6 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   /**
-   * @param resource Resource
-   * @deprecated Please use {@link #MediaComponentPropertyResolver(Resource, ComponentPropertyResolverFactory)}
-   */
-  @Deprecated
-  @SuppressWarnings("resource")
-  public MediaComponentPropertyResolver(@NotNull Resource resource) {
-    // resolve media component properties 1. from policies and 2. from component definition
-    resolver = new ComponentPropertyResolver(resource, true)
-        .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
-        .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
-    propertyAccessor = new ComponentPropertyResolverPropertyAccessor(resolver);
-  }
-
-  /**
    * @return AutoCrop state
    */
   public boolean isAutoCrop() {

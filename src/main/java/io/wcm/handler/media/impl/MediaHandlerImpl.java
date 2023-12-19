@@ -26,7 +26,6 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +64,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaFormatHandler mediaFormatHandler;
-  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
+  @OSGiService
   private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
   private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
@@ -87,7 +86,7 @@ public final class MediaHandlerImpl implements MediaHandler {
 
   @Override
   public @NotNull MediaBuilder get(String mediaRef) {
-    return new MediaBuilderImpl(mediaRef, this);
+    return new MediaBuilderImpl(mediaRef, null, this, componentPropertyResolverFactory);
   }
 
   @Override
