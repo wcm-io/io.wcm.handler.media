@@ -576,14 +576,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  @SuppressWarnings("deprecation")
-  public boolean isFlash() {
-    return MediaFileType.isFlash(getFileExtension());
-  }
-
-  @Override
   public boolean isDownload() {
-    return !isImage() && !isFlash();
+    return !isImage();
   }
 
   @Override
