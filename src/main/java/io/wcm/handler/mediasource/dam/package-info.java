@@ -20,5 +20,5 @@
 /**
  * Media source implementation for assets stored in DAM.
  */
-@org.osgi.annotation.versioning.Version("1.5")
+@org.osgi.annotation.versioning.Version("2.0")
 package io.wcm.handler.mediasource.dam;

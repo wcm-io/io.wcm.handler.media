@@ -20,5 +20,5 @@
 /**
  * Media format management.
  */
-@org.osgi.annotation.versioning.Version("1.4.0")
+@org.osgi.annotation.versioning.Version("2.0")
 package io.wcm.handler.media.format;
