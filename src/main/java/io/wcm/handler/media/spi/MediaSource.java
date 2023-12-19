@@ -136,17 +136,6 @@ public abstract class MediaSource {
   /**
    * Get media request path to media library
    * @param mediaRequest Media request
-   * @return Path or null if not present
-   * @deprecated Use {@link #getMediaRef(MediaRequest, MediaHandlerConfig)}
-   */
-  @Deprecated
-  protected final @Nullable String getMediaRef(@NotNull MediaRequest mediaRequest) {
-    return getMediaRef(mediaRequest, null);
-  }
-
-  /**
-   * Get media request path to media library
-   * @param mediaRequest Media request
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Path or null if not present
    */
@@ -164,17 +153,6 @@ public abstract class MediaSource {
     else {
       return null;
     }
-  }
-
-  /**
-   * Get property name containing the media request path
-   * @param mediaRequest Media request
-   * @return Property name
-   * @deprecated Use {@link #getMediaRefProperty(MediaRequest, MediaHandlerConfig)}
-   */
-  @Deprecated
-  protected final @Nullable String getMediaRefProperty(@NotNull MediaRequest mediaRequest) {
-    return getMediaRefProperty(mediaRequest, null);
   }
 
   /**
@@ -201,17 +179,6 @@ public abstract class MediaSource {
   /**
    * Get (optional) crop dimensions from resource
    * @param mediaRequest Media request
-   * @return Crop dimension or null if not set or invalid
-   * @deprecated Use {@link #getMediaCropDimension(MediaRequest, MediaHandlerConfig)}
-   */
-  @Deprecated
-  protected final @Nullable CropDimension getMediaCropDimension(@NotNull MediaRequest mediaRequest) {
-    return getMediaCropDimension(mediaRequest, null);
-  }
-
-  /**
-   * Get (optional) crop dimensions from resource
-   * @param mediaRequest Media request
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    * @return Crop dimension or null if not set or invalid
    */
@@ -232,17 +199,6 @@ public abstract class MediaSource {
       }
     }
     return null;
-  }
-
-  /**
-   * Get property name containing the cropping parameters
-   * @param mediaRequest Media request
-   * @return Property name
-   * @deprecated Use {@link #getMediaCropProperty(MediaRequest, MediaHandlerConfig)}
-   */
-  @Deprecated
-  protected final @NotNull String getMediaCropProperty(@NotNull MediaRequest mediaRequest) {
-    return getMediaCropProperty(mediaRequest, null);
   }
 
   /**
@@ -380,7 +336,8 @@ public abstract class MediaSource {
     boolean anyMandatory = mediaArgs.getMediaFormatOptions() != null
         && Arrays.stream(mediaArgs.getMediaFormatOptions())
         .anyMatch(MediaFormatOption::isMandatory);
-    if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 1
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
+    if (mediaFormats != null && mediaFormats.length > 1
         && (anyMandatory || mediaArgs.getImageSizes() != null || mediaArgs.getPictureSources() != null)) {
       return resolveAllRenditions(media, asset, mediaArgs);
     }

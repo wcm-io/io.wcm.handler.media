@@ -72,22 +72,6 @@ public final class MediaMarkupBuilderUtil {
    * @param resource Resource pointing to JCR node
    * @param refProperty Name of property for media library item reference. If null, default name is used.
    * @param request Servlet request
-   * @deprecated Use
-   *             {@link #addDiffDecoration(HtmlElement, Resource, String, SlingHttpServletRequest, MediaHandlerConfig)}
-   */
-  @Deprecated
-  public static void addDiffDecoration(@NotNull HtmlElement<?> mediaElement, @NotNull Resource resource,
-      @NotNull String refProperty, @NotNull SlingHttpServletRequest request) {
-    addDiffDecoration(mediaElement, resource, refProperty, request, null);
-  }
-
-  /**
-   * Adds CSS classes that denote the changes to the media element when compared to a different version.
-   * If no diff has been requested by the WCM UI, there won't be any changes to the element.
-   * @param mediaElement Element to be decorated
-   * @param resource Resource pointing to JCR node
-   * @param refProperty Name of property for media library item reference. If null, default name is used.
-   * @param request Servlet request
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    */
   @SuppressWarnings("null")
@@ -166,7 +150,7 @@ public final class MediaMarkupBuilderUtil {
     long width = mediaArgs.getFixedWidth();
     long height = mediaArgs.getFixedHeight();
     if ((width == 0 || height == 0) && mediaFormats != null && mediaFormats.length > 0) {
-      MediaFormat firstMediaFormat = mediaArgs.getMediaFormats()[0];
+      MediaFormat firstMediaFormat = mediaFormats[0];
       Dimension dimension = firstMediaFormat.getMinDimension();
       if (dimension != null) {
         width = dimension.getWidth();

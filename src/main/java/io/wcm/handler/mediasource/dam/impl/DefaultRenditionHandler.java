@@ -320,6 +320,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @return Rendition or null if none found
    */
   private RenditionMetadata getExactMatchRendition(final Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     // check for fixed width and/or height request
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
       for (RenditionMetadata candidate : candidates) {
@@ -330,7 +331,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     }
 
     // otherwise check for media format restriction
-    else if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 0) {
+    else if (mediaFormats != null && mediaFormats.length > 0) {
       return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
         @Override
         public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {

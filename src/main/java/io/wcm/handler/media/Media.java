@@ -128,16 +128,6 @@ public final class Media {
   }
 
   /**
-   * @param value Html element
-   * @deprecated Use {@link #setElementBuilder(Function)} to build anchor on-demand
-   */
-  @Deprecated
-  public void setElement(HtmlElement<?> value) {
-    this.element = value;
-    this.markup = null;
-  }
-
-  /**
    * @param value Function that builds the HTML element representation on demand
    */
   public void setElementBuilder(Function<Media, HtmlElement<?>> value) {

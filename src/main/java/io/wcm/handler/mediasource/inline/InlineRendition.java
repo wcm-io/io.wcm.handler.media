@@ -181,8 +181,9 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     this.url = buildMediaUrl(scaledDimension);
 
     // set first media format as resolved format - because only the first is supported
-    if (url != null && mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 0) {
-      this.resolvedMediaFormat = mediaArgs.getMediaFormats()[0];
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
+    if (url != null && mediaFormats != null && mediaFormats.length > 0) {
+      this.resolvedMediaFormat = mediaFormats[0];
     }
 
   }

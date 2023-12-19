@@ -165,7 +165,6 @@ class MediaHandlerImplTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
   void testAllBuilderProps() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
 
@@ -188,7 +187,6 @@ class MediaHandlerImplTest {
 
     MediaArgs args = media.getMediaRequest().getMediaArgs();
     assertArrayEquals(mediaFormats, args.getMediaFormats());
-    assertTrue(args.isMediaFormatsMandatory());
     assertArrayEquals(fileExtensions, args.getFileExtensions());
     assertEquals(200, args.getFixedWidth());
     assertEquals(100, args.getFixedHeight());
@@ -249,7 +247,6 @@ class MediaHandlerImplTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
   void testComponentProperties_Legacy_SingleMandatoryFlag() {
     Resource component = context.create().resource("/apps/app1/components/comp1",
         MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
@@ -272,7 +269,6 @@ class MediaHandlerImplTest {
     assertNull(mediaFormatNames);
 
     assertTrue(metadata.getMediaRequest().getMediaArgs().isAutoCrop());
-    assertTrue(metadata.getMediaRequest().getMediaArgs().isMediaFormatsMandatory());
   }
 
   @Test

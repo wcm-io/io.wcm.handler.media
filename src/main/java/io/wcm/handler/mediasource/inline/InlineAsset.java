@@ -125,18 +125,6 @@ class InlineAsset extends SlingAdaptable implements Asset {
     }
   }
 
-  @SuppressWarnings("deprecation")
-  @Override
-  public Rendition getFlashRendition(@NotNull MediaArgs mediaArgs) {
-    Rendition rendition = getRendition(mediaArgs);
-    if (rendition != null && rendition.isFlash()) {
-      return rendition;
-    }
-    else {
-      return null;
-    }
-  }
-
   @Override
   public Rendition getDownloadRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
