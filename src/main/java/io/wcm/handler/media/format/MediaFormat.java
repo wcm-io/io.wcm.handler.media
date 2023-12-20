@@ -177,26 +177,6 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
   /**
    * @return Ration width (px)
-   * @deprecated Use {@link #getRatioWidthAsDouble()}
-   */
-  @Deprecated
-  @JsonIgnore
-  public long getRatioWidth() {
-    return Math.round(this.ratioWidth);
-  }
-
-  /**
-   * @return Ration height (px)
-   * @deprecated Use {@link #getRatioHeightAsDouble()}
-   */
-  @Deprecated
-  @JsonIgnore
-  public long getRatioHeight() {
-    return Math.round(this.ratioHeight);
-  }
-
-  /**
-   * @return Ration width (px)
    */
   @JsonIgnore
   public double getRatioWidthAsDouble() {

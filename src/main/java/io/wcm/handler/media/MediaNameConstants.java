@@ -134,13 +134,6 @@ public final class MediaNameConstants {
   public static final @NotNull String NN_MEDIA_INLINE_STANDARD = "file";
 
   /**
-   * Default property name for flash variables
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  public static final @NotNull String PN_FLASH_VARS = "flashVars";
-
-  /**
    * CSS class for dummy image
    */
   public static final @NotNull String CSS_DUMMYIMAGE = "wcmio_mediahandler_wcm_dummy";
@@ -159,13 +152,6 @@ public final class MediaNameConstants {
    * CSS class for "Removed in Diff Mode"
    */
   public static final @NotNull String CSS_DIFF_REMOVED = "wcmio_mediahandler_wcm_diff_removed";
-
-  /**
-   * Property name for responsive breakpoint (mq)
-   * @deprecated This is used only for the "legacy mode" of responsive image handling.
-   */
-  @Deprecated
-  public static final @NotNull String PROP_BREAKPOINT = "mq";
 
   /**
    * Property name for setting additional CSS classes
@@ -236,29 +222,6 @@ public final class MediaNameConstants {
   public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES = "wcmio:mediaResponsivePictureSources";
 
   /**
-   * Defines "image sizes" responsive image setting.
-   * Contains properties <code>sizes</code>, <code>widths</code>.
-   * <p>
-   * Child node is to be defined on component or in policy.
-   * </p>
-   * @deprecated Please use {@link #NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES}
-   */
-  @Deprecated
-  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES = "wcmio:mediaRepsonsiveImageSizes";
-
-  /**
-   * Defines "picture sources" responsive image setting.
-   * Contains child nodes for each source definition with properties <code>mediaFormat</code>, <code>media</code>,
-   * <code>widths</code>.
-   * <p>
-   * Child node is to be defined on component or in policy.
-   * </p>
-   * @deprecated Please use {@link #NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES}
-   */
-  @Deprecated
-  public static final @NotNull String NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES = "wcmio:mediaRepsonsivePictureSources";
-
-  /**
    * Media format property name for the parent media format. Parent media format is the original media format that
    * is used to generate a width-based sub-media-format for responsive images.
    */
@@ -273,12 +236,5 @@ public final class MediaNameConstants {
    * URI template placeholder for height.
    */
   public static final String URI_TEMPLATE_PLACEHOLDER_HEIGHT = "{height}";
-
-  /**
-   * URI template placeholder for width.
-   * @deprecated Please use {@link #URI_TEMPLATE_PLACEHOLDER_WIDTH}
-   */
-  @Deprecated
-  public static final String URI_TEMPLATE_PLACEHOLDER_WITH = URI_TEMPLATE_PLACEHOLDER_WIDTH;
 
 }

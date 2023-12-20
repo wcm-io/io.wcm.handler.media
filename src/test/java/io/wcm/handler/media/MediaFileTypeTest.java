@@ -93,24 +93,4 @@ class MediaFileTypeTest {
     assertEquals(Set.of(ContentType.SVG), MediaFileType.getVectorImageContentTypes());
   }
 
-  @Test
-  @SuppressWarnings("deprecation")
-  void testIsFlash() {
-    assertTrue(MediaFileType.isFlash("swf"));
-    assertFalse(MediaFileType.isFlash("pdf"));
-    assertFalse(MediaFileType.isFlash(null));
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetFlashFileExtensions() {
-    assertEquals(Set.of("swf"), MediaFileType.getFlashFileExtensions());
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetFlashContentTypes() {
-    assertEquals(Set.of(ContentType.SWF), MediaFileType.getFlashContentTypes());
-  }
-
 }

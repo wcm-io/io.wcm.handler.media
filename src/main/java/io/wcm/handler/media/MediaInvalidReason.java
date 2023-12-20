@@ -46,13 +46,6 @@ public enum MediaInvalidReason {
   NOT_ENOUGH_MATCHING_RENDITIONS,
 
   /**
-   * No media source found for handling the given (or empty) media request
-   * @deprecated No longer in use, first media source defined is used as fallback if no match is found.
-   */
-  @Deprecated
-  NO_MEDIA_SOURCE,
-
-  /**
    * One or all of the given media format names are invalid.
    */
   INVALID_MEDIA_FORMAT,

@@ -47,7 +47,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 class MediaArgsTest {
 
   @Test
-  @SuppressWarnings("deprecation")
   void testGetMediaFormats() {
     MediaArgs mediaArgs;
 
@@ -55,32 +54,27 @@ class MediaArgsTest {
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL
     }, mediaArgs.getMediaFormats());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs("editorial_1col");
     assertArrayEquals(new String[] {
         "editorial_1col"
     }, mediaArgs.getMediaFormatNames());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs(EDITORIAL_1COL, EDITORIAL_2COL);
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL, EDITORIAL_2COL
     }, mediaArgs.getMediaFormats());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs("editorial_1col", "editorial_2col");
     assertArrayEquals(new String[] {
         "editorial_1col", "editorial_2col"
     }, mediaArgs.getMediaFormatNames());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     assertNull(new MediaArgs().mediaFormat((MediaFormat)null).getMediaFormats());
     assertNull(new MediaArgs().mediaFormatName((String)null).getMediaFormatNames());
   }
 
   @Test
-  @SuppressWarnings("deprecation")
   void testGetMediaFormatsMandatory() {
     MediaArgs mediaArgs;
 
@@ -88,13 +82,11 @@ class MediaArgsTest {
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL, EDITORIAL_2COL
     }, mediaArgs.getMediaFormats());
-    assertTrue(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs().mandatoryMediaFormatNames("editorial_1col", "editorial_2col");
     assertArrayEquals(new String[] {
         "editorial_1col", "editorial_2col"
     }, mediaArgs.getMediaFormatNames());
-    assertTrue(mediaArgs.isMediaFormatsMandatory());
   }
 
   @Test
