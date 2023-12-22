@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
-import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
+import io.wcm.handler.media.impl.MediaHandlerAdapterFactory;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
@@ -97,13 +97,13 @@ public final class MediaSourceDamAppAemContext {
     public void execute(@NotNull AemContext context) throws PersistenceException, IOException {
 
       // handler SPI
-      context.registerInjectActivateService(new SiteRootDetectorImpl());
-      context.registerInjectActivateService(new UrlHandlerAdapterFactory());
-      context.registerInjectActivateService(new ClientlibProxyRewriterImpl());
-      context.registerInjectActivateService(new DefaultUrlHandlerConfig());
+      context.registerInjectActivateService(SiteRootDetectorImpl.class);
+      context.registerInjectActivateService(UrlHandlerAdapterFactory.class);
+      context.registerInjectActivateService(ClientlibProxyRewriterImpl.class);
+      context.registerInjectActivateService(DefaultUrlHandlerConfig.class);
       context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
-      context.registerInjectActivateService(new MediaHandlerConfigAdapterFactory());
-      context.registerInjectActivateService(new DefaultMediaHandlerConfig());
+      context.registerInjectActivateService(MediaHandlerAdapterFactory.class);
+      context.registerInjectActivateService(DefaultMediaHandlerConfig.class);
       context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig());
 
       // context path strategy
@@ -111,10 +111,10 @@ public final class MediaSourceDamAppAemContext {
 
       // media formats
       context.registerService(MediaFormatProvider.class, new DummyMediaFormatProvider());
-      context.registerInjectActivateService(new MediaFormatProviderManagerImpl());
+      context.registerInjectActivateService(MediaFormatProviderManagerImpl.class);
 
       // dynamic media
-      context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
+      context.registerInjectActivateService(DynamicMediaSupportServiceImpl.class);
 
       // sling models registration
       context.addModelsForPackage("io.wcm.handler.media",
