@@ -49,7 +49,6 @@ import java.util.Map;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -58,9 +57,9 @@ import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
-import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 @ExtendWith(AemContextExtension.class)
 class MediaComponentPropertyResolverTest {
@@ -69,19 +68,12 @@ class MediaComponentPropertyResolverTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  private ComponentPropertyResolverFactory componentPropertyResolverFactory;
-
-  @BeforeEach
-  void setUp() {
-    componentPropertyResolverFactory = context.getService(ComponentPropertyResolverFactory.class);
-  }
-
   @Test
   void testIsAutoCrop_Default() throws Exception {
     Resource resource = context.create().resource("/content/r1");
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertFalse(underTest.isAutoCrop());
     }
   }
@@ -94,7 +86,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertTrue(underTest.isAutoCrop());
     }
   }
@@ -110,7 +102,7 @@ class MediaComponentPropertyResolverTest {
     Resource subresource2 = context.create().resource(subresource1, "subresource2");
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(subresource2, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(subresource2, MediaComponentPropertyResolver.class)) {
       assertTrue(underTest.isAutoCrop());
     }
   }
@@ -126,7 +118,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertFalse(underTest.isAutoCrop());
     }
   }
@@ -148,7 +140,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", false)
       }, underTest.getMediaFormatOptions());
@@ -163,7 +155,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", false),
           new MediaFormatOption("home_teaser", false)
@@ -186,7 +178,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", true),
           new MediaFormatOption("home_teaser", true)
@@ -212,7 +204,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", true),
           new MediaFormatOption("home_teaser", false)
@@ -237,7 +229,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", true),
           new MediaFormatOption("home_teaser", false),
@@ -283,7 +275,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -296,7 +288,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -311,7 +303,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertEquals(new ImageSizes("sizes1", new WidthOption[] {
           new WidthOption(200, true),
           new WidthOption(400, true),
@@ -330,7 +322,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -346,7 +338,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertEquals(new ImageSizes("sizes1", 200, 400), underTest.getImageSizes());
     }
   }
@@ -362,7 +354,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -374,7 +366,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getPictureSources());
     }
   }
@@ -387,7 +379,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -408,7 +400,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new PictureSource[] {
           new PictureSource("home_stage")
               .media("media1")
@@ -437,7 +429,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getPictureSources());
     }
   }
@@ -455,7 +447,7 @@ class MediaComponentPropertyResolverTest {
     context.resourceResolver().commit();
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new PictureSource[] {
           new PictureSource("home_stage").widths(200, 400)
       }, underTest.getPictureSources());
@@ -474,7 +466,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getPictureSources());
     }
   }

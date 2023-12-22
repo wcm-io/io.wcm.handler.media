@@ -166,13 +166,14 @@ String[] mediaFormats = null;
 String[] mediaFormatsMandatory = null;
 boolean mediaCropAuto = false;
 if (contentResource != null) {
-  MediaComponentPropertyResolver componentPropertyResolver = new MediaComponentPropertyResolver(contentResource);
-  mediaFormats = getStringArrayWithExpressionSupport("mediaFormats",
-      MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, cfg, ex, componentPropertyResolver.getMediaFormatNames());
-  mediaFormatsMandatory = getStringArrayWithExpressionSupport("mediaFormatsMandatory",
-      MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, cfg, ex, componentPropertyResolver.getMandatoryMediaFormatNames());
-  mediaCropAuto = getBooleanWithExpressionSupport("mediaCropAuto",
-      MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, cfg, ex, componentPropertyResolver.isAutoCrop());
+  try (MediaComponentPropertyResolver componentPropertyResolver = contentResource.adaptTo(MediaComponentPropertyResolver.class)) {
+    mediaFormats = getStringArrayWithExpressionSupport("mediaFormats",
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, cfg, ex, componentPropertyResolver.getMediaFormatNames());
+    mediaFormatsMandatory = getStringArrayWithExpressionSupport("mediaFormatsMandatory",
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, cfg, ex, componentPropertyResolver.getMandatoryMediaFormatNames());
+    mediaCropAuto = getBooleanWithExpressionSupport("mediaCropAuto",
+        MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, cfg, ex, componentPropertyResolver.isAutoCrop());
+  }
 
   // add info about media formats in field description
   String mediaFormatsFieldDescription = buildMediaFormatsFieldDescription(mediaFormats, contentResource, i18n);

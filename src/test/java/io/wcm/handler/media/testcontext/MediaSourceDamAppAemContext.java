@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.media.format.impl.MediaFormatProviderManagerImpl;
 import io.wcm.handler.media.impl.DefaultMediaHandlerConfig;
-import io.wcm.handler.media.impl.MediaHandlerConfigAdapterFactory;
+import io.wcm.handler.media.impl.MediaHandlerAdapterFactory;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
@@ -102,7 +102,7 @@ public final class MediaSourceDamAppAemContext {
       context.registerInjectActivateService(new ClientlibProxyRewriterImpl());
       context.registerInjectActivateService(new DefaultUrlHandlerConfig());
       context.registerService(UrlHandlerConfig.class, new DummyUrlHandlerConfig());
-      context.registerInjectActivateService(new MediaHandlerConfigAdapterFactory());
+      context.registerInjectActivateService(new MediaHandlerAdapterFactory());
       context.registerInjectActivateService(new DefaultMediaHandlerConfig());
       context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig());
 
