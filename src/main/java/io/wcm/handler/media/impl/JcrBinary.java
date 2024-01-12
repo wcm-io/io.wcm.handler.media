@@ -20,6 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.oak.spi.nodetype.NodeTypeConstants;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -50,7 +51,9 @@ public final class JcrBinary {
    * @return true if resource is nt:file node
    */
   public static boolean isNtResource(Resource resource) {
-    return isNt(resource, JcrConstants.NT_RESOURCE);
+    return isNt(resource, JcrConstants.NT_RESOURCE)
+        // also check for oak:resource which is used in replacement of nt:resource
+        || isNt(resource, NodeTypeConstants.NT_OAK_RESOURCE);
   }
 
   /**
