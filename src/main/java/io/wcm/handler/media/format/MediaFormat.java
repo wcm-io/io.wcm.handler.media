@@ -177,26 +177,6 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
   /**
    * @return Ration width (px)
-   * @deprecated Use {@link #getRatioWidthAsDouble()}
-   */
-  @Deprecated
-  @JsonIgnore
-  public long getRatioWidth() {
-    return Math.round(this.ratioWidth);
-  }
-
-  /**
-   * @return Ration height (px)
-   * @deprecated Use {@link #getRatioHeightAsDouble()}
-   */
-  @Deprecated
-  @JsonIgnore
-  public long getRatioHeight() {
-    return Math.round(this.ratioHeight);
-  }
-
-  /**
-   * @return Ration width (px)
    */
   @JsonIgnore
   public double getRatioWidthAsDouble() {
@@ -213,7 +193,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
   /**
    * Returns the ratio defined in the media format definition.
-   * If no ratio is defined an the media format has a fixed with/height it is calculated automatically.
+   * If no ratio is defined an the media format has a fixed width/height it is calculated automatically.
    * Otherwise 0 is returned.
    * @return Ratio
    */
@@ -505,7 +485,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
       List<String> extParts = new ArrayList<>();
 
-      // with/height restrictions
+      // width/height restrictions
       if (minWidthHeight != 0) {
         extParts.add("min. " + minWidthHeight + "px width/height");
       }

@@ -22,7 +22,6 @@ package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -94,7 +93,7 @@ public final class DynamicMediaPath {
    * @param height Height
    * @return Media path
    */
-  public static @NotNull String buildImage(@NotNull DamContext damContext, long width, long height) {
+  public static @Nullable String buildImage(@NotNull DamContext damContext, long width, long height) {
     return buildImage(damContext, width, height, null, null);
   }
 
@@ -107,18 +106,25 @@ public final class DynamicMediaPath {
    * @param rotation Rotation
    * @return Media path
    */
-  public static @NotNull String buildImage(@NotNull DamContext damContext, long width, long height,
+  public static @Nullable String buildImage(@NotNull DamContext damContext, long width, long height,
       @Nullable CropDimension cropDimension, @Nullable Integer rotation) {
     Dimension dimension = calcWidthHeight(damContext, width, height);
 
     StringBuilder result = new StringBuilder();
     result.append(IMAGE_SERVER_PATH).append(encodeDynamicMediaObject(damContext));
 
-    if (cropDimension != null && cropDimension.isAutoCrop() && rotation == null) {
-      // auto-crop applied - check for matching image profile and use predefined cropping preset if match found
-      Optional<NamedDimension> smartCroppingDef = getSmartCropDimension(damContext, width, height);
-      if (smartCroppingDef.isPresent()) {
-        result.append("%3A").append(smartCroppingDef.get().getName()).append("?")
+    // check for smart cropping when no cropping was applied by default, or auto-crop is enabled
+    if (SmartCrop.canApply(cropDimension, rotation)) {
+      // check for matching image profile and use predefined cropping preset if match found
+      NamedDimension smartCropDef = SmartCrop.getDimensionForWidthHeight(damContext.getImageProfile(), width, height);
+      if (smartCropDef != null) {
+        if (damContext.isDynamicMediaValidateSmartCropRenditionSizes()
+            && !SmartCrop.isMatchingSize(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef, width, height)) {
+          // smart crop should be applied, but selected area is too small, treat as invalid
+          logResult(damContext, "<too small for " + width + "x" + height + ">");
+          return null;
+        }
+        result.append("%3A").append(smartCropDef.getName()).append("?")
             .append("wid=").append(dimension.getWidth()).append("&")
             .append("hei=").append(dimension.getHeight()).append("&")
             // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
@@ -143,7 +149,7 @@ public final class DynamicMediaPath {
     return result.toString();
   }
 
-  private static void logResult(@NotNull DamContext damContext, @NotNull StringBuilder result) {
+  private static void logResult(@NotNull DamContext damContext, @NotNull CharSequence result) {
     if (log.isTraceEnabled()) {
       log.trace("Build dynamic media path for {}: {}", damContext.getAsset().getPath(), result);
     }
@@ -171,18 +177,6 @@ public final class DynamicMediaPath {
       return new Dimension(newWidth, newHeight);
     }
     return new Dimension(width, height);
-  }
-
-  private static Optional<@NotNull NamedDimension> getSmartCropDimension(@NotNull DamContext damContext, long width, long height) {
-    Double requestedRatio = Ratio.get(width, height);
-    ImageProfile imageProfile = damContext.getImageProfile();
-    if (imageProfile == null) {
-      return Optional.empty();
-    }
-    Optional<NamedDimension> matchingDimension = imageProfile.getSmartCropDefinitions().stream()
-        .filter(def -> Ratio.matches(Ratio.get(def), requestedRatio))
-        .findFirst();
-    return matchingDimension.map(def -> new NamedDimension(def.getName(), width, height));
   }
 
   /**

@@ -22,9 +22,12 @@ package io.wcm.handler.media.format.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +38,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.osgi.framework.Constants;
-
-import com.google.common.collect.ImmutableSortedSet;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
@@ -53,11 +54,11 @@ class MediaFormatProviderManagerImplTest {
 
   private static final MediaFormat MF11 = MediaFormatBuilder.create("mf11").description("desc-from-1").build();
   private static final MediaFormat MF12 = MediaFormatBuilder.create("mf12").description("desc-from-1").build();
-  private static final SortedSet<MediaFormat> MEDIAFORMATS_1 = ImmutableSortedSet.of(MF11, MF12);
+  private static final SortedSet<MediaFormat> MEDIAFORMATS_1 = new TreeSet<>(Set.of(MF11, MF12));
 
   private static final MediaFormat MF11_FROM2 = MediaFormatBuilder.create("mf11").description("desc-from-2").build();
   private static final MediaFormat MF21 = MediaFormatBuilder.create("mf21").description("desc-from-2").build();
-  private static final SortedSet<MediaFormat> MEDIAFORMATS_2 = ImmutableSortedSet.of(MF11_FROM2, MF21);
+  private static final SortedSet<MediaFormat> MEDIAFORMATS_2 = new TreeSet<>(Set.of(MF11_FROM2, MF21));
 
   private final AemContext context = new AemContext();
 
@@ -89,7 +90,7 @@ class MediaFormatProviderManagerImplTest {
   @Test
   void testWithResource() {
     SortedSet<MediaFormat> result = underTest.getMediaFormats(resource);
-    assertEquals(ImmutableSortedSet.of(MF11, MF12, MF21), result);
+    assertEquals(new TreeSet<>(Set.of(MF11, MF12, MF21)), result);
 
     MediaFormat first = result.iterator().next();
     assertEquals("mf11", first.getName());
@@ -99,7 +100,7 @@ class MediaFormatProviderManagerImplTest {
 
   @Test
   void testNullResource() {
-    assertEquals(ImmutableSortedSet.of(), underTest.getMediaFormats(null));
+    assertEquals(Collections.emptySet(), underTest.getMediaFormats(null));
   }
 
   @Test
@@ -112,7 +113,7 @@ class MediaFormatProviderManagerImplTest {
     assertEquals("mock-bundle", entry.getKey());
 
     SortedSet<MediaFormat> mediaFormats = entry.getValue();
-    assertEquals(ImmutableSortedSet.of(MF11, MF12, MF21), mediaFormats);
+    assertEquals(new TreeSet<>(Set.of(MF11, MF12, MF21)), mediaFormats);
   }
 
 }

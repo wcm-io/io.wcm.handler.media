@@ -67,11 +67,26 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   public DamAsset(Media media, com.day.cq.dam.api.Asset damAsset, MediaHandlerConfig mediaHandlerConfig,
       DynamicMediaSupportService dynamicMediaSupportService, Adaptable adaptable) {
     this.damAsset = damAsset;
-    this.cropDimension = media.getCropDimension();
+    this.cropDimension = rescaleCropDimension(damAsset, media.getCropDimension());
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
-    this.damContext = new DamContext(damAsset, defaultMediaArgs.getUrlMode(), mediaHandlerConfig,
+    this.damContext = new DamContext(damAsset, defaultMediaArgs, mediaHandlerConfig,
         dynamicMediaSupportService, adaptable);
+  }
+
+  /**
+   * Crop dimension stored in repository is always calucated against the web-enabled rendition of an asset.
+   * Rescale the crop-dimension here once to calculate it against the original image, which will be used for the actual
+   * cropping.
+   * @param asset Asset
+   * @param cropDimension Crop dimension from repository/input parameters
+   * @return Rescaled crop dimension
+   */
+  private static @Nullable CropDimension rescaleCropDimension(@NotNull com.day.cq.dam.api.Asset asset, @Nullable CropDimension cropDimension) {
+    if (cropDimension == null) {
+      return null;
+    }
+    return WebEnabledRenditionCropping.getCropDimensionForOriginal(asset, cropDimension);
   }
 
   @Override
@@ -158,18 +173,6 @@ public final class DamAsset extends SlingAdaptable implements Asset {
     }
   }
 
-  @SuppressWarnings("deprecation")
-  @Override
-  public Rendition getFlashRendition(@NotNull MediaArgs mediaArgs) {
-    Rendition rendition = getRendition(mediaArgs);
-    if (rendition != null && rendition.isFlash()) {
-      return rendition;
-    }
-    else {
-      return null;
-    }
-  }
-
   @Override
   public Rendition getDownloadRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
@@ -213,7 +216,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
     if (dimension == null) {
       throw new IllegalArgumentException("Unable to get dimension for original rendition of asset: " + getPath());
     }
-    return new DamUriTemplate(type, dimension, damContext, defaultMediaArgs);
+    return new DamUriTemplate(type, dimension, original, null, null, null, damContext);
   }
 
   @Override

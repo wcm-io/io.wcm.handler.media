@@ -24,13 +24,11 @@ import org.apache.sling.api.resource.AbstractResource;
 import org.apache.sling.api.resource.ResourceMetadata;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.sling.commons.resource.ImmutableValueMap;
 
 /**
  * Virtual resource returning name and ratio of media format.
@@ -54,9 +52,9 @@ class AspectRatioResource extends AbstractResource {
       ratio = 1d / mediaFormat.getRatio();
     }
 
-    this.properties = new ValueMapDecorator(ImmutableMap.<String, Object>of(
+    this.properties = ImmutableValueMap.of(
         "name", getDisplayString(mediaFormat),
-        "ratio", ratio));
+        "ratio", ratio);
   }
 
   private static String getDisplayString(MediaFormat mf) {

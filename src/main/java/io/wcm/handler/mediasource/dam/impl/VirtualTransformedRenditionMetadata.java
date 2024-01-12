@@ -24,13 +24,20 @@ import java.io.InputStream;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 
 /**
@@ -93,7 +100,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public @NotNull String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
+  public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
     // render virtual rendition with dynamic media (we ignore contentDispositionAttachment here)
     return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight(), this.cropDimension, this.rotation);
   }
@@ -119,6 +126,22 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   protected InputStream getInputStream() {
     // currently not supported for virtual renditions
     return null;
+  }
+
+  @Override
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type, @NotNull DamContext damContext) {
+    if (!isImage() || isVectorImage()) {
+      throw new UnsupportedOperationException("Unable to build URI template for rendition: " + getRendition().getPath());
+    }
+    Dimension dimension = cropDimension;
+    if (dimension == null) {
+      dimension = AssetRendition.getDimension(getRendition());
+    }
+    if (dimension == null) {
+      throw new IllegalArgumentException("Unable to get dimension for rendition: " + getRendition().getPath());
+    }
+    dimension = ImageTransformation.rotateMapDimension(dimension, rotation);
+    return new DamUriTemplate(type, dimension, getRendition(), cropDimension, rotation, Ratio.get(dimension), damContext);
   }
 
   @Override

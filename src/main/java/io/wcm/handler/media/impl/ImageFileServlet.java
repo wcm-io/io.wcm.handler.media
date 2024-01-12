@@ -32,13 +32,13 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.dam.api.handler.store.AssetStore;
 import com.day.image.Layer;
-import com.drew.lang.annotations.Nullable;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.format.Ratio;
@@ -116,12 +116,18 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     }
 
     // if only width or only height is given - derive other value from ratio
-    double layerRatio = Ratio.get(layer.getWidth(), layer.getHeight());
+    double originalRatio;
+    if (cropDimension != null) {
+      originalRatio = Ratio.get(cropDimension);
+    }
+    else {
+      originalRatio = Ratio.get(layer.getWidth(), layer.getHeight());
+    }
     if (width == 0) {
-      width = (int)Math.round(height * layerRatio);
+      width = (int)Math.round(height * originalRatio);
     }
     else if (height == 0) {
-      height = (int)Math.round(width / layerRatio);
+      height = (int)Math.round(width / originalRatio);
     }
 
     // if required: crop image
@@ -131,7 +137,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     else {
       // if image ratio that is requested does not match with the given ratio apply a center-crop here
       double requestedRatio = Ratio.get(width, height);
-      if (!Ratio.matches(layerRatio, requestedRatio)) {
+      if (!Ratio.matches(originalRatio, requestedRatio)) {
         cropDimension = ImageTransformation.calculateAutoCropDimension(layer.getWidth(), layer.getHeight(), requestedRatio);
         layer.crop(cropDimension.getRectangle());
       }

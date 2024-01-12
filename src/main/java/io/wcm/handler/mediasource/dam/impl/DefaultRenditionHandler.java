@@ -22,9 +22,14 @@ package io.wcm.handler.mediasource.dam.impl;
 import static io.wcm.handler.media.format.impl.MediaFormatSupport.getRequestedFileExtensions;
 import static io.wcm.handler.media.format.impl.MediaFormatSupport.visitMediaFormats;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,15 +38,18 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
-import com.google.common.collect.ImmutableSet;
 
+import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.format.impl.MediaFormatVisitor;
 import io.wcm.handler.mediasource.dam.AssetRendition;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop;
 
 /**
  * Handles resolving DAM renditions and resizing for media handler.
@@ -79,7 +87,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         addRendition(candidates, rendition, mediaArgs);
       }
       candidates = postProcessCandidates(candidates, mediaArgs);
-      this.renditions = ImmutableSet.<RenditionMetadata>copyOf(candidates);
+      this.renditions = Collections.unmodifiableSet(candidates);
     }
     return this.renditions;
   }
@@ -109,12 +117,57 @@ class DefaultRenditionHandler implements RenditionHandler {
     if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
       return;
     }
-    // skip all non-original rendition for dynamic media assets. dynamic media does not support them.
-    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset() && !AssetRendition.isOriginal(rendition)) {
-      return;
+
+    // special handling for dynamic media
+    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+      // skip all non-original renditions for dynamic media assets. dynamic media does not support them.
+      if (!AssetRendition.isOriginal(rendition)) {
+        return;
+      }
+
+      // check if there are matching smart crop renditions for the requested media format(s)
+      // and return those instead of the original rendition for further processing
+      String fileExtension = FilenameUtils.getExtension(damContext.getAsset().getName());
+      if (damContext.isDynamicMediaValidateSmartCropRenditionSizes()
+          && MediaFileType.isImage(fileExtension) && !MediaFileType.isVectorImage(fileExtension)) {
+        List<CropDimension> cropDimensions = getDynamicMediaCropDimensions(mediaArgs);
+        if (!cropDimensions.isEmpty()) {
+          candidates.addAll(cropDimensions.stream()
+              .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
+                  cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension, null))
+              .collect(Collectors.toList()));
+          return;
+        }
+      }
     }
+
     RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
     candidates.add(renditionMetadata);
+  }
+
+  /**
+   * Try to get actual smart crop dimensions for the requested ratio(s) for the current asset.
+   * @param mediaArgs Media Args with requested media formats
+   * @return Cropping dimensions or empty list if not found
+   */
+  private @NotNull List<CropDimension> getDynamicMediaCropDimensions(MediaArgs mediaArgs) {
+    if (mediaArgs.getMediaFormatOptions() == null) {
+      return Collections.emptyList();
+    }
+    List<CropDimension> result = new ArrayList<>();
+    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
+      MediaFormat mediaFormat = mediaFormatOption.getMediaFormat();
+      if (mediaFormat != null && mediaFormat.hasRatio()) {
+        NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), mediaFormat.getRatio());
+        if (smartCropDef != null) {
+          CropDimension cropDimension =  SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
+          if (cropDimension != null) {
+            result.add(cropDimension);
+          }
+        }
+      }
+    }
+    return result;
   }
 
   /**
@@ -267,6 +320,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @return Rendition or null if none found
    */
   private RenditionMetadata getExactMatchRendition(final Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     // check for fixed width and/or height request
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
       for (RenditionMetadata candidate : candidates) {
@@ -277,16 +331,16 @@ class DefaultRenditionHandler implements RenditionHandler {
     }
 
     // otherwise check for media format restriction
-    else if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 0) {
+    else if (mediaFormats != null && mediaFormats.length > 0) {
       return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
         @Override
         public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
           for (RenditionMetadata candidate : candidates) {
-            if (candidate.matches((int)mediaFormat.getEffectiveMinWidth(),
-                (int)mediaFormat.getEffectiveMinHeight(),
-                (int)mediaFormat.getEffectiveMaxWidth(),
-                (int)mediaFormat.getEffectiveMaxHeight(),
-                (int)mediaFormat.getMinWidthHeight(),
+            if (candidate.matches(mediaFormat.getEffectiveMinWidth(),
+                mediaFormat.getEffectiveMinHeight(),
+                mediaFormat.getEffectiveMaxWidth(),
+                mediaFormat.getEffectiveMaxHeight(),
+                mediaFormat.getMinWidthHeight(),
                 mediaFormat.getRatio())) {
               candidate.setMediaFormat(mediaFormat);
               return candidate;
@@ -333,7 +387,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    */
   private RenditionMetadata getVirtualRendition(final Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
 
-    // get from fixed with/height
+    // get from fixed width/height
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
       long destWidth = mediaArgs.getFixedWidth();
       long destHeight = mediaArgs.getFixedHeight();
@@ -349,9 +403,9 @@ class DefaultRenditionHandler implements RenditionHandler {
     return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
       @Override
       public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
-        int destWidth = (int)mediaFormat.getEffectiveMinWidth();
-        int destHeight = (int)mediaFormat.getEffectiveMinHeight();
-        int minWidthHeight = (int)mediaFormat.getMinWidthHeight();
+        long destWidth = mediaFormat.getEffectiveMinWidth();
+        long destHeight = mediaFormat.getEffectiveMinHeight();
+        long minWidthHeight = mediaFormat.getMinWidthHeight();
         double destRatio = mediaFormat.getRatio();
         // try to find matching rendition, otherwise check for next media format
         RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, minWidthHeight, destRatio,
@@ -423,12 +477,12 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // if height is missing - calculate from width
     if (height == 0 && width > 0) {
-      height = (int)Math.round(width / ratio);
+      height = Math.round(width / ratio);
     }
 
     // if width is missing - calculate from height
     if (width == 0 && height > 0) {
-      width = (int)Math.round(height * ratio);
+      width = Math.round(height * ratio);
     }
 
     // return virtual rendition

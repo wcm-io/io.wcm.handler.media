@@ -36,8 +36,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
-import com.google.common.collect.ImmutableSet;
-
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
@@ -73,7 +71,7 @@ public final class MediaArgs implements Cloneable {
   private boolean dynamicMediaDisabled;
   private ValueMap properties;
 
-  private static final Set<String> ALLOWED_FORCED_FILE_EXTENSIONS = ImmutableSet.of(
+  private static final Set<String> ALLOWED_FORCED_FILE_EXTENSIONS = Set.of(
       FileExtension.JPEG, FileExtension.PNG);
 
   /**
@@ -99,13 +97,10 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
-   * Returns list of media formats to resolve to. If {@link #isMediaFormatsMandatory()} is false,
-   * the first rendition that matches any of the given media format is returned. If it is set to true,
-   * for each media format given a rendition has to be resolved and returned. If not all renditions
-   * could be resolved the media is marked as invalid (but the partial resolved renditions are returned anyway).
+   * Returns list of media formats to resolve to.
    * @return Media formats
    */
-  public MediaFormat[] getMediaFormats() {
+  public MediaFormat @Nullable [] getMediaFormats() {
     if (this.mediaFormatOptions != null) {
       MediaFormat[] result = Arrays.stream(this.mediaFormatOptions)
           .filter(option -> option.getMediaFormatName() == null)
@@ -137,7 +132,6 @@ public final class MediaArgs implements Cloneable {
 
   /**
    * Sets list of media formats to resolve to.
-   * Additionally {@link #isMediaFormatsMandatory()} is set to true.
    * @param values Media formats
    * @return this
    */
@@ -168,21 +162,6 @@ public final class MediaArgs implements Cloneable {
       };
     }
     return this;
-  }
-
-  /**
-   * Checks if all media format options have the "mandatory" flag set.
-   * If none or not all of them have the flag set, false is returned.
-   * @return true if all media format options have the "mandatory" flag set.
-   * @deprecated Please check the mandatory flag for each media format individually via {@link #getMediaFormatOptions()}
-   */
-  @Deprecated
-  public boolean isMediaFormatsMandatory() {
-    if (this.mediaFormatOptions == null) {
-      return false;
-    }
-    return !Arrays.stream(this.mediaFormatOptions)
-        .anyMatch(option -> !option.isMandatory());
   }
 
   /**
@@ -235,7 +214,6 @@ public final class MediaArgs implements Cloneable {
 
   /**
    * Sets list of media formats to resolve to.
-   * Additionally {@link #isMediaFormatsMandatory()} is set to true.
    * @param names Media format names.
    * @return this
    */
@@ -969,17 +947,6 @@ public final class MediaArgs implements Cloneable {
 
     /**
      * @return Widths for the renditions in the <code>srcset</code> attribute.
-     * @deprecated Use {@link #getWidthOptions()}
-     */
-    @Deprecated
-    public long @Nullable [] getWidths() {
-      return Arrays.stream(this.widthOptions)
-          .mapToLong(WidthOption::getWidth)
-          .toArray();
-    }
-
-    /**
-     * @return Widths for the renditions in the <code>srcset</code> attribute.
      */
     public @NotNull WidthOption @Nullable [] getWidthOptions() {
       return this.widthOptions;
@@ -1034,36 +1001,6 @@ public final class MediaArgs implements Cloneable {
       this.mediaFormatName = mediaFormatName;
     }
 
-    /**
-     * @param mediaFormat Media format
-     * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
-     *          list</a>
-     * @param widths Widths for the renditions in the <code>srcset</code> attribute (all mandatory).
-     * @deprecated Use constructor with {@link MediaFormat} and {@link #media} and {@link #widths(long...)}.
-     */
-    @Deprecated
-    public PictureSource(@NotNull MediaFormat mediaFormat, @Nullable String media,
-        long @NotNull... widths) {
-      this.mediaFormat = mediaFormat;
-      this.media = media;
-      this.widthOptions = toWidthOptions(widths);
-    }
-
-    /**
-     * @param mediaFormat Media format
-     * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
-     *          list</a>
-     * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
-     * @deprecated Use constructor with {@link MediaFormat} and {@link #media} and {@link #widths(long...)}.
-     */
-    @Deprecated
-    public PictureSource(@Nullable MediaFormat mediaFormat, @Nullable String media,
-        @NotNull WidthOption @NotNull... widthOptions) {
-      this.mediaFormat = mediaFormat;
-      this.media = media;
-      this.widthOptions = widthOptions;
-    }
-
     private static @NotNull WidthOption @NotNull [] toWidthOptions(long @NotNull... widths) {
       return Arrays.stream(widths)
           .mapToObj(width -> new WidthOption(width, true))
@@ -1107,17 +1044,6 @@ public final class MediaArgs implements Cloneable {
     public PictureSource widths(long @NotNull... value) {
       this.widthOptions = toWidthOptions(value);
       return this;
-    }
-
-    /**
-     * @return Widths for the renditions in the <code>srcset</code> attribute.
-     * @deprecated Use {@link #getWidthOptions()}
-     */
-    @Deprecated
-    public long @Nullable [] getWidths() {
-      return Arrays.stream(this.widthOptions)
-          .mapToLong(WidthOption::getWidth)
-          .toArray();
     }
 
     /**

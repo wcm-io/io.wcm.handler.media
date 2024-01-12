@@ -49,6 +49,8 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.format.impl.MediaFormatSupport;
@@ -74,6 +76,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   private final String fileExtension;
   private final String originalFileExtension;
   private final Dimension imageDimension;
+  private final Dimension maxImageDimension;
   private final String url;
   private CropDimension cropDimension;
   private final Integer rotation;
@@ -110,6 +113,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     boolean isVectorImage = MediaFileType.isVectorImage(this.originalFileExtension);
 
     Dimension dimension = null;
+    Dimension maxDimension = null;
     Dimension scaledDimension = null;
     String processedFileName = fileName;
     if (isImage) {
@@ -117,6 +121,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
       List<Dimension> dimensionCandidates = getImageOrCroppedDimensions();
       for (int i = 0; i < dimensionCandidates.size(); i++) {
         dimension = dimensionCandidates.get(i);
+        maxDimension = dimension;
         if (isVectorImage && (this.rotation != null || this.cropDimension != null)) {
           // transformation not possible for vector images
           scaledDimension = SCALING_NOT_POSSIBLE_DIMENSION;
@@ -149,6 +154,7 @@ class InlineRendition extends SlingAdaptable implements Rendition {
         List<CropDimension> autoCropDimensions = autoCropping.calculateAutoCropDimensions();
         for (CropDimension autoCropDimension : autoCropDimensions) {
           scaledDimension = getScaledDimension(autoCropDimension);
+          maxDimension = autoCropDimension;
           if (scaledDimension == null) {
             scaledDimension = autoCropDimension;
           }
@@ -169,13 +175,15 @@ class InlineRendition extends SlingAdaptable implements Rendition {
     this.fileName = processedFileName;
     this.fileExtension = FilenameUtils.getExtension(processedFileName);
     this.imageDimension = dimension;
+    this.maxImageDimension = maxDimension;
 
     // build media url (it is null if no rendition is available for the given media args)
     this.url = buildMediaUrl(scaledDimension);
 
     // set first media format as resolved format - because only the first is supported
-    if (url != null && mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 0) {
-      this.resolvedMediaFormat = mediaArgs.getMediaFormats()[0];
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
+    if (url != null && mediaFormats != null && mediaFormats.length > 0) {
+      this.resolvedMediaFormat = mediaFormats[0];
     }
 
   }
@@ -246,10 +254,10 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
       // calculate missing width/height from ratio if not specified
       if (requestedWidth == 0 && requestedHeight > 0) {
-        requestedWidth = (int)Math.round(requestedHeight * imageRatio);
+        requestedWidth = Math.round(requestedHeight * imageRatio);
       }
       else if (requestedWidth > 0 && requestedHeight == 0) {
-        requestedHeight = (int)Math.round(requestedWidth / imageRatio);
+        requestedHeight = Math.round(requestedWidth / imageRatio);
       }
 
       // calculate requested ratio
@@ -473,10 +481,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
 
     // check for dimensions from mediaformat (evaluate only first media format)
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    if (mediaFormats != null && mediaFormats.length > 0) {
-      if (mediaFormats[0].getRatio() > 0) {
-        return mediaFormats[0].getRatio();
-      }
+    if (mediaFormats != null && mediaFormats.length > 0 && mediaFormats[0].getRatio() > 0) {
+      return mediaFormats[0].getRatio();
     }
 
     // no ratio
@@ -570,14 +576,8 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  @SuppressWarnings("deprecation")
-  public boolean isFlash() {
-    return MediaFileType.isFlash(getFileExtension());
-  }
-
-  @Override
   public boolean isDownload() {
-    return !isImage() && !isFlash();
+    return !isImage();
   }
 
   @Override
@@ -603,6 +603,23 @@ class InlineRendition extends SlingAdaptable implements Rendition {
   @Override
   public boolean isFallback() {
     return fallback;
+  }
+
+  @Override
+  public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
+    if (type == UriTemplateType.CROP_CENTER) {
+      throw new IllegalArgumentException("CROP_CENTER not supported for rendition URI templates.");
+    }
+    if (!isImage() || isVectorImage()) {
+      throw new UnsupportedOperationException("Unable to build URI template for " + resource.getPath());
+    }
+    if (this.maxImageDimension == null) {
+      throw new IllegalStateException("Unable to detect dimension for inline image: " + resource.getPath());
+    }
+
+    Dimension dimension = ImageTransformation.rotateMapDimension(maxImageDimension, rotation);
+    return new InlineUriTemplate(type, dimension, this.resource, fileName,
+        this.cropDimension, this.rotation, mediaArgs, adaptable);
   }
 
   @Override

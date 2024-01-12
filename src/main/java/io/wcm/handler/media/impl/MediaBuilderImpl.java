@@ -61,7 +61,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   private static final Logger log = LoggerFactory.getLogger(MediaBuilderImpl.class);
 
   MediaBuilderImpl(@Nullable Resource resource, @NotNull MediaHandlerImpl mediaHandler,
-      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+      @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
     this.resource = resource;
     this.mediaRef = null;
     this.mediaHandler = mediaHandler;
@@ -76,8 +76,9 @@ final class MediaBuilderImpl implements MediaBuilder {
    * @param contextResource context resource
    * @param componentPropertyResolverFactory factory to create a component property resolver
    */
-  private void resolveDefaultSettingsFromPolicyAndComponent(Resource contextResource, ComponentPropertyResolverFactory componentPropertyResolverFactory) {
-    try (MediaComponentPropertyResolver resolver = getMediaComponentPropertyResolver(contextResource, componentPropertyResolverFactory)) {
+  private void resolveDefaultSettingsFromPolicyAndComponent(@NotNull Resource contextResource,
+      @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+    try (MediaComponentPropertyResolver resolver = new MediaComponentPropertyResolver(contextResource, componentPropertyResolverFactory)) {
       mediaArgs.mediaFormatOptions(resolver.getMediaFormatOptions());
       mediaArgs.autoCrop(resolver.isAutoCrop());
       mediaArgs.imageSizes(resolver.getImageSizes());
@@ -88,20 +89,8 @@ final class MediaBuilderImpl implements MediaBuilder {
     }
   }
 
-  @SuppressWarnings("deprecation")
-  private static MediaComponentPropertyResolver getMediaComponentPropertyResolver(@NotNull Resource resource,
-      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
-    if (componentPropertyResolverFactory != null) {
-      return new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory);
-    }
-    else {
-      // fallback mode if ComponentPropertyResolverFactory is not available
-      return new MediaComponentPropertyResolver(resource);
-    }
-  }
-
   MediaBuilderImpl(String mediaRef, Resource contextResource, MediaHandlerImpl mediaHandler,
-      @Nullable ComponentPropertyResolverFactory componentPropertyResolverFactory) {
+      @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
     this.resource = contextResource;
     this.mediaRef = mediaRef;
     this.mediaHandler = mediaHandler;
@@ -109,10 +98,6 @@ final class MediaBuilderImpl implements MediaBuilder {
     if (contextResource != null) {
       resolveDefaultSettingsFromPolicyAndComponent(contextResource, componentPropertyResolverFactory);
     }
-  }
-
-  MediaBuilderImpl(String mediaRef, MediaHandlerImpl mediaHandler) {
-    this(mediaRef, null, mediaHandler, null);
   }
 
   MediaBuilderImpl(MediaRequest mediaRequest, MediaHandlerImpl mediaHandler) {
@@ -314,18 +299,6 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths) {
-    this.pictureSourceSets.add(new PictureSource(mediaFormat).media(media).widths(widths));
-    return this;
-  }
-
-  @Override
-  public @NotNull MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths) {
-    this.pictureSourceSets.add(new PictureSource(mediaFormat).widths(widths));
-    return this;
-  }
-
-  @Override
   public @NotNull MediaBuilder dynamicMediaDisabled(boolean value) {
     this.mediaArgs.dynamicMediaDisabled(value);
     return this;
@@ -356,6 +329,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  @SuppressWarnings("PMD.OptimizableToArrayCall")
   public @NotNull Media build() {
     if (!pictureSourceSets.isEmpty()) {
       this.mediaArgs.pictureSources(pictureSourceSets.toArray(new PictureSource[pictureSourceSets.size()]));

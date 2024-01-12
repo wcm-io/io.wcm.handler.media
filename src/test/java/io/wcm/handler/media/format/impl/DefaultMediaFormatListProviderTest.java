@@ -19,12 +19,16 @@
  */
 package io.wcm.handler.media.format.impl;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
@@ -48,9 +52,11 @@ class DefaultMediaFormatListProviderTest {
     underTest.service(context.request(), context.response());
 
     String response = context.response().getOutputAsString();
-    assertTrue(StringUtils.contains(response, "\"" + DummyMediaFormats.EDITORIAL_1COL.getName() + "\""));
-    assertTrue(StringUtils.contains(response, "\"" + DummyMediaFormats.EDITORIAL_2COL.getName() + "\""));
-    assertTrue(StringUtils.contains(response, "\"" + DummyMediaFormats.EDITORIAL_3COL.getName() + "\""));
+
+    DocumentContext json = JsonPath.parse(response);
+    assertThat(json, hasJsonPath("$[*].name", hasItem(DummyMediaFormats.EDITORIAL_1COL.getName())));
+    assertThat(json, hasJsonPath("$[*].name", hasItem(DummyMediaFormats.EDITORIAL_2COL.getName())));
+    assertThat(json, hasJsonPath("$[*].name", hasItem(DummyMediaFormats.EDITORIAL_3COL.getName())));
   }
 
 }

@@ -19,16 +19,11 @@
  */
 package io.wcm.handler.mediasource.dam.markup;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -42,12 +37,10 @@ import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.commons.util.PrefixRenditionPicker;
 import com.day.cq.dam.video.VideoConstants;
 import com.day.cq.dam.video.VideoProfile;
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Video;
@@ -56,7 +49,6 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.url.UrlHandler;
-import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Default implementation of {@link MediaMarkupBuilder} for DAM video assets.
@@ -71,7 +63,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   private static final String OGG_PROFILE = "format_ogg";
   private static final String LEGACY_H264_PROFILE = "hq"; // for AEM 6.3
   private static final String LEGACY_OGG_PROFILE = "firefoxhq"; // for AEM 6.3
-  private static final List<String> VIDEO_PROFILE_NAMES = ImmutableList.of(H264_PROFILE, OGG_PROFILE,
+  private static final List<String> VIDEO_PROFILE_NAMES = List.of(H264_PROFILE, OGG_PROFILE,
       LEGACY_H264_PROFILE, LEGACY_OGG_PROFILE);
 
   private static final Logger log = LoggerFactory.getLogger(DamVideoMediaMarkupBuilder.class);
@@ -149,8 +141,8 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
 
     Video video = new Video();
-    video.setWidth((int)dimension.getWidth());
-    video.setHeight((int)dimension.getHeight());
+    video.setWidth(dimension.getWidth());
+    video.setHeight(dimension.getHeight());
     video.setControls(true);
 
     // add video sources for each video profile
@@ -177,91 +169,6 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
         .setType(profile.getHtmlType())
         .setSrc(urlHandler.get(rendition.getPath()).buildExternalResourceUrl(rendition.adaptTo(Resource.class)));
       }
-    }
-  }
-
-  /**
-   * Build flash player element
-   * @param media Media metadata
-   * @param dimension Dimension
-   * @return Media element
-   * @deprecated Usage of flash for video player fallback is deprecated
-   */
-  @Deprecated
-  protected HtmlElement getFlashPlayerElement(Media media, Dimension dimension) {
-    Asset asset = getDamAsset(media);
-    if (asset == null) {
-      return null;
-    }
-
-    com.day.cq.dam.api.Rendition rendition = asset.getRendition(new PrefixRenditionPicker(VideoConstants.RENDITION_PREFIX + H264_PROFILE));
-    if (rendition == null) {
-      rendition = asset.getRendition(new PrefixRenditionPicker(VideoConstants.RENDITION_PREFIX + LEGACY_H264_PROFILE));
-      if (rendition == null) {
-        return null;
-      }
-    }
-
-    String playerUrl = urlHandler.get("/etc/clientlibs/foundation/video/swf/StrobeMediaPlayback.swf")
-        .buildExternalResourceUrl();
-
-    // strobe specialty: path must be relative to swf file
-    String renditionUrl = "../../../../.." + rendition.getPath();
-
-    // manually apply jcr_content namespace mangling
-    renditionUrl = StringUtils.replace(renditionUrl, JcrConstants.JCR_CONTENT, "_jcr_content");
-
-    HtmlElement object = new HtmlElement("object");
-    object.setAttribute("type", ContentType.SWF);
-    object.setAttribute("data", playerUrl);
-    object.setAttribute("width", Long.toString(dimension.getWidth()));
-    object.setAttribute("height", Long.toString(dimension.getHeight()));
-
-    // get flashvars
-    Map<String, String> flashvars = new HashMap<>();
-    flashvars.put("src", renditionUrl);
-    flashvars.putAll(getAdditionalFlashPlayerFlashVars(media, dimension));
-
-    // get flash parameters
-    Map<String, String> parameters = new HashMap<>();
-    parameters.put("movie", playerUrl);
-    parameters.put("flashvars", buildFlashVarsString(flashvars));
-    parameters.putAll(getAdditionalFlashPlayerParameters(media, dimension));
-
-    // set parameters on object element
-    for (Map.Entry<String, String> entry : parameters.entrySet()) {
-      HtmlElement param = object.create("param");
-      param.setAttribute("name", entry.getKey());
-      param.setAttribute("value", entry.getValue());
-    }
-
-    return object;
-  }
-
-  /**
-   * Build flashvars string to be used on HTML object element for flash embedding.
-   * @param flashVars flashvars map
-   * @return flashvars string with proper encoding
-   * @deprecated Usage of flash for video player fallback is deprecated
-   */
-  @Deprecated
-  protected String buildFlashVarsString(Map<String, String> flashVars) {
-    try {
-      StringBuilder flashvarsString = new StringBuilder();
-      Iterator<Map.Entry<String, String>> flashvarsIterator = flashVars.entrySet().iterator();
-      while (flashvarsIterator.hasNext()) {
-        Map.Entry<String, String> entry = flashvarsIterator.next();
-        flashvarsString.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.name()));
-        flashvarsString.append('=');
-        flashvarsString.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.name()));
-        if (flashvarsIterator.hasNext()) {
-          flashvarsString.append('&');
-        }
-      }
-      return flashvarsString.toString();
-    }
-    catch (UnsupportedEncodingException ex) {
-      throw new RuntimeException("Unsupported encoding.", ex);
     }
   }
 

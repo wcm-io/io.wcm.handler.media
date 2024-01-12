@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.markup;
 
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -54,24 +56,13 @@ import io.wcm.sling.commons.request.RequestParam;
 @ProviderType
 public final class MediaMarkupBuilderUtil {
 
+  /**
+   * List of OOTB IPE editor types for images.
+   */
+  public static final Set<String> DEFAULT_ALLOWED_IPE_EDITOR_TYPES = Set.of("image");
+
   private MediaMarkupBuilderUtil() {
     // static methods only
-  }
-
-  /**
-   * Adds CSS classes that denote the changes to the media element when compared to a different version.
-   * If no diff has been requested by the WCM UI, there won't be any changes to the element.
-   * @param mediaElement Element to be decorated
-   * @param resource Resource pointing to JCR node
-   * @param refProperty Name of property for media library item reference. If null, default name is used.
-   * @param request Servlet request
-   * @deprecated Use
-   *             {@link #addDiffDecoration(HtmlElement, Resource, String, SlingHttpServletRequest, MediaHandlerConfig)}
-   */
-  @Deprecated
-  public static void addDiffDecoration(@NotNull HtmlElement<?> mediaElement, @NotNull Resource resource,
-      @NotNull String refProperty, @NotNull SlingHttpServletRequest request) {
-    addDiffDecoration(mediaElement, resource, refProperty, request, null);
   }
 
   /**
@@ -159,7 +150,7 @@ public final class MediaMarkupBuilderUtil {
     long width = mediaArgs.getFixedWidth();
     long height = mediaArgs.getFixedHeight();
     if ((width == 0 || height == 0) && mediaFormats != null && mediaFormats.length > 0) {
-      MediaFormat firstMediaFormat = mediaArgs.getMediaFormats()[0];
+      MediaFormat firstMediaFormat = mediaFormats[0];
       Dimension dimension = firstMediaFormat.getMinDimension();
       if (dimension != null) {
         width = dimension.getWidth();
@@ -217,6 +208,18 @@ public final class MediaMarkupBuilderUtil {
    */
   public static boolean canSetCustomIPECropRatios(@NotNull MediaRequest mediaRequest,
       @Nullable ComponentContext wcmComponentContext) {
+    return canSetCustomIPECropRatios(mediaRequest, wcmComponentContext, DEFAULT_ALLOWED_IPE_EDITOR_TYPES);
+  }
+
+  /**
+   * Implements check whether to set customized IPE cropping ratios as described in {@link IPERatioCustomize}.
+   * @param mediaRequest Media request
+   * @param wcmComponentContext WCM component context
+   * @param allowedIpeEditorTypes Allowed editor types for image IPE (in-place editor).
+   * @return true if customized IP cropping ratios can be set
+   */
+  public static boolean canSetCustomIPECropRatios(@NotNull MediaRequest mediaRequest,
+      @Nullable ComponentContext wcmComponentContext, @NotNull Set<String> allowedIpeEditorTypes) {
 
     EditConfig editConfig = null;
     InplaceEditingConfig ipeConfig = null;
@@ -227,7 +230,7 @@ public final class MediaMarkupBuilderUtil {
       ipeConfig = editConfig.getInplaceEditingConfig();
     }
     if (editConfig == null || ipeConfig == null
-        || !StringUtils.equals(ipeConfig.getEditorType(), "image")) {
+        || !allowedIpeEditorTypes.contains(ipeConfig.getEditorType())) {
       // no image IPE activated - never customize crop ratios
       return false;
     }

@@ -24,6 +24,7 @@ import java.io.InputStream;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
@@ -61,7 +62,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
 
   @Override
   public long getFileSize() {
-    // no size for virutal renditions
+    // no size for virtual renditions
     return 0L;
   }
 
@@ -88,7 +89,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   }
 
   @Override
-  public @NotNull String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
+  public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
     if (contentDispositionAttachment) {
       // serve static content from dynamic media for content disposition attachment
       return DynamicMediaPath.buildContent(damContext, true);

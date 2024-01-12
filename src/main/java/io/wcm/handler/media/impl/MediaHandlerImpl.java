@@ -26,15 +26,12 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableList;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -67,7 +64,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaFormatHandler mediaFormatHandler;
-  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
+  @OSGiService
   private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
   private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
@@ -89,7 +86,7 @@ public final class MediaHandlerImpl implements MediaHandler {
 
   @Override
   public @NotNull MediaBuilder get(String mediaRef) {
-    return new MediaBuilderImpl(mediaRef, this);
+    return new MediaBuilderImpl(mediaRef, null, this, componentPropertyResolverFactory);
   }
 
   @Override
@@ -191,14 +188,16 @@ public final class MediaHandlerImpl implements MediaHandler {
       // generate markup (if markup builder is available) - first accepting wins
       List<Class<? extends MediaMarkupBuilder>> mediaMarkupBuilders = mediaHandlerConfig.getMarkupBuilders();
       if (mediaMarkupBuilders != null) {
-        for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
-          MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
-          if (mediaMarkupBuilder.accepts(media)) {
-            log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
-            media.setElement(mediaMarkupBuilder.build(media));
-            break;
+        media.setElementBuilder(m -> {
+          for (Class<? extends MediaMarkupBuilder> mediaMarkupBuilderClass : mediaMarkupBuilders) {
+            MediaMarkupBuilder mediaMarkupBuilder = AdaptTo.notNull(adaptable, mediaMarkupBuilderClass);
+            if (mediaMarkupBuilder.accepts(m)) {
+              log.trace("Apply media markup builder ({}): {}", mediaMarkupBuilderClass, mediaRequest);
+              return mediaMarkupBuilder.build(m);
+            }
           }
-        }
+          return null;
+        });
       }
 
       // postprocess media request after resolving
@@ -266,7 +265,7 @@ public final class MediaHandlerImpl implements MediaHandler {
     List<MediaFormat> candidates = new ArrayList<>();
     boolean fallbackToAllMediaFormats = false;
     if (mediaArgs.getMediaFormats() != null) {
-      candidates.addAll(ImmutableList.copyOf(mediaArgs.getMediaFormats()));
+      candidates.addAll(List.of(mediaArgs.getMediaFormats()));
     }
     else {
       candidates.addAll(mediaFormatHandler.getMediaFormats());

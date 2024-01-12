@@ -21,7 +21,7 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -82,7 +82,7 @@ class AutoCroppingMediaHandlerTest {
   @Test
   void testMediaFormatWithRatio() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(RATIO)
+        .mediaFormat(RATIO_16_10)
         .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
@@ -100,7 +100,7 @@ class AutoCroppingMediaHandlerTest {
     Rendition rendition = media.getRendition();
     assertEquals(215, rendition.getWidth());
     assertEquals(102, rendition.getHeight());
-    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.215.102.0,5,400,194.file/test.jpg", media.getUrl());
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.215.102.0,5,400,195.file/test.jpg", media.getUrl());
   }
 
   @Test
@@ -112,7 +112,7 @@ class AutoCroppingMediaHandlerTest {
     Rendition rendition = media.getRendition();
     assertEquals(215, rendition.getWidth());
     assertEquals(102, rendition.getHeight());
-    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.215.102.0,5,400,194.file/test.jpg", media.getUrl());
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/original.image_file.215.102.0,6,400,195.file/test.jpg", media.getUrl());
   }
 
   @Test
@@ -134,7 +134,7 @@ class AutoCroppingMediaHandlerTest {
         MediaNameConstants.PN_MEDIA_CROP, new CropDimension(0, 0, 120, 75).getCropString());
 
     Media media = mediaHandler.get(resource2)
-        .mediaFormat(RATIO)
+        .mediaFormat(RATIO_16_10)
         .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
@@ -154,7 +154,7 @@ class AutoCroppingMediaHandlerTest {
         MediaNameConstants.PN_MEDIA_CROP, new CropDimension(20, 20, 50, 50).getCropString());
 
     Media media = mediaHandler.get(resource2)
-        .mediaFormat(RATIO)
+        .mediaFormat(RATIO_16_10)
         .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
@@ -167,7 +167,7 @@ class AutoCroppingMediaHandlerTest {
   @Test
   void testMediaFormatWithRatio_WebRenditionsExcludedFromMediaHandling() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(RATIO)
+        .mediaFormat(RATIO_16_10)
         .includeAssetWebRenditions(false)
         .build();
     assertTrue(media.isValid());

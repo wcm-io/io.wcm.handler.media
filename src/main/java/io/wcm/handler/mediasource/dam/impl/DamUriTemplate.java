@@ -25,7 +25,11 @@ import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_W
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import com.day.cq.dam.api.Rendition;
+
+import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
@@ -33,88 +37,144 @@ import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
+/**
+ * Generates URI templates for asset renditions - with or without Dynamic Media.
+ */
 class DamUriTemplate implements UriTemplate {
 
-  private final String uriTemplate;
   private final UriTemplateType type;
+  private final String uriTemplate;
   private final Dimension dimension;
 
   DamUriTemplate(@NotNull UriTemplateType type, @NotNull Dimension dimension,
-      @NotNull DamContext damContext, @NotNull MediaArgs mediaArgs) {
-    this.uriTemplate = buildUriTemplate(type, damContext, mediaArgs);
+      @NotNull Rendition rendition, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @Nullable Double ratio, @NotNull DamContext damContext) {
     this.type = type;
-    this.dimension = dimension;
-  }
 
-  private static String buildUriTemplate(@NotNull UriTemplateType type, @NotNull DamContext damContext,
-      @NotNull MediaArgs mediaArgs) {
     String url = null;
-    if (!mediaArgs.isDynamicMediaDisabled() && damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+    Dimension validatedDimension = null;
+    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
       // if DM is enabled: try to get rendition URL from dynamic media
-      String productionAssetUrl = damContext.getDynamicMediaServerUrl();
-      if (productionAssetUrl != null) {
-        switch (type) {
-          case CROP_CENTER:
-            url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
-                + "?wid=" + URI_TEMPLATE_PLACEHOLDER_WIDTH + "&hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT + "&fit=crop";
-            break;
-          case SCALE_WIDTH:
-            url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
-                + "?wid=" + URI_TEMPLATE_PLACEHOLDER_WIDTH;
-            break;
-          case SCALE_HEIGHT:
-            url = productionAssetUrl + DynamicMediaPath.buildImage(damContext)
-                + "?hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT;
-            break;
-          default:
-            throw new IllegalArgumentException("Unsupported type: " + type);
-        }
+      NamedDimension smartCropDef = getDynamicMediaSmartCropDef(cropDimension, rotation, ratio, damContext);
+      url = buildUriTemplateDynamicMedia(type, cropDimension, rotation, smartCropDef, damContext);
+      // get actual max. dimension from smart crop rendition
+      if (url != null && smartCropDef != null) {
+        validatedDimension = SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
       }
     }
     if (url == null && (!damContext.isDynamicMediaEnabled() || !damContext.isDynamicMediaAemFallbackDisabled())) {
       // Render renditions in AEM: build externalized URL
-      final long DUMMY_WIDTH = 999991;
-      final long DUMMY_HEIGHT = 999992;
+      url = buildUriTemplateDam(type, rendition, cropDimension, rotation, damContext);
+    }
+    this.uriTemplate = url;
 
-      String mediaPath = RenditionMetadata.buildMediaPath(damContext.getAsset().getOriginal().getPath() + "." + ImageFileServlet.SELECTOR
-          + "." + DUMMY_WIDTH + "." + DUMMY_HEIGHT
-          + "." + MediaFileServlet.EXTENSION,
-          ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
-      UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
-      url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())
-          .buildExternalResourceUrl(damContext.getAsset().adaptTo(Resource.class));
+    if (validatedDimension == null) {
+      validatedDimension = dimension;
+    }
+    this.dimension = validatedDimension;
+  }
 
-      switch (type) {
-        case CROP_CENTER:
-          url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
-          url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
-          break;
-        case SCALE_WIDTH:
-          url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
-          url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), "0");
-          break;
-        case SCALE_HEIGHT:
-          url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), "0");
-          url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
-          break;
-        default:
-          throw new IllegalArgumentException("Unsupported type: " + type);
-      }
+  private static String buildUriTemplateDam(@NotNull UriTemplateType type, @NotNull Rendition rendition,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @NotNull DamContext damContext) {
+    final long DUMMY_WIDTH = 999991;
+    final long DUMMY_HEIGHT = 999992;
+
+    // build rendition URL with dummy width/height parameters (otherwise externalization will fail)
+    MediaArgs mediaArgs = damContext.getMediaArgs();
+    String mediaPath = RenditionMetadata.buildMediaPath(rendition.getPath()
+        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, false)
+        + "." + MediaFileServlet.EXTENSION,
+        ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
+    UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
+    String url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())
+        .buildExternalResourceUrl(damContext.getAsset().adaptTo(Resource.class));
+
+    // replace dummy width/height parameters with actual placeholders
+    switch (type) {
+      case CROP_CENTER:
+        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
+        break;
+      case SCALE_WIDTH:
+        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), "0");
+        break;
+      case SCALE_HEIGHT:
+        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), "0");
+        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported type: " + type);
     }
     return url;
   }
 
-  @Override
-  public String getUriTemplate() {
-    return uriTemplate;
+  private static @Nullable String buildUriTemplateDynamicMedia(@NotNull UriTemplateType type,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation, @Nullable NamedDimension smartCropDef,
+      @NotNull DamContext damContext) {
+    String productionAssetUrl = damContext.getDynamicMediaServerUrl();
+    if (productionAssetUrl == null) {
+      return null;
+    }
+    StringBuilder result = new StringBuilder();
+    result.append(productionAssetUrl).append(DynamicMediaPath.buildImage(damContext));
+
+    // build DM URL with smart cropping
+    if (smartCropDef != null) {
+      result.append("%3A").append(smartCropDef.getName()).append("?")
+          .append(getDynamicMediaWidthHeightParameters(type))
+          .append("&fit=constrain");
+      return result.toString();
+    }
+
+    // build DM URL without smart cropping
+    result.append("?");
+    if (cropDimension != null) {
+      result.append("crop=").append(cropDimension.getCropStringWidthHeight()).append("&");
+    }
+    if (rotation != null) {
+      result.append("rotate=").append(rotation).append("&");
+    }
+    result.append(getDynamicMediaWidthHeightParameters(type));
+    return result.toString();
+  }
+
+  private static String getDynamicMediaWidthHeightParameters(UriTemplateType type) {
+    switch (type) {
+      case CROP_CENTER:
+        return "wid=" + URI_TEMPLATE_PLACEHOLDER_WIDTH + "&hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT + "&fit=crop";
+      case SCALE_WIDTH:
+        return "wid=" + URI_TEMPLATE_PLACEHOLDER_WIDTH;
+      case SCALE_HEIGHT:
+        return "hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT;
+      default:
+        throw new IllegalArgumentException("Unsupported type: " + type);
+    }
+  }
+
+  private static NamedDimension getDynamicMediaSmartCropDef(@Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @Nullable Double ratio, @NotNull DamContext damContext) {
+    if (SmartCrop.canApply(cropDimension, rotation) && ratio != null) {
+      // check for matching image profile and use predefined cropping preset if match found
+      return SmartCrop.getDimensionForRatio(damContext.getImageProfile(), ratio);
+    }
+    return null;
   }
 
   @Override
   public UriTemplateType getType() {
     return type;
+  }
+
+  @Override
+  public String getUriTemplate() {
+    return uriTemplate;
   }
 
   @Override

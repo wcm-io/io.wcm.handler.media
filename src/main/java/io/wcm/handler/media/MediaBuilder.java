@@ -305,36 +305,6 @@ public interface MediaBuilder {
   MediaBuilder pictureSource(@NotNull PictureSource pictureSource);
 
   /**
-   * Apply responsive image handling using <code>picture</code> and <code>source</code> elements.
-   * This will add one <code>source</code> element with an <code>media</code> attribute set to the given media
-   * string, and a <code>srcset</code> attribute with renditions for each width given based on the given media format.
-   * @param mediaFormat Media format with ratio for the renditions of the <code>source</code> element
-   * @param media A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
-   *          list</a>
-   * @param widths Widths for the renditions in the <code>srcset</code> attribute.
-   *          All renditions will use the ratio of the given media format.
-   * @return this
-   * @deprecated Use {@link #pictureSource(io.wcm.handler.media.MediaArgs.PictureSource)}
-   */
-  @Deprecated
-  @NotNull
-  MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, @NotNull String media, long @NotNull... widths);
-
-  /**
-   * Apply responsive image handling using <code>picture</code> and <code>source</code> elements.
-   * This will add one <code>source</code> element without an <code>media</code> attribute, and a <code>srcset</code>
-   * attribute with renditions for each width given based on the given media format.
-   * @param mediaFormat Media format with ratio for the renditions of the <code>source</code> element
-   * @param widths Widths for the renditions in the <code>srcset</code> attribute.
-   *          All renditions will use the ratio of the given media format.
-   * @return this
-   * @deprecated Use {@link #pictureSource(io.wcm.handler.media.MediaArgs.PictureSource)}
-   */
-  @Deprecated
-  @NotNull
-  MediaBuilder pictureSource(@NotNull MediaFormat mediaFormat, long @NotNull... widths);
-
-  /**
    * Disable dynamic media support.
    * @param value If set to true, dynamic media support is disabled even when enabled on the instance.
    * @return this

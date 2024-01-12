@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
@@ -55,7 +56,6 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 import com.day.cq.dam.api.handler.store.AssetStore;
 import com.day.image.Layer;
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaFileType;
@@ -206,7 +206,7 @@ public final class RenditionMetadataGenerator {
       if (metadataResource == null) {
         metadataResource = ResourceUtil.getOrCreateResource(resourceResolver,
             metdataResourcePath,
-            ImmutableMap.<String, Object>of(JCR_PRIMARYTYPE, NT_UNSTRUCTURED),
+            Map.<String, Object>of(JCR_PRIMARYTYPE, NT_UNSTRUCTURED),
             null, false);
       }
 
@@ -278,7 +278,7 @@ public final class RenditionMetadataGenerator {
   }
 
   /**
-   * Get dimension (with/height) of rendition.
+   * Get dimension (width/height) of rendition.
    * @param renditionResource Rendition
    * @return Dimension or null if it could not be detected
    */

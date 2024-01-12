@@ -20,5 +20,5 @@
 /**
  * Media source implementation for binaries stored inline in the page content.
  */
-@org.osgi.annotation.versioning.Version("1.4")
+@org.osgi.annotation.versioning.Version("2.0.0")
 package io.wcm.handler.mediasource.inline;

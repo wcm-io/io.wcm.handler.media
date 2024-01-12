@@ -28,8 +28,8 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.IMAGE_UNCONSTRA
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.MATERIAL_TILE;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.NORATIO_LARGE_MINWIDTH;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.PRODUCT_CUTOUT_LARGE;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO;
-import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO2;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_16_10;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.RATIO_4_3;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.VIDEO_2COL;
@@ -44,13 +44,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -63,8 +63,6 @@ import com.day.cq.wcm.api.components.DropTarget;
 import com.day.cq.wcm.api.components.EditConfig;
 import com.day.cq.wcm.api.components.EditContext;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -626,7 +624,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original./standard.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -648,7 +646,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.64.30.2,2,86,42.file/standard.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -661,12 +659,12 @@ class DamMediaSourceTest extends AbstractDamTest {
 
   @Test
   void testMultipleMandatoryMediaFormatsWithCropping_AlsoMatchOriginal() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO_16_10);
     Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -674,18 +672,18 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(1).getMediaFormat());
   }
 
   @Test
   void testMultipleMandatoryMediaFormatsWithCropping_AlsoMatchOriginal_AutoCrop() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO, RATIO2, EDITORIAL_STAGE_SMALL)
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO_16_10, RATIO_4_3, EDITORIAL_STAGE_SMALL)
         .autoCrop(true);
     Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(4, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -694,7 +692,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.1333.1000.134,0,1467,1000.file/sixteen-ten.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.1");
-    assertEquals(RATIO2, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_4_3, renditions.get(1).getMediaFormat());
     assertFalse(renditions.get(1).isFallback());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.960.150.0,375,1600,625.file/sixteen-ten.jpg",
@@ -704,7 +702,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
             renditions.get(3).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(3).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(3).getMediaFormat());
     assertTrue(renditions.get(3).isFallback());
   }
 
@@ -715,12 +713,12 @@ class DamMediaSourceTest extends AbstractDamTest {
    */
   @Test
   void testMultipleMediaFormatsWithCropping_PreferCroppingOverFallback() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO, SHOWROOM_CONTROLS);
+    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(RATIO_16_10, SHOWROOM_CONTROLS);
     Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.84.40.0,0,840,400.file/sixteen-ten.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -728,7 +726,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
         renditions.get(1).getUrl(), "rendition.mediaUrl.2");
-    assertEquals(RATIO, renditions.get(1).getMediaFormat());
+    assertEquals(RATIO_16_10, renditions.get(1).getMediaFormat());
   }
 
   @Test
@@ -739,7 +737,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(MediaInvalidReason.NOT_ENOUGH_MATCHING_RENDITIONS, media.getMediaInvalidReason());
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.1");
@@ -760,7 +758,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.450.213.jpg./cq5dam.web.450.213.jpg",
         renditions.get(0).getUrl(), "rendition.mediaUrl.2");
@@ -783,7 +781,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/cq5dam.web.685.325.jpg.image_file.500.237.file/cq5dam.web.685.325.jpg",
         renditions.get(0).getUrl(), "Virtual rendition for width option 500px should match");
@@ -837,7 +835,7 @@ class DamMediaSourceTest extends AbstractDamTest {
 
     // ensure a custom ipe config with a path pointing to IPEConfigResourceProvider is set
     String expectedPath = IPEConfigResourceProvider.buildPath(parStandardMediaRef.getPath(),
-        ImmutableSet.of("editorial_1col"));
+        Set.of("editorial_1col"));
     doAnswer(new Answer<Object>() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -851,59 +849,17 @@ class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
-  void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO)
-        .breakpoint("B1", 160, 100)
-        .breakpoint("B2", 320, 200)
-        .build());
-
-    Media media = mediaHandler().get(MEDIAITEM_PATH_16_10, mediaArgs).build();
-    assertTrue(media.isValid(), "valid?");
-    assertNotNull(media.getAsset(), "asset?");
-    assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
-
-    Rendition rendition0 = renditions.get(0);
-    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
-        rendition0.getUrl(), "rendition.mediaUrl.1");
-    assertEquals(160, rendition0.getWidth());
-    assertEquals(100, rendition0.getHeight());
-    assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
-
-    MediaFormat mediaFormat0 = renditions.get(0).getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat0.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat0.getRatio(), 0.001d);
-    assertEquals(160, mediaFormat0.getWidth());
-    assertEquals(100, mediaFormat0.getHeight());
-    assertEquals("B1", mediaFormat0.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
-
-    Rendition rendition1 = renditions.get(1);
-    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
-        rendition1.getUrl(), "rendition.mediaUrl.2");
-    assertEquals(320, rendition1.getWidth());
-    assertEquals(200, rendition1.getHeight());
-
-    MediaFormat mediaFormat1 = renditions.get(1).getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
-    assertEquals(320, mediaFormat1.getWidth());
-    assertEquals(200, mediaFormat1.getHeight());
-    assertEquals("B2", mediaFormat1.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
-  }
-
-  @Test
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormat(RATIO)
-        .pictureSource(new PictureSource(RATIO).media("media1").widths(160))
-        .pictureSource(new PictureSource(RATIO).media("media2").widths(320))
+        .mediaFormat(RATIO_16_10)
+        .pictureSource(new PictureSource(RATIO_16_10).media("media1").widths(160))
+        .pictureSource(new PictureSource(RATIO_16_10).media("media2").widths(320))
         .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
@@ -913,7 +869,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
 
     MediaFormat mediaFormat0 = rendition0.getMediaFormat();
-    assertEquals(RATIO.getName(), mediaFormat0.getName());
+    assertEquals(RATIO_16_10.getName(), mediaFormat0.getName());
 
     Rendition rendition1 = renditions.get(1);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
@@ -923,8 +879,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
 
     MediaFormat mediaFormat1 = rendition1.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat1.getRatio(), 0.001d);
     assertEquals(160, mediaFormat1.getWidth());
 
     Rendition rendition2 = renditions.get(2);
@@ -934,8 +890,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(200, rendition2.getHeight());
 
     MediaFormat mediaFormat2 = rendition2.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat2.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat2.getRatio(), 0.001d);
     assertEquals(320, mediaFormat2.getWidth());
   }
 
@@ -950,7 +906,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
@@ -984,14 +940,14 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMultipleMediaFormats_ImageSizes() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormats(RATIO2, RATIO) // <- only second media format matches
+        .mediaFormats(RATIO_4_3, RATIO_16_10) // <- only second media format matches
         .imageSizes("sizes", 160, 320)
         .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
@@ -1001,7 +957,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
 
     MediaFormat mediaFormat0 = rendition0.getMediaFormat();
-    assertEquals(RATIO.getName(), mediaFormat0.getName());
+    assertEquals(RATIO_16_10.getName(), mediaFormat0.getName());
 
     Rendition rendition1 = renditions.get(1);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
@@ -1011,8 +967,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(160d / 100d, rendition1.getRatio(), 0.0001);
 
     MediaFormat mediaFormat1 = rendition1.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat1.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat1.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat1.getRatio(), 0.001d);
     assertEquals(160, mediaFormat1.getWidth());
 
     Rendition rendition2 = renditions.get(2);
@@ -1022,8 +978,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertEquals(200, rendition2.getHeight());
 
     MediaFormat mediaFormat2 = rendition2.getMediaFormat();
-    assertEquals(RATIO.getLabel(), mediaFormat2.getLabel());
-    assertEquals(RATIO.getRatio(), mediaFormat2.getRatio(), 0.001d);
+    assertEquals(RATIO_16_10.getLabel(), mediaFormat2.getLabel());
+    assertEquals(RATIO_16_10.getRatio(), mediaFormat2.getRatio(), 0.001d);
     assertEquals(320, mediaFormat2.getWidth());
   }
 
@@ -1037,7 +993,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
@@ -1082,7 +1038,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
     assertEquals(3, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = ImmutableList.copyOf(media.getRenditions());
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
 
     Rendition rendition0 = renditions.get(0);
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",

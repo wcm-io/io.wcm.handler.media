@@ -29,6 +29,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.media.Asset;
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaFileType;
@@ -124,18 +125,6 @@ class InlineAsset extends SlingAdaptable implements Asset {
     }
   }
 
-  @SuppressWarnings("deprecation")
-  @Override
-  public Rendition getFlashRendition(@NotNull MediaArgs mediaArgs) {
-    Rendition rendition = getRendition(mediaArgs);
-    if (rendition != null && rendition.isFlash()) {
-      return rendition;
-    }
-    else {
-      return null;
-    }
-  }
-
   @Override
   public Rendition getDownloadRendition(@NotNull MediaArgs mediaArgs) {
     Rendition rendition = getRendition(mediaArgs);
@@ -173,8 +162,9 @@ class InlineAsset extends SlingAdaptable implements Asset {
       throw new UnsupportedOperationException("Unable to build URI template for this asset type: " + getPath());
     }
     Rendition originalRendition = getInlineRendition(new MediaArgs());
-    return new InlineUriTemplate(type, originalRendition.getWidth(), originalRendition.getHeight(),
-        this.resource, fileName, defaultMediaArgs, adaptable);
+    Dimension dimension = new Dimension(originalRendition.getWidth(), originalRendition.getHeight());
+    return new InlineUriTemplate(type, dimension, this.resource, fileName,
+        null, null, defaultMediaArgs, adaptable);
   }
 
   @Override

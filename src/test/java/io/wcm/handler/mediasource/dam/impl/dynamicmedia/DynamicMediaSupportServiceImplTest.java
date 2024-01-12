@@ -20,7 +20,6 @@
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl.ASSETS_SCENE7_FEATURE_FLAG_PID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.stream.Stream;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.featureflags.impl.ConfiguredFeature;
 import org.apache.sling.testing.mock.caconfig.MockContextAwareConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,53 +64,105 @@ class DynamicMediaSupportServiceImplTest {
   }
 
   @Test
-  void testDefaultConfig_FeatureDisabled() {
-    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
-    assertFalse(underTest.isDynamicMediaEnabled());
-  }
-
-  @Test
   void testDefaultConfig() {
-    activateDynamicMediaFeature();
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl());
     assertTrue(underTest.isDynamicMediaEnabled());
+    assertTrue(underTest.isValidateSmartCropRenditionSizes());
     assertEquals(new Dimension(2000, 2000), underTest.getImageSizeLimit());
-    assertEquals("https://dummy.scene7.com", underTest.getDynamicMediaServerUrl(asset, null));
+    assertEquals("https://dummy.scene7.com", underTest.getDynamicMediaServerUrl(asset, null, context.request()));
+    assertTrue(underTest.isDynamicMediaCapabilityEnabled(true));
+    assertFalse(underTest.isDynamicMediaCapabilityEnabled(false));
   }
 
   @Test
   void testConfigDisabled() {
-    activateDynamicMediaFeature();
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
         "enabled", false);
     assertFalse(underTest.isDynamicMediaEnabled());
   }
 
   @Test
+  void testConfigDMCapability_OFF() {
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
+        "dmCapabilityDetection", "OFF");
+    assertFalse(underTest.isDynamicMediaCapabilityEnabled(true));
+    assertFalse(underTest.isDynamicMediaCapabilityEnabled(false));
+  }
+
+  @Test
+  void testConfigDMCapability_ON() {
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
+        "dmCapabilityDetection", "ON");
+    assertTrue(underTest.isDynamicMediaCapabilityEnabled(true));
+    assertTrue(underTest.isDynamicMediaCapabilityEnabled(false));
+  }
+
+  @Test
   void testAuthorPreviewMode() {
-    activateDynamicMediaFeature();
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
         "authorPreviewMode", true,
+        "validateSmartCropRenditionSizes", false,
         "imageSizeLimitWidth", 4000,
         "imageSizeLimitHeight", 3000);
     assertTrue(underTest.isDynamicMediaEnabled());
+    assertFalse(underTest.isValidateSmartCropRenditionSizes());
     assertEquals(new Dimension(4000, 3000), underTest.getImageSizeLimit());
-    assertEquals("", underTest.getDynamicMediaServerUrl(asset, null));
+    assertEquals("https://author.dummysite.org", underTest.getDynamicMediaServerUrl(asset, null, context.request()));
   }
 
   @Test
   void testAuthorPreviewMode_SiteConfig() {
-    activateDynamicMediaFeature();
-
     MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
-    MockContextAwareConfig.writeConfiguration(context, "/content/dam", SiteConfig.class,
-        "siteUrlAuthor", "https://author");
+    MockContextAwareConfig.writeConfiguration(context, AppAemContext.ROOTPATH_CONTENT, SiteConfig.class,
+        "siteUrlAuthor", "https://author-dm");
 
     DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
         "authorPreviewMode", true);
     assertTrue(underTest.isDynamicMediaEnabled());
     assertEquals(new Dimension(2000, 2000), underTest.getImageSizeLimit());
-    assertEquals("https://author", underTest.getDynamicMediaServerUrl(asset, null));
+    assertEquals("https://author-dm", underTest.getDynamicMediaServerUrl(asset, null, context.request()));
+  }
+
+  /**
+   * Ensure Site URL auto-detection with &lt;auto&gt; placeholder works.
+   */
+  @Test
+  void testAuthorPreviewMode_SiteConfig_AutoDetection() {
+    context.request().setServerName("servername-dm");
+    context.request().setServerPort(8443);
+    context.request().setScheme("https");
+
+    MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
+    MockContextAwareConfig.writeConfiguration(context, AppAemContext.ROOTPATH_CONTENT, SiteConfig.class,
+        "siteUrlAuthor", "<auto>https://author-dm");
+
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
+        "authorPreviewMode", true);
+    assertTrue(underTest.isDynamicMediaEnabled());
+    assertEquals(new Dimension(2000, 2000), underTest.getImageSizeLimit());
+    assertEquals("https://servername-dm:8443", underTest.getDynamicMediaServerUrl(asset, null, context.request()));
+  }
+
+  /**
+   * Ensure Site URL auto-detection with &lt;auto&gt; placeholder works with using the fallback URL
+   * when media handler is used outside request context (adapted from resource).
+   */
+  @Test
+  @SuppressWarnings("null")
+  void testAuthorPreviewMode_SiteConfig_AutoDetection_Fallback() {
+    context.request().setServerName("servername-dm");
+    context.request().setServerPort(8443);
+    context.request().setScheme("https");
+
+    MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
+    MockContextAwareConfig.writeConfiguration(context, AppAemContext.ROOTPATH_CONTENT, SiteConfig.class,
+        "siteUrlAuthor", "<auto>https://author-dm-fallback");
+
+    DynamicMediaSupportService underTest = context.registerInjectActivateService(new DynamicMediaSupportServiceImpl(),
+        "authorPreviewMode", true);
+    assertTrue(underTest.isDynamicMediaEnabled());
+    assertEquals(new Dimension(2000, 2000), underTest.getImageSizeLimit());
+    assertEquals("https://author-dm-fallback", underTest.getDynamicMediaServerUrl(asset, null, context.currentResource()));
   }
 
   /**
@@ -169,9 +219,7 @@ class DynamicMediaSupportServiceImplTest {
 
   @ParameterizedTest
   @MethodSource("forcePublicshUrlModes")
-  void testAuthorPreviewMode_SiteConfig_FourcePublish(UrlMode urlMode) {
-    activateDynamicMediaFeature();
-
+  void testAuthorPreviewMode_SiteConfig_ForcePublish(UrlMode urlMode) {
     MockCAConfig.contextPathStrategyAbsoluteParent(context, 1);
     MockContextAwareConfig.writeConfiguration(context, "/content/dam", SiteConfig.class,
         "siteUrlAuthor", "https://author");
@@ -180,7 +228,7 @@ class DynamicMediaSupportServiceImplTest {
         "authorPreviewMode", true);
     assertTrue(underTest.isDynamicMediaEnabled());
     assertEquals(new Dimension(2000, 2000), underTest.getImageSizeLimit());
-    assertEquals("https://dummy.scene7.com", underTest.getDynamicMediaServerUrl(asset, urlMode));
+    assertEquals("https://dummy.scene7.com", underTest.getDynamicMediaServerUrl(asset, urlMode, context.request()));
   }
 
   private static Stream<Arguments> forcePublicshUrlModes() {
@@ -189,12 +237,6 @@ class DynamicMediaSupportServiceImplTest {
         Arguments.of(UrlModes.FULL_URL_PUBLISH_FORCENONSECURE),
         Arguments.of(UrlModes.FULL_URL_PUBLISH_FORCESECURE),
         Arguments.of(UrlModes.FULL_URL_PUBLISH_PROTOCOLRELATIVE));
-  }
-
-  private void activateDynamicMediaFeature() {
-    context.registerInjectActivateService(new ConfiguredFeature(),
-        "name", ASSETS_SCENE7_FEATURE_FLAG_PID,
-        "enabled", true);
   }
 
 }

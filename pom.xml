@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>2.1.0</version>
+    <version>2.3.0-SNAPSHOT</version>
     <relativePath/>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.handler.media</artifactId>
-  <version>1.14.5-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Media Handler</name>
@@ -49,7 +49,7 @@
     <site.url.module.prefix>handler/media</site.url.module.prefix>
 
     <!-- Enable reproducible builds -->
-    <project.build.outputTimestamp>2022-06-16T17:48:16Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-12-18T11:21:09Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -63,13 +63,13 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.commons</artifactId>
-      <version>1.4.4</version>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.url</artifactId>
-      <version>1.5.0</version>
+      <version>2.0.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
@@ -82,19 +82,26 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.wcm.commons</artifactId>
-      <version>1.9.0</version>
+      <version>1.10.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.sling.commons</artifactId>
-      <version>1.4.0</version>
+      <version>1.6.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.wcm.ui.granite</artifactId>
-      <version>1.8.0</version>
+      <version>1.10.0</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+      <version>3.1.8</version>
       <scope>compile</scope>
     </dependency>
 
@@ -131,7 +138,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
-      <version>5.0.0</version>
+      <version>5.4.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -143,13 +150,13 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.testing.caconfig-mock-plugin</artifactId>
-      <version>1.4.0</version>
+      <version>1.5.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.wcm-io-mock.sling</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -161,7 +168,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.wcm-io-mock.caconfig</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -180,7 +187,24 @@
     <dependency>
       <groupId>org.skyscreamer</groupId>
       <artifactId>jsonassert</artifactId>
-      <version>1.5.0</version>
+      <version>1.5.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <version>2.8.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path-assert</artifactId>
+      <version>2.8.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -188,20 +212,20 @@
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-tiff</artifactId>
-      <version>3.4.1</version>
+      <version>3.10.1</version>
       <scope>test</scope>
     </dependency>
     <!-- Java ImageIO Support for SVG -->
     <dependency>
       <groupId>com.twelvemonkeys.imageio</groupId>
       <artifactId>imageio-batik</artifactId>
-      <version>3.4.1</version>
+      <version>3.10.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-transcoder</artifactId>
-      <version>1.9.1</version>
+      <version>1.17</version>
       <scope>test</scope>
     </dependency>
 
@@ -225,13 +249,19 @@
             Sling-Initial-Content: \
               SLING-INF/app-root;overwrite:=true;ignoreImportProviders:=xml;path:=/apps/wcm-io/handler/media
 
-            Sling-Namespaces: wcmio=http://wcm.io/ns
+            Sling-Namespaces: \
+              wcmio=http://wcm.io/ns,\
+              cq=http://www.day.com/jcr/cq/1.0,\
+              granite=http://www.adobe.com/jcr/granite/1.0,\
+              sling=http://sling.apache.org/jcr/sling/1.0
 
             Import-Package: \
               <!-- For build compatibility with Java 11 -->\
               javax.annotation;version="[0.0,2)",\
               <!-- Package version change between AEM 6.2 and AEM 6.3 -->\
               com.day.cq.dam.api.handler;version="[1.0,3)",\
+              <!-- Caffeine is embedded -->\
+              !com.github.benmanes.caffeine.*,\
               *
           </bnd>
         </configuration>
@@ -248,6 +278,42 @@
             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
           </archive>
         </configuration>
+      </plugin>
+
+      <!-- Embed shaded version of Caffeine to avoid classpath issues in unit tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <configuration>
+          <artifactSet>
+            <includes>
+              <include>com.github.ben-manes.caffeine:caffeine</include>
+            </includes>
+          </artifactSet>
+          <relocations>
+            <relocation>
+              <pattern>com.github.benmanes.caffeine</pattern>
+              <shadedPattern>io.wcm.handler.media.shaded.com.github.benmanes.caffeine</shadedPattern>
+            </relocation>
+          </relocations>
+          <filters>
+            <filter>
+              <artifact>com.github.ben-manes.caffeine:caffeine</artifact>
+              <excludes>
+                <exclude>module-info.class</exclude>
+                <exclude>META-INF/**</exclude>
+              </excludes>
+            </filter>
+          </filters>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

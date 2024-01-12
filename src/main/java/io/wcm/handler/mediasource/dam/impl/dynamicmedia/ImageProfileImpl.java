@@ -30,11 +30,22 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Wraps access to dynamic media image profile.
  */
-final class ImageProfileImpl implements ImageProfile {
+public final class ImageProfileImpl implements ImageProfile {
 
-  static final String PN_CROP_TYPE = "crop_type";
-  static final String CROP_TYPE_SMART = "crop_smart";
-  static final String PN_BANNER = "banner";
+  /**
+   * Crop type
+   */
+  public static final String PN_CROP_TYPE = "crop_type";
+
+  /**
+   * Smart cropping crop type.
+   */
+  public static final String CROP_TYPE_SMART = "crop_smart";
+
+  /**
+   * Banner property with string like: Crop-1,100,60|Crop-2,50,30
+   */
+  public static final String PN_BANNER = "banner";
 
   private final List<NamedDimension> smartCropDefinitions;
 

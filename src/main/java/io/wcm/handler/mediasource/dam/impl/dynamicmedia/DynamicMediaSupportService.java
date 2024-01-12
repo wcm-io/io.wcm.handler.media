@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
+import org.apache.sling.api.adapter.Adaptable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,10 +40,22 @@ public interface DynamicMediaSupportService {
   boolean isDynamicMediaEnabled();
 
   /**
+   * @param isDynamicMediaAsset true if given asset has DM metadata properties available.
+   * @return Whether dynamic media capability is enabled for the given asset
+   */
+  boolean isDynamicMediaCapabilityEnabled(boolean isDynamicMediaAsset);
+
+  /**
    * @return Whether a transparent fallback to Media Handler-based rendering of renditions is allowed
    *         if the appropriate Dynamic Media metadata is not preset for an asset.
    */
   boolean isAemFallbackDisabled();
+
+  /**
+   * @return Whether to validate that the renditions defined via smart cropping fulfill the requested image width/height
+   *         to avoid upscaling or white borders.
+   */
+  boolean isValidateSmartCropRenditionSizes();
 
   /**
    * @return Reply image size limit as configured in dynamic media.
@@ -69,10 +82,12 @@ public interface DynamicMediaSupportService {
   /**
    * Get scene7 host/URL prefix for publish environment.
    * @param asset DAM asset
+   * @param urlMode URL mode
+   * @param adaptable Adaptable
    * @return Protocol and hostname of scene7 host or null.
    *         If author preview mode is enabled, returns empty string.
    */
   @Nullable
-  String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode);
+  String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode, @NotNull Adaptable adaptable);
 
 }

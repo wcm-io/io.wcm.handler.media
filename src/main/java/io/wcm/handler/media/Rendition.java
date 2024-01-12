@@ -116,14 +116,6 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   boolean isVectorImage();
 
   /**
-   * @return true if the rendition has a flash movie.
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  @JsonIgnore
-  boolean isFlash();
-
-  /**
    * @return true if the rendition is not and image nor a flash movie.
    */
   @JsonIgnore
@@ -168,4 +160,18 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
    *         rendition is returned that fulfills all other media format restrictions, this flag is set to true.
    */
   boolean isFallback();
+
+  /**
+   * Generate an URI template for the rendition.
+   * The URI template ignores the actual resolution of this rendition and allows to scale the rendition
+   * to any size within the maximum range of width/height, keeping the aspect ratio and respecting
+   * both the original image and probably configured cropping parameters.
+   * @param type URI template type. It is not supported to use {@link UriTemplateType#CROP_CENTER}.
+   * @return URI template
+   * @throws IllegalArgumentException if {@link UriTemplateType#CROP_CENTER} is used
+   * @throws UnsupportedOperationException if the original rendition is not an image or it is a vector image.
+   */
+  @NotNull
+  UriTemplate getUriTemplate(@NotNull UriTemplateType type);
+
 }

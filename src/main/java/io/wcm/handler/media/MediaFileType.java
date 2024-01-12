@@ -28,8 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
-import com.google.common.collect.ImmutableSet;
-
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
@@ -62,21 +60,16 @@ public enum MediaFileType {
   /**
    * SVG
    */
-  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG }),
+  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG });
 
-  /**
-   * Flash
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  SWF(new String[] { ContentType.SWF }, new String[] { FileExtension.SWF });
 
   private final Set<String> contentTypes;
   private final Set<String> extensions;
 
+  @SuppressWarnings("null")
   MediaFileType(@NotNull String @NotNull [] contentTypes, @NotNull String @NotNull [] extensions) {
-    this.contentTypes = ImmutableSet.copyOf(contentTypes);
-    this.extensions = ImmutableSet.copyOf(extensions);
+    this.contentTypes = Set.of(contentTypes);
+    this.extensions = Set.of(extensions);
   }
 
   /**
@@ -117,12 +110,6 @@ public enum MediaFileType {
    */
   private static final EnumSet<MediaFileType> VECTOR_IMAGE_FILE_TYPES = EnumSet.of(
       SVG);
-
-  /**
-   * All file types that will be displayed as Flash.
-   */
-  private static final EnumSet<MediaFileType> FLASH_FILE_TYPES = EnumSet.of(
-      SWF);
 
   /**
    * Check if the given file extension is supported by the Media Handler for rendering as image.
@@ -191,35 +178,6 @@ public enum MediaFileType {
    */
   public static @NotNull Set<String> getVectorImageContentTypes() {
     return getContentTypes(VECTOR_IMAGE_FILE_TYPES);
-  }
-
-  /**
-   * Check if the given file extension is an flash.
-   * @param fileExtension File extension
-   * @return true if flash
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  public static boolean isFlash(@Nullable String fileExtension) {
-    return isExtension(FLASH_FILE_TYPES, fileExtension);
-  }
-
-  /**
-   * @return Flash file extensions
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  public static @NotNull Set<String> getFlashFileExtensions() {
-    return getFileExtensions(FLASH_FILE_TYPES);
-  }
-
-  /**
-   * @return Flash content types
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  public static @NotNull Set<String> getFlashContentTypes() {
-    return getContentTypes(FLASH_FILE_TYPES);
   }
 
   private static Set<String> getContentTypes(@NotNull EnumSet<MediaFileType> fileTypes) {

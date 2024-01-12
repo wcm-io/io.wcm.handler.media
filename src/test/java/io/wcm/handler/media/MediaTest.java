@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,8 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.google.common.collect.ImmutableList;
 
 import io.wcm.handler.commons.dom.Div;
 import io.wcm.handler.media.spi.MediaSource;
@@ -68,13 +67,13 @@ class MediaTest {
   }
 
   @Test
-  void testElement() {
+  void testElementBuilder() {
     Div div = new Div();
     div.setText("test");
 
-    underTest.setElement(div);
+    underTest.setElementBuilder(m -> div.setTitle("title1"));
     assertSame(div, underTest.getElement());
-    assertEquals("<div>test</div>", underTest.getMarkup());
+    assertEquals("<div title=\"title1\">test</div>", underTest.getMarkup());
   }
 
   @Test
@@ -99,7 +98,7 @@ class MediaTest {
 
     Rendition rendition1 = mock(Rendition.class);
     Rendition rendition2 = mock(Rendition.class);
-    Collection<Rendition> renditions = ImmutableList.of(rendition1, rendition2);
+    Collection<Rendition> renditions = List.of(rendition1, rendition2);
     underTest.setRenditions(renditions);
 
     assertSame(rendition1, underTest.getRendition());

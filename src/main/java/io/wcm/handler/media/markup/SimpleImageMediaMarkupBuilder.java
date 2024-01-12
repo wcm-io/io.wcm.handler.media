@@ -34,8 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
-import com.google.common.collect.ImmutableList;
-
 import io.wcm.handler.commons.dom.Area;
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.commons.dom.Image;
@@ -144,7 +142,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     if (foundAnySource) {
       if (image instanceof Span) {
         // if image was wrapped in span, add content of span element, not the span itself
-        for (Element element : ImmutableList.copyOf(image.getChildren())) {
+        for (Element element : List.copyOf(image.getChildren())) {
           element.detach();
           picture.addContent(element);
         }

@@ -94,16 +94,6 @@ public interface Asset extends Adaptable {
   Rendition getImageRendition(@NotNull MediaArgs mediaArgs);
 
   /**
-   * Get the first flash rendition that matches the given media args.
-   * @param mediaArgs Media args to filter specific media formats or extensions.
-   * @return {@link Rendition} for the first matching rendition or null if no match found.
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  @Nullable
-  Rendition getFlashRendition(@NotNull MediaArgs mediaArgs);
-
-  /**
    * Get the first download rendition that matches the given media args.
    * @param mediaArgs Media args to filter specific media formats or extensions.
    * @return {@link Rendition} for the first matching rendition or null if no match found.
@@ -117,7 +107,7 @@ public interface Asset extends Adaptable {
    * asset and the max. width/height of it's original rendition.
    * @param type URI template type
    * @return URI template
-   * @throws UnsupportedOperationException if the original rendition is not an image or a vector image.
+   * @throws UnsupportedOperationException if the original rendition is not an image or it is a vector image.
    */
   @NotNull
   UriTemplate getUriTemplate(@NotNull UriTemplateType type);

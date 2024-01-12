@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2021 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,32 +20,27 @@
 package io.wcm.handler.mediasource.inline;
 
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.wcm.handler.media.UriTemplateType.CROP_CENTER;
+import static io.wcm.handler.media.UriTemplateType.SCALE_HEIGHT;
+import static io.wcm.handler.media.UriTemplateType.SCALE_WIDTH;
+import static io.wcm.handler.media.testcontext.UriTemplateAssert.assertUriTemplate;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.scene7.api.constants.Scene7Constants;
-
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.UriTemplate;
-import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
- * Test Inline URI template
+ * Test Inline URI template for assets.
  */
 @ExtendWith(AemContextExtension.class)
 class InlineUriTemplateTest {
@@ -57,76 +52,40 @@ class InlineUriTemplateTest {
 
   @BeforeEach
   @SuppressWarnings("null")
-  void setUp() throws PersistenceException {
+  void setUp() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     // prepare inline media object with real image binary data to test scaling
-    inlineImage = context.resourceResolver().create(context.currentPage().getContentResource(), "inlineImage",
-        ImmutableValueMap.builder()
-            .put(NN_MEDIA_INLINE + "Name", "sample_image_215x102.jpg")
-            .build());
+    inlineImage = context.create().resource(context.currentPage(), "inlineImage",
+        NN_MEDIA_INLINE + "Name", "sample.jpg");
     context.load().binaryResource("/sample_image_215x102.jpg",
         inlineImage.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
   }
 
   @Test
-  void testGetUriTemplate_CropCenter() {
+  void testGetUriTemplate() {
     Media media = mediaHandler.get(inlineImage).build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
-    assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.jpg",
-        uriTemplate.getUriTemplate());
-    assertEquals(215, uriTemplate.getMaxWidth());
-    assertEquals(102, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
+    assertUriTemplate(media, CROP_CENTER, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample.jpg");
+    assertUriTemplate(media, SCALE_WIDTH, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample.jpg");
+    assertUriTemplate(media, SCALE_HEIGHT, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample.jpg");
   }
 
   @Test
-  void testGetUriTemplate_CropCenter_EnforceOutputFileExtension() {
+  void testGetUriTemplate_EnforceOutputFileExtension() {
     Media media = mediaHandler.get(inlineImage)
         .enforceOutputFileExtension(FileExtension.PNG)
         .build();
 
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.CROP_CENTER);
-    assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample_image_215x102.png",
-        uriTemplate.getUriTemplate());
-    assertEquals(215, uriTemplate.getMaxWidth());
-    assertEquals(102, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.CROP_CENTER, uriTemplate.getType());
-  }
-
-  @Test
-  void testGetUriTemplate_ScaleWidth() {
-    Media media = mediaHandler.get(inlineImage).build();
-
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample_image_215x102.jpg",
-        uriTemplate.getUriTemplate());
-    assertEquals(215, uriTemplate.getMaxWidth());
-    assertEquals(102, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplate.getType());
-  }
-
-  @Test
-  void testGetUriTemplate_ScaleHeight() {
-    Media media = mediaHandler.get(inlineImage).build();
-
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(UriTemplateType.SCALE_HEIGHT);
-    assertEquals(
-        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample_image_215x102.jpg",
-        uriTemplate.getUriTemplate());
-    assertEquals(215, uriTemplate.getMaxWidth());
-    assertEquals(102, uriTemplate.getMaxHeight());
-    assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplate.getType());
-  }
-
-  Asset createSampleAsset(String classpathResource, String contentType) {
-    String fileName = FilenameUtils.getName(classpathResource);
-    return context.create().asset("/content/dam/" + fileName, classpathResource, contentType,
-        Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
+    assertUriTemplate(media, CROP_CENTER, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample.png");
+    assertUriTemplate(media, SCALE_WIDTH, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample.png");
+    assertUriTemplate(media, SCALE_HEIGHT, 215, 102,
+        "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.0.{height}.file/sample.png");
   }
 
 }

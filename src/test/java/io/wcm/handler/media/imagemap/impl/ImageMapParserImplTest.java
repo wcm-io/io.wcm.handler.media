@@ -29,8 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.google.common.collect.ImmutableList;
-
 import io.wcm.handler.media.imagemap.ImageMapArea;
 import io.wcm.handler.media.imagemap.ImageMapParser;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
@@ -56,7 +54,7 @@ public class ImageMapParserImplTest {
       + "[rect(256,171,1023,682)\"" + INVALID_CONTENT_REF + "\"|\"\"|\"altText\"|(0.1992,0.2005,0.7992,0.7995)]";
 
   @SuppressWarnings("null")
-  public static final List<ImageMapArea<String>> EXPECTED_AREAS_RESOLVED = ImmutableList.of(
+  public static final List<ImageMapArea<String>> EXPECTED_AREAS_RESOLVED = List.of(
       new ImageMapAreaImpl<String>("circle", "256,256,256", "0.2000,0.3001,0.2000",
           EXTERNAL_REF, EXTERNAL_REF, null, null),
       new ImageMapAreaImpl<String>("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995",
@@ -66,7 +64,7 @@ public class ImageMapParserImplTest {
           null));
 
   @SuppressWarnings("null")
-  public static final List<ImageMapArea<String>> EXPECTED_AREAS_UNRESOLVED = ImmutableList.of(
+  public static final List<ImageMapArea<String>> EXPECTED_AREAS_UNRESOLVED = List.of(
       new ImageMapAreaImpl<String>("circle", "256,256,256", "0.2000,0.3001,0.2000",
           null, EXTERNAL_REF, null, null),
       new ImageMapAreaImpl<String>("rect", "256,171,1023,682", "0.1992,0.2005,0.7992,0.7995",

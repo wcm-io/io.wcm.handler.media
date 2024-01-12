@@ -34,8 +34,6 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.servlets.annotations.SlingServletResourceTypes;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
@@ -43,6 +41,9 @@ import org.osgi.service.component.annotations.Component;
 import com.day.cq.i18n.I18n;
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
@@ -63,7 +64,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     selectors = MediaFormatValidateServlet.SELECTOR,
     resourceTypes = "sling/servlet/default",
     methods = HttpConstants.METHOD_GET)
-@SuppressWarnings("deprecation")
 public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
@@ -73,6 +73,8 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
   static final String RP_MEDIA_FORMATS_MANDATORY = "mediaFormatsMandatory";
   static final String RP_MEDIA_CROPAUTO = "mediaCropAuto";
   static final String RP_MEDIA_REF = "mediaRef";
+
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   /**
    * Prefix for i18n keys to generated messages for media invalid reasons.
@@ -112,20 +114,15 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
         .build();
 
     // response
-    try {
-      JSONObject result = new JSONObject();
-      result.put("valid", media.isValid());
-      if (!media.isValid()) {
-        I18n i18n = getI18n(request);
-        result.put("reason", getI18nText(i18n, getMediaInvalidReasonI18nKeyOrMessage(media)));
-        result.put("reasonTitle", getI18nText(i18n, ASSET_INVALID_I18N_KEY));
-      }
-      response.setContentType(ContentType.JSON);
-      response.getWriter().write(result.toString());
+    ResultResponse result = new ResultResponse();
+    result.valid = media.isValid();
+    if (!media.isValid()) {
+      I18n i18n = getI18n(request);
+      result.reason = getI18nText(i18n, getMediaInvalidReasonI18nKeyOrMessage(media));
+      result.reasonTitle = getI18nText(i18n, ASSET_INVALID_I18N_KEY);
     }
-    catch (JSONException ex) {
-      throw new ServletException(ex);
-    }
+    response.setContentType(ContentType.JSON);
+    response.getWriter().write(OBJECT_MAPPER.writeValueAsString(result));
   }
 
   private String getMediaInvalidReasonI18nKeyOrMessage(@NotNull Media media) {
@@ -155,6 +152,27 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
       return new I18n(resourceBundle);
     }
     return new I18n(request);
+  }
+
+  @JsonInclude(Include.NON_NULL)
+  static class ResultResponse {
+
+    private boolean valid;
+    private String reason;
+    private String reasonTitle;
+
+    public boolean isValid() {
+      return this.valid;
+    }
+
+    public String getReason() {
+      return this.reason;
+    }
+
+    public String getReasonTitle() {
+      return this.reasonTitle;
+    }
+
   }
 
 }

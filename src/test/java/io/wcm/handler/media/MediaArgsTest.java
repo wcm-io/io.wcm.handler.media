@@ -34,8 +34,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
@@ -49,7 +47,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 class MediaArgsTest {
 
   @Test
-  @SuppressWarnings("deprecation")
   void testGetMediaFormats() {
     MediaArgs mediaArgs;
 
@@ -57,32 +54,27 @@ class MediaArgsTest {
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL
     }, mediaArgs.getMediaFormats());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs("editorial_1col");
     assertArrayEquals(new String[] {
         "editorial_1col"
     }, mediaArgs.getMediaFormatNames());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs(EDITORIAL_1COL, EDITORIAL_2COL);
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL, EDITORIAL_2COL
     }, mediaArgs.getMediaFormats());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs("editorial_1col", "editorial_2col");
     assertArrayEquals(new String[] {
         "editorial_1col", "editorial_2col"
     }, mediaArgs.getMediaFormatNames());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     assertNull(new MediaArgs().mediaFormat((MediaFormat)null).getMediaFormats());
     assertNull(new MediaArgs().mediaFormatName((String)null).getMediaFormatNames());
   }
 
   @Test
-  @SuppressWarnings("deprecation")
   void testGetMediaFormatsMandatory() {
     MediaArgs mediaArgs;
 
@@ -90,13 +82,11 @@ class MediaArgsTest {
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL, EDITORIAL_2COL
     }, mediaArgs.getMediaFormats());
-    assertTrue(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs().mandatoryMediaFormatNames("editorial_1col", "editorial_2col");
     assertArrayEquals(new String[] {
         "editorial_1col", "editorial_2col"
     }, mediaArgs.getMediaFormatNames());
-    assertTrue(mediaArgs.isMediaFormatsMandatory());
   }
 
   @Test
@@ -130,7 +120,7 @@ class MediaArgsTest {
 
   @Test
   void testGetProperties() {
-    Map<String, Object> props = ImmutableMap.<String, Object>of("prop1", "value1");
+    Map<String, Object> props = Map.of("prop1", "value1");
 
     MediaArgs mediaArgs = new MediaArgs()
     .property("prop3", "value3")

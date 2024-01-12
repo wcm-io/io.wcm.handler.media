@@ -23,10 +23,121 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.14.6" date="not released">
+    <release version="2.0.0" date="not released">
+      <action type="remove" dev="sseifert" issue="27">
+        Remove deprecated functionality.
+      </action>
       <action type="update" dev="sseifert">
+        Switch to AEM 6.5.17 as minimum version.
+      </action>
+      <action type="update" dev="sseifert" issue="3">
         MediaFileServlet: Force Content-Disposition=attachment header for SVG files served by MediaFileServlet. Also ensure URLs to SVG images are always handled by MediaFileServlet.
       </action>
+    </release>
+
+    <release version="1.16.0" date="2023-12-18">
+      <action type="add" dev="sseifert" issue="14">
+        MediaHandlerConfig: Make list of allowed IPE editor types configurable (defaults to "image").
+      </action>
+      <action type="update" dev="sseifert" issue="26">
+        DefaultMediaFormatListProvider, MediaFormatValidateServlet: Eliminate usage of org.apache.sling.commons.json.
+      </action>
+    </release>
+
+    <release version="1.15.8" date="2023-09-08">
+      <action type="update" dev="joerghoh" issue="22">
+        DAM Renditions: Read width/height of rendition lazy, as this can be expensive when not configured properly or Asset metadata is missing for other reasons.
+      </action>
+      <action type="update" dev="sseifert" issue="23">
+        MediaComponentPropertyResolver: Add option to resolve properties directly from a value map.
+      </action>
+    </release>
+
+    <release version="1.15.6" date="2023-04-19">
+      <action type="update" dev="sseifert" issue="19">
+        Eliminate dependency to Guava. Embed Caffeine as replacement for Guava Cache.
+      </action>
+    </release>
+
+    <release version="1.15.4" date="2023-02-24">
+      <action type="update" dev="sseifert">
+        Switch to Java 11 as minimum version.
+      </action>
+      <action type="update" dev="sseifert">
+        Reduce dependency to Guava.
+      </action>
+      <action type="fix" dev="sseifert">
+        Sling-Initial-Content: Register non-standard JCR namespaces for conversion with cp2fm into enhanced DocView files.
+      </action>
+    </release>
+
+    <release version="1.15.2" date="2022-12-15">
+      <action type="update" dev="sseifert" issue="18">
+        MediaHandler: Build HTML element markup on-demand based on the current status of media when the element is requested. This allows to react on results of media post processors, and avoids building the element if not required.
+      </action>
+      <action type="fix" dev="amey-tripathi" issue="17">
+        File Upload Granite UI component: Fix "Clear Transformation" button when namePrefix with sub-node is used.
+      </action>
+    </release>
+
+    <release version="1.15.0" date="2022-11-17">
+      <action type="add" dev="sseifert" issue="9">
+        Add Rendition.getUriTemplate method to build URI templates for getting scaled or auto-cropped renditions of an asset with the restrictions of the rendition e.g. aspect ratio.
+      </action>
+      <action type="update" dev="sseifert" issue="16">
+        File Upload Granite UI Widget: Allow video/mpeg and video/quicktime by default and support updating thumbnails.
+      </action>
+      <action type="fix" dev="sseifert" issue="15">
+        Dynamic Media Support: Fix smart-cropping rendition validation in case unconstrained media formats are used (without exact size, e.g. only minimum width) and the original image ratio excaclty matches the requested ratio.
+      </action>
+    </release>
+
+    <release version="1.14.18" date="2022-11-09">
+      <action type="update" dev="sseifert" issue="13">
+        Dynamic Media Support: Make Smart Crop rendition validation configurable (default: enabled).
+      </action>
+      <action type="fix" dev="sseifert" issue="12">
+        Dynamic Media Support: Apply fail-safe approach when normalized width/height provided by Dynamic Media for smart cropping are not matching the defined aspect ratio.
+      </action>
+    </release>
+
+    <release version="1.14.16" date="2022-10-22">
+      <action type="update" dev="sseifert" issue="10">
+        DAM Media Source: Use cropping dimension based on original rendition internally. Re-calculate webenabled rendition-based cropping coordinates when loading them from repository before starting the media processing, and not only when doing the actual cropping.
+      </action>
+      <action type="fix" dev="sseifert" issue="9">
+        Dynamic Media Support: Fix smart-cropping rendition validation in case unconstrained media formats are used (without exact size, e.g. only minimum width).
+      </action>
+    </release>
+
+    <release version="1.14.14" date="2022-10-20">
+      <action type="fix" dev="sseifert">
+        Dynamic Media Support: Ensure smart-cropped renditions fulfill minimum size requirements.
+      </action>
+    </release>
+
+    <release version="1.14.12" date="2022-10-10">
+      <action type="update" dev="sseifert">
+        Dynamic Media Support: Do not rely on Dynamic Media feature flag to detect DM capability on publish instances. In "AUTO" mode only the availability of DM metadata on a given asset is checked.
+      </action>
+    </release>
+
+    <release version="1.14.10" date="2022-09-27">
+      <action type="update" dev="sseifert">
+        Dynamic Media Support: Introduce OSGi configuration parameter dmCapabilityDetection to switch from auto-detection to enable or disable Dynamic Media capability via configuration.
+      </action>
+    </release>
+
+    <release version="1.14.8" date="2022-09-20">
+      <action type="fix" dev="sseifert">
+        Dynamic Media Support: Make use of smart-cropped image rendition also in the case if the original image has same ratio as the requested ratio.
+      </action>
+    </release>
+
+    <release version="1.14.6" date="2022-09-02">
+      <action type="fix" dev="sseifert"><![CDATA[
+        Dynamic Media Support: Apply Site URL detection with <code>&lt;auto&gt;</code> when building Dynamic Media URLs in author instance.
+      ]]></action>
     </release>
 
     <release version="1.14.4" date="2022-06-16">
@@ -103,7 +214,7 @@
         Add support for properties "altValueFromDAM"/"mediaForceAltValueFromAsset". If set to true, it is forced to use the alt. text from asset description (otherwise it's the fallback behavior).
       </action>
       <action type="update" dev="sseifert"><![CDATA[
-        <strong>Change default behavior of alt text lookup from DAM</strong>: Use asset description if avalailable as alt. text, fallback to asset title if not description is set.
+        <strong>Change default behavior of alt text lookup from DAM</strong>: Use asset description if available, fallback to asset title if no description is set.
       ]]></action>
     </release>
 

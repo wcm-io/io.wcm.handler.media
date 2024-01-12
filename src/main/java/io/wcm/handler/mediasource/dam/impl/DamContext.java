@@ -23,7 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,11 +34,11 @@ import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
-import io.wcm.handler.url.UrlMode;
 
 /**
  * Context objects require in DAM support implementation.
@@ -43,7 +46,7 @@ import io.wcm.handler.url.UrlMode;
 public final class DamContext implements Adaptable {
 
   private final Asset asset;
-  private final UrlMode urlMode;
+  private final MediaArgs mediaArgs;
   private final MediaHandlerConfig mediaHandlerConfig;
   private final DynamicMediaSupportService dynamicMediaSupportService;
   private final Adaptable adaptable;
@@ -62,15 +65,15 @@ public final class DamContext implements Adaptable {
 
   /**
    * @param asset DAM asset
-   * @param urlMode urlMode
+   * @param mediaArgs Media Args from media request
    * @param mediaHandlerConfig Media handler config
    * @param dynamicMediaSupportService Dynamic media support service
    * @param adaptable Adaptable from current context
    */
-  public DamContext(@NotNull Asset asset, @Nullable UrlMode urlMode, @NotNull MediaHandlerConfig mediaHandlerConfig,
+  public DamContext(@NotNull Asset asset, @NotNull MediaArgs mediaArgs, @NotNull MediaHandlerConfig mediaHandlerConfig,
       @NotNull DynamicMediaSupportService dynamicMediaSupportService, @NotNull Adaptable adaptable) {
     this.asset = asset;
-    this.urlMode = urlMode;
+    this.mediaArgs = mediaArgs;
     this.mediaHandlerConfig = mediaHandlerConfig;
     this.dynamicMediaSupportService = dynamicMediaSupportService;
     this.adaptable = adaptable;
@@ -84,6 +87,13 @@ public final class DamContext implements Adaptable {
   }
 
   /**
+   * @return Media Args from media request
+   */
+  public MediaArgs getMediaArgs() {
+    return mediaArgs;
+  }
+
+  /**
    * @return Media handler config
    */
   public MediaHandlerConfig getMediaHandlerConfig() {
@@ -94,7 +104,12 @@ public final class DamContext implements Adaptable {
    * @return Whether dynamic media is enabled on this AEM instance
    */
   public boolean isDynamicMediaEnabled() {
-    return dynamicMediaSupportService.isDynamicMediaEnabled();
+    // check that DM is not disabled globally
+    return dynamicMediaSupportService.isDynamicMediaEnabled()
+        // check that DM capability is enabled for the given asset
+        && dynamicMediaSupportService.isDynamicMediaCapabilityEnabled(isDynamicMediaAsset())
+        // ensure DM is not disabled within MediaArgs for this media request
+        && !mediaArgs.isDynamicMediaDisabled();
   }
 
   /**
@@ -127,9 +142,17 @@ public final class DamContext implements Adaptable {
    */
   public @Nullable String getDynamicMediaServerUrl() {
     if (dynamicMediaServerUrl == null) {
-      dynamicMediaServerUrl = dynamicMediaSupportService.getDynamicMediaServerUrl(asset, urlMode);
+      dynamicMediaServerUrl = dynamicMediaSupportService.getDynamicMediaServerUrl(asset, mediaArgs.getUrlMode(), adaptable);
     }
     return dynamicMediaServerUrl;
+  }
+
+  /**
+   * @return Whether to validate that the renditions defined via smart cropping fulfill the requested image width/height
+   *         to avoid upscaling or white borders.
+   */
+  public boolean isDynamicMediaValidateSmartCropRenditionSizes() {
+    return dynamicMediaSupportService.isValidateSmartCropRenditionSizes();
   }
 
   /**
@@ -158,6 +181,21 @@ public final class DamContext implements Adaptable {
     }
     else {
       return imageProfile;
+    }
+  }
+
+  /**
+   * @return Resource resolver from current context
+   */
+  public @NotNull ResourceResolver getResourceResolver() {
+    if (adaptable instanceof Resource) {
+      return ((Resource)adaptable).getResourceResolver();
+    }
+    else if (adaptable instanceof SlingHttpServletRequest) {
+      return ((SlingHttpServletRequest)adaptable).getResourceResolver();
+    }
+    else {
+      throw new IllegalStateException("Adaptable is neither Resoucre nor SlingHttpServletRequest");
     }
   }
 

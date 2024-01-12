@@ -21,16 +21,17 @@ package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.featureflags.Features;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
@@ -45,10 +46,10 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.s7dam.utils.PublishUtils;
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.url.SiteConfig;
+import io.wcm.handler.url.UrlHandler;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -68,8 +69,14 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     @AttributeDefinition(
         name = "Enabled",
         description = "Enable support for dynamic media. "
-            + "Only gets active when dynamic media is actually configured for the instance.")
+            + "Only gets active when dynamic media is actually enabled for the instance.")
     boolean enabled() default true;
+
+    @AttributeDefinition(
+        name = "Dynamic Media Capability",
+        description = "Whether to detect automatically if Dynamic Media is actually for a given asset by looking for existing DM metadata. "
+            + "Setting to ON disables the auto-detection and forces it to enabled for all asssets, setting to OFF forced it to disabled.")
+    DynamicMediaCapabilityDetection dmCapabilityDetection() default DynamicMediaCapabilityDetection.AUTO;
 
     @AttributeDefinition(
         name = "Author Preview Mode",
@@ -84,6 +91,11 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     boolean disableAemFallback() default false;
 
     @AttributeDefinition(
+        name = "Validte Smart Crop Rendition Sizes",
+        description = "Validates that the renditions defined via smart cropping fulfill the requested image width/height to avoid upscaling or white borders.")
+    boolean validateSmartCropRenditionSizes() default true;
+
+    @AttributeDefinition(
         name = "Image width limit",
         description = "The configured width value for 'Reply Image Size Limit'.")
     long imageSizeLimitWidth() default 2000;
@@ -95,21 +107,16 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
 
   }
 
-  /**
-   * Feature flag signaling activation of DM on AEM instance.
-   */
-  public static final String ASSETS_SCENE7_FEATURE_FLAG_PID = "com.adobe.dam.asset.scene7.feature.flag";
-
-  @Reference
-  private Features featureFlagService;
   @Reference
   private PublishUtils dynamicMediaPublishUtils;
   @Reference
   private ResourceResolverFactory resourceResolverFactory;
 
   private boolean enabled;
+  private DynamicMediaCapabilityDetection dmCapabilityDetection;
   private boolean authorPreviewMode;
   private boolean disableAemFallback;
+  private boolean validateSmartCropRenditionSizes;
   private Dimension imageSizeLimit;
 
   private static final String SERVICEUSER_SUBSERVICE = "dynamic-media-support";
@@ -120,19 +127,46 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Activate
   private void activate(Config config) {
     this.enabled = config.enabled();
+    this.dmCapabilityDetection = config.dmCapabilityDetection();
     this.authorPreviewMode = config.authorPreviewMode();
     this.disableAemFallback = config.disableAemFallback();
+    this.validateSmartCropRenditionSizes = config.validateSmartCropRenditionSizes();
     this.imageSizeLimit = new Dimension(config.imageSizeLimitWidth(), config.imageSizeLimitHeight());
+
+    if (this.enabled) {
+      log.info("DynamicMediaSupport: enabled={}, capabilityEnabled={}, capabilityDetection={}, "
+          + "authorPreviewMode={}, disableAemFallback={}, imageSizeLimit={}",
+          this.enabled, this.dmCapabilityDetection, this.dmCapabilityDetection,
+          this.authorPreviewMode, this.disableAemFallback, this.imageSizeLimit);
+    }
   }
 
   @Override
   public boolean isDynamicMediaEnabled() {
-    return this.enabled && featureFlagService.isEnabled(ASSETS_SCENE7_FEATURE_FLAG_PID);
+    return this.enabled;
+  }
+
+  @Override
+  public boolean isDynamicMediaCapabilityEnabled(boolean isDynamicMediaAsset) {
+    switch (dmCapabilityDetection) {
+      case AUTO:
+        return isDynamicMediaAsset;
+      case ON:
+        return true;
+      case OFF:
+      default:
+        return false;
+    }
   }
 
   @Override
   public boolean isAemFallbackDisabled() {
     return disableAemFallback;
+  }
+
+  @Override
+  public boolean isValidateSmartCropRenditionSizes() {
+    return validateSmartCropRenditionSizes;
   }
 
   @Override
@@ -143,7 +177,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Override
   public @Nullable ImageProfile getImageProfile(@NotNull String profilePath) {
     try (ResourceResolver resourceResolver = resourceResolverFactory
-        .getServiceResourceResolver(ImmutableMap.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
+        .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
       Resource profileResource = resourceResolver.getResource(profilePath);
       if (profileResource != null) {
         log.debug("Loaded image profile: {}", profilePath);
@@ -188,13 +222,15 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   }
 
   @Override
-  public @Nullable String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode) {
+  public @Nullable String getDynamicMediaServerUrl(@NotNull Asset asset, @Nullable UrlMode urlMode, @NotNull Adaptable adaptable) {
     Resource assetResource = AdaptTo.notNull(asset, Resource.class);
     if (authorPreviewMode && !forcePublishMode(urlMode)) {
       // route dynamic media requests through author instance for preview
       // return configured author URL, or empty string if none configured
-      SiteConfig siteConfig = AdaptTo.notNull(assetResource, SiteConfig.class);
-      return StringUtils.defaultString(siteConfig.siteUrlAuthor());
+      SiteConfig siteConfig = AdaptTo.notNull(adaptable, SiteConfig.class);
+      String siteUrlAUthor = StringUtils.defaultString(siteConfig.siteUrlAuthor());
+      UrlHandler urlHandler = AdaptTo.notNull(adaptable, UrlHandler.class);
+      return urlHandler.applySiteUrlAutoDetection(siteUrlAUthor);
     }
     try {
       String[] productionAssetUrls = dynamicMediaPublishUtils.externalizeImageDeliveryAsset(assetResource);
@@ -215,10 +251,10 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
    * @return true if publish mode should be forced
    */
   private boolean forcePublishMode(@Nullable UrlMode urlMode) {
-    return (urlMode == UrlModes.FULL_URL_PUBLISH
-        || urlMode == UrlModes.FULL_URL_PUBLISH_FORCENONSECURE
-        || urlMode == UrlModes.FULL_URL_PUBLISH_FORCESECURE
-        || urlMode == UrlModes.FULL_URL_PUBLISH_PROTOCOLRELATIVE);
+    return urlMode != null && (urlMode.equals(UrlModes.FULL_URL_PUBLISH)
+        || urlMode.equals(UrlModes.FULL_URL_PUBLISH_FORCENONSECURE)
+        || urlMode.equals(UrlModes.FULL_URL_PUBLISH_FORCESECURE)
+        || urlMode.equals(UrlModes.FULL_URL_PUBLISH_PROTOCOLRELATIVE));
   }
 
 }

@@ -21,7 +21,6 @@ package io.wcm.handler.media.testcontext;
 
 import static io.wcm.handler.media.format.MediaFormatBuilder.create;
 
-import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.format.MediaFormat;
 
 public final class DummyMediaFormats {
@@ -507,12 +506,12 @@ public final class DummyMediaFormats {
       .build();
 
   /* format for testing ratio validation */
-  public static final MediaFormat RATIO = create("ratio")
+  public static final MediaFormat RATIO_16_10 = create("ratio_16_10")
       .label("Ratio (16:10)")
       .ratio(16, 10)
       .extensions("gif", "jpg", "png")
       .build();
-  public static final MediaFormat RATIO2 = create("ratio2")
+  public static final MediaFormat RATIO_4_3 = create("ratio_4_3")
       .label("Ratio (4:3)")
       .ratio(4, 3)
       .extensions("gif", "jpg", "png")
@@ -521,22 +520,6 @@ public final class DummyMediaFormats {
       .label("Ratio (1:1)")
       .ratio(1, 1)
       .extensions("gif", "jpg", "png", "tif", "svg")
-      .build();
-
-  /* formats for testing responsive images */
-  @SuppressWarnings("deprecation")
-  public static final MediaFormat RESPONSIVE_32_9_M1 = create("responsive_32_9_m1")
-      .label("Responsive 32:9")
-      .fixedDimension(1281, 360)
-      .extensions("gif", "jpg", "jpeg", "png")
-      .property(MediaNameConstants.PROP_BREAKPOINT, "M1")
-      .build();
-  @SuppressWarnings("deprecation")
-  public static final MediaFormat RESPONSIVE_32_9_L1 = create("responsive_32_9_l1")
-      .label("Responsive 32:9")
-      .fixedDimension(1920, 540)
-      .extensions("gif", "jpg", "jpeg", "png")
-      .property(MediaNameConstants.PROP_BREAKPOINT, "L1")
       .build();
 
 }
