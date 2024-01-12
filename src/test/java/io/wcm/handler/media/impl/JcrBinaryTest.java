@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import org.apache.jackrabbit.oak.spi.nodetype.NodeTypeConstants;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,14 @@ class JcrBinaryTest {
   @Test
   void testIsNtFileResource_Resource() {
     when(resource.getResourceType()).thenReturn(JcrConstants.NT_RESOURCE);
+    assertFalse(JcrBinary.isNtFile(resource));
+    assertTrue(JcrBinary.isNtResource(resource));
+    assertTrue(JcrBinary.isNtFileOrResource(resource));
+  }
+
+  @Test
+  void testIsNtFileResource_OakResource() {
+    when(resource.getResourceType()).thenReturn(NodeTypeConstants.NT_OAK_RESOURCE);
     assertFalse(JcrBinary.isNtFile(resource));
     assertTrue(JcrBinary.isNtResource(resource));
     assertTrue(JcrBinary.isNtFileOrResource(resource));

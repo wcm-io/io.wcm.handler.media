@@ -20,6 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,6 +38,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 class MediaFileServletTest {
 
   private static final long EXPECTED_CONTENT_LENGTH = 15471;
+  private static final long EXPECTED_CONTENT_LENGTH_SVG = 718;
 
   private final AemContext context = AppAemContext.newAemContext();
 
@@ -56,6 +58,21 @@ class MediaFileServletTest {
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getOutput().length);
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getContentLength());
+    assertNull(context.response().getHeader(AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION));
+  }
+
+  @Test
+  void testGet_SVG() throws Exception {
+    context.currentResource(context.load().binaryFile("/filetype/sample.svg", "/content/sample.svg"));
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(ContentType.SVG, context.response().getContentType());
+    assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getOutput().length);
+    assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getContentLength());
+    // forced content disposition header for SVG to prevent stored XSS
+    assertEquals("attachment;", context.response().getHeader(AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION));
   }
 
   @Test

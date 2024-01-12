@@ -158,22 +158,31 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
       // Overwrite MIME type with one suited for downloads
       response.setContentType(ContentType.DOWNLOAD);
 
-      // Construct disposition header
-      StringBuilder dispositionHeader = new StringBuilder("attachment;");
-      String suffix = request.getRequestPathInfo().getSuffix();
-      suffix = StringUtils.stripStart(suffix, "/");
-      if (StringUtils.isNotEmpty(suffix)) {
-        dispositionHeader.append("filename=\"").append(suffix).append('\"');
-      }
+      // set content disposition header to file name from suffix
+      setContentDispositionAttachmentHeader(request, response);
+    }
 
-      response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader.toString());
+    // special handling for SVG images which are not treated as download:
+    // force content disposition header to prevent stored XSS attack with malicious JavaScript in SVG file
+    else if (StringUtils.equals(contentType, ContentType.SVG)) {
+      setContentDispositionAttachmentHeader(request, response);
     }
 
     // write binary data
     OutputStream out = response.getOutputStream();
     out.write(binaryData);
     out.flush();
+  }
 
+  private void setContentDispositionAttachmentHeader(SlingHttpServletRequest request, SlingHttpServletResponse response) {
+    // Construct disposition header
+    StringBuilder dispositionHeader = new StringBuilder("attachment;");
+    String suffix = request.getRequestPathInfo().getSuffix();
+    suffix = StringUtils.stripStart(suffix, "/");
+    if (StringUtils.isNotEmpty(suffix)) {
+      dispositionHeader.append("filename=\"").append(suffix).append('\"');
+    }
+    response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader.toString());
   }
 
 }

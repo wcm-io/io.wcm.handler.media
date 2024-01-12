@@ -30,6 +30,9 @@
       <action type="update" dev="sseifert">
         Switch to AEM 6.5.17 as minimum version.
       </action>
+      <action type="update" dev="sseifert" issue="3">
+        MediaFileServlet: Force Content-Disposition=attachment header for SVG files served by MediaFileServlet. Also ensure URLs to SVG images are always handled by MediaFileServlet.
+      </action>
     </release>
 
     <release version="1.16.0" date="2023-12-18">
