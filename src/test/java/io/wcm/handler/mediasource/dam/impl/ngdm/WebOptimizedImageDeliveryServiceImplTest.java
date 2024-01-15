@@ -19,15 +19,21 @@
  */
 package io.wcm.handler.mediasource.dam.impl.ngdm;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import com.day.cq.dam.api.Asset;
+
+import io.wcm.handler.media.CropDimension;
 import io.wcm.testing.mock.aem.dam.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
 class WebOptimizedImageDeliveryServiceImplTest {
@@ -53,6 +59,29 @@ class WebOptimizedImageDeliveryServiceImplTest {
     WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class,
         "enabled", false);
     assertFalse(underTest.isEnabled());
+  }
+
+  @Test
+  void testGetDeliveryUrl_AssetDeliveryNotPresent() {
+    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
+    Asset asset = context.create().asset("/content/dam/test.jpg", 10, 10, ContentType.JPEG);
+
+    assertNull(underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()));
+  }
+
+  @Test
+  void testGetDeliveryUrl_AssetDeliveryPresent() {
+    context.registerInjectActivateService(MockAssetDelivery.class);
+    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
+    Asset asset = context.create().asset("/content/dam/test.jpg", 10, 10, ContentType.JPEG);
+    String assetId = MockAssetDelivery.getAssetId(asset);
+
+    assertEquals("/asset/delivery/" + assetId + "/test.jpg?preferwebp=true",
+        underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()));
+
+    assertEquals("/asset/delivery/" + assetId + "/test.jpg?c=0%2C0%2C2%2C4&height=5&preferwebp=true&r=90&width=10",
+        underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
+            .width(10L).height(5L).cropDimension(new CropDimension(0, 0, 2, 4)).rotation(90)));
   }
 
 }
