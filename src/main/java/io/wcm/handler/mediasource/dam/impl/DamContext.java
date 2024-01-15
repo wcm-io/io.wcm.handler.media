@@ -192,6 +192,13 @@ public final class DamContext implements Adaptable {
   }
 
   /**
+   * @return Whether web-optimized image delivery is enabled on this AEM instance
+   */
+  public boolean isWebOptimizedImageDeliveryEnabled() {
+    return webOptimizedImageDeliveryService.isEnabled();
+  }
+
+  /**
    * Get web-optimized image delivery URL for a rendition of an asset.
    * @param params Parameters
    * @return Delivery URL or null if not supported or not enabled

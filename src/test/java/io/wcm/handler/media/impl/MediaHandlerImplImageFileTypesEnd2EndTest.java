@@ -447,7 +447,9 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertEquals(width, layer.getWidth(), "rendition layer width");
     assertEquals(height, layer.getHeight(), "rendition layer height");
 
-    if (!StringUtils.contains(mediaUrl, ".download_attachment.") && !StringUtils.contains(mediaUrl, "/is/image/")) {
+    if (!StringUtils.contains(mediaUrl, ".download_attachment.")
+        && !StringUtils.contains(mediaUrl, "/is/image/")
+        && !StringUtils.contains(mediaUrl, "/asset/delivery/")) {
       Rendition rendition = media.getRendition();
       String strippedMediaUrl = StringUtils.removeEnd(mediaUrl, DynamicMediaPath.DOWNLOAD_SUFFIX);
       assertEquals(FilenameUtils.getName(strippedMediaUrl), rendition.getFileName());

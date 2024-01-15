@@ -141,6 +141,12 @@ class DefaultRenditionHandler implements RenditionHandler {
       }
     }
 
+    // special handling for web-optimized image delivery
+    if (damContext.isWebOptimizedImageDeliveryEnabled() && !AssetRendition.isOriginal(rendition)) {
+      // skip all non-original renditions for web-optimized delivery. they are not supported.
+      return;
+    }
+
     RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
     candidates.add(renditionMetadata);
   }
