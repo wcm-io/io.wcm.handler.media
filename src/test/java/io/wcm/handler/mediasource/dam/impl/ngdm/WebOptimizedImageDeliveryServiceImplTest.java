@@ -17,12 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
+package io.wcm.handler.mediasource.dam.impl.ngdm;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -38,11 +38,10 @@ class WebOptimizedImageDeliveryServiceImplTest {
 
   private WebOptimizedImageDeliveryService underTest;
 
-  @BeforeAll
+  @BeforeEach
   void setUp() {
     underTest = context.getService(WebOptimizedImageDeliveryService.class);
   }
-
 
   @Test
   void testEnabled_AssetDeliveryNotPresent() {

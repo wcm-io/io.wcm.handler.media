@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
+package io.wcm.handler.mediasource.dam.impl.ngdm;
 
 /**
  * Supports rendering asset renditions from stored in AEMaaCS sites instance via Next Generation Dynamic Media
