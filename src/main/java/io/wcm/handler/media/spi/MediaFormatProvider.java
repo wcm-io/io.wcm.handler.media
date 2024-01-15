@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.osgi.annotation.versioning.ConsumerType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.sling.commons.caservice.ContextAwareService;
@@ -38,6 +40,8 @@ import io.wcm.sling.commons.caservice.ContextAwareService;
 public abstract class MediaFormatProvider implements ContextAwareService {
 
   private final Set<MediaFormat> mediaFormats;
+
+  private static final Logger log = LoggerFactory.getLogger(MediaFormatProvider.class);
 
   /**
    * @param mediaFormats Set of media formats for parameter provider
@@ -76,9 +80,16 @@ public abstract class MediaFormatProvider implements ContextAwareService {
       }
     }
     catch (IllegalArgumentException | IllegalAccessException ex) {
-      throw new RuntimeException("Unable to access fields of " + type.getName(), ex);
+      log.warn("Unable to access fields of {}", type.getName(), ex);
     }
     return Collections.unmodifiableSet(params);
+  }
+
+  @Override
+  @SuppressWarnings({ "PMD.EmptyFinalizer", "checkstyle:SuperFinalize", "checkstyle:NoFinalizerCheck" })
+  @Deprecated(since = "2.0.0")
+  protected final void finalize() {
+    // prevent finalize attack (PMD CT_CONSTRUCTOR_THROW  / SEI CERT Rule OBJ-11)
   }
 
 }

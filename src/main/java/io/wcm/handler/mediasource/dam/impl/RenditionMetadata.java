@@ -407,4 +407,11 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     return super.adaptTo(type);
   }
 
+  @Override
+  @SuppressWarnings({ "PMD.EmptyFinalizer", "checkstyle:SuperFinalize", "checkstyle:NoFinalizerCheck" })
+  @Deprecated(since = "2.0.0")
+  protected final void finalize() {
+    // prevent finalize attack (PMD CT_CONSTRUCTOR_THROW  / SEI CERT Rule OBJ-11)
+  }
+
 }
