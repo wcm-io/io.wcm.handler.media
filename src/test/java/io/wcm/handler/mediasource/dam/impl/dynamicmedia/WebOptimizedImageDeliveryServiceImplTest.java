@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -35,23 +36,29 @@ class WebOptimizedImageDeliveryServiceImplTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
+  private WebOptimizedImageDeliveryService underTest;
+
+  @BeforeAll
+  void setUp() {
+    underTest = context.getService(WebOptimizedImageDeliveryService.class);
+  }
+
+
   @Test
   void testEnabled_AssetDeliveryNotPresent() {
-    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
     assertFalse(underTest.isEnabled());
   }
 
   @Test
   void testEnabled_AssetDeliveryPresent() {
     context.registerInjectActivateService(MockAssetDelivery.class);
-    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
     assertTrue(underTest.isEnabled());
   }
 
   @Test
   void testEnabled_AssetDeliveryPresent_Disabled() {
     context.registerInjectActivateService(MockAssetDelivery.class);
-    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class,
+    underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class,
         "enabled", false);
     assertFalse(underTest.isEnabled());
   }
