@@ -68,6 +68,7 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.impl.DamAsset;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
+import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryService;
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
@@ -95,6 +96,8 @@ public final class DamMediaSource extends MediaSource {
   private MediaFormatHandler mediaFormatHandler;
   @OSGiService
   private DynamicMediaSupportService dynamicMediaSupportService;
+  @OSGiService
+  private WebOptimizedImageDeliveryService webOptimizedImageDeliveryService;
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -145,7 +148,8 @@ public final class DamMediaSource extends MediaSource {
         damAsset = assetResource.adaptTo(com.day.cq.dam.api.Asset.class);
       }
       if (damAsset != null) {
-        Asset asset = new DamAsset(media, damAsset, mediaHandlerConfig, dynamicMediaSupportService, adaptable);
+        Asset asset = new DamAsset(media, damAsset, mediaHandlerConfig,
+            dynamicMediaSupportService, webOptimizedImageDeliveryService, adaptable);
         media.setAsset(asset);
 
         // resolve rendition(s)

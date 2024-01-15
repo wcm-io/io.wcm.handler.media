@@ -32,6 +32,7 @@ import com.day.image.Layer;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
+import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryParams;
 
 /**
  * Virtual rendition that is downscaling from an existing rendition.
@@ -100,6 +101,12 @@ class VirtualRenditionMetadata extends RenditionMetadata {
     }
     // render virtual rendition with dynamic media
     return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight());
+  }
+
+  @Override
+  public @Nullable String getWebOptimizedImageDeliveryPath(DamContext damContext) {
+    return damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams()
+        .width(getWidth()).height(getHeight()));
   }
 
   @Override

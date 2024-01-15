@@ -68,6 +68,9 @@ final class DamUriTemplate implements UriTemplate {
       }
     }
     if (url == null && (!damContext.isDynamicMediaEnabled() || !damContext.isDynamicMediaAemFallbackDisabled())) {
+
+      // TODO: check for web-optimizated image rendition URI template
+
       // Render renditions in AEM: build externalized URL
       url = buildUriTemplateDam(type, rendition, cropDimension, rotation, damContext);
     }

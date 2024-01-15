@@ -39,6 +39,7 @@ import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
+import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryParams;
 
 /**
  * Virtual rendition that is cropping and/or rotating and downscaling from an existing rendition.
@@ -103,6 +104,12 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   public @Nullable String getDynamicMediaPath(boolean contentDispositionAttachment, DamContext damContext) {
     // render virtual rendition with dynamic media (we ignore contentDispositionAttachment here)
     return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight(), this.cropDimension, this.rotation);
+  }
+
+  @Override
+  public @Nullable String getWebOptimizedImageDeliveryPath(DamContext damContext) {
+    return damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams()
+        .width(getWidth()).height(getHeight()).cropDimension(this.cropDimension).rotation(this.rotation));
   }
 
   @Override

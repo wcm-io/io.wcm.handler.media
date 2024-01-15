@@ -120,6 +120,8 @@ class DamRendition extends SlingAdaptable implements Rendition {
       return null;
     }
     String url = null;
+
+    // check for dynamic media support
     if (damContext.isDynamicMediaEnabled()) {
       if (damContext.isDynamicMediaAsset()) {
         url = buildDynamicMediaUrl();
@@ -140,13 +142,21 @@ class DamRendition extends SlingAdaptable implements Rendition {
         }
       }
     }
+
+    // check for web-optimized image delivery
     if (url == null) {
-      // Render renditions in AEM: build externalized URL
+      // TODO: what to do with mediaArgs.isContentDispositionAttachment()?
+      url = rendition.getWebOptimizedImageDeliveryPath(damContext);
+    }
+
+    // Fallback: Render renditions in AEM - build externalized URL
+    if (url == null) {
       UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
       String mediaPath = rendition.getMediaPath(mediaArgs.isContentDispositionAttachment());
       url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())
           .buildExternalResourceUrl(rendition.adaptTo(Resource.class));
     }
+
     return url;
   }
 

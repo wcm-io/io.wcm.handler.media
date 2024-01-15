@@ -19,6 +19,11 @@
  */
 package io.wcm.handler.mediasource.dam.impl.ngdm;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.day.cq.dam.api.Asset;
+
 /**
  * Supports rendering asset renditions from stored in AEMaaCS sites instance via Next Generation Dynamic Media
  * "Web Optimized Image Delivery", rendering the renditions on the edge.
@@ -30,5 +35,14 @@ public interface WebOptimizedImageDeliveryService {
    * @return Whether AEM AssetDelivery service is available and the support is enabled.
    */
   boolean isEnabled();
+
+  /**
+   * Get delivery URL for a rendition of an asset.
+   * @param asset Asset
+   * @param params Parameters
+   * @return Delivery URL or null if not supported or not enabled
+   */
+  @Nullable
+  String getDeliveryUrl(@NotNull Asset asset, @NotNull WebOptimizedImageDeliveryParams params);
 
 }

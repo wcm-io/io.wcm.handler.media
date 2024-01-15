@@ -19,6 +19,11 @@
  */
 package io.wcm.handler.mediasource.dam.impl.ngdm;
 
+import java.util.Map;
+
+import org.apache.sling.api.resource.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -29,6 +34,9 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import com.adobe.cq.wcm.spi.AssetDelivery;
+import com.day.cq.dam.api.Asset;
+
+import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
  * Implements {@link WebOptimizedImageDeliveryService}.
@@ -62,6 +70,16 @@ public class WebOptimizedImageDeliveryServiceImpl implements WebOptimizedImageDe
   @Override
   public boolean isEnabled() {
     return enabled && this.assetDelivery != null;
+  }
+
+  @Override
+  public @Nullable String getDeliveryUrl(@NotNull Asset asset, @NotNull WebOptimizedImageDeliveryParams params) {
+    if (!isEnabled()) {
+      return null;
+    }
+    Resource resource = AdaptTo.notNull(asset, Resource.class);
+    Map<String, Object> parameterMap = ParameterMap.build(asset, params);
+    return assetDelivery.getDeliveryURL(resource, parameterMap);
   }
 
 }

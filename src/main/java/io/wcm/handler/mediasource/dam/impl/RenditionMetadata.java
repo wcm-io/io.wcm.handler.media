@@ -45,6 +45,7 @@ import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
+import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryParams;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -222,6 +223,15 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       // that cannot be displayed in browser directly - render via dynamic media
       return DynamicMediaPath.buildImage(damContext, getWidth(), getHeight());
     }
+  }
+
+  /**
+   * Returns a web-optimized image delivery URL.
+   * @param damContext DAM context
+   * @return URL or null if web-optimized image delivery is not supported
+   */
+  public @Nullable String getWebOptimizedImageDeliveryPath(DamContext damContext) {
+    return damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams());
   }
 
   /**
