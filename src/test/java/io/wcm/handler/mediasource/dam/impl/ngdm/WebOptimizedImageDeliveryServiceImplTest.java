@@ -22,11 +22,9 @@ package io.wcm.handler.mediasource.dam.impl.ngdm;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.dam.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -34,30 +32,25 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 @ExtendWith(AemContextExtension.class)
 class WebOptimizedImageDeliveryServiceImplTest {
 
-  private final AemContext context = AppAemContext.newAemContext();
-
-  private WebOptimizedImageDeliveryService underTest;
-
-  @BeforeEach
-  void setUp() {
-    underTest = context.getService(WebOptimizedImageDeliveryService.class);
-  }
+  private final AemContext context = new AemContext();
 
   @Test
   void testEnabled_AssetDeliveryNotPresent() {
+    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
     assertFalse(underTest.isEnabled());
   }
 
   @Test
   void testEnabled_AssetDeliveryPresent() {
     context.registerInjectActivateService(MockAssetDelivery.class);
+    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
     assertTrue(underTest.isEnabled());
   }
 
   @Test
   void testEnabled_AssetDeliveryPresent_Disabled() {
     context.registerInjectActivateService(MockAssetDelivery.class);
-    underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class,
+    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class,
         "enabled", false);
     assertFalse(underTest.isEnabled());
   }
