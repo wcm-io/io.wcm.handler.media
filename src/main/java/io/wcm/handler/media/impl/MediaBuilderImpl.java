@@ -305,6 +305,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder webOptimizedImageDeliveryDisabled(boolean value) {
+    this.mediaArgs.webOptimizedImageDeliveryDisabled(value);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder refProperty(@NotNull String value) {
     this.mediaPropertyNames.refProperty(value);
     return this;

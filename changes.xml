@@ -24,9 +24,10 @@
   <body>
 
     <release version="2.0.0" date="not released">
-      <action type="add" dev="sseifert" issue="30">
-        Add support for Web Optimized Image Delivery (part of Next Generation Dynamic Media) - rendering asset renditions from AEM Sites instance on the edge. Active by default, can be disabled.
-      </action>
+      <action type="add" dev="sseifert" issue="30"><![CDATA[
+        Add support for Web Optimized Image Delivery (part of Next Generation Dynamic Media) - rendering asset renditions from AEM Sites instance on the edge.<br/>
+        <b>This feature is active by default on AEMaaCS cloud isntances, can be disabled via OSGi configuration</b>.
+      ]]></action>
       <action type="remove" dev="sseifert" issue="27">
         Remove deprecated functionality.
       </action>

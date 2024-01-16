@@ -313,6 +313,14 @@ public interface MediaBuilder {
   MediaBuilder dynamicMediaDisabled(boolean value);
 
   /**
+   * Disable web-optimized image delivery.
+   * @param value If set to true, web-optimized image delivery is disabled even when enabled on the instance.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder webOptimizedImageDeliveryDisabled(boolean value);
+
+  /**
    * Sets the name of the property from which the media reference path is read, or node name for inline media.
    * @param refProperty Property or node name
    * @return Media builder

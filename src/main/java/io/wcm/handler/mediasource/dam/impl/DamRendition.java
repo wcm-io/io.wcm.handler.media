@@ -145,7 +145,6 @@ class DamRendition extends SlingAdaptable implements Rendition {
 
     // check for web-optimized image delivery
     if (url == null) {
-      // TODO: what to do with mediaArgs.isContentDispositionAttachment()?
       url = buildWebOptimizedImageDeliveryUrl();
     }
 
@@ -180,7 +179,10 @@ class DamRendition extends SlingAdaptable implements Rendition {
    * @return URL or null
    */
   private @Nullable String buildWebOptimizedImageDeliveryUrl() {
-    if (MediaFileType.isImage(getFileExtension()) && !MediaFileType.isVectorImage((getFileExtension()))) {
+    if (MediaFileType.isImage(getFileExtension())
+        && !MediaFileType.isVectorImage(getFileExtension())
+        && !mediaArgs.isContentDispositionAttachment()
+        && !mediaArgs.isWebOptimizedImageDeliveryDisabled()) {
       return rendition.getWebOptimizedImageDeliveryPath(damContext);
     }
     else {

@@ -53,12 +53,12 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
         ContentType.JPEG);
   }
 
-  @Override
   @Test
-  void testAsset_JPEG_Original_ContentDisposition() {
+  void testAsset_JPEG_Original_WebOptimizedImageDeliveryDisabled() {
+    this.webOptimizedImageDeliveryDisabled = true;
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
-    buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true",
+    buildAssertMedia(asset, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original./sample.jpg",
         ContentType.JPEG);
   }
 
@@ -151,15 +151,6 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
     buildAssertMedia(asset, 100, 50,
         "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true",
         ContentType.JPEG);
-  }
-
-  @Override
-  @Test
-  void testAsset_TIFF_Original_ContentDisposition() {
-    Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
-    buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true",
-        ContentType.TIFF);
   }
 
   @Override
