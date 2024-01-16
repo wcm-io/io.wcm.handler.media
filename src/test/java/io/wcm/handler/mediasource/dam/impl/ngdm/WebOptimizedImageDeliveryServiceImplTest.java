@@ -79,9 +79,9 @@ class WebOptimizedImageDeliveryServiceImplTest {
     assertEquals("/asset/delivery/" + assetId + "/test.jpg?preferwebp=true",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()));
 
-    assertEquals("/asset/delivery/" + assetId + "/test.jpg?c=0%2C0%2C2%2C4&height=5&preferwebp=true&r=90&width=10",
+    assertEquals("/asset/delivery/" + assetId + "/test.jpg?c=0%2C0%2C2%2C4&preferwebp=true&r=90&width=10",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
-            .width(10L).height(5L).cropDimension(new CropDimension(0, 0, 2, 4)).rotation(90)));
+            .width(10L).cropDimension(new CropDimension(0, 0, 2, 4)).rotation(90)));
   }
 
 }

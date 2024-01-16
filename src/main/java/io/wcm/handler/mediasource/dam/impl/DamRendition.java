@@ -146,7 +146,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
     // check for web-optimized image delivery
     if (url == null) {
       // TODO: what to do with mediaArgs.isContentDispositionAttachment()?
-      url = rendition.getWebOptimizedImageDeliveryPath(damContext);
+      url = buildWebOptimizedImageDeliveryUrl();
     }
 
     // Fallback: Render renditions in AEM - build externalized URL
@@ -174,6 +174,20 @@ class DamRendition extends SlingAdaptable implements Rendition {
       return null;
     }
   }
+
+  /**
+   * Build web-optimized image delivery URL if this is a raster image.
+   * @return URL or null
+   */
+  private @Nullable String buildWebOptimizedImageDeliveryUrl() {
+    if (MediaFileType.isImage(getFileExtension()) && !MediaFileType.isVectorImage((getFileExtension()))) {
+      return rendition.getWebOptimizedImageDeliveryPath(damContext);
+    }
+    else {
+      return null;
+    }
+  }
+
 
   @Override
   public String getPath() {

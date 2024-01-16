@@ -21,13 +21,16 @@ package io.wcm.handler.mediasource.dam.impl.ngdm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.wcm.commons.contenttype.FileExtension;
 
 final class ParameterMap {
 
@@ -35,11 +38,17 @@ final class ParameterMap {
   static final String PARAM_SEO_NAME = "seoname";
   static final String PARAM_FORMAT = "format";
 
+  static final String PARAM_PREFER_WEBP = "preferwebp";
   static final String PARAM_WIDTH = "width";
-  static final String PARAM_HEIGHT = "height";
   static final String PARAM_CROP = "c";
   static final String PARAM_ROTATE = "r";
-  static final String PARAM_PREFER_WEBP = "preferwebp";
+  static final String PARAM_QUALITY = "quality";
+
+  private static final Set<String> SUPPORTED_FORMATS = Set.of(
+      FileExtension.JPEG,
+      FileExtension.PNG,
+      FileExtension.GIF,
+      FileExtension.WEBP);
 
   private ParameterMap() {
     // static methods only
@@ -49,12 +58,16 @@ final class ParameterMap {
   static Map<String, Object> build(@NotNull Asset asset, @NotNull WebOptimizedImageDeliveryParams params) {
     String path = asset.getPath();
     String seoName = FilenameUtils.getBaseName(asset.getName());
-    String format = FilenameUtils.getExtension(asset.getName());
+    String format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(asset.getName()));
+
+    if (!SUPPORTED_FORMATS.contains(format)) {
+      format = FileExtension.JPEG;
+    }
 
     Long width = params.getWidth();
-    Long height = params.getHeight();
     CropDimension cropDimension = params.getCropDimension();
     Integer rotation = params.getRotation();
+    Integer quality = params.getQuality();
 
     // please note: AssetDelivery API expects all values as strings
     Map<String, Object> map = new HashMap<>();
@@ -65,14 +78,14 @@ final class ParameterMap {
     if (width != null) {
       map.put(PARAM_WIDTH, width.toString());
     }
-    if (height != null) {
-      map.put(PARAM_HEIGHT, height.toString());
-    }
     if (cropDimension != null) {
       map.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
     }
     if (rotation != null && rotation != 0) {
       map.put(PARAM_ROTATE, rotation.toString());
+    }
+    if (quality != null) {
+      map.put(PARAM_QUALITY, quality.toString());
     }
     return map;
   }

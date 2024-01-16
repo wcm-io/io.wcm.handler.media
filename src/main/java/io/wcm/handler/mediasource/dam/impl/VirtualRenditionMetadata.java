@@ -106,7 +106,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   @Override
   public @Nullable String getWebOptimizedImageDeliveryPath(DamContext damContext) {
     return damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams()
-        .width(getWidth()).height(getHeight()));
+        .width(getWidth()));
   }
 
   @Override

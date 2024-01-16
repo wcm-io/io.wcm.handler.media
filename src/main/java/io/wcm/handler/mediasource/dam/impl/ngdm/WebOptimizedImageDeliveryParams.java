@@ -30,9 +30,9 @@ import io.wcm.handler.media.CropDimension;
 public class WebOptimizedImageDeliveryParams {
 
   private Long width;
-  private Long height;
   private CropDimension cropDimension;
   private Integer rotation;
+  private Integer quality;
 
   /**
    * @return Width
@@ -47,22 +47,6 @@ public class WebOptimizedImageDeliveryParams {
    */
   public @NotNull WebOptimizedImageDeliveryParams width(@Nullable Long value) {
     this.width = value;
-    return this;
-  }
-
-  /**
-   * @return Height
-   */
-  public @Nullable Long getHeight() {
-    return this.height;
-  }
-
-  /**
-   * @param value Height
-   * @return this
-   */
-  public @NotNull WebOptimizedImageDeliveryParams height(@Nullable Long value) {
-    this.height = value;
     return this;
   }
 
@@ -95,6 +79,22 @@ public class WebOptimizedImageDeliveryParams {
    */
   public @NotNull WebOptimizedImageDeliveryParams rotation(@Nullable Integer value) {
     this.rotation = value;
+    return this;
+  }
+
+  /**
+   * @return Quality
+   */
+  public @Nullable Integer getQuality() {
+    return this.quality;
+  }
+
+  /**
+   * @param value Quality
+   * @return this
+   */
+  public @NotNull WebOptimizedImageDeliveryParams quality(@Nullable Integer value) {
+    this.quality = value;
     return this;
   }
 

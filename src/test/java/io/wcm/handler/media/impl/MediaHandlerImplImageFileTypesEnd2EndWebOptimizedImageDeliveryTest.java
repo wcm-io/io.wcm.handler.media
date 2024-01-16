@@ -67,7 +67,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_JPEG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?height=40&preferwebp=true&width=80",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true&width=80",
         ContentType.JPEG);
   }
 
@@ -76,7 +76,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_JPEG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&height=50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
         ContentType.JPEG);
   }
 
@@ -86,7 +86,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&height=50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
         ContentType.JPEG);
   }
 
@@ -104,7 +104,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_GIF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?height=40&preferwebp=true&width=80",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?preferwebp=true&width=80",
         ContentType.GIF);
   }
 
@@ -113,7 +113,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_GIF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?c=25%2C0%2C50%2C50&height=50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
         ContentType.GIF);
   }
 
@@ -131,7 +131,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_PNG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.png?height=40&preferwebp=true&width=80",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.png?preferwebp=true&width=80",
         ContentType.PNG);
   }
 
@@ -140,7 +140,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_PNG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.png?c=25%2C0%2C50%2C50&height=50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.png?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
         ContentType.PNG);
   }
 
@@ -149,7 +149,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_TIFF_Original() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.tif?preferwebp=true",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true",
         ContentType.JPEG);
   }
 
@@ -158,7 +158,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_TIFF_Original_ContentDisposition() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.tif?preferwebp=true",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true",
         ContentType.TIFF);
   }
 
@@ -167,7 +167,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_TIFF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.tif?height=40&preferwebp=true&width=80",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true&width=80",
         ContentType.JPEG);
   }
 
@@ -176,37 +176,15 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_TIFF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.tif?c=25%2C0%2C50%2C50&height=50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
         ContentType.JPEG);
   }
 
   @Override
   @Test
-  void testAsset_SVG_Original() {
-    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
-    // TODO: expected URL result for SVG?
-    buildAssertMedia(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.svg?preferwebp=true",
-        ContentType.SVG);
-  }
-
-  @Override
-  @Test
-  void testAsset_SVG_Original_ContentDisposition() {
-    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
-    buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.svg?preferwebp=true",
-        ContentType.SVG);
-  }
-
-  @Override
-  @Test
   void testAsset_SVG_Rescale() {
-    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
-    // TODO: expected URL result for "rescaled" SVG?
-    buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.svg?height=40&preferwebp=true&width=80",
-        ContentType.SVG);
+    // TODO: Auto-generated method stub
+    super.testAsset_SVG_Rescale();
   }
 
 }
