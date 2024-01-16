@@ -114,7 +114,7 @@ public final class MediaSourceDamAppAemContext {
       context.registerService(MediaFormatProvider.class, new DummyMediaFormatProvider());
       context.registerInjectActivateService(MediaFormatProviderManagerImpl.class);
 
-      // dynamic media/ngdm
+      // dynamic media/NGDM
       context.registerInjectActivateService(DynamicMediaSupportServiceImpl.class);
       context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
 
