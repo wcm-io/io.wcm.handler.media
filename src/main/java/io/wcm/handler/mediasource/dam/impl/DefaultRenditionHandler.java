@@ -86,6 +86,24 @@ class DefaultRenditionHandler implements RenditionHandler {
       for (Rendition rendition : damContext.getAsset().getRenditions()) {
         addRendition(candidates, rendition, mediaArgs);
       }
+
+      // special handling for dynamic media
+      if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+        // check if there are matching smart crop renditions for the requested media format(s)
+        // and return those instead of the original rendition for further processing
+        String fileExtension = FilenameUtils.getExtension(damContext.getAsset().getName());
+        if (damContext.isDynamicMediaValidateSmartCropRenditionSizes()
+            && MediaFileType.isImage(fileExtension) && !MediaFileType.isVectorImage(fileExtension)) {
+          List<CropDimension> cropDimensions = getDynamicMediaCropDimensions(mediaArgs);
+          if (!cropDimensions.isEmpty()) {
+            candidates.addAll(cropDimensions.stream()
+                .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
+                    cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension, null))
+                .collect(Collectors.toList()));
+          }
+        }
+      }
+
       candidates = postProcessCandidates(candidates, mediaArgs);
       this.renditions = Collections.unmodifiableSet(candidates);
     }
@@ -118,32 +136,9 @@ class DefaultRenditionHandler implements RenditionHandler {
       return;
     }
 
-    // special handling for dynamic media
-    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
-      // skip all non-original renditions for dynamic media assets. dynamic media does not support them.
-      if (!AssetRendition.isOriginal(rendition)) {
-        return;
-      }
-
-      // check if there are matching smart crop renditions for the requested media format(s)
-      // and return those instead of the original rendition for further processing
-      String fileExtension = FilenameUtils.getExtension(damContext.getAsset().getName());
-      if (damContext.isDynamicMediaValidateSmartCropRenditionSizes()
-          && MediaFileType.isImage(fileExtension) && !MediaFileType.isVectorImage(fileExtension)) {
-        List<CropDimension> cropDimensions = getDynamicMediaCropDimensions(mediaArgs);
-        if (!cropDimensions.isEmpty()) {
-          candidates.addAll(cropDimensions.stream()
-              .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
-                  cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension, null))
-              .collect(Collectors.toList()));
-          return;
-        }
-      }
-    }
-
-    // special handling for web-optimized image delivery
-    if (damContext.isWebOptimizedImageDeliveryEnabled() && !AssetRendition.isOriginal(rendition)) {
-      // skip all non-original renditions for web-optimized delivery. they are not supported.
+    if (!AssetRendition.isOriginal(rendition)
+        && ((damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) || damContext.isWebOptimizedImageDeliveryEnabled())) {
+      // skip all non-original renditions for dynamic media and web-optimized delivery - they are not supported
       return;
     }
 

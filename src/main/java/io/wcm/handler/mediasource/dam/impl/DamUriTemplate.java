@@ -146,7 +146,7 @@ final class DamUriTemplate implements UriTemplate {
         url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
         break;
       default:
-        throw new IllegalArgumentException("Unsupported type: " + type);
+        throw new IllegalArgumentException("Unsupported type for Web-optimized image delivery: " + type);
     }
     return url;
   }
@@ -190,7 +190,7 @@ final class DamUriTemplate implements UriTemplate {
       case SCALE_HEIGHT:
         return "hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT;
       default:
-        throw new IllegalArgumentException("Unsupported type: " + type);
+        throw new IllegalArgumentException("Unsupported type for Dynamic Media: " + type);
     }
   }
 
