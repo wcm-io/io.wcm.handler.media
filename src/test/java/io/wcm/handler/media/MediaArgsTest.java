@@ -189,6 +189,7 @@ class MediaArgsTest {
     mediaArgs.dragDropSupport(DragDropSupport.NEVER);
     mediaArgs.ipeRatioCustomize(IPERatioCustomize.NEVER);
     mediaArgs.dynamicMediaDisabled(true);
+    mediaArgs.webOptimizedImageDeliveryDisabled(true);
     mediaArgs.properties(props);
 
     MediaArgs clone = mediaArgs.clone();
@@ -221,6 +222,7 @@ class MediaArgsTest {
     assertEquals(mediaArgs.getDragDropSupport(), clone.getDragDropSupport());
     assertEquals(IPERatioCustomize.NEVER, clone.getIPERatioCustomize());
     assertEquals(mediaArgs.isDynamicMediaDisabled(), clone.isDynamicMediaDisabled());
+    assertEquals(mediaArgs.isWebOptimizedImageDeliveryDisabled(), clone.isWebOptimizedImageDeliveryDisabled());
     assertEquals(ImmutableValueMap.copyOf(mediaArgs.getProperties()), ImmutableValueMap.copyOf(clone.getProperties()));
   }
 

@@ -44,6 +44,7 @@ import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
+import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryService;
 import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
@@ -62,16 +63,19 @@ public final class DamAsset extends SlingAdaptable implements Asset {
    * @param damAsset DAM asset
    * @param mediaHandlerConfig Media handler config
    * @param dynamicMediaSupportService Dynamic media support service
+   * @param webOptimizedImageDeliveryService Web optimized image delivery service
    * @param adaptable Adaptable from current context
    */
   public DamAsset(Media media, com.day.cq.dam.api.Asset damAsset, MediaHandlerConfig mediaHandlerConfig,
-      DynamicMediaSupportService dynamicMediaSupportService, Adaptable adaptable) {
+      DynamicMediaSupportService dynamicMediaSupportService,
+      WebOptimizedImageDeliveryService webOptimizedImageDeliveryService,
+      Adaptable adaptable) {
     this.damAsset = damAsset;
     this.cropDimension = rescaleCropDimension(damAsset, media.getCropDimension());
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
     this.damContext = new DamContext(damAsset, defaultMediaArgs, mediaHandlerConfig,
-        dynamicMediaSupportService, adaptable);
+        dynamicMediaSupportService, webOptimizedImageDeliveryService, adaptable);
   }
 
   /**

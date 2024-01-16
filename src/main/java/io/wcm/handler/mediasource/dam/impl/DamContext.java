@@ -39,6 +39,8 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
+import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryParams;
+import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryService;
 
 /**
  * Context objects require in DAM support implementation.
@@ -49,6 +51,7 @@ public final class DamContext implements Adaptable {
   private final MediaArgs mediaArgs;
   private final MediaHandlerConfig mediaHandlerConfig;
   private final DynamicMediaSupportService dynamicMediaSupportService;
+  private final WebOptimizedImageDeliveryService webOptimizedImageDeliveryService;
   private final Adaptable adaptable;
 
   private String dynamicMediaObject;
@@ -68,14 +71,18 @@ public final class DamContext implements Adaptable {
    * @param mediaArgs Media Args from media request
    * @param mediaHandlerConfig Media handler config
    * @param dynamicMediaSupportService Dynamic media support service
+   * @param webOptimizedImageDeliveryService Web optimized image delivery service
    * @param adaptable Adaptable from current context
    */
   public DamContext(@NotNull Asset asset, @NotNull MediaArgs mediaArgs, @NotNull MediaHandlerConfig mediaHandlerConfig,
-      @NotNull DynamicMediaSupportService dynamicMediaSupportService, @NotNull Adaptable adaptable) {
+      @NotNull DynamicMediaSupportService dynamicMediaSupportService,
+      @NotNull WebOptimizedImageDeliveryService webOptimizedImageDeliveryService,
+      @NotNull Adaptable adaptable) {
     this.asset = asset;
     this.mediaArgs = mediaArgs;
     this.mediaHandlerConfig = mediaHandlerConfig;
     this.dynamicMediaSupportService = dynamicMediaSupportService;
+    this.webOptimizedImageDeliveryService = webOptimizedImageDeliveryService;
     this.adaptable = adaptable;
   }
 
@@ -182,6 +189,22 @@ public final class DamContext implements Adaptable {
     else {
       return imageProfile;
     }
+  }
+
+  /**
+   * @return Whether web-optimized image delivery is enabled on this AEM instance
+   */
+  public boolean isWebOptimizedImageDeliveryEnabled() {
+    return webOptimizedImageDeliveryService.isEnabled();
+  }
+
+  /**
+   * Get web-optimized image delivery URL for a rendition of an asset.
+   * @param params Parameters
+   * @return Delivery URL or null if not supported or not enabled
+   */
+  public @Nullable String getWebOptimizedImageDeliveryUrl(@NotNull WebOptimizedImageDeliveryParams params) {
+    return webOptimizedImageDeliveryService.getDeliveryUrl(asset, params);
   }
 
   /**

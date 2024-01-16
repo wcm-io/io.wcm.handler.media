@@ -69,6 +69,7 @@ public final class MediaArgs implements Cloneable {
   private DragDropSupport dragDropSupport = DragDropSupport.AUTO;
   private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
   private boolean dynamicMediaDisabled;
+  private boolean webOptimizedImageDeliveryDisabled;
   private ValueMap properties;
 
   private static final Set<String> ALLOWED_FORCED_FILE_EXTENSIONS = Set.of(
@@ -628,6 +629,22 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * @return If set to true, web-optimized image delivery is disabled even when enabled on the instance.
+   */
+  public boolean isWebOptimizedImageDeliveryDisabled() {
+    return this.webOptimizedImageDeliveryDisabled;
+  }
+
+  /**
+   * @param value If set to true, web-optimized image delivery is disabled even when enabled on the instance.
+   * @return this
+   */
+  public @NotNull MediaArgs webOptimizedImageDeliveryDisabled(boolean value) {
+    this.webOptimizedImageDeliveryDisabled = value;
+    return this;
+  }
+
+  /**
    * Drag&amp;Drop support for media builder.
    * @return Drag&amp;Drop support
    */
@@ -816,6 +833,7 @@ public final class MediaArgs implements Cloneable {
     clone.dragDropSupport = this.dragDropSupport;
     clone.ipeRatioCustomize = this.ipeRatioCustomize;
     clone.dynamicMediaDisabled = this.dynamicMediaDisabled;
+    clone.webOptimizedImageDeliveryDisabled = this.webOptimizedImageDeliveryDisabled;
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<>(this.properties));
     }
