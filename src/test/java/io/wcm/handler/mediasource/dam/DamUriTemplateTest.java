@@ -40,6 +40,7 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.testing.mock.aem.dam.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -99,6 +100,22 @@ class DamUriTemplateTest {
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}");
     assertUriTemplate(media, SCALE_HEIGHT, 100, 50,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}");
+  }
+
+  @Test
+  void testGetUriTemplate_WebOptimizedImageDelivery() {
+    context.registerInjectActivateService(MockAssetDelivery.class);
+
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    String assetId = MockAssetDelivery.getAssetId(asset);
+    Media media = mediaHandler.get(asset.getPath()).build();
+
+    assertUriTemplate(media, CROP_CENTER, 100, 50,
+        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&width={width}");
+    assertUriTemplate(media, SCALE_WIDTH, 100, 50,
+        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&width={width}");
+    assertUriTemplate(media, SCALE_HEIGHT, 100, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
   }
 
   Asset createSampleAsset(String classpathResource, String contentType) {

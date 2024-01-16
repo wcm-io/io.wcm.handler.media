@@ -171,11 +171,4 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
         ContentType.JPEG);
   }
 
-  @Override
-  @Test
-  void testAsset_SVG_Rescale() {
-    // TODO: Auto-generated method stub
-    super.testAsset_SVG_Rescale();
-  }
-
 }
