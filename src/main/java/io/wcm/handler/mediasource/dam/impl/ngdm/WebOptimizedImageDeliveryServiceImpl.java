@@ -46,13 +46,13 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 public class WebOptimizedImageDeliveryServiceImpl implements WebOptimizedImageDeliveryService {
 
   @ObjectClassDefinition(
-      name = "wcm.io Web Optimized Image Delivery Support",
-      description = "Support for Next Generation Dynamic Media Web Optimized Image Delivery capabilites.")
+      name = "wcm.io Web-Optimized Image Delivery Support",
+      description = "Support for Next Generation Dynamic Media Web-Optimized Image Delivery capabilites.")
   @interface Config {
 
     @AttributeDefinition(
         name = "Enabled",
-        description = "Enable support for Web Optimized Delivery (if available).")
+        description = "Enable support for Web-Optimized Image Delivery (if available).")
     boolean enabled() default true;
 
   }
