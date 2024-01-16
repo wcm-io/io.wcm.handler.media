@@ -31,11 +31,14 @@
       <action type="remove" dev="sseifert" issue="27">
         Remove deprecated functionality.
       </action>
-      <action type="update" dev="sseifert">
-        Switch to AEM 6.5.17 as minimum version.
-      </action>
       <action type="update" dev="sseifert" issue="3">
         MediaFileServlet: Force Content-Disposition=attachment header for SVG files served by MediaFileServlet. Also ensure URLs to SVG images are always handled by MediaFileServlet.
+      </action>
+      <action type="update" dev="sseifert">
+        Explicitly define folder type for JSON files with "nt:unstructured" as root node to circumvent SLING-12197.
+      </action>
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.5.17 as minimum version.
       </action>
     </release>
 
