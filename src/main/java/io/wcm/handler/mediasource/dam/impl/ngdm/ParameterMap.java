@@ -56,22 +56,23 @@ final class ParameterMap {
     CropDimension cropDimension = params.getCropDimension();
     Integer rotation = params.getRotation();
 
+    // please note: AssetDelivery API expects all values as strings
     Map<String, Object> map = new HashMap<>();
     map.put(PARAM_PATH, path);
     map.put(PARAM_SEO_NAME, seoName);
     map.put(PARAM_FORMAT, format);
-    map.put(PARAM_PREFER_WEBP, true);
+    map.put(PARAM_PREFER_WEBP, "true");
     if (width != null) {
-      map.put(PARAM_WIDTH, width);
+      map.put(PARAM_WIDTH, width.toString());
     }
     if (height != null) {
-      map.put(PARAM_HEIGHT, height);
+      map.put(PARAM_HEIGHT, height.toString());
     }
     if (cropDimension != null) {
       map.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
     }
     if (rotation != null && rotation != 0) {
-      map.put(PARAM_ROTATE, rotation);
+      map.put(PARAM_ROTATE, rotation.toString());
     }
     return map;
   }
