@@ -19,7 +19,6 @@
  */
 package io.wcm.handler.media.impl;
 
-import static io.wcm.handler.media.impl.ImageFileServlet.buildSelectorString;
 import static io.wcm.handler.media.impl.ImageFileServlet.getImageFileName;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -35,7 +34,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.image.Layer;
 
-import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -253,22 +251,6 @@ class ImageFileServletTest {
     is.close();
     assertEquals(width, layer.getWidth());
     assertEquals(height, layer.getHeight());
-  }
-
-  @Test
-  void testBuildSelectorString() {
-    CropDimension crop = new CropDimension(2, 4, 6, 8);
-    assertEquals("image_file.10.20", buildSelectorString(10, 20, null, null, null, false));
-    assertEquals("image_file.10.20.download_attachment", buildSelectorString(10, 20, null, null, null, true));
-    assertEquals("image_file.10.20.-.0.50.download_attachment", buildSelectorString(10, 20, null, null, 0.5d, true));
-    assertEquals("image_file.10.20.2,4,8,12", buildSelectorString(10, 20, crop, null, null, false));
-    assertEquals("image_file.10.20.2,4,8,12.download_attachment", buildSelectorString(10, 20, crop, null, null, true));
-    assertEquals("image_file.10.20.2,4,8,12.90", buildSelectorString(10, 20, crop, 90, null, false));
-    assertEquals("image_file.10.20.2,4,8,12.90.download_attachment", buildSelectorString(10, 20, crop, 90, null, true));
-    assertEquals("image_file.10.20.2,4,8,12.90.60", buildSelectorString(10, 20, crop, 90, 0.6d, false));
-    assertEquals("image_file.10.20.-.90", buildSelectorString(10, 20, null, 90, null, false));
-    assertEquals("image_file.10.20.-.90.download_attachment", buildSelectorString(10, 20, null, 90, null, true));
-    assertEquals("image_file.10.20.-.0", buildSelectorString(10, 20, null, null, -0.2d, false));
   }
 
 }

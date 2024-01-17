@@ -19,15 +19,12 @@
  */
 package io.wcm.handler.media.impl;
 
-import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.servlet.Servlet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.HttpConstants;
@@ -74,50 +71,17 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     // get media app config
     MediaHandlerConfig config = AdaptTo.notNull(request, MediaHandlerConfig.class);
 
-    // check for image scaling parameters
-    int width = 0;
-    int height = 0;
-    String[] selectors = request.getRequestPathInfo().getSelectors();
-    if (selectors.length >= 3) {
-      width = NumberUtils.toInt(selectors[1]);
-      height = NumberUtils.toInt(selectors[2]);
-    }
+    // parse selectors
+    ImageFileServletSelector params = new ImageFileServletSelector(request.getRequestPathInfo().getSelectors());
+    int width = params.getWidth();
+    int height = params.getHeight();
+    CropDimension cropDimension = params.getCropDimension();
+    int rotation = params.getRotation();
+    int quality = params.getQuality();
+
+    // ensure valid image size
     if (width < 0 || height < 0 || (width == 0 && height == 0)) {
       return null;
-    }
-
-    // check for cropping parameter
-    CropDimension cropDimension = null;
-    if (selectors.length >= 4) {
-      String cropString = selectors[3];
-      if (!StringUtils.equals(cropString, "-")) {
-        try {
-          cropDimension = CropDimension.fromCropString(cropString);
-        }
-        catch (IllegalArgumentException ex) {
-          // ignore
-        }
-      }
-    }
-
-    // check for rotation parameter
-    int rotation = 0;
-    if (selectors.length >= 5) {
-      String rotationString = selectors[4];
-      rotation = NumberUtils.toInt(rotationString);
-      if (!isValidRotation(rotation)) {
-        rotation = 0;
-      }
-    }
-
-    // check for image quality
-    int quality = 0;
-    if (selectors.length >= 6) {
-      String qualityString = selectors[5];
-      quality = NumberUtils.toInt(qualityString);
-      if (quality < 0 || quality > 100) {
-        quality = 0;
-      }
     }
 
     Layer layer = ResourceLayerUtil.toLayer(resource, assetStore);
@@ -230,49 +194,6 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       extensionPart = FileExtension.JPEG;
     }
     return namePart + "." + extensionPart;
-  }
-
-  /**
-   * Build selector string for this servlet.
-   * @param width Width
-   * @param height Height
-   * @param cropDimension Crop dimension
-   * @param rotation Rotation
-   * @param contentDispositionAttachment Content disposition attachment
-   * @param imageQualityPercentage Image quality percentage (0..1)
-   * @return Selector string
-   */
-  public static @NotNull String buildSelectorString(long width, long height,
-      @Nullable CropDimension cropDimension, @Nullable Integer rotation, @Nullable Double imageQualityPercentage,
-      boolean contentDispositionAttachment) {
-    StringBuilder result = new StringBuilder()
-        .append(SELECTOR)
-        .append(".").append(Long.toString(width))
-        .append(".").append(Long.toString(height));
-
-    if (cropDimension != null) {
-      result.append(".").append(cropDimension.getCropString());
-    }
-    else if (rotation != null || imageQualityPercentage != null) {
-      result.append(".-");
-    }
-    if (rotation != null) {
-      result.append(".").append(rotation.toString());
-    }
-    else if (imageQualityPercentage != null) {
-      result.append(".0");
-    }
-    if (imageQualityPercentage != null) {
-      long quality = Math.round(imageQualityPercentage * 100);
-      if (quality > 0) {
-        result.append(".").append(Long.toString(quality));
-      }
-    }
-    if (contentDispositionAttachment) {
-      result.append(".").append(AbstractMediaFileServlet.SELECTOR_DOWNLOAD);
-    }
-
-    return result.toString();
   }
 
 }

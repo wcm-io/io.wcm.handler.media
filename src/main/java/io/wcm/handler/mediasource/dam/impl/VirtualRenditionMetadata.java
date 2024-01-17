@@ -30,6 +30,7 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryParams;
@@ -87,7 +88,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
       return super.getMediaPath(contentDispositionAttachment);
     }
     return RenditionMetadata.buildMediaPath(getRendition().getPath()
-        + "." + ImageFileServlet.buildSelectorString(getWidth(), getHeight(),
+        + "." + ImageFileServletSelector.build(getWidth(), getHeight(),
             null, null, this.imageQualityPercentage, contentDispositionAttachment)
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
   }
