@@ -20,13 +20,11 @@
 package io.wcm.handler.media.testcontext;
 
 import java.util.List;
-import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
-import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 import io.wcm.handler.mediasource.inline.InlineMediaSource;
 
@@ -45,8 +43,9 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
   }
 
   @Override
-  public @NotNull Set<AemRenditionType> getIncludeAssetAemRenditionsByDefault() {
-    return Set.of(AemRenditionType.WEB_RENDITION, AemRenditionType.VIDEO_RENDITION);
+  public boolean includeAssetWebRenditionsByDefault() {
+    // unit tests rely on old behavior
+    return true;
   }
 
 }
