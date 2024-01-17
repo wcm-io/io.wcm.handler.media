@@ -38,6 +38,7 @@ class AemRenditionTypeTest {
     assertFalse(THUMBNAIL_RENDITION.matches("cq5dam.web.100.100.jpg"));
     assertFalse(THUMBNAIL_RENDITION.matches("cq5dam.video.hq.m4v"));
     assertFalse(THUMBNAIL_RENDITION.matches("cq5dam.zoom.50.50.jpg"));
+    assertFalse(THUMBNAIL_RENDITION.matches("cqdam.text.txt"));
     assertFalse(THUMBNAIL_RENDITION.matches("othername.gif"));
   }
 
@@ -47,6 +48,7 @@ class AemRenditionTypeTest {
     assertTrue(WEB_RENDITION.matches("cq5dam.web.100.100.jpg"));
     assertFalse(WEB_RENDITION.matches("cq5dam.video.hq.m4v"));
     assertFalse(WEB_RENDITION.matches("cq5dam.zoom.50.50.jpg"));
+    assertFalse(WEB_RENDITION.matches("cqdam.text.txt"));
     assertFalse(WEB_RENDITION.matches("othername.gif"));
   }
 
@@ -56,6 +58,7 @@ class AemRenditionTypeTest {
     assertFalse(VIDEO_RENDITION.matches("cq5dam.web.100.100.jpg"));
     assertTrue(VIDEO_RENDITION.matches("cq5dam.video.hq.m4v"));
     assertFalse(VIDEO_RENDITION.matches("cq5dam.zoom.50.50.jpg"));
+    assertFalse(VIDEO_RENDITION.matches("cqdam.text.txt"));
     assertFalse(VIDEO_RENDITION.matches("othername.gif"));
   }
 
@@ -65,6 +68,7 @@ class AemRenditionTypeTest {
     assertTrue(OTHER_RENDITION.matches("cq5dam.web.100.100.jpg"));
     assertTrue(OTHER_RENDITION.matches("cq5dam.video.hq.m4v"));
     assertTrue(OTHER_RENDITION.matches("cq5dam.zoom.50.50.jpg"));
+    assertTrue(OTHER_RENDITION.matches("cqdam.text.txt"));
     assertFalse(OTHER_RENDITION.matches("othername.gif"));
   }
 
@@ -74,6 +78,7 @@ class AemRenditionTypeTest {
     assertEquals(WEB_RENDITION, AemRenditionType.forRendition("cq5dam.web.100.100.jpg"));
     assertEquals(VIDEO_RENDITION, AemRenditionType.forRendition("cq5dam.video.hq.m4v"));
     assertEquals(OTHER_RENDITION, AemRenditionType.forRendition("cq5dam.zoom.50.50.jpg"));
+    assertEquals(OTHER_RENDITION, AemRenditionType.forRendition("cqdam.text.txt"));
     assertNull(AemRenditionType.forRendition("othername.gif"));
   }
 
