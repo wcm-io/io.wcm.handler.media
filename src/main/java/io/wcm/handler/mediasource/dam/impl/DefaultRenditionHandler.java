@@ -100,7 +100,8 @@ class DefaultRenditionHandler implements RenditionHandler {
           if (!cropDimensions.isEmpty()) {
             candidates.addAll(cropDimensions.stream()
                 .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
-                    cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension, null))
+                    cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension,
+                    null, mediaArgs.getImageQualityPercentage()))
                 .collect(Collectors.toList()));
           }
         }
@@ -430,7 +431,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         destRatio = Ratio.get(destWidth, destHeight);
       }
       return getVirtualRendition(candidates, destWidth, destHeight, 0, destRatio,
-          mediaArgs.getEnforceOutputFileExtension());
+          mediaArgs.getEnforceOutputFileExtension(), mediaArgs.getImageQualityPercentage());
     }
 
     // or from any media format
@@ -443,7 +444,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         double destRatio = mediaFormat.getRatio();
         // try to find matching rendition, otherwise check for next media format
         RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, minWidthHeight, destRatio,
-            mediaArgs.getEnforceOutputFileExtension());
+            mediaArgs.getEnforceOutputFileExtension(), mediaArgs.getImageQualityPercentage());
         if (rendition != null) {
           rendition.setMediaFormat(mediaFormat);
         }
@@ -463,15 +464,15 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param enforceOutputFileExtension Enforce output file extension
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(Set<RenditionMetadata> candidates,
+  private RenditionMetadata getVirtualRendition(@NotNull Set<RenditionMetadata> candidates,
       long destWidth, long destHeight, long minWidthHeight, double destRatio,
-      String enforceOutputFileExtension) {
+      @Nullable String enforceOutputFileExtension, @Nullable Double imageQualityPercentage) {
 
     // if ratio is defined get first rendition with matching ratio and same or bigger size
     if (destRatio > 0) {
       for (RenditionMetadata candidate : candidates) {
         if (candidate.matches(destWidth, destHeight, 0, 0, minWidthHeight, destRatio)) {
-          return getVirtualRendition(candidate, destWidth, destHeight, destRatio, enforceOutputFileExtension);
+          return getVirtualRendition(candidate, destWidth, destHeight, destRatio, enforceOutputFileExtension, imageQualityPercentage);
         }
       }
     }
@@ -479,7 +480,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     else {
       for (RenditionMetadata candidate : candidates) {
         if (candidate.matches(destWidth, destHeight, 0, 0, minWidthHeight, 0d)) {
-          return getVirtualRendition(candidate, destWidth, destHeight, 0d, enforceOutputFileExtension);
+          return getVirtualRendition(candidate, destWidth, destHeight, 0d, enforceOutputFileExtension, imageQualityPercentage);
         }
       }
     }
@@ -495,10 +496,11 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param heightValue Height
    * @param ratioValue Ratio
    * @param enforceOutputFileExtension Enforce output file extension
+   * @param imageQualityPercentage Image quality
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(RenditionMetadata rendition, long widthValue, long heightValue,
-      double ratioValue, String enforceOutputFileExtension) {
+  private RenditionMetadata getVirtualRendition(@NotNull RenditionMetadata rendition, long widthValue, long heightValue,
+      double ratioValue, @Nullable String enforceOutputFileExtension, @Nullable Double imageQualityPercentage) {
 
     long width = widthValue;
     long height = heightValue;
@@ -524,10 +526,10 @@ class DefaultRenditionHandler implements RenditionHandler {
       if (rendition instanceof VirtualTransformedRenditionMetadata) {
         VirtualTransformedRenditionMetadata cropRendition = (VirtualTransformedRenditionMetadata)rendition;
         return new VirtualTransformedRenditionMetadata(cropRendition.getRendition(), width, height, enforceOutputFileExtension,
-            cropRendition.getCropDimension(), cropRendition.getRotation());
+            cropRendition.getCropDimension(), cropRendition.getRotation(), imageQualityPercentage);
       }
       else {
-        return new VirtualRenditionMetadata(rendition.getRendition(), width, height, enforceOutputFileExtension);
+        return new VirtualRenditionMetadata(rendition.getRendition(), width, height, enforceOutputFileExtension, imageQualityPercentage);
       }
     }
     else {

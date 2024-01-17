@@ -190,6 +190,7 @@ class MediaArgsTest {
     mediaArgs.includeAssetWebRenditions(true);
     mediaArgs.imageSizes(imageSizes);
     mediaArgs.pictureSources(pictureSourceSets);
+    mediaArgs.imageQualityPercentage(0.5d);
     mediaArgs.dragDropSupport(DragDropSupport.NEVER);
     mediaArgs.ipeRatioCustomize(IPERatioCustomize.NEVER);
     mediaArgs.dynamicMediaDisabled(true);
@@ -224,6 +225,7 @@ class MediaArgsTest {
     assertEquals(mediaArgs.isIncludeAssetWebRenditions(), clone.isIncludeAssetWebRenditions());
     assertEquals(mediaArgs.getImageSizes(), clone.getImageSizes());
     assertArrayEquals(mediaArgs.getPictureSources(), clone.getPictureSources());
+    assertEquals(mediaArgs.getImageQualityPercentage(), clone.getImageQualityPercentage());
     assertEquals(mediaArgs.getDragDropSupport(), clone.getDragDropSupport());
     assertEquals(IPERatioCustomize.NEVER, clone.getIPERatioCustomize());
     assertEquals(mediaArgs.isDynamicMediaDisabled(), clone.isDynamicMediaDisabled());

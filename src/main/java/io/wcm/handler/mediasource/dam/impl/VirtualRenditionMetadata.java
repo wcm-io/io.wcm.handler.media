@@ -30,6 +30,7 @@ import com.day.cq.dam.api.Rendition;
 import com.day.image.Layer;
 
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryParams;
@@ -42,12 +43,15 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   private final long width;
   private final long height;
   private final String enforceOutputFileExtension;
+  private final Double imageQualityPercentage;
 
-  VirtualRenditionMetadata(Rendition rendition, long width, long height, String enforceOutputFileExtension) {
+  VirtualRenditionMetadata(@NotNull Rendition rendition, long width, long height,
+      @Nullable String enforceOutputFileExtension, @Nullable Double imageQualityPercentage) {
     super(rendition);
     this.width = width;
     this.height = height;
     this.enforceOutputFileExtension = enforceOutputFileExtension;
+    this.imageQualityPercentage = imageQualityPercentage;
   }
 
   @Override
@@ -83,9 +87,9 @@ class VirtualRenditionMetadata extends RenditionMetadata {
       // vector images can be scaled in browser without need of ImageFileServlet
       return super.getMediaPath(contentDispositionAttachment);
     }
-    return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
-        + "." + getWidth() + "." + getHeight()
-        + (contentDispositionAttachment ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
+    return RenditionMetadata.buildMediaPath(getRendition().getPath()
+        + "." + ImageFileServletSelector.build(getWidth(), getHeight(),
+            null, null, this.imageQualityPercentage, contentDispositionAttachment)
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
   }
 

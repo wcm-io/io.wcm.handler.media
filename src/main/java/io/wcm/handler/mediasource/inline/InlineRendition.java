@@ -55,6 +55,7 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.format.impl.MediaFormatSupport;
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.JcrBinary;
 import io.wcm.handler.media.impl.MediaFileServlet;
@@ -388,8 +389,9 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
 
     // URL to render scaled image via {@link InlineRenditionServlet}
     String path = resourcePath
-        + "." + ImageFileServlet.buildSelectorString(dimension.getWidth(), dimension.getHeight(),
-            mediaUrlCropDimension, this.rotation, this.mediaArgs.isContentDispositionAttachment())
+        + "." + ImageFileServletSelector.build(dimension.getWidth(), dimension.getHeight(),
+            mediaUrlCropDimension, this.rotation, this.mediaArgs.getImageQualityPercentage(),
+            this.mediaArgs.isContentDispositionAttachment())
         + "." + MediaFileServlet.EXTENSION + "/"
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + ImageFileServlet.getImageFileName(getFileName(),

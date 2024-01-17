@@ -35,6 +35,7 @@ import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.AssetRendition;
@@ -51,15 +52,18 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   private final String enforceOutputFileExtension;
   private final CropDimension cropDimension;
   private final Integer rotation;
+  private final Double imageQualityPercentage;
 
-  VirtualTransformedRenditionMetadata(Rendition rendition, long width, long height, String enforceOutputFileExtension,
-      CropDimension cropDimension, Integer rotation) {
+  VirtualTransformedRenditionMetadata(@NotNull Rendition rendition, long width, long height,
+      @Nullable String enforceOutputFileExtension, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @Nullable Double imageQualityPercentage) {
     super(rendition);
     this.width = width;
     this.height = height;
     this.enforceOutputFileExtension = enforceOutputFileExtension;
     this.cropDimension = cropDimension;
     this.rotation = rotation;
+    this.imageQualityPercentage = imageQualityPercentage;
   }
 
   @Override
@@ -95,8 +99,8 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   @Override
   public @NotNull String getMediaPath(boolean contentDispositionAttachment) {
     return RenditionMetadata.buildMediaPath(getRendition().getPath()
-        + "." + ImageFileServlet.buildSelectorString(getWidth(), getHeight(),
-            this.cropDimension, this.rotation, contentDispositionAttachment)
+        + "." + ImageFileServletSelector.build(getWidth(), getHeight(),
+            this.cropDimension, this.rotation, this.imageQualityPercentage, contentDispositionAttachment)
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
   }
 

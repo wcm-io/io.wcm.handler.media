@@ -49,7 +49,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_JPEG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true&quality=98",
         ContentType.JPEG);
   }
 
@@ -67,7 +67,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_JPEG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true&width=80",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true&quality=98&width=80",
         ContentType.JPEG);
   }
 
@@ -76,8 +76,17 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_JPEG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&quality=98&width=50",
         ContentType.JPEG);
+  }
+
+  @Override
+  @Test
+  void testAsset_JPEG_AutoCrop_ImageQuality() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&quality=60&width=50",
+        ContentType.JPEG, 0.6d);
   }
 
   @Override
@@ -86,7 +95,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&quality=98&width=50",
         ContentType.JPEG);
   }
 
@@ -95,7 +104,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_GIF_Original() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?preferwebp=true",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?preferwebp=true&quality=98",
         ContentType.GIF);
   }
 
@@ -104,7 +113,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_GIF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?preferwebp=true&width=80",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?preferwebp=true&quality=98&width=80",
         ContentType.GIF);
   }
 
@@ -113,7 +122,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_GIF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.gif?c=25%2C0%2C50%2C50&preferwebp=true&quality=98&width=50",
         ContentType.GIF);
   }
 
@@ -122,7 +131,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_PNG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.png?preferwebp=true",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.png?preferwebp=true&quality=98",
         ContentType.PNG);
   }
 
@@ -131,7 +140,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_PNG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.png?preferwebp=true&width=80",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.png?preferwebp=true&quality=98&width=80",
         ContentType.PNG);
   }
 
@@ -140,7 +149,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_PNG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.png?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.png?c=25%2C0%2C50%2C50&preferwebp=true&quality=98&width=50",
         ContentType.PNG);
   }
 
@@ -149,7 +158,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_TIFF_Original() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia(asset, 100, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true&quality=98",
         ContentType.JPEG);
   }
 
@@ -158,7 +167,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_TIFF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true&width=80",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?preferwebp=true&quality=98&width=80",
         ContentType.JPEG);
   }
 
@@ -167,7 +176,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_TIFF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&quality=98&width=50",
         ContentType.JPEG);
   }
 

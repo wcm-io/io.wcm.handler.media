@@ -34,6 +34,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.JcrBinary;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.url.UrlHandler;
@@ -70,7 +71,8 @@ final class InlineUriTemplate implements UriTemplate {
     final long DUMMY_WIDTH = 999991;
     final long DUMMY_HEIGHT = 999992;
     String path = resourcePath
-        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, false)
+        + "." + ImageFileServletSelector.build(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation,
+            mediaArgs.getImageQualityPercentage(), false)
         + "." + MediaFileServlet.EXTENSION
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + "/" + ImageFileServlet.getImageFileName(fileName, mediaArgs.getEnforceOutputFileExtension());

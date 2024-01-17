@@ -33,6 +33,7 @@ import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.sling.commons.request.RequestPath;
@@ -89,7 +90,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param request Request
    * @return Resource pointing to nt:file or nt:resource node
    */
-  protected Resource getBinaryDataResource(SlingHttpServletRequest request) {
+  protected @Nullable Resource getBinaryDataResource(SlingHttpServletRequest request) {
     return request.getResource();
   }
 
@@ -100,8 +101,8 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param response Response
    * @return true if the resource is not modified and should not be delivered anew
    */
-  protected boolean isNotModified(Resource resource, SlingHttpServletRequest request,
-      SlingHttpServletResponse response) {
+  protected boolean isNotModified(@NotNull Resource resource, @NotNull SlingHttpServletRequest request,
+      @NotNull SlingHttpServletResponse response) {
     // check resource's modification date against the If-Modified-Since header and send 304 if resource wasn't modified
     // never send expires header on author or publish instance (performance optimization - if medialib items changes
     // users have to refresh browsers cache)
@@ -113,7 +114,8 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param resource Resource
    * @return Binary data or null if not binary data found
    */
-  protected byte[] getBinaryData(Resource resource, @SuppressWarnings("unused") SlingHttpServletRequest request) throws IOException {
+  protected byte @Nullable [] getBinaryData(@NotNull Resource resource,
+      @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {
       return null;
@@ -131,7 +133,8 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param resource Resource
    * @return Content type (never null)
    */
-  protected String getContentType(Resource resource, @SuppressWarnings("unused") SlingHttpServletRequest request) {
+  protected @NotNull String getContentType(@NotNull Resource resource,
+      @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) {
     String mimeType = JcrBinary.getMimeType(resource);
     if (StringUtils.isEmpty(mimeType)) {
       mimeType = ContentType.OCTET_STREAM;
@@ -146,8 +149,8 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param request Request
    * @param response Response
    */
-  protected void sendBinaryData(byte[] binaryData, String contentType,
-      SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+  protected void sendBinaryData(byte @NotNull [] binaryData, @NotNull String contentType,
+      @NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws IOException {
 
     // set content type and length
     response.setContentType(contentType);
@@ -174,7 +177,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
     out.flush();
   }
 
-  private void setContentDispositionAttachmentHeader(SlingHttpServletRequest request, SlingHttpServletResponse response) {
+  private void setContentDispositionAttachmentHeader(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) {
     // Construct disposition header
     StringBuilder dispositionHeader = new StringBuilder("attachment;");
     String suffix = request.getRequestPathInfo().getSuffix();

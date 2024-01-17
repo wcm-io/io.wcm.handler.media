@@ -232,6 +232,13 @@ public interface MediaBuilder {
   MediaBuilder dummyImageUrl(@NotNull String value);
 
   /**
+   * @param value Image quality in percent (0..1) for images with lossy compression (e.g. JPEG).
+   * @return this
+   */
+  @NotNull
+  MediaBuilder imageQualityPercentage(@NotNull Double value);
+
+  /**
    * @param value Defines which types of AEM-generated renditions (with <code>cq5dam.</code> prefix) are taken into
    *          account when trying to resolve the media request.
    * @return this

@@ -24,12 +24,13 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 import com.day.cq.wcm.api.Page;
 
+import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
 import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
@@ -47,9 +48,16 @@ import io.wcm.sling.commons.caservice.ContextAwareService;
 public abstract class MediaHandlerConfig implements ContextAwareService {
 
   /**
-   * Default value for JPEG quality.
+   * Default image quality for images with lossy compressions (e.g. JPEG).
    */
-  public static final double DEFAULT_JPEG_QUALITY = 0.98d;
+  public static final double DEFAULT_IMAGE_QUALITY = 0.98d;
+
+  /**
+   * Default value for JPEG quality.
+   * @deprecated Use {@link #DEFAULT_IMAGE_QUALITY} instead.
+   */
+  @Deprecated(since = "2.0.0")
+  public static final double DEFAULT_JPEG_QUALITY = DEFAULT_IMAGE_QUALITY;
 
   private static final List<Class<? extends MediaSource>> DEFAULT_MEDIA_SOURCES = List.of(
       DamMediaSource.class);
@@ -89,24 +97,31 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
-   * Get the default quality for images in this app generated with the Layer API.
+   * Get the default quality for images.
    * The meaning of the quality parameter for the different image formats is described in
    * {@link com.day.image.Layer#write(String, double, java.io.OutputStream)}.
-   * @param mimeType MIME-type of the output format
+   * @param contentType MIME-type of the output format
    * @return Quality factor
    */
-  public double getDefaultImageQuality(String mimeType) {
-    if (StringUtils.isNotEmpty(mimeType)) {
-      String format = StringUtils.substringAfter(mimeType.toLowerCase(), "image/");
-      if (StringUtils.equals(format, "jpg") || StringUtils.equals(format, "jpeg")) {
-        return DEFAULT_JPEG_QUALITY;
-      }
-      else if (StringUtils.equals(format, "gif")) {
-        return 256d; // 256 colors
-      }
+  public double getDefaultImageQuality(@Nullable String contentType) {
+    MediaFileType mediaFileType = MediaFileType.getByContentType(contentType);
+    if (mediaFileType != null && mediaFileType.isImageQualityPercentage()) {
+      return getDefaultImageQualityPercentage();
+    }
+    else if (mediaFileType == MediaFileType.GIF) {
+      return 256d; // 256 colors
     }
     // return quality "1" for all other mime types
     return 1d;
+  }
+
+  /**
+   * Get the default quality for images.
+   * This parameter only applies to images with lossy compression (e.g. JPEG).
+   * @return Quality percentage (0..1)
+   */
+  public double getDefaultImageQualityPercentage() {
+    return DEFAULT_IMAGE_QUALITY;
   }
 
   /**

@@ -21,6 +21,7 @@ package io.wcm.handler.media;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
@@ -91,6 +92,27 @@ class MediaFileTypeTest {
   @Test
   void testGetVectorImageContentTypes() {
     assertEquals(Set.of(ContentType.SVG), MediaFileType.getVectorImageContentTypes());
+  }
+
+  @Test
+  void testGetByContentType() {
+    assertEquals(MediaFileType.JPEG, MediaFileType.getByContentType("image/jpeg"));
+    assertEquals(MediaFileType.JPEG, MediaFileType.getByContentType("IMAGE/JPEG"));
+    assertEquals(MediaFileType.GIF, MediaFileType.getByContentType("image/gif"));
+    assertNull(MediaFileType.getByContentType("application/octet-stream"));
+    assertNull(MediaFileType.getByContentType(""));
+    assertNull(MediaFileType.getByContentType(null));
+  }
+
+  @Test
+  void testGetByFileExtensions() {
+    assertEquals(MediaFileType.JPEG, MediaFileType.getByFileExtensions("jpg"));
+    assertEquals(MediaFileType.JPEG, MediaFileType.getByFileExtensions("JPG"));
+    assertEquals(MediaFileType.JPEG, MediaFileType.getByFileExtensions("jpeg"));
+    assertEquals(MediaFileType.GIF, MediaFileType.getByFileExtensions("gif"));
+    assertNull(MediaFileType.getByFileExtensions("txt"));
+    assertNull(MediaFileType.getByFileExtensions(""));
+    assertNull(MediaFileType.getByFileExtensions(null));
   }
 
 }

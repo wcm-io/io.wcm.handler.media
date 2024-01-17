@@ -259,6 +259,12 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder imageQualityPercentage(@NotNull Double value) {
+    this.mediaArgs.imageQualityPercentage(value);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder includeAssetAemRenditions(@NotNull Set<AemRenditionType> value) {
     this.mediaArgs.includeAssetAemRenditions(value);
     return this;

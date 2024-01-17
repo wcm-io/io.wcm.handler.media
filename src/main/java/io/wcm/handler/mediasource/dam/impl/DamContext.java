@@ -41,6 +41,7 @@ import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryParams;
 import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryService;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Context objects require in DAM support implementation.
@@ -204,6 +205,16 @@ public final class DamContext implements Adaptable {
    * @return Delivery URL or null if not supported or not enabled
    */
   public @Nullable String getWebOptimizedImageDeliveryUrl(@NotNull WebOptimizedImageDeliveryParams params) {
+
+    // set image quality.
+    Double quality = this.mediaArgs.getImageQualityPercentage();
+    if (quality == null) {
+      // use JPEG content type by default, because preferwebp is set by default and is a lossy compression,
+      // so we always need a quality value
+      quality = this.mediaHandlerConfig.getDefaultImageQuality(ContentType.JPEG);
+    }
+    params.quality((int)Math.round(quality * 100d));
+
     return webOptimizedImageDeliveryService.getDeliveryUrl(asset, params);
   }
 

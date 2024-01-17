@@ -35,6 +35,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.MediaFileServlet;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
@@ -78,7 +79,8 @@ final class DamUriTemplate implements UriTemplate {
       }
       if (url == null) {
         // Render renditions in AEM: build externalized URL
-        url = buildUriTemplateDam(type, rendition, cropDimension, rotation, damContext);
+        url = buildUriTemplateDam(type, rendition, cropDimension, rotation,
+            damContext.getMediaArgs().getImageQualityPercentage(), damContext);
       }
     }
     this.uriTemplate = url;
@@ -90,13 +92,13 @@ final class DamUriTemplate implements UriTemplate {
   }
 
   private static String buildUriTemplateDam(@NotNull UriTemplateType type, @NotNull Rendition rendition,
-      @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation, @Nullable Double imageQualityPercentage,
       @NotNull DamContext damContext) {
 
     // build rendition URL with dummy width/height parameters (otherwise externalization will fail)
     MediaArgs mediaArgs = damContext.getMediaArgs();
     String mediaPath = RenditionMetadata.buildMediaPath(rendition.getPath()
-        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, false)
+        + "." + ImageFileServletSelector.build(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, imageQualityPercentage, false)
         + "." + MediaFileServlet.EXTENSION,
         ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
     UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
