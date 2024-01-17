@@ -139,7 +139,7 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
-        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&width={width}");
+        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&quality=98&width={width}");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 192, 120,
         "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
   }
@@ -184,7 +184,7 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 160, 120,
-        "/asset/delivery/" + assetId + "/sample.jpg?c=16%2C0%2C160%2C120&preferwebp=true&width={width}");
+        "/asset/delivery/" + assetId + "/sample.jpg?c=16%2C0%2C160%2C120&preferwebp=true&quality=98&width={width}");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 160, 120,
         "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.16,0,176,120.file/sample.jpg");
   }
