@@ -184,21 +184,19 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @return Cropping dimensions or empty list if not found
    */
   private @NotNull List<CropDimension> getDynamicMediaCropDimensions(MediaArgs mediaArgs) {
-    if (mediaArgs.getMediaFormatOptions() == null) {
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    if (mediaFormatOptions == null) {
       return Collections.emptyList();
     }
     List<CropDimension> result = new ArrayList<>();
-    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
-    if (mediaFormatOptions != null) {
-      for (MediaFormatOption mediaFormatOption : mediaFormatOptions) {
-        MediaFormat mediaFormat = mediaFormatOption.getMediaFormat();
-        if (mediaFormat != null && mediaFormat.hasRatio()) {
-          NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), mediaFormat.getRatio());
-          if (smartCropDef != null) {
-            CropDimension cropDimension = SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
-            if (cropDimension != null) {
-              result.add(cropDimension);
-            }
+    for (MediaFormatOption mediaFormatOption : mediaFormatOptions) {
+      MediaFormat mediaFormat = mediaFormatOption.getMediaFormat();
+      if (mediaFormat != null && mediaFormat.hasRatio()) {
+        NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), mediaFormat.getRatio());
+        if (smartCropDef != null) {
+          CropDimension cropDimension = SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
+          if (cropDimension != null) {
+            result.add(cropDimension);
           }
         }
       }
