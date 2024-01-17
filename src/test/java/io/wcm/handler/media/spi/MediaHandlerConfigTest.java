@@ -57,7 +57,7 @@ class MediaHandlerConfigTest {
   void testGetDefaultImageQuality() {
     assertEquals(1d, underTest.getDefaultImageQuality("image/png"), 0.001d);
     assertEquals(256d, underTest.getDefaultImageQuality("image/gif"), 0.001d);
-    assertEquals(MediaHandlerConfig.DEFAULT_JPEG_QUALITY, underTest.getDefaultImageQuality("image/jpg"), 0.001d);
+    assertEquals(MediaHandlerConfig.DEFAULT_JPEG_QUALITY, underTest.getDefaultImageQuality("image/jpeg"), 0.001d);
     assertEquals(MediaHandlerConfig.DEFAULT_JPEG_QUALITY, underTest.getDefaultImageQuality("IMAGE/JPEG"), 0.001d);
     assertEquals(1d, underTest.getDefaultImageQuality(""), 0.001d);
     assertEquals(1d, underTest.getDefaultImageQuality(null), 0.001d);

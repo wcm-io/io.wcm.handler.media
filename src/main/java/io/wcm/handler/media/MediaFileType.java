@@ -22,6 +22,7 @@ package io.wcm.handler.media;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -198,6 +199,40 @@ public enum MediaFileType {
     return fileTypes.stream()
         .flatMap(type -> type.getExtensions().stream())
         .collect(Collectors.toSet());
+  }
+
+  /**
+   * Get Media file type by content type.
+   * @param contentType Content type
+   * @return Media file type or null if not found
+   */
+  @SuppressWarnings("null")
+  public static @Nullable MediaFileType getByContentType(@Nullable String contentType) {
+    if (contentType == null) {
+      return null;
+    }
+    String contentTypeLowerCase = StringUtils.toRootLowerCase(contentType);
+    return Stream.of(MediaFileType.values())
+        .filter(type -> type.getContentTypes().contains(contentTypeLowerCase))
+        .findFirst()
+        .orElse(null);
+  }
+
+  /**
+   * Get Media file type by file extension.
+   * @param extension File extension
+   * @return Media file type or null if not found
+   */
+  @SuppressWarnings("null")
+  public static @Nullable MediaFileType getByFileExtensions(@Nullable String extension) {
+    if (extension == null) {
+      return null;
+    }
+    String extensionLowerCase = StringUtils.toRootLowerCase(extension);
+    return Stream.of(MediaFileType.values())
+        .filter(type -> type.getExtensions().contains(extensionLowerCase))
+        .findFirst()
+        .orElse(null);
   }
 
 }
