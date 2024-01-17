@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
+import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -151,6 +153,7 @@ class MediaArgsTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   void testClone() {
     MediaFormatOption[] mediaFormatOptions = new MediaFormatOption[] {
         new MediaFormatOption(EDITORIAL_1COL, true),
@@ -182,6 +185,7 @@ class MediaArgsTest {
     mediaArgs.decorative(true);
     mediaArgs.dummyImage(true);
     mediaArgs.dummyImageUrl("/dummy/url");
+    mediaArgs.includeAssetAemRenditions(Set.of(AemRenditionType.THUMBNAIL_RENDITION, AemRenditionType.WEB_RENDITION));
     mediaArgs.includeAssetThumbnails(true);
     mediaArgs.includeAssetWebRenditions(true);
     mediaArgs.imageSizes(imageSizes);
@@ -215,6 +219,7 @@ class MediaArgsTest {
     assertEquals(mediaArgs.isDecorative(), clone.isDecorative());
     assertEquals(mediaArgs.isDummyImage(), clone.isDummyImage());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
+    assertEquals(mediaArgs.getIncludeAssetAemRenditions(), clone.getIncludeAssetAemRenditions());
     assertEquals(mediaArgs.isIncludeAssetThumbnails(), clone.isIncludeAssetThumbnails());
     assertEquals(mediaArgs.isIncludeAssetWebRenditions(), clone.isIncludeAssetWebRenditions());
     assertEquals(mediaArgs.getImageSizes(), clone.getImageSizes());

@@ -51,7 +51,8 @@ public final class MediaFormatSupport {
   public static @Nullable String[] getRequestedFileExtensions(@NotNull MediaArgs mediaArgs) {
     // get file extension defined in media args
     Set<String> mediaArgsFileExtensions = new HashSet<>();
-    if (mediaArgs.getFileExtensions() != null && mediaArgs.getFileExtensions().length > 0) {
+    String[] mediaArgsFileExtensionsArray = mediaArgs.getFileExtensions();
+    if (mediaArgsFileExtensionsArray != null && mediaArgsFileExtensionsArray.length > 0) {
       mediaArgsFileExtensions.addAll(List.of(mediaArgs.getFileExtensions()));
     }
 

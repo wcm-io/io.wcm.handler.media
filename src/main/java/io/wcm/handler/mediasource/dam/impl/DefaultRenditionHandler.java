@@ -24,6 +24,7 @@ import static io.wcm.handler.media.format.impl.MediaFormatSupport.visitMediaForm
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -47,6 +48,7 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.format.impl.MediaFormatVisitor;
+import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop;
@@ -126,13 +128,9 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param rendition Rendition
    */
   private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition, MediaArgs mediaArgs) {
-    // ignore AEM-generated thumbnail renditions unless allowed via mediaargs
-    if (!mediaArgs.isIncludeAssetThumbnails() && AssetRendition.isThumbnailRendition(rendition)) {
-      return;
-    }
-    // ignore AEM-generated web renditions unless allowed via mediaargs
-    boolean isIncludeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions() == null || mediaArgs.isIncludeAssetWebRenditions();
-    if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
+    AemRenditionType aemRenditionType = AemRenditionType.forRendition(rendition);
+    if (aemRenditionType != null && !getIncludeAssetAemRenditions(mediaArgs).contains(aemRenditionType)) {
+      // ignore all other AEM-generated renditions unless allowed via mediaargs
       return;
     }
 
@@ -147,6 +145,40 @@ class DefaultRenditionHandler implements RenditionHandler {
   }
 
   /**
+   * Get combined set of allowed AEM-generated rendition types.
+   * @param mediaArgs Media args
+   * @return All allowed AEM-generated rendition types
+   */
+  @SuppressWarnings("deprecation")
+  private @NotNull Set<AemRenditionType> getIncludeAssetAemRenditions(MediaArgs mediaArgs) {
+    Set<AemRenditionType> fromMediaArgs = mediaArgs.getIncludeAssetAemRenditions();
+    if (fromMediaArgs == null) {
+      fromMediaArgs = Set.of();
+    }
+    Set<AemRenditionType> result = new HashSet<>(fromMediaArgs);
+    // check deprecated flags for web renditions and asset thumbnails
+    Boolean includeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions();
+    if (includeAssetWebRenditions != null) {
+      if (includeAssetWebRenditions) {
+        result.add(AemRenditionType.WEB_RENDITION);
+      }
+      else {
+        result.remove(AemRenditionType.WEB_RENDITION);
+      }
+    }
+    Boolean includeAssetThumbnails = mediaArgs.isIncludeAssetThumbnails();
+    if (includeAssetThumbnails != null) {
+      if (includeAssetThumbnails) {
+        result.add(AemRenditionType.THUMBNAIL_RENDITION);
+      }
+      else {
+        result.remove(AemRenditionType.THUMBNAIL_RENDITION);
+      }
+    }
+    return result;
+  }
+
+  /**
    * Try to get actual smart crop dimensions for the requested ratio(s) for the current asset.
    * @param mediaArgs Media Args with requested media formats
    * @return Cropping dimensions or empty list if not found
@@ -156,14 +188,17 @@ class DefaultRenditionHandler implements RenditionHandler {
       return Collections.emptyList();
     }
     List<CropDimension> result = new ArrayList<>();
-    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
-      MediaFormat mediaFormat = mediaFormatOption.getMediaFormat();
-      if (mediaFormat != null && mediaFormat.hasRatio()) {
-        NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), mediaFormat.getRatio());
-        if (smartCropDef != null) {
-          CropDimension cropDimension =  SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
-          if (cropDimension != null) {
-            result.add(cropDimension);
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    if (mediaFormatOptions != null) {
+      for (MediaFormatOption mediaFormatOption : mediaFormatOptions) {
+        MediaFormat mediaFormat = mediaFormatOption.getMediaFormat();
+        if (mediaFormat != null && mediaFormat.hasRatio()) {
+          NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), mediaFormat.getRatio());
+          if (smartCropDef != null) {
+            CropDimension cropDimension = SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
+            if (cropDimension != null) {
+              result.add(cropDimension);
+            }
           }
         }
       }

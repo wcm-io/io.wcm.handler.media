@@ -165,6 +165,7 @@ class AutoCroppingMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   void testMediaFormatWithRatio_WebRenditionsExcludedFromMediaHandling() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(RATIO_16_10)

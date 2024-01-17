@@ -23,8 +23,6 @@ import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.dam.api.DamConstants.EXIF_PIXELXDIMENSION;
 import static com.day.cq.dam.api.DamConstants.EXIF_PIXELYDIMENSION;
 import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
-import static com.day.cq.dam.api.DamConstants.PREFIX_ASSET_THUMBNAIL;
-import static com.day.cq.dam.api.DamConstants.PREFIX_ASSET_WEB;
 import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
 import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.NN_RENDITIONS_METADATA;
@@ -33,7 +31,6 @@ import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataName
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -61,9 +58,6 @@ import io.wcm.sling.commons.adapter.AdaptTo;
 public final class AssetRendition {
 
   private static final Logger log = LoggerFactory.getLogger(AssetRendition.class);
-
-  private static final Pattern ASSET_THUMBNAIL_RENDITION_NAME = Pattern.compile("^" + Pattern.quote(PREFIX_ASSET_THUMBNAIL) + "\\..*$");
-  private static final Pattern ASSET_WEB_RENDITION_NAME = Pattern.compile("^" + Pattern.quote(PREFIX_ASSET_WEB) + "\\..*$");
 
   private AssetRendition() {
     // static methods only
@@ -224,23 +218,23 @@ public final class AssetRendition {
   }
 
   /**
-   * Checks if the given rendition is a thumbnail rendition generated automatically by the AEM asset workflows
-   * (with <code>cq5dam.thumbnail</code> prefix).
+   * Checks if the given rendition is a thumbnail rendition generated automatically by AEM
+   * (with <code>cq5dam.thumbnail.</code> prefix).
    * @param rendition DAM rendition
    * @return true if rendition is a thumbnail rendition
    */
   public static boolean isThumbnailRendition(@NotNull Rendition rendition) {
-    return ASSET_THUMBNAIL_RENDITION_NAME.matcher(rendition.getName()).matches();
+    return AemRenditionType.THUMBNAIL_RENDITION.matches(rendition);
   }
 
   /**
-   * Checks if the given rendition is a web rendition generated automatically by the AEM asset workflows
-   * (with <code>cq5dam.web</code> prefix).
+   * Checks if the given rendition is a web rendition generated automatically by AEM for the image editor/cropping
+   * (with <code>cq5dam.web.</code> prefix).
    * @param rendition DAM rendition
    * @return true if rendition is a web rendition
    */
   public static boolean isWebRendition(@NotNull Rendition rendition) {
-    return ASSET_WEB_RENDITION_NAME.matcher(rendition.getName()).matches();
+    return AemRenditionType.WEB_RENDITION.matches(rendition);
   }
 
   /**

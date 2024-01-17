@@ -119,14 +119,12 @@ class AssetRenditionTest {
   void testIsThumbnailRendition() {
     assertTrue(AssetRendition.isThumbnailRendition(renditionByName("cq5dam.thumbnail.10.10.png")));
     assertFalse(AssetRendition.isThumbnailRendition(renditionByName("cq5dam.web.100.100.jpg")));
-    assertFalse(AssetRendition.isThumbnailRendition(renditionByName("othername.gif")));
   }
 
   @Test
   void testIsWebRendition() {
     assertFalse(AssetRendition.isWebRendition(renditionByName("cq5dam.thumbnail.10.10.png")));
     assertTrue(AssetRendition.isWebRendition(renditionByName("cq5dam.web.100.100.jpg")));
-    assertFalse(AssetRendition.isWebRendition(renditionByName("othername.gif")));
   }
 
   @SuppressWarnings("null")

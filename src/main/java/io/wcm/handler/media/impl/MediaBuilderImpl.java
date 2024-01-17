@@ -21,6 +21,7 @@ package io.wcm.handler.media.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +42,7 @@ import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
+import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
@@ -257,12 +259,20 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder includeAssetAemRenditions(@NotNull Set<AemRenditionType> value) {
+    this.mediaArgs.includeAssetAemRenditions(value);
+    return this;
+  }
+
+  @Override
+  @SuppressWarnings("deprecation")
   public @NotNull MediaBuilder includeAssetThumbnails(boolean value) {
     this.mediaArgs.includeAssetThumbnails(value);
     return this;
   }
 
   @Override
+  @SuppressWarnings("deprecation")
   public @NotNull MediaBuilder includeAssetWebRenditions(boolean value) {
     this.mediaArgs.includeAssetWebRenditions(value);
     return this;
