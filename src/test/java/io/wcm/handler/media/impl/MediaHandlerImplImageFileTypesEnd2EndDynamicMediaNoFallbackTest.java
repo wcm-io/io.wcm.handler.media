@@ -101,6 +101,14 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaNoFallbackTest extends Me
 
   @Override
   @Test
+  void testAsset_JPEG_AutoCrop_ImageQuality() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    Media media = mediaHandler.get(asset.getPath()).build();
+    assertFalse(media.isValid());
+  }
+
+  @Override
+  @Test
   void testFileUpload_JPEG_Original() {
     // fallback to media handler rendering: only DAM assets supported by scene7
     super.testFileUpload_JPEG_Original();

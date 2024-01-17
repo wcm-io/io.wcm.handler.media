@@ -82,6 +82,15 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
 
   @Override
   @Test
+  void testAsset_JPEG_AutoCrop_ImageQuality() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
+        "/asset/delivery/" + getAssetId(asset) + "/sample.jpg?c=25%2C0%2C50%2C50&preferwebp=true&width=50",
+        ContentType.JPEG, 0.6d);
+  }
+
+  @Override
+  @Test
   void testAsset_JPEG_CropWithExplicitRendition() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);

@@ -69,9 +69,9 @@ final class InlineUriTemplate implements UriTemplate {
     // URL to render scaled image via {@link InlineRenditionServlet}
     final long DUMMY_WIDTH = 999991;
     final long DUMMY_HEIGHT = 999992;
-    // TODO: add image quality parameter
     String path = resourcePath
-        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, null, false)
+        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation,
+            mediaArgs.getImageQualityPercentage(), false)
         + "." + MediaFileServlet.EXTENSION
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + "/" + ImageFileServlet.getImageFileName(fileName, mediaArgs.getEnforceOutputFileExtension());

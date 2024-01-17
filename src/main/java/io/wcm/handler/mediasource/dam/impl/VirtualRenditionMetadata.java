@@ -42,12 +42,15 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   private final long width;
   private final long height;
   private final String enforceOutputFileExtension;
+  private final Double imageQualityPercentage;
 
-  VirtualRenditionMetadata(Rendition rendition, long width, long height, String enforceOutputFileExtension) {
+  VirtualRenditionMetadata(@NotNull Rendition rendition, long width, long height,
+      @Nullable String enforceOutputFileExtension, @Nullable Double imageQualityPercentage) {
     super(rendition);
     this.width = width;
     this.height = height;
     this.enforceOutputFileExtension = enforceOutputFileExtension;
+    this.imageQualityPercentage = imageQualityPercentage;
   }
 
   @Override
@@ -83,10 +86,9 @@ class VirtualRenditionMetadata extends RenditionMetadata {
       // vector images can be scaled in browser without need of ImageFileServlet
       return super.getMediaPath(contentDispositionAttachment);
     }
-    // TODO: add image quality parameter
     return RenditionMetadata.buildMediaPath(getRendition().getPath()
         + "." + ImageFileServlet.buildSelectorString(getWidth(), getHeight(),
-            null, null, null, contentDispositionAttachment)
+            null, null, this.imageQualityPercentage, contentDispositionAttachment)
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
   }
 

@@ -122,6 +122,14 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   }
 
   @Test
+  void testAsset_JPEG_AutoCrop_ImageQuality() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.50.50.25,0,75,50.0.60.file/sample.jpg",
+        ContentType.JPEG, 0.6d);
+  }
+
+  @Test
   void testAsset_JPEG_CropWithExplicitRendition() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
@@ -426,11 +434,16 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   }
 
   void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType) {
+    buildAssertMedia_AutoCrop(asset, width, height, mediaUrl, contentType, null);
+  }
+
+  void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType, Double imageQualityPercentage) {
     Media media = mediaHandler.get(asset.getPath())
         .dynamicMediaDisabled(dynamicMediaDisabled)
         .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
+        .imageQualityPercentage(imageQualityPercentage)
         .build();
     assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
   }

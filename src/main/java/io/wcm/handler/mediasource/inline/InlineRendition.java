@@ -387,10 +387,10 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
     }
 
     // URL to render scaled image via {@link InlineRenditionServlet}
-    // TODO: add image quality parameter
     String path = resourcePath
         + "." + ImageFileServlet.buildSelectorString(dimension.getWidth(), dimension.getHeight(),
-            mediaUrlCropDimension, this.rotation, null, this.mediaArgs.isContentDispositionAttachment())
+            mediaUrlCropDimension, this.rotation, this.mediaArgs.getImageQualityPercentage(),
+            this.mediaArgs.isContentDispositionAttachment())
         + "." + MediaFileServlet.EXTENSION + "/"
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + ImageFileServlet.getImageFileName(getFileName(),
