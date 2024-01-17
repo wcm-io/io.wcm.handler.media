@@ -193,7 +193,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public @NotNull MediaBuilder enforceOutputFileExtension(String value) {
+  public @NotNull MediaBuilder enforceOutputFileExtension(@NotNull String value) {
     this.mediaArgs.enforceOutputFileExtension(value);
     return this;
   }

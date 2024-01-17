@@ -151,7 +151,7 @@ public interface MediaBuilder {
    * @return this
    */
   @NotNull
-  MediaBuilder enforceOutputFileExtension(String value);
+  MediaBuilder enforceOutputFileExtension(@NotNull String value);
 
   /**
    * @param value URS mode
