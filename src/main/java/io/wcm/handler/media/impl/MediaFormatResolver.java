@@ -157,8 +157,9 @@ final class MediaFormatResolver {
     // if additional media formats where found add them to the media format list in media args
     if (!additionalMediaFormats.isEmpty()) {
       List<MediaFormatOption> allMediaFormats = new ArrayList<>();
-      if (mediaArgs.getMediaFormatOptions() != null) {
-        allMediaFormats.addAll(Arrays.asList(mediaArgs.getMediaFormatOptions()));
+      MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+      if (mediaFormatOptions != null) {
+        allMediaFormats.addAll(Arrays.asList(mediaFormatOptions));
       }
       allMediaFormats.addAll(additionalMediaFormats.values());
       mediaArgs.mediaFormatOptions(allMediaFormats.toArray(new MediaFormatOption[0]));

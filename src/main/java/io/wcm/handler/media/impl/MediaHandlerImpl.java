@@ -156,8 +156,8 @@ public final class MediaHandlerImpl implements MediaHandler {
     }
 
     // apply defaults to media args
-    if (mediaRequest.getMediaArgs().isIncludeAssetWebRenditions() == null) {
-      mediaRequest.getMediaArgs().includeAssetWebRenditions(mediaHandlerConfig.includeAssetWebRenditionsByDefault());
+    if (mediaRequest.getMediaArgs().getIncludeAssetAemRenditions() == null) {
+      mediaRequest.getMediaArgs().includeAssetAemRenditions(mediaHandlerConfig.getIncludeAssetAemRenditionsByDefault());
     }
 
     if (log.isTraceEnabled()) {

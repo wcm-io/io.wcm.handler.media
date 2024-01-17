@@ -108,6 +108,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testImageSizes() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO_16_10)
@@ -123,6 +124,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testImageSizes_MixedMandatory() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO_16_10)
@@ -138,6 +140,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testImageSizes_MultipleMediaFormats() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormats(RATIO_16_10, RATIO_4_3)
@@ -156,6 +159,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testImageSizes_MultipleMediaFormats_MixedMandatory() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormats(RATIO_16_10, RATIO_4_3)
@@ -174,6 +178,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testImageSizes_NoRatioMediaFormat() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(IMAGE_UNCONSTRAINED)
@@ -197,6 +202,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testPictureSources_DifferentRatio() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO_16_10)
@@ -217,6 +223,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testPictureSources_DifferentRatio_MediaFormatNames() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO_16_10)
@@ -237,6 +244,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testPictureSources_DifferentRatio_MixedMandatory() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO_16_10)
@@ -257,6 +265,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testPictureSources_SameRatio() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO_16_10)
@@ -276,6 +285,7 @@ class MediaFormatResolverTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testPictureSources_NoWidths() {
     MediaArgs mediaArgs = new MediaArgs()
         .mediaFormat(RATIO_16_10)
@@ -301,7 +311,6 @@ class MediaFormatResolverTest {
     assertFalse(underTest.resolve(mediaArgs));
   }
 
-  @SuppressWarnings("null")
   private void assertResponsiveMediaFormat(MediaFormat baseMediaFormat, long width, boolean mandatory,
       MediaFormatOption actualMediaFormatOption) {
     MediaFormat actualMediaFormat = actualMediaFormatOption.getMediaFormat();

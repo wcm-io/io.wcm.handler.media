@@ -42,4 +42,10 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
     return MEDIA_SOURCES;
   }
 
+  @Override
+  public boolean includeAssetWebRenditionsByDefault() {
+    // unit tests rely on old behavior
+    return true;
+  }
+
 }

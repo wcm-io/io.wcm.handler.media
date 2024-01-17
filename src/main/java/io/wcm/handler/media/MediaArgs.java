@@ -39,6 +39,7 @@ import org.osgi.annotation.versioning.ProviderType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
+import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
@@ -62,7 +63,8 @@ public final class MediaArgs implements Cloneable {
   private boolean decorative;
   private boolean dummyImage = true;
   private String dummyImageUrl;
-  private boolean includeAssetThumbnails;
+  private Set<AemRenditionType> includeAssetAemRenditions;
+  private Boolean includeAssetThumbnails;
   private Boolean includeAssetWebRenditions;
   private ImageSizes imageSizes;
   private PictureSource[] pictureSourceSets;
@@ -183,7 +185,7 @@ public final class MediaArgs implements Cloneable {
    * Returns list of media formats to resolve to. See {@link #getMediaFormatNames()} for details.
    * @return Media format names
    */
-  public String[] getMediaFormatNames() {
+  public String @Nullable [] getMediaFormatNames() {
     if (this.mediaFormatOptions != null) {
       String[] result = Arrays.stream(this.mediaFormatOptions)
           .filter(option -> option.getMediaFormatName() != null)
@@ -251,7 +253,7 @@ public final class MediaArgs implements Cloneable {
    * Gets list of media formats to resolve to.
    * @return Media formats with mandatory flag
    */
-  public MediaFormatOption[] getMediaFormatOptions() {
+  public MediaFormatOption @Nullable [] getMediaFormatOptions() {
     return this.mediaFormatOptions;
   }
 
@@ -291,7 +293,7 @@ public final class MediaArgs implements Cloneable {
   /**
    * @return Accepted file extensions
    */
-  public String[] getFileExtensions() {
+  public String @Nullable [] getFileExtensions() {
     return this.fileExtensions;
   }
 
@@ -313,7 +315,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Accepted file extension
    * @return this
    */
-  public @NotNull MediaArgs fileExtension(String value) {
+  public @NotNull MediaArgs fileExtension(@Nullable String value) {
     if (value == null) {
       this.fileExtensions = null;
     }
@@ -337,7 +339,7 @@ public final class MediaArgs implements Cloneable {
    * </p>
    * @return File extension to be used for returned renditions
    */
-  public String getEnforceOutputFileExtension() {
+  public @Nullable String getEnforceOutputFileExtension() {
     return this.enforceOutputFileExtension;
   }
 
@@ -354,7 +356,7 @@ public final class MediaArgs implements Cloneable {
    * @param value File extension to be used for returned renditions
    * @return this
    */
-  public @NotNull MediaArgs enforceOutputFileExtension(String value) {
+  public @NotNull MediaArgs enforceOutputFileExtension(@Nullable String value) {
     if (!ALLOWED_FORCED_FILE_EXTENSIONS.contains(value)) {
       throw new IllegalArgumentException("Allowed enfourced output file extensions: "
           + StringUtils.join(ALLOWED_FORCED_FILE_EXTENSIONS, ","));
@@ -366,7 +368,7 @@ public final class MediaArgs implements Cloneable {
   /**
    * @return URL mode
    */
-  public UrlMode getUrlMode() {
+  public @Nullable UrlMode getUrlMode() {
     return this.urlMode;
   }
 
@@ -374,7 +376,7 @@ public final class MediaArgs implements Cloneable {
    * @param value URS mode
    * @return this
    */
-  public @NotNull MediaArgs urlMode(UrlMode value) {
+  public @NotNull MediaArgs urlMode(@Nullable UrlMode value) {
     this.urlMode = value;
     return this;
   }
@@ -463,7 +465,7 @@ public final class MediaArgs implements Cloneable {
   /**
    * @return The custom alternative text that is to be used instead of the one defined in the the asset metadata.
    */
-  public String getAltText() {
+  public @Nullable String getAltText() {
     return this.altText;
   }
 
@@ -473,7 +475,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Custom alternative text. If null or empty, the default alt text from media library is used.
    * @return this
    */
-  public @NotNull MediaArgs altText(String value) {
+  public @NotNull MediaArgs altText(@Nullable String value) {
     this.altText = value;
     return this;
   }
@@ -530,7 +532,7 @@ public final class MediaArgs implements Cloneable {
   /**
    * @return Url of custom dummy image. If null default dummy image is used.
    */
-  public String getDummyImageUrl() {
+  public @Nullable String getDummyImageUrl() {
     return this.dummyImageUrl;
   }
 
@@ -538,43 +540,69 @@ public final class MediaArgs implements Cloneable {
    * @param value Url of custom dummy image. If null default dummy image is used.
    * @return this
    */
-  public @NotNull MediaArgs dummyImageUrl(String value) {
+  public @NotNull MediaArgs dummyImageUrl(@Nullable String value) {
     this.dummyImageUrl = value;
     return this;
   }
 
   /**
-   * @return If set to true, thumbnail generated by the DAM asset workflows (with cq5dam.thumbnail prefix) are taken
-   *         into account as well when trying to resolve the media request.
+   * @return Defines which types of AEM-generated renditions (with <code>cq5dam.</code> prefix) are taken into
+   *         account when trying to resolve the media request.
    */
-  public boolean isIncludeAssetThumbnails() {
+  public @Nullable Set<AemRenditionType> getIncludeAssetAemRenditions() {
+    return this.includeAssetAemRenditions;
+  }
+
+  /**
+   * @param value Defines which types of AEM-generated renditions (with <code>cq5dam.</code> prefix) are taken into
+   *          account when trying to resolve the media request.
+   * @return this
+   */
+  public @NotNull MediaArgs includeAssetAemRenditions(@Nullable Set<AemRenditionType> value) {
+    this.includeAssetAemRenditions = value;
+    return this;
+  }
+
+  /**
+   * @return If set to true, thumbnail generated by AEM (with <code>cq5dam.thumbnail.</code> prefix) are taken
+   *         into account as well when trying to resolve the media request. Defaults to false.
+   * @deprecated Use {@link #includeAssetAemRenditions(Set)} instead.
+   */
+  @Deprecated(since = "2.0.0")
+  public @Nullable Boolean isIncludeAssetThumbnails() {
     return this.includeAssetThumbnails;
   }
 
   /**
-   * @param value If set to true, thumbnail generated by the DAM asset workflows (with cq5dam.thumbnail prefix) are
+   * @param value If set to true, thumbnail generated by AEM (with <code>cq5dam.thumbnail.</code> prefix) are
    *          taken into account as well when trying to resolve the media request.
    * @return this
+   * @deprecated Use {@link #includeAssetAemRenditions(Set)} instead.
    */
+  @Deprecated(since = "2.0.0")
   public @NotNull MediaArgs includeAssetThumbnails(boolean value) {
     this.includeAssetThumbnails = value;
     return this;
   }
 
   /**
-   * @return If set to true, web renditions generated by the DAM asset workflows (with cq5dam.web prefix) are taken
+   * @return If set to true, web renditions generated by AEM (with <code>cq5dam.web.</code> prefix) are taken
    *         into account as well when trying to resolve the media request.
    *         If null, the default setting applies from the media handler configuration.
+   * @deprecated Use {@link #includeAssetAemRenditions(Set)} instead.
    */
-  public Boolean isIncludeAssetWebRenditions() {
+  @Deprecated(since = "2.0.0")
+  public @Nullable Boolean isIncludeAssetWebRenditions() {
     return this.includeAssetWebRenditions;
   }
 
   /**
-   * @param value If set to true, web renditions generated by the DAM asset workflows (with cq5dam.web prefix) are
+   * @param value If set to true, web renditions generated by AEM (with <code>cq5dam.web.</code> prefix) are
    *          taken into account as well when trying to resolve the media request.
    * @return this
+   * @deprecated Use {@link #includeAssetAemRenditions(Set)} instead.
    */
+  @Deprecated(since = "2.0.0")
   public @NotNull MediaArgs includeAssetWebRenditions(boolean value) {
     this.includeAssetWebRenditions = value;
     return this;
@@ -583,7 +611,7 @@ public final class MediaArgs implements Cloneable {
   /**
    * @return Image sizes for responsive image handling
    */
-  public ImageSizes getImageSizes() {
+  public @Nullable ImageSizes getImageSizes() {
     return this.imageSizes;
   }
 
@@ -591,7 +619,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Image sizes for responsive image handling
    * @return this
    */
-  public @NotNull MediaArgs imageSizes(ImageSizes value) {
+  public @NotNull MediaArgs imageSizes(@Nullable ImageSizes value) {
     this.imageSizes = value;
     return this;
   }
@@ -599,7 +627,7 @@ public final class MediaArgs implements Cloneable {
   /**
    * @return Picture sources for responsive image handling
    */
-  public PictureSource[] getPictureSources() {
+  public PictureSource @Nullable [] getPictureSources() {
     return this.pictureSourceSets;
   }
 
@@ -648,7 +676,7 @@ public final class MediaArgs implements Cloneable {
    * Drag&amp;Drop support for media builder.
    * @return Drag&amp;Drop support
    */
-  public DragDropSupport getDragDropSupport() {
+  public @NotNull DragDropSupport getDragDropSupport() {
     return this.dragDropSupport;
   }
 
@@ -657,10 +685,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Drag&amp;Drop support
    * @return this
    */
-  public @NotNull MediaArgs dragDropSupport(DragDropSupport value) {
-    if (value == null) {
-      throw new IllegalArgumentException("No null value allowed for drag&drop support.");
-    }
+  public @NotNull MediaArgs dragDropSupport(@NotNull DragDropSupport value) {
     this.dragDropSupport = value;
     return this;
   }
@@ -676,7 +701,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Whether to set customized list of IPE cropping ratios.
    * @return this
    */
-  public @NotNull MediaArgs ipeRatioCustomize(IPERatioCustomize value) {
+  public @NotNull MediaArgs ipeRatioCustomize(@Nullable IPERatioCustomize value) {
     this.ipeRatioCustomize = value;
     return this;
   }
@@ -686,10 +711,7 @@ public final class MediaArgs implements Cloneable {
    * @param map Property map. Is merged with properties already set.
    * @return this
    */
-  public @NotNull MediaArgs properties(Map<String, Object> map) {
-    if (map == null) {
-      throw new IllegalArgumentException("Map argument must not be null.");
-    }
+  public @NotNull MediaArgs properties(@NotNull Map<String, Object> map) {
     getProperties().putAll(map);
     return this;
   }
@@ -700,10 +722,7 @@ public final class MediaArgs implements Cloneable {
    * @param value Property value
    * @return this
    */
-  public @NotNull MediaArgs property(String key, Object value) {
-    if (key == null) {
-      throw new IllegalArgumentException("Key argument must not be null.");
-    }
+  public @NotNull MediaArgs property(@NotNull String key, @Nullable Object value) {
     getProperties().put(key, value);
     return this;
   }
@@ -775,7 +794,10 @@ public final class MediaArgs implements Cloneable {
     if (dummyImageUrl != null) {
       sb.append("dummyImageUrl", dummyImageUrl);
     }
-    if (includeAssetThumbnails) {
+    if (includeAssetAemRenditions != null) {
+      sb.append("includeAssetAemRenditions", includeAssetAemRenditions);
+    }
+    if (includeAssetThumbnails != null) {
       sb.append("includeAssetThumbnails", includeAssetThumbnails);
     }
     if (includeAssetWebRenditions != null) {
@@ -795,6 +817,9 @@ public final class MediaArgs implements Cloneable {
     }
     if (dynamicMediaDisabled) {
       sb.append("dynamicMediaDisabled", dynamicMediaDisabled);
+    }
+    if (webOptimizedImageDeliveryDisabled) {
+      sb.append("webOptimizedImageDeliveryDisabled", webOptimizedImageDeliveryDisabled);
     }
     if (properties != null && !properties.isEmpty()) {
       sb.append("properties", properties);
@@ -826,6 +851,7 @@ public final class MediaArgs implements Cloneable {
     clone.decorative = this.decorative;
     clone.dummyImage = this.dummyImage;
     clone.dummyImageUrl = this.dummyImageUrl;
+    clone.includeAssetAemRenditions = this.includeAssetAemRenditions;
     clone.includeAssetThumbnails = this.includeAssetThumbnails;
     clone.includeAssetWebRenditions = this.includeAssetWebRenditions;
     clone.imageSizes = this.imageSizes;
