@@ -31,10 +31,10 @@
       <action type="remove" dev="sseifert" issue="27">
         Remove deprecated functionality.
       </action>
-      <action type="update" dev="sseifert"><![CDATA[
-        <b>Change in default behavior of AEM-generated renditions</b>:
-        By default, all AEM-generated renditions (starting with <code>cq5dam.</code> prefix) are no longer considered when resolving media requests, except video renditions (starting with <code>cq5dam.video.</code> prefix).
-        In Media Handler 1.x web renditions (starting with <code>cq5dam.web.</code> prefix) and all other renditions exeption thumbnails (starting with <code>cq5dam.thumbnail.</code> prefix) were processed.
+      <action type="update" dev="sseifert" issue="31"><![CDATA[
+        <b>Change in default behavior of AEM-generated renditions</b>:<br/>
+        By default, all AEM-generated renditions (starting with <code>cq5dam.</code> prefix) are no longer considered when resolving media requests, except video renditions (starting with <code>cq5dam.video.</code> prefix).<br/>
+        In Media Handler 1.x web renditions (starting with <code>cq5dam.web.</code> prefix) and all other renditions except thumbnails (starting with <code>cq5dam.thumbnail.</code> prefix) were processed.<br/>
         The <code>MediaHandlerConfig</code> contains a new method <code>getIncludeAssetAemRenditionsByDefault</code> that controls this behavior and allows to switch to the previous setting.
       ]]></action>
       <action type="update" dev="sseifert" issue="3">
