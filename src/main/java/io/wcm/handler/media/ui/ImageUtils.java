@@ -24,6 +24,7 @@ import java.util.Arrays;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +51,8 @@ final class ImageUtils {
    * @param medias             media expressions for the picture source elements
    * @param widths             widths for the picture source elements
    */
-  public static void applyPictureSources(MediaFormatHandler mediaFormatHandler, MediaBuilder builder,
-      String[] mediaFormatNames, String[] medias, String[] widths) {
+  public static void applyPictureSources(@NotNull MediaFormatHandler mediaFormatHandler, @NotNull MediaBuilder builder,
+      String @NotNull [] mediaFormatNames, String @NotNull [] medias, String @NotNull [] widths) {
     for (int i = 0; i < mediaFormatNames.length && i < medias.length && i < widths.length; i++) {
       MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatNames[i]);
       if (mediaFormat != null) {
@@ -79,7 +80,7 @@ final class ImageUtils {
    * @param widths Widths string
    * @return Widths array
    */
-  public static long[] toWidthsArray(String widths) {
+  public static long[] toWidthsArray(@NotNull String widths) {
     if (StringUtils.isBlank(widths)) {
       return new long[0];
     }
@@ -97,7 +98,7 @@ final class ImageUtils {
    * @param widthOptions Width options string
    * @return Widths array which is empty in case given widthOptions is blank
    */
-  public static MediaArgs.WidthOption[] toWidthOptionArray(String widthOptions) {
+  public static MediaArgs.WidthOption[] toWidthOptionArray(@NotNull String widthOptions) {
     if (StringUtils.isBlank(widthOptions)) {
       return new MediaArgs.WidthOption[0];
     }

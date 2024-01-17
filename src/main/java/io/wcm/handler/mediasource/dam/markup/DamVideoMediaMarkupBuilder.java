@@ -33,6 +33,7 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,8 +124,12 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
    * @param media Media metadata
    * @return DAM asset or null
    */
-  protected Asset getDamAsset(Media media) {
-    return media.getAsset().adaptTo(Asset.class);
+  protected @Nullable Asset getDamAsset(Media media) {
+    io.wcm.handler.media.Asset asset = media.getAsset();
+    if (asset != null) {
+      return asset.adaptTo(Asset.class);
+    }
+    return null;
   }
 
   @Override

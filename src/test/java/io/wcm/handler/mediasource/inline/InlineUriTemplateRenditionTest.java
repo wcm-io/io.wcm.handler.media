@@ -73,6 +73,7 @@ class InlineUriTemplateRenditionTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testOriginal_CropCenter() {
     Media media = mediaHandler.get(inlineImage)
         .mediaFormat(RATIO_16_10)

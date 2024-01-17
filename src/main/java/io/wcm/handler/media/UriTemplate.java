@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -30,11 +31,13 @@ public interface UriTemplate {
   /**
    * @return URI template string containing placeholders like <code>{width}</code> or <code>{height}</code>.
    */
+  @NotNull
   String getUriTemplate();
 
   /**
    * @return URI template type
    */
+  @NotNull
   UriTemplateType getType();
 
   /**

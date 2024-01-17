@@ -193,7 +193,6 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return Image sizes
    */
-  @SuppressWarnings("null")
   public @Nullable ImageSizes getImageSizes() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {

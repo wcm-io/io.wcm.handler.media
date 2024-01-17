@@ -204,12 +204,12 @@ final class DamUriTemplate implements UriTemplate {
   }
 
   @Override
-  public UriTemplateType getType() {
+  public @NotNull UriTemplateType getType() {
     return type;
   }
 
   @Override
-  public String getUriTemplate() {
+  public @NotNull String getUriTemplate() {
     return uriTemplate;
   }
 

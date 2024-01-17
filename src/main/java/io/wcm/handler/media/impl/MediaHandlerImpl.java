@@ -70,37 +70,37 @@ public final class MediaHandlerImpl implements MediaHandler {
   private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
 
   @Override
-  public @NotNull MediaBuilder get(Resource resource) {
+  public @NotNull MediaBuilder get(@Nullable Resource resource) {
     return new MediaBuilderImpl(resource, this, componentPropertyResolverFactory);
   }
 
   @Override
-  public @NotNull MediaBuilder get(Resource resource, MediaArgs mediaArgs) {
+  public @NotNull MediaBuilder get(@Nullable Resource resource, @NotNull MediaArgs mediaArgs) {
     return get(resource).args(mediaArgs);
   }
 
   @Override
-  public @NotNull MediaBuilder get(Resource resource, MediaFormat... mediaFormats) {
+  public @NotNull MediaBuilder get(@Nullable Resource resource, MediaFormat @NotNull... mediaFormats) {
     return get(resource).mediaFormats(mediaFormats);
   }
 
   @Override
-  public @NotNull MediaBuilder get(String mediaRef) {
+  public @NotNull MediaBuilder get(@Nullable String mediaRef) {
     return new MediaBuilderImpl(mediaRef, null, this, componentPropertyResolverFactory);
   }
 
   @Override
-  public @NotNull MediaBuilder get(String mediaRef, @Nullable Resource contextResource) {
+  public @NotNull MediaBuilder get(@Nullable String mediaRef, @Nullable Resource contextResource) {
     return new MediaBuilderImpl(mediaRef, contextResource, this, componentPropertyResolverFactory);
   }
 
   @Override
-  public @NotNull MediaBuilder get(String mediaRef, MediaArgs mediaArgs) {
+  public @NotNull MediaBuilder get(@Nullable String mediaRef, @NotNull MediaArgs mediaArgs) {
     return get(mediaRef).args(mediaArgs);
   }
 
   @Override
-  public @NotNull MediaBuilder get(String mediaRef, MediaFormat... mediaFormats) {
+  public @NotNull MediaBuilder get(@Nullable String mediaRef, MediaFormat @NotNull... mediaFormats) {
     return get(mediaRef).mediaFormats(mediaFormats);
   }
 
