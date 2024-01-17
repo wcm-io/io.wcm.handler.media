@@ -37,7 +37,7 @@ import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
-import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryService;
+import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.ngdm;
+package io.wcm.handler.mediasource.dam.impl.weboptimized;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

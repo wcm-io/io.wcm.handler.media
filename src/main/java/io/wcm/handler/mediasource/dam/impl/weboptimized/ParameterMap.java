@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.ngdm;
+package io.wcm.handler.mediasource.dam.impl.weboptimized;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -37,7 +37,7 @@ import io.wcm.handler.media.impl.MediaHandlerAdapterFactory;
 import io.wcm.handler.media.spi.MediaFormatProvider;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
-import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryServiceImpl;
+import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryServiceImpl;
 import io.wcm.handler.url.SiteConfig;
 import io.wcm.handler.url.impl.DefaultUrlHandlerConfig;
 import io.wcm.handler.url.impl.SiteRootDetectorImpl;

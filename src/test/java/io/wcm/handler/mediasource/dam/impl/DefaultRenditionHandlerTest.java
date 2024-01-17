@@ -31,7 +31,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
-import io.wcm.handler.mediasource.dam.impl.ngdm.WebOptimizedImageDeliveryService;
+import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
 @SuppressWarnings("null")

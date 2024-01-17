@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.ngdm;
+package io.wcm.handler.mediasource.dam.impl.weboptimized;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
