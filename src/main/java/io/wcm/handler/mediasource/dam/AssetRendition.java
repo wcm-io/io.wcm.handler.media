@@ -174,16 +174,17 @@ public final class AssetRendition {
       boolean suppressLogWarningNoRenditionsMetadata) {
     try (InputStream is = rendition.getStream()) {
       if (is != null) {
-        if (!suppressLogWarningNoRenditionsMetadata) {
-          log.warn("Unable to detect rendition metadata for {}, "
-              + "fallback to inefficient detection by loading image into in memory. "
-              + "Please check if the service user for the bundle 'io.wcm.handler.media' is configured properly.",
-              rendition.getPath());
-        }
         Layer layer = new Layer(is);
         long width = layer.getWidth();
         long height = layer.getHeight();
-        return toDimension(width, height);
+        Dimension dimension = toDimension(width, height);
+        if (!suppressLogWarningNoRenditionsMetadata) {
+          log.warn("Unable to detect rendition metadata for {}, "
+              + "fallback to inefficient detection by loading image into in memory (detected dimension={}). "
+              + "Please check if the service user for the bundle 'io.wcm.handler.media' is configured properly.",
+              rendition.getPath(), dimension);
+        }
+        return dimension;
       }
       else {
         log.warn("Unable to get binary stream for rendition {}", rendition.getPath());
