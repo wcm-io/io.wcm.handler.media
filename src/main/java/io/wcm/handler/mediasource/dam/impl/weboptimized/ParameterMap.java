@@ -22,6 +22,8 @@ package io.wcm.handler.mediasource.dam.impl.weboptimized;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +45,8 @@ final class ParameterMap {
   static final String PARAM_CROP = "c";
   static final String PARAM_ROTATE = "r";
   static final String PARAM_QUALITY = "quality";
+
+  static final Pattern SEO_NAME_FILTER_PATTERN = Pattern.compile("[\\W|_]");
 
   private static final Set<String> SUPPORTED_FORMATS = Set.of(
       FileExtension.JPEG,
@@ -72,7 +76,7 @@ final class ParameterMap {
     // please note: AssetDelivery API expects all values as strings
     Map<String, Object> map = new HashMap<>();
     map.put(PARAM_PATH, path);
-    map.put(PARAM_SEO_NAME, seoName);
+    map.put(PARAM_SEO_NAME, sanitizeSeoName(seoName));
     map.put(PARAM_FORMAT, format);
     map.put(PARAM_PREFER_WEBP, "true");
     if (width != null) {
@@ -88,6 +92,16 @@ final class ParameterMap {
       map.put(PARAM_QUALITY, quality.toString());
     }
     return map;
+  }
+
+  /**
+   * Sanitizes the SEO name to avoid problems with special characters in URLs.
+   * @param name Name
+   * @return Sanitzes name
+   */
+  private static String sanitizeSeoName(String name) {
+    Matcher matcher = SEO_NAME_FILTER_PATTERN.matcher(name);
+    return StringUtils.toRootLowerCase(matcher.replaceAll("-"));
   }
 
 }
