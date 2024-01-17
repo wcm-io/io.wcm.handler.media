@@ -46,7 +46,7 @@ final class ParameterMap {
   static final String PARAM_ROTATE = "r";
   static final String PARAM_QUALITY = "quality";
 
-  static final Pattern SEO_NAME_FILTER_PATTERN = Pattern.compile("[\\W|_]");
+  static final Pattern SEO_NAME_FILTER_PATTERN = Pattern.compile("[\\W_]");
 
   private static final Set<String> SUPPORTED_FORMATS = Set.of(
       FileExtension.JPEG,
@@ -97,7 +97,7 @@ final class ParameterMap {
   /**
    * Sanitizes the SEO name to avoid problems with special characters in URLs.
    * @param name Name
-   * @return Sanitzes name
+   * @return Sanitzed name
    */
   private static String sanitizeSeoName(String name) {
     Matcher matcher = SEO_NAME_FILTER_PATTERN.matcher(name);
