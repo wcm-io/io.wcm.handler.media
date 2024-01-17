@@ -73,13 +73,13 @@ class WebOptimizedImageDeliveryServiceImplTest {
   void testGetDeliveryUrl_AssetDeliveryPresent() {
     context.registerInjectActivateService(MockAssetDelivery.class);
     WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
-    Asset asset = context.create().asset("/content/dam/test.jpg", 10, 10, ContentType.JPEG);
+    Asset asset = context.create().asset("/content/dam/Test_1.jpg", 10, 10, ContentType.JPEG);
     String assetId = MockAssetDelivery.getAssetId(asset);
 
-    assertEquals("/asset/delivery/" + assetId + "/test.jpg?preferwebp=true",
+    assertEquals("/asset/delivery/" + assetId + "/test-1.jpg?preferwebp=true",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()));
 
-    assertEquals("/asset/delivery/" + assetId + "/test.jpg?c=0%2C0%2C2%2C4&preferwebp=true&r=90&width=10",
+    assertEquals("/asset/delivery/" + assetId + "/test-1.jpg?c=0%2C0%2C2%2C4&preferwebp=true&r=90&width=10",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
             .width(10L).cropDimension(new CropDimension(0, 0, 2, 4)).rotation(90)));
   }
