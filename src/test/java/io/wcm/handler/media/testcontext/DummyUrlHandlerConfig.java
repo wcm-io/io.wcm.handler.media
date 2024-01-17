@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.url.integrator.IntegratorMode;
 import io.wcm.handler.url.integrator.IntegratorModes;
@@ -40,7 +41,7 @@ public class DummyUrlHandlerConfig extends UrlHandlerConfig {
       IntegratorModes.EXTENDED);
 
   @Override
-  public int getSiteRootLevel(Resource resource) {
+  public int getSiteRootLevel(@Nullable Resource resource) {
     return SITE_ROOT_LEVEL;
   }
 
