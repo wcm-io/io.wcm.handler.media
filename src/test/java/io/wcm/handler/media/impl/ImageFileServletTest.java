@@ -181,6 +181,17 @@ class ImageFileServletTest {
   }
 
   @Test
+  void testGet_Cropping_Rotation_Quality() throws Exception {
+    context.requestPathInfo().setSelectorString("image_file.215.102.10,10,25,20.180.75");
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(SC_OK, context.response().getStatus());
+    assertEquals(ContentType.JPEG, context.response().getContentType());
+    assertResponseLayerSize(15, 10);
+  }
+
+  @Test
   void testGet_Rotation_InvalidValue() throws Exception {
     context.requestPathInfo().setSelectorString("image_file.215.102.-.45");
 
@@ -247,14 +258,17 @@ class ImageFileServletTest {
   @Test
   void testBuildSelectorString() {
     CropDimension crop = new CropDimension(2, 4, 6, 8);
-    assertEquals("image_file.10.20", buildSelectorString(10, 20, null, null, false));
-    assertEquals("image_file.10.20.download_attachment", buildSelectorString(10, 20, null, null, true));
-    assertEquals("image_file.10.20.2,4,8,12", buildSelectorString(10, 20, crop, null, false));
-    assertEquals("image_file.10.20.2,4,8,12.download_attachment", buildSelectorString(10, 20, crop, null, true));
-    assertEquals("image_file.10.20.2,4,8,12.90", buildSelectorString(10, 20, crop, 90, false));
-    assertEquals("image_file.10.20.2,4,8,12.90.download_attachment", buildSelectorString(10, 20, crop, 90, true));
-    assertEquals("image_file.10.20.-.90", buildSelectorString(10, 20, null, 90, false));
-    assertEquals("image_file.10.20.-.90.download_attachment", buildSelectorString(10, 20, null, 90, true));
+    assertEquals("image_file.10.20", buildSelectorString(10, 20, null, null, null, false));
+    assertEquals("image_file.10.20.download_attachment", buildSelectorString(10, 20, null, null, null, true));
+    assertEquals("image_file.10.20.-.0.50.download_attachment", buildSelectorString(10, 20, null, null, 0.5d, true));
+    assertEquals("image_file.10.20.2,4,8,12", buildSelectorString(10, 20, crop, null, null, false));
+    assertEquals("image_file.10.20.2,4,8,12.download_attachment", buildSelectorString(10, 20, crop, null, null, true));
+    assertEquals("image_file.10.20.2,4,8,12.90", buildSelectorString(10, 20, crop, 90, null, false));
+    assertEquals("image_file.10.20.2,4,8,12.90.download_attachment", buildSelectorString(10, 20, crop, 90, null, true));
+    assertEquals("image_file.10.20.2,4,8,12.90.60", buildSelectorString(10, 20, crop, 90, 0.6d, false));
+    assertEquals("image_file.10.20.-.90", buildSelectorString(10, 20, null, 90, null, false));
+    assertEquals("image_file.10.20.-.90.download_attachment", buildSelectorString(10, 20, null, 90, null, true));
+    assertEquals("image_file.10.20.-.0", buildSelectorString(10, 20, null, null, -0.2d, false));
   }
 
 }

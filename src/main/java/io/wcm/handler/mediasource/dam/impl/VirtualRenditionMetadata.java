@@ -83,9 +83,10 @@ class VirtualRenditionMetadata extends RenditionMetadata {
       // vector images can be scaled in browser without need of ImageFileServlet
       return super.getMediaPath(contentDispositionAttachment);
     }
-    return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
-        + "." + getWidth() + "." + getHeight()
-        + (contentDispositionAttachment ? "." + MediaFileServlet.SELECTOR_DOWNLOAD : "")
+    // TODO: add image quality parameter
+    return RenditionMetadata.buildMediaPath(getRendition().getPath()
+        + "." + ImageFileServlet.buildSelectorString(getWidth(), getHeight(),
+            null, null, null, contentDispositionAttachment)
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
   }
 

@@ -68,6 +68,7 @@ public final class MediaArgs implements Cloneable {
   private Boolean includeAssetWebRenditions;
   private ImageSizes imageSizes;
   private PictureSource[] pictureSourceSets;
+  private Double imageQualityPercentage;
   private DragDropSupport dragDropSupport = DragDropSupport.AUTO;
   private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
   private boolean dynamicMediaDisabled;
@@ -673,6 +674,22 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * @return Image quality in percent (0..1) for images with lossy compression (e.g. JPEG).
+   */
+  public @Nullable Double getImageQualityPercentage() {
+    return this.imageQualityPercentage;
+  }
+
+  /**
+   * @param value Image quality in percent (0..1) for images with lossy compression (e.g. JPEG).
+   * @return this
+   */
+  public @NotNull MediaArgs imageQualityPercentage(@Nullable Double value) {
+    this.imageQualityPercentage = value;
+    return this;
+  }
+
+  /**
    * Drag&amp;Drop support for media builder.
    * @return Drag&amp;Drop support
    */
@@ -809,6 +826,9 @@ public final class MediaArgs implements Cloneable {
     if (pictureSourceSets != null && pictureSourceSets.length > 0) {
       sb.append("pictureSourceSets", "[" + StringUtils.join(pictureSourceSets, ",") + "]");
     }
+    if (imageQualityPercentage != null) {
+      sb.append("imageQualityPercentage ", imageQualityPercentage);
+    }
     if (dragDropSupport != DragDropSupport.AUTO) {
       sb.append("dragDropSupport ", dragDropSupport);
     }
@@ -856,6 +876,7 @@ public final class MediaArgs implements Cloneable {
     clone.includeAssetWebRenditions = this.includeAssetWebRenditions;
     clone.imageSizes = this.imageSizes;
     clone.pictureSourceSets = ArrayUtils.clone(this.pictureSourceSets);
+    clone.imageQualityPercentage = this.imageQualityPercentage;
     clone.dragDropSupport = this.dragDropSupport;
     clone.ipeRatioCustomize = this.ipeRatioCustomize;
     clone.dynamicMediaDisabled = this.dynamicMediaDisabled;

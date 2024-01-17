@@ -70,7 +70,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
   private AssetStore assetStore;
 
   @Override
-  protected byte[] getBinaryData(Resource resource, SlingHttpServletRequest request) throws IOException {
+  protected byte @Nullable [] getBinaryData(@NotNull Resource resource, @NotNull SlingHttpServletRequest request) throws IOException {
     // get media app config
     MediaHandlerConfig config = AdaptTo.notNull(request, MediaHandlerConfig.class);
 
@@ -107,6 +107,16 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       rotation = NumberUtils.toInt(rotationString);
       if (!isValidRotation(rotation)) {
         rotation = 0;
+      }
+    }
+
+    // check for image quality
+    int quality = 0;
+    if (selectors.length >= 6) {
+      String qualityString = selectors[5];
+      quality = NumberUtils.toInt(qualityString);
+      if (quality < 0 || quality > 100) {
+        quality = 0;
       }
     }
 
@@ -153,16 +163,25 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
       layer.resize(width, height);
     }
 
+    // determine layer quality with fallback to default image quality if not set
+    String contentType = getContentType(resource, request);
+    double layerQuality;
+    if (quality > 0) {
+      layerQuality = quality / 100d;
+    }
+    else {
+      layerQuality = config.getDefaultImageQuality(contentType);
+    }
+
     // stream to byte array
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    String contentType = getContentType(resource, request);
-    layer.write(contentType, config.getDefaultImageQuality(contentType), bos);
+    layer.write(contentType, layerQuality, bos);
     bos.flush();
     return bos.toByteArray();
   }
 
   @Override
-  protected String getContentType(Resource resource, SlingHttpServletRequest request) {
+  protected @NotNull String getContentType(@NotNull Resource resource, @NotNull SlingHttpServletRequest request) {
 
     // get filename from suffix to get extension
     String fileName = request.getRequestPathInfo().getSuffix();
@@ -220,10 +239,11 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
    * @param cropDimension Crop dimension
    * @param rotation Rotation
    * @param contentDispositionAttachment Content disposition attachment
+   * @param imageQualityPercentage Image quality percentage (0..1)
    * @return Selector string
    */
   public static @NotNull String buildSelectorString(long width, long height,
-      @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation, @Nullable Double imageQualityPercentage,
       boolean contentDispositionAttachment) {
     StringBuilder result = new StringBuilder()
         .append(SELECTOR)
@@ -233,11 +253,20 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     if (cropDimension != null) {
       result.append(".").append(cropDimension.getCropString());
     }
-    else if (rotation != null) {
+    else if (rotation != null || imageQualityPercentage != null) {
       result.append(".-");
     }
     if (rotation != null) {
       result.append(".").append(rotation.toString());
+    }
+    else if (imageQualityPercentage != null) {
+      result.append(".0");
+    }
+    if (imageQualityPercentage != null) {
+      long quality = Math.round(imageQualityPercentage * 100);
+      if (quality > 0) {
+        result.append(".").append(Long.toString(quality));
+      }
     }
     if (contentDispositionAttachment) {
       result.append(".").append(AbstractMediaFileServlet.SELECTOR_DOWNLOAD);

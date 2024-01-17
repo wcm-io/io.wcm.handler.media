@@ -48,9 +48,16 @@ import io.wcm.sling.commons.caservice.ContextAwareService;
 public abstract class MediaHandlerConfig implements ContextAwareService {
 
   /**
-   * Default value for JPEG quality.
+   * Default image quality for images with lossy compressions (e.g. JPEG).
    */
-  public static final double DEFAULT_JPEG_QUALITY = 0.98d;
+  public static final double DEFAULT_IMAGE_QUALITY = 0.98d;
+
+  /**
+   * Default value for JPEG quality.
+   * @deprecated Use {@link #DEFAULT_IMAGE_QUALITY} instead.
+   */
+  @Deprecated(since = "2.0.0")
+  public static final double DEFAULT_JPEG_QUALITY = DEFAULT_IMAGE_QUALITY;
 
   private static final List<Class<? extends MediaSource>> DEFAULT_MEDIA_SOURCES = List.of(
       DamMediaSource.class);
@@ -98,8 +105,8 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
    */
   public double getDefaultImageQuality(@Nullable String contentType) {
     MediaFileType mediaFileType = MediaFileType.getByContentType(contentType);
-    if (mediaFileType == MediaFileType.JPEG) {
-      return DEFAULT_JPEG_QUALITY;
+    if (mediaFileType != null && mediaFileType.isImageQualityPercentage()) {
+      return DEFAULT_IMAGE_QUALITY;
     }
     else if (mediaFileType == MediaFileType.GIF) {
       return 256d; // 256 colors

@@ -95,8 +95,9 @@ final class DamUriTemplate implements UriTemplate {
 
     // build rendition URL with dummy width/height parameters (otherwise externalization will fail)
     MediaArgs mediaArgs = damContext.getMediaArgs();
+    // TODO: add image quality parameter
     String mediaPath = RenditionMetadata.buildMediaPath(rendition.getPath()
-        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, false)
+        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, null, false)
         + "." + MediaFileServlet.EXTENSION,
         ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
     UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);

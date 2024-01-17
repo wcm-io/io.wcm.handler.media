@@ -94,9 +94,10 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
 
   @Override
   public @NotNull String getMediaPath(boolean contentDispositionAttachment) {
+    // TODO: add image quality parameter
     return RenditionMetadata.buildMediaPath(getRendition().getPath()
         + "." + ImageFileServlet.buildSelectorString(getWidth(), getHeight(),
-            this.cropDimension, this.rotation, contentDispositionAttachment)
+            this.cropDimension, this.rotation, null, contentDispositionAttachment)
         + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
   }
 

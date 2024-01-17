@@ -41,36 +41,40 @@ public enum MediaFileType {
   /**
    * JPEG
    */
-  JPEG(new String[] { ContentType.JPEG }, new String[] { FileExtension.JPEG, "jpeg" }),
+  JPEG(new String[] { ContentType.JPEG }, new String[] { FileExtension.JPEG, "jpeg" }, true),
 
   /**
    * PNG
    */
-  PNG(new String[] { ContentType.PNG }, new String[] { FileExtension.PNG }),
+  PNG(new String[] { ContentType.PNG }, new String[] { FileExtension.PNG }, false),
 
   /**
    * GIF
    */
-  GIF(new String[] { ContentType.GIF }, new String[] { FileExtension.GIF }),
+  GIF(new String[] { ContentType.GIF }, new String[] { FileExtension.GIF }, false),
 
   /**
    * TIFF
    */
-  TIFF(new String[] { ContentType.TIFF }, new String[] { FileExtension.TIFF, "tiff" }),
+  TIFF(new String[] { ContentType.TIFF }, new String[] { FileExtension.TIFF, "tiff" }, false),
 
   /**
    * SVG
    */
-  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG });
+  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG }, false);
 
 
   private final Set<String> contentTypes;
   private final Set<String> extensions;
+  private final boolean imageQualityPercentage;
 
   @SuppressWarnings("null")
-  MediaFileType(@NotNull String @NotNull [] contentTypes, @NotNull String @NotNull [] extensions) {
+  MediaFileType(@NotNull String @NotNull [] contentTypes,
+      @NotNull String @NotNull [] extensions,
+      boolean imageQualityPercentage) {
     this.contentTypes = Set.of(contentTypes);
     this.extensions = Set.of(extensions);
+    this.imageQualityPercentage = imageQualityPercentage;
   }
 
   /**
@@ -85,6 +89,13 @@ public enum MediaFileType {
    */
   public Set<String> getExtensions() {
     return extensions;
+  }
+
+  /**
+   * @return true if this image type has lossy compression and image quality is specified in percentage
+   */
+  public boolean isImageQualityPercentage() {
+    return imageQualityPercentage;
   }
 
   /**
