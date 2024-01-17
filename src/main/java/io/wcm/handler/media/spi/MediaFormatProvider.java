@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,7 @@ public abstract class MediaFormatProvider implements ContextAwareService {
   /**
    * @return Media formats that the application defines
    */
-  public Set<MediaFormat> getMediaFormats() {
+  public @NotNull Set<MediaFormat> getMediaFormats() {
     return mediaFormats;
   }
 

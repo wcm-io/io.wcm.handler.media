@@ -80,6 +80,7 @@ class AutoCroppingMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testMediaFormatWithRatio() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(RATIO_16_10)
@@ -92,6 +93,7 @@ class AutoCroppingMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testMediaFormatFixedDimension() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(EDITORIAL_1COL)
@@ -104,6 +106,7 @@ class AutoCroppingMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testMultipleMediaFormatsFixedDimension() {
     Media media = mediaHandler.get(resource)
         .mediaFormats(EDITORIAL_2COL, EDITORIAL_1COL)
@@ -124,8 +127,8 @@ class AutoCroppingMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testManualCroppingParametersHaveHigherPrecedence() {
-
     // prepare resource with asset reference and manual cropping parameters
     // this manual cropping results in a 16:10 image and should have higher precedence than auto-cropping
     Resource resource2 = context.create().resource("/content/test2",
@@ -144,8 +147,8 @@ class AutoCroppingMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testInvalidManualCroppingParametersFallbackToAutoCropping() {
-
     // prepare resource with asset reference and manual cropping parameters
     // this manual cropping results in a 1:1 image not matching the media format
     Resource resource2 = context.create().resource("/content/test2",
@@ -165,7 +168,7 @@ class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({ "deprecation", "null" })
   void testMediaFormatWithRatio_WebRenditionsExcludedFromMediaHandling() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(RATIO_16_10)

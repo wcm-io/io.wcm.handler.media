@@ -88,6 +88,7 @@ class DamUriTemplateRenditionTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testOriginal_CropCenter() {
     Asset asset = createSampleAsset();
     Media media = mediaHandler.get(asset.getPath())

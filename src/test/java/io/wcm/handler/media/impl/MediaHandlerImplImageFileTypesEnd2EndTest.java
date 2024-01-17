@@ -445,6 +445,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertFalse(media.isValid(), "media valid");
   }
 
+  @SuppressWarnings("null")
   void assertMedia(Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
     assertTrue(media.isValid(), "media valid");
     assertEquals(mediaUrl, media.getUrl(), "mediaUrl");

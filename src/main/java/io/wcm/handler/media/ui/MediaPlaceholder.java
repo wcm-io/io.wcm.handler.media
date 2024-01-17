@@ -99,10 +99,10 @@ public class MediaPlaceholder {
   }
 
   private String getMediaInvalidReasonText(Media mediaMetadata) {
-    if (mediaMetadata.getMediaInvalidReason() != null
-        && mediaMetadata.getMediaInvalidReason() != MediaInvalidReason.MEDIA_REFERENCE_MISSING) {
+    MediaInvalidReason reason = mediaMetadata.getMediaInvalidReason();
+    if (reason != null && reason != MediaInvalidReason.MEDIA_REFERENCE_MISSING) {
       // build i18n key
-      return MEDIA_INVALID_REASON_I18N_PREFIX + mediaMetadata.getMediaInvalidReason().name();
+      return MEDIA_INVALID_REASON_I18N_PREFIX + reason.name();
     }
     else {
       return null;

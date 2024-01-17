@@ -72,7 +72,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({ "deprecation", "null" })
   void testWithAllowWebRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
@@ -89,7 +89,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({ "deprecation", "null" })
   void testWithDisallowWebRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
@@ -106,7 +106,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({ "deprecation", "null" })
   void testWithAllowThumbnailRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
@@ -123,6 +123,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testWithAllowSpecificRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
@@ -139,6 +140,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testWithDisallowWebRenditionsViaMediaHandlerConfig() {
     context.registerService(MediaHandlerConfig.class, new MediaHandlerConfig() {
       @Override

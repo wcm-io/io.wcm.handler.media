@@ -70,9 +70,10 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   @Override
   public final boolean accepts(@NotNull Media media) {
     // accept if rendition is an image rendition, and resolving was successful
+    Rendition rendition = media.getRendition();
     return media.isValid()
-        && media.getRendition() != null
-        && media.getRendition().isBrowserImage();
+        && rendition != null
+        && rendition.isBrowserImage();
   }
 
   @Override

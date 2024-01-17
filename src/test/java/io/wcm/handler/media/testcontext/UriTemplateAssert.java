@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
@@ -40,7 +41,9 @@ public final class UriTemplateAssert {
   public static void assertUriTemplate(Media media, UriTemplateType type,
       long expectedMaxWith, long expectedMaxHeight, String expectedTemplate) {
     assertTrue(media.isValid(), "media valid");
-    UriTemplate uriTemplate = media.getAsset().getUriTemplate(type);
+    Asset asset = media.getAsset();
+    assertNotNull(asset);
+    UriTemplate uriTemplate = asset.getUriTemplate(type);
     assertEquals(type, uriTemplate.getType(), "uriTemplateType");
     assertEquals(expectedMaxWith, uriTemplate.getMaxWidth(), "maxWidth(" + type + ")");
     assertEquals(expectedMaxHeight, uriTemplate.getMaxHeight(), "maxHeight(" + type + ")");
