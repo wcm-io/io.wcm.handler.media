@@ -40,6 +40,9 @@
         In Media Handler 1.x web renditions (starting with <code>cq5dam.web.</code> prefix) and all other renditions except thumbnails (starting with <code>cq5dam.thumbnail.</code> prefix) were processed.<br/>
         The <code>MediaHandlerConfig</code> contains a new method <code>getIncludeAssetAemRenditionsByDefault</code> that controls this behavior and allows to switch to the previous setting.
       ]]></action>
+      <action type="update" dev="sseifert" issue="34"><![CDATA[
+        <b>MediaHandlerConfig: Change default image quality for lossy compression image (e.g. JPG) to 85%.</b> In previous versions this was 98%. You can change the default value in the MediaHandlerConfig.
+      ]]></action>
       <action type="update" dev="sseifert" issue="3">
         MediaFileServlet: Force Content-Disposition=attachment header for SVG files served by MediaFileServlet. Also ensure URLs to SVG images are always handled by MediaFileServlet.
       </action>

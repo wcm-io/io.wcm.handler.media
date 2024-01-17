@@ -50,7 +50,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   /**
    * Default image quality for images with lossy compressions (e.g. JPEG).
    */
-  public static final double DEFAULT_IMAGE_QUALITY = 0.98d;
+  public static final double DEFAULT_IMAGE_QUALITY = 0.85d;
 
   /**
    * Default value for JPEG quality.

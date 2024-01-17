@@ -111,9 +111,9 @@ class DamUriTemplateTest {
     Media media = mediaHandler.get(asset.getPath()).build();
 
     assertUriTemplate(media, CROP_CENTER, 100, 50,
-        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&quality=98&width={width}");
+        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&quality=85&width={width}");
     assertUriTemplate(media, SCALE_WIDTH, 100, 50,
-        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&quality=98&width={width}");
+        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&quality=85&width={width}");
     assertUriTemplate(media, SCALE_HEIGHT, 100, 50,
         "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
   }
