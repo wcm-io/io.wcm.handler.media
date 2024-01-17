@@ -97,7 +97,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
-   * Get the default quality for images in this app generated with the Layer API.
+   * Get the default quality for images.
    * The meaning of the quality parameter for the different image formats is described in
    * {@link com.day.image.Layer#write(String, double, java.io.OutputStream)}.
    * @param contentType MIME-type of the output format
@@ -106,13 +106,22 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   public double getDefaultImageQuality(@Nullable String contentType) {
     MediaFileType mediaFileType = MediaFileType.getByContentType(contentType);
     if (mediaFileType != null && mediaFileType.isImageQualityPercentage()) {
-      return DEFAULT_IMAGE_QUALITY;
+      return getDefaultImageQualityPercentage();
     }
     else if (mediaFileType == MediaFileType.GIF) {
       return 256d; // 256 colors
     }
     // return quality "1" for all other mime types
     return 1d;
+  }
+
+  /**
+   * Get the default quality for images.
+   * This parameter only applies to images with lossy compression (e.g. JPEG).
+   * @return Quality percentage (0..1)
+   */
+  public double getDefaultImageQualityPercentage() {
+    return DEFAULT_IMAGE_QUALITY;
   }
 
   /**
