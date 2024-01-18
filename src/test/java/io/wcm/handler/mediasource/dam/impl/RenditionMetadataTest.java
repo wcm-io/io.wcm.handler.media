@@ -73,7 +73,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareOriginalRenditionToItself() {
-    assertEquals(originalRendition.compareTo(originalRendition), 0, "original rendition is not equal to itself");
+    assertEquals(0, originalRendition.compareTo(originalRendition), "original rendition is not equal to itself");
   }
 
   /**
@@ -81,7 +81,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareSmallToBigRendition() {
-    assertEquals(smallestRendition.compareTo(biggestRendition), -1, "smaller rendition is not smaller");
+    assertEquals(-1, smallestRendition.compareTo(biggestRendition), "smaller rendition is not smaller");
   }
 
   /**
@@ -89,7 +89,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareBigToSmallRendition() {
-    assertEquals(biggestRendition.compareTo(smallestRendition), 1, "bigger rendition is not bigger");
+    assertEquals(1, biggestRendition.compareTo(smallestRendition), "bigger rendition is not bigger");
   }
 
   /**
@@ -97,7 +97,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareTwoEqualRenditions() {
-    assertEquals(biggestRendition.compareTo(biggestRendition), 0, "two equal renditions are not equal");
+    assertEquals(0, biggestRendition.compareTo(biggestRendition), "two equal renditions are not equal");
   }
 
   /**
