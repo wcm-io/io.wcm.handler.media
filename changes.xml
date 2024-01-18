@@ -28,6 +28,9 @@
         Add support for Web-Optimized Image Delivery (part of Next Generation Dynamic Media) - rendering asset renditions from AEM Sites instance on the edge.<br/>
         <b>This feature is active by default on AEMaaCS cloud instances, can be disabled via OSGi configuration</b>.
       ]]></action>
+      <action type="add" dev="sseifert" issue="38">
+        Add support for Next Generation Dynamic Media (Polaris) remote assets.
+      </action>
       <action type="add" dev="sseifert" issue="33">
         Allow to set image quality per media request.
       </action>
