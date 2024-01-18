@@ -42,11 +42,13 @@ public final class DynamicMediaPath {
   /**
    * Fixed path part for dynamic media image serving API for serving images.
    */
+  @SuppressWarnings("java:S1075") // not a file path
   private static final String IMAGE_SERVER_PATH = "/is/image/";
 
   /**
    * Fixed path part for dynamic media image serving API for serving static content.
    */
+  @SuppressWarnings("java:S1075") // not a file path
   private static final String CONTENT_SERVER_PATH = "/is/content/";
 
   /**

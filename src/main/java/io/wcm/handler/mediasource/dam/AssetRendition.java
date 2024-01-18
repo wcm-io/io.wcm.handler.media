@@ -149,6 +149,7 @@ public final class AssetRendition {
    * @param rendition Rendition
    * @return Dimension or null
    */
+  @SuppressWarnings("java:S1075") // not a file path
   private static @Nullable Dimension getDimensionFromRenditionMetadata(@NotNull Rendition rendition) {
     Asset asset = rendition.getAsset();
     String metadataPath = JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/" + rendition.getName();

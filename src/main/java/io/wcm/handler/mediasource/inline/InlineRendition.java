@@ -372,6 +372,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
    * @return Media URL
    */
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+  @SuppressWarnings("java:S1075") // not a file path
   private String buildScaledMediaUrl(@NotNull Dimension dimension, @Nullable CropDimension mediaUrlCropDimension) {
 
     if (isVectorImage()) {
@@ -406,6 +407,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
    * Builds URL to rescaled version of the binary image.
    * @return Media URL
    */
+  @SuppressWarnings("java:S1075") // not a file path
   private String buildDownloadMediaUrl() {
     String resourcePath = this.resource.getPath();
 

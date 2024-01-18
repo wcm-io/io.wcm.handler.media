@@ -56,6 +56,7 @@ final class InlineUriTemplate implements UriTemplate {
     this.dimension = dimension;
   }
 
+  @SuppressWarnings("java:S1075") // not a file path
   private static String buildUriTemplate(@NotNull UriTemplateType type, @NotNull Resource resource,
       @NotNull String fileName, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
       @NotNull MediaArgs mediaArgs, @NotNull Adaptable adaptable) {

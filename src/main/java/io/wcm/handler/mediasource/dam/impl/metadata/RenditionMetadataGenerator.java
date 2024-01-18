@@ -85,6 +85,7 @@ public final class RenditionMetadataGenerator {
    * Generate/validate rendition metadata of all renditions of this asset.
    * @param asset Asset
    */
+  @SuppressWarnings("java:S1075") // not a file path
   public void processAllRenditions(Asset asset) {
     Set<String> existingRenditionNames = new HashSet<>();
     List<String> renditionPaths = new ArrayList<>();
@@ -223,6 +224,7 @@ public final class RenditionMetadataGenerator {
     }
   }
 
+  @SuppressWarnings("java:S1075") // not a file path
   private @Nullable String getContentType(@NotNull Resource renditionResource) {
     return renditionResource.getValueMap().get(JCR_CONTENT + "/" + JCR_MIMETYPE, String.class);
   }
@@ -295,6 +297,7 @@ public final class RenditionMetadataGenerator {
    * @param renditionPath Rendition path
    * @return Metadata resource or null if none exist
    */
+  @SuppressWarnings("java:S1075") // not a file path
   private String getRenditionMetadataResourcePath(String renditionPath) {
     String assetPath = StringUtils.substringBefore(renditionPath, "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER + "/");
     String renditionName = Text.getName(renditionPath);
