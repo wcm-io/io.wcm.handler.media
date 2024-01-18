@@ -105,8 +105,8 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareOriginalRenditionToEqualRendition() {
-    assertEquals(originalRendition.compareTo(originalRenditionCopy), -1, "original rendition is not preferred over the equal rendition");
-    assertEquals(originalRenditionCopy.compareTo(originalRendition), 1, "original rendition is not preferred over the equal rendition");
+    assertEquals(-1, originalRendition.compareTo(originalRenditionCopy), "original rendition is not preferred over the equal rendition");
+    assertEquals(1, originalRenditionCopy.compareTo(originalRendition), "original rendition is not preferred over the equal rendition");
   }
 
   @Test
