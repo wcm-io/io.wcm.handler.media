@@ -37,7 +37,7 @@ public final class WidthUtils {
   // example values:
   // 800,1024,2048
   // 800,1024?,2048?   <- last two are optional
-  static final Pattern WIDTHS_PATTERN = Pattern.compile("^\\s*\\d+\\??\\s*(,\\s*\\d+\\??\\s*)*$");
+  static final Pattern WIDTHS_PATTERN = Pattern.compile("^\\s*\\d+\\??\\s*(,\\s*\\d+\\??\\s*)*+$");
 
   private WidthUtils() {
     // static methods only

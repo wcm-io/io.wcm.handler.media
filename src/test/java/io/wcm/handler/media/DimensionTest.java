@@ -20,8 +20,7 @@
 package io.wcm.handler.media;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -43,21 +42,21 @@ class DimensionTest {
     Dimension dimension3 = new Dimension(21, 10);
     Dimension dimension4 = new Dimension(20, 11);
 
-    assertTrue(dimension1.equals(dimension2));
-    assertFalse(dimension1.equals(dimension3));
-    assertFalse(dimension1.equals(dimension4));
+    assertEquals(dimension1, dimension2);
+    assertNotEquals(dimension1, dimension3);
+    assertNotEquals(dimension1, dimension4);
 
-    assertTrue(dimension2.equals(dimension1));
-    assertFalse(dimension2.equals(dimension3));
-    assertFalse(dimension2.equals(dimension4));
+    assertEquals(dimension2, dimension1);
+    assertNotEquals(dimension2, dimension3);
+    assertNotEquals(dimension2, dimension4);
 
-    assertFalse(dimension3.equals(dimension1));
-    assertFalse(dimension3.equals(dimension2));
-    assertFalse(dimension3.equals(dimension4));
+    assertNotEquals(dimension3, dimension1);
+    assertNotEquals(dimension3, dimension2);
+    assertNotEquals(dimension3, dimension4);
 
-    assertFalse(dimension4.equals(dimension1));
-    assertFalse(dimension4.equals(dimension2));
-    assertFalse(dimension4.equals(dimension3));
+    assertNotEquals(dimension4, dimension1);
+    assertNotEquals(dimension4, dimension2);
+    assertNotEquals(dimension4, dimension3);
   }
 
 }

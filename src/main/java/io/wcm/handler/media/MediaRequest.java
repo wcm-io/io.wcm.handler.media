@@ -56,7 +56,7 @@ public final class MediaRequest {
    * @param mediaRef Reference to media item
    * @param mediaArgs Additional arguments affection media resolving
    */
-  public MediaRequest(@NotNull String mediaRef, @Nullable MediaArgs mediaArgs) {
+  public MediaRequest(@Nullable String mediaRef, @Nullable MediaArgs mediaArgs) {
     this(null, mediaRef, mediaArgs, null);
   }
 

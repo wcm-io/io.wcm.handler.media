@@ -286,8 +286,6 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
-  @SuppressWarnings("null")
-  @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
   public Media invalid() {
     // build invalid media with first media source
     Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getSources().stream().findFirst().orElse(null);

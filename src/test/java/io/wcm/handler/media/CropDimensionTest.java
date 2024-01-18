@@ -21,6 +21,7 @@ package io.wcm.handler.media;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -57,41 +58,41 @@ class CropDimensionTest {
     CropDimension dimension5 = new CropDimension(16, 5, 20, 10);
     CropDimension dimension6 = new CropDimension(15, 6, 20, 10);
 
-    assertTrue(dimension1.equals(dimension2));
-    assertFalse(dimension1.equals(dimension3));
-    assertFalse(dimension1.equals(dimension4));
-    assertFalse(dimension1.equals(dimension5));
-    assertFalse(dimension1.equals(dimension6));
+    assertEquals(dimension1, dimension2);
+    assertNotEquals(dimension1, dimension3);
+    assertNotEquals(dimension1, dimension4);
+    assertNotEquals(dimension1, dimension5);
+    assertNotEquals(dimension1, dimension6);
 
-    assertTrue(dimension2.equals(dimension1));
-    assertFalse(dimension2.equals(dimension3));
-    assertFalse(dimension2.equals(dimension4));
-    assertFalse(dimension2.equals(dimension5));
-    assertFalse(dimension2.equals(dimension6));
+    assertEquals(dimension2, dimension1);
+    assertNotEquals(dimension2, dimension3);
+    assertNotEquals(dimension2, dimension4);
+    assertNotEquals(dimension2, dimension5);
+    assertNotEquals(dimension2, dimension6);
 
-    assertFalse(dimension3.equals(dimension1));
-    assertFalse(dimension3.equals(dimension2));
-    assertFalse(dimension3.equals(dimension4));
-    assertFalse(dimension3.equals(dimension5));
-    assertFalse(dimension3.equals(dimension6));
+    assertNotEquals(dimension3, dimension1);
+    assertNotEquals(dimension3, dimension2);
+    assertNotEquals(dimension3, dimension4);
+    assertNotEquals(dimension3, dimension5);
+    assertNotEquals(dimension3, dimension6);
 
-    assertFalse(dimension4.equals(dimension1));
-    assertFalse(dimension4.equals(dimension2));
-    assertFalse(dimension4.equals(dimension3));
-    assertFalse(dimension4.equals(dimension5));
-    assertFalse(dimension4.equals(dimension6));
+    assertNotEquals(dimension4, dimension1);
+    assertNotEquals(dimension4, dimension2);
+    assertNotEquals(dimension4, dimension3);
+    assertNotEquals(dimension4, dimension5);
+    assertNotEquals(dimension4, dimension6);
 
-    assertFalse(dimension5.equals(dimension1));
-    assertFalse(dimension5.equals(dimension2));
-    assertFalse(dimension5.equals(dimension3));
-    assertFalse(dimension5.equals(dimension4));
-    assertFalse(dimension5.equals(dimension6));
+    assertNotEquals(dimension5, dimension1);
+    assertNotEquals(dimension5, dimension2);
+    assertNotEquals(dimension5, dimension3);
+    assertNotEquals(dimension5, dimension4);
+    assertNotEquals(dimension5, dimension6);
 
-    assertFalse(dimension6.equals(dimension1));
-    assertFalse(dimension6.equals(dimension2));
-    assertFalse(dimension6.equals(dimension3));
-    assertFalse(dimension6.equals(dimension4));
-    assertFalse(dimension6.equals(dimension5));
+    assertNotEquals(dimension6, dimension1);
+    assertNotEquals(dimension6, dimension2);
+    assertNotEquals(dimension6, dimension3);
+    assertNotEquals(dimension6, dimension4);
+    assertNotEquals(dimension6, dimension5);
   }
 
   @Test

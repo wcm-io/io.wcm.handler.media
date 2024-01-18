@@ -20,9 +20,8 @@
 package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 
@@ -115,9 +114,9 @@ class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
     VirtualTransformedRenditionMetadata m4 = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         null, new CropDimension(5, 5, 30, 25), 180, null);
 
-    assertTrue(m1.equals(m2));
-    assertFalse(m1.equals(m3));
-    assertFalse(m1.equals(m4));
+    assertEquals(m1, m2);
+    assertNotEquals(m1, m3);
+    assertNotEquals(m1, m4);
   }
 
   @Test
