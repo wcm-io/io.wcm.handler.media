@@ -34,6 +34,7 @@ The Media Handler provides:
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
 * Generic HTL Placeholder template
 * Generic [Granite UI components][graniteui-components] that can be used in media/image component dialogs
+* Support for Web-Optimized Image Delivery: On AEMaaCS instances renditions are transparently rendered on the edge
 * Support for [Dynamic Media][dynamic-media]
 
 Read the [general concepts][general-concepts] to get an overview of the functionality.
