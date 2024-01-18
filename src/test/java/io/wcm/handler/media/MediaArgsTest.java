@@ -23,7 +23,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -239,10 +239,10 @@ class MediaArgsTest {
     MediaArgs mediaArgs2 = new MediaArgs().mediaFormat(EDITORIAL_1COL).urlMode(UrlModes.FULL_URL).altText("abc");
     MediaArgs mediaArgs3 = new MediaArgs().mediaFormat(EDITORIAL_2COL).urlMode(UrlModes.FULL_URL).altText("abc");
 
-    assertTrue(mediaArgs1.equals(mediaArgs2));
-    assertTrue(mediaArgs2.equals(mediaArgs1));
-    assertFalse(mediaArgs1.equals(mediaArgs3));
-    assertFalse(mediaArgs2.equals(mediaArgs3));
+    assertEquals(mediaArgs1, mediaArgs2);
+    assertEquals(mediaArgs2, mediaArgs1);
+    assertNotEquals(mediaArgs1, mediaArgs3);
+    assertNotEquals(mediaArgs2, mediaArgs3);
   }
 
   @Test

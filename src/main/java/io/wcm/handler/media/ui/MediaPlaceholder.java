@@ -134,6 +134,7 @@ public class MediaPlaceholder {
    * allow drag&amp;drop of assets into an empty component.
    * @return CSS class or null
    */
+  @SuppressWarnings("java:S4275") // naming is by intention
   public @Nullable String getClassAppend() {
     return this.classAppendCombined;
   }

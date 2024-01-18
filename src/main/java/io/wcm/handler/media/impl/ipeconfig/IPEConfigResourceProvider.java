@@ -60,11 +60,12 @@ import io.wcm.sling.commons.adapter.AdaptTo;
     ResourceProvider.PROPERTY_NAME + "=wcmioHandlerIPEConfig",
     ResourceProvider.PROPERTY_ROOT + "=" + IPEConfigResourceProvider.IPECONFIG_OVERLAY_ROOTPATH
 })
-public class IPEConfigResourceProvider extends ResourceProvider {
+public class IPEConfigResourceProvider extends ResourceProvider<Void> {
 
   /**
    * Root path for IPE config overlay resources.
    */
+  @SuppressWarnings("java:S1075") // no file path
   public static final String IPECONFIG_OVERLAY_ROOTPATH = "/wcmio:mediaHandler/ipeConfig";
 
   @Override

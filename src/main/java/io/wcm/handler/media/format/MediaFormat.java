@@ -271,16 +271,18 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * @return Ratio display string or null if no nice string was found
    */
   private static String guessHumanReadableRatioString(double ratio, NumberFormat numberFormat) {
-    for (long width = 1; width <= 50; width++) {
-      double height = width / ratio;
-      if (isLong(height)) {
-        return numberFormat.format(width) + ":" + numberFormat.format(height);
+    if (ratio > 0) {
+      for (long width = 1; width <= 50; width++) {
+        double height = width / ratio;
+        if (isLong(height)) {
+          return numberFormat.format(width) + ":" + numberFormat.format(height);
+        }
       }
-    }
-    for (long width = 1; width <= 200; width++) {
-      double height = width / 2d / ratio;
-      if (isHalfLong(height)) {
-        return numberFormat.format(width / 2d) + ":" + numberFormat.format(height);
+      for (long width = 1; width <= 200; width++) {
+        double height = width / 2d / ratio;
+        if (isHalfLong(height)) {
+          return numberFormat.format(width / 2d) + ":" + numberFormat.format(height);
+        }
       }
     }
     return null;
