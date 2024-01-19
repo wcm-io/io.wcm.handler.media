@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-class NextGenerationDynamicMediaReferenceTest {
+class NextGenDynamicMediaReferenceTest {
 
   private static final String SAMPLE_ASSET_ID = "urn:aaid:aem:18412592-06f9-4d97-afac-a9387237c243";
   private static final String SAMPLE_FILENAME = "my-image.jpg";
@@ -35,7 +35,7 @@ class NextGenerationDynamicMediaReferenceTest {
 
   @Test
   void testFromReference() {
-    NextGenerationDynamicMediaReference underTest = NextGenerationDynamicMediaReference.fromReference(SAMPLE_REFERENCE);
+    NextGenDynamicMediaReference underTest = NextGenDynamicMediaReference.fromReference(SAMPLE_REFERENCE);
     assertNotNull(underTest);
     assertEquals(SAMPLE_ASSET_ID, underTest.getAssetId());
     assertEquals(SAMPLE_FILENAME, underTest.getFileName());
@@ -45,18 +45,18 @@ class NextGenerationDynamicMediaReferenceTest {
 
   @Test
   void testFromReference_Invalid() {
-    assertNull(NextGenerationDynamicMediaReference.fromReference("wurstbrot"));
-    assertNull(NextGenerationDynamicMediaReference.fromReference("/wurst/brot"));
-    assertNull(NextGenerationDynamicMediaReference.fromReference(""));
+    assertNull(NextGenDynamicMediaReference.fromReference("wurstbrot"));
+    assertNull(NextGenDynamicMediaReference.fromReference("/wurst/brot"));
+    assertNull(NextGenDynamicMediaReference.fromReference(""));
   }
 
   @Test
   void testIsReference() {
-    assertTrue(NextGenerationDynamicMediaReference.isReference(SAMPLE_REFERENCE));
-    assertFalse(NextGenerationDynamicMediaReference.isReference("wurstbrot"));
-    assertFalse(NextGenerationDynamicMediaReference.isReference("/wurst/brot"));
-    assertFalse(NextGenerationDynamicMediaReference.isReference(""));
-    assertFalse(NextGenerationDynamicMediaReference.isReference(null));
+    assertTrue(NextGenDynamicMediaReference.isReference(SAMPLE_REFERENCE));
+    assertFalse(NextGenDynamicMediaReference.isReference("wurstbrot"));
+    assertFalse(NextGenDynamicMediaReference.isReference("/wurst/brot"));
+    assertFalse(NextGenDynamicMediaReference.isReference(""));
+    assertFalse(NextGenDynamicMediaReference.isReference(null));
   }
 
 }

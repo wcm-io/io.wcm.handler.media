@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
  * Example: <code>/urn:aaid:aem:18412592-06f9-4d97-afac-a9387237c243/my-image.jpg</code>
  * </p>
  */
-public final class NextGenerationDynamicMediaReference {
+public final class NextGenDynamicMediaReference {
 
   private static final Pattern REFERENCE_PATTERN = Pattern.compile("^/(urn:[^/]+)/([^/]+)$");
   private static final String ASSET_ID_PREFIX = "urn:";
@@ -44,7 +44,7 @@ public final class NextGenerationDynamicMediaReference {
    * @param assetId Asset ID (has to start with "urn:")
    * @param fileName File name
    */
-  public NextGenerationDynamicMediaReference(@NotNull String assetId, @NotNull String fileName) {
+  public NextGenDynamicMediaReference(@NotNull String assetId, @NotNull String fileName) {
     if (!StringUtils.startsWith(assetId, ASSET_ID_PREFIX)) {
       throw new IllegalArgumentException("Asset ID must start with '" + ASSET_ID_PREFIX + "'");
     }
@@ -78,14 +78,14 @@ public final class NextGenerationDynamicMediaReference {
    * @param reference Reference
    * @return Parsed reference or null if reference is invalid
    */
-  public static @Nullable NextGenerationDynamicMediaReference fromReference(@NotNull String reference) {
+  public static @Nullable NextGenDynamicMediaReference fromReference(@NotNull String reference) {
     Matcher matcher = REFERENCE_PATTERN.matcher(reference);
     if (!matcher.matches()) {
       return null;
     }
     String assetId = matcher.group(1);
     String fileName = matcher.group(2);
-    return new NextGenerationDynamicMediaReference(assetId, fileName);
+    return new NextGenDynamicMediaReference(assetId, fileName);
   }
 
   /**
