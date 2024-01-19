@@ -159,7 +159,7 @@ public final class ImageFileServletSelector {
       }
     }
     if (contentDispositionAttachment) {
-      result.append(".").append(AbstractMediaFileServlet.SELECTOR_DOWNLOAD);
+      result.append(".").append(MediaFileServletConstants.SELECTOR_DOWNLOAD);
     }
 
     return result.toString();

@@ -39,6 +39,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * with rendering via dynamic media. The fallback to AEM-rendered renditions is disabled.
  */
 @ExtendWith(AemContextExtension.class)
+@SuppressWarnings("java:S5976") // ignore similar tests
 class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaNoFallbackTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
 
   @Override

@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_DISPOSITION;
+import static io.wcm.handler.media.impl.MediaFileServletConstants.SELECTOR_DOWNLOAD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -58,7 +60,7 @@ class MediaFileServletTest {
     assertEquals(ContentType.JPEG, context.response().getContentType());
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getOutput().length);
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getContentLength());
-    assertNull(context.response().getHeader(AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION));
+    assertNull(context.response().getHeader(HEADER_CONTENT_DISPOSITION));
   }
 
   @Test
@@ -72,12 +74,12 @@ class MediaFileServletTest {
     assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getOutput().length);
     assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getContentLength());
     // forced content disposition header for SVG to prevent stored XSS
-    assertEquals("attachment;", context.response().getHeader(AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION));
+    assertEquals("attachment;", context.response().getHeader(HEADER_CONTENT_DISPOSITION));
   }
 
   @Test
   void testGet_Download() throws Exception {
-    context.requestPathInfo().setSelectorString(AbstractMediaFileServlet.SELECTOR_DOWNLOAD);
+    context.requestPathInfo().setSelectorString(SELECTOR_DOWNLOAD);
 
     underTest.service(context.request(), context.response());
 
@@ -85,12 +87,12 @@ class MediaFileServletTest {
     assertEquals(ContentType.DOWNLOAD, context.response().getContentType());
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getOutput().length);
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getContentLength());
-    assertEquals("attachment;", context.response().getHeader(AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION));
+    assertEquals("attachment;", context.response().getHeader(HEADER_CONTENT_DISPOSITION));
   }
 
   @Test
   void testGet_Download_Suffix() throws Exception {
-    context.requestPathInfo().setSelectorString(AbstractMediaFileServlet.SELECTOR_DOWNLOAD);
+    context.requestPathInfo().setSelectorString(SELECTOR_DOWNLOAD);
     context.requestPathInfo().setSuffix("sample_image.jpg");
 
     underTest.service(context.request(), context.response());
@@ -99,7 +101,7 @@ class MediaFileServletTest {
     assertEquals(ContentType.DOWNLOAD, context.response().getContentType());
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getOutput().length);
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getContentLength());
-    assertEquals("attachment;filename=\"sample_image.jpg\"", context.response().getHeader(AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION));
+    assertEquals("attachment;filename=\"sample_image.jpg\"", context.response().getHeader(HEADER_CONTENT_DISPOSITION));
   }
 
   @Test

@@ -58,7 +58,7 @@ import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.JcrBinary;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -96,6 +96,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
    * @param mediaArgs Media args
    * @param fileName File name
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   InlineRendition(Resource resource, Media media, MediaArgs mediaArgs, MediaHandlerConfig mediaHandlerConfig,
       String fileName, Adaptable adaptable) {
     this.resource = resource;
@@ -393,7 +394,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
         + "." + ImageFileServletSelector.build(dimension.getWidth(), dimension.getHeight(),
             mediaUrlCropDimension, this.rotation, this.mediaArgs.getImageQualityPercentage(),
             this.mediaArgs.isContentDispositionAttachment())
-        + "." + MediaFileServlet.EXTENSION + "/"
+        + "." + MediaFileServletConstants.EXTENSION + "/"
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + ImageFileServlet.getImageFileName(getFileName(),
             mediaArgs.getEnforceOutputFileExtension());
@@ -418,9 +419,9 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
     }
 
     // URL to render scaled image via {@link InlineRenditionServlet}
-    String path = resourcePath + "." + MediaFileServlet.SELECTOR
-        + "." + MediaFileServlet.SELECTOR_DOWNLOAD
-        + "." + MediaFileServlet.EXTENSION + "/" + getFileName();
+    String path = resourcePath + "." + MediaFileServletConstants.SELECTOR
+        + "." + MediaFileServletConstants.SELECTOR_DOWNLOAD
+        + "." + MediaFileServletConstants.EXTENSION + "/" + getFileName();
 
     // build externalized URL
     UrlHandler urlHandler = AdaptTo.notNull(this.adaptable, UrlHandler.class);
@@ -520,6 +521,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
+  @SuppressWarnings("java:S112") // allow runtime exception
   public long getFileSize() {
     Node node = this.resource.adaptTo(Node.class);
     if (node != null) {

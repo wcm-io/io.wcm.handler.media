@@ -49,7 +49,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * Optional support for Content-Disposition header ("download_attachment").
  */
 @Component(service = Servlet.class, immediate = true, property = {
-    "sling.servlet.extensions=" + MediaFileServlet.EXTENSION,
+    "sling.servlet.extensions=" + MediaFileServletConstants.EXTENSION,
     "sling.servlet.selectors=" + ImageFileServlet.SELECTOR,
     "sling.servlet.resourceTypes=" + JcrConstants.NT_FILE,
     "sling.servlet.resourceTypes=" + JcrConstants.NT_RESOURCE,
@@ -67,6 +67,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
   private AssetStore assetStore;
 
   @Override
+  @SuppressWarnings("java:S3776") // ignore complexity
   protected byte @Nullable [] getBinaryData(@NotNull Resource resource, @NotNull SlingHttpServletRequest request) throws IOException {
     // get media app config
     MediaHandlerConfig config = AdaptTo.notNull(request, MediaHandlerConfig.class);

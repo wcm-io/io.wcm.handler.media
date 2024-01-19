@@ -60,6 +60,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
    * @param mediaArgs Media args
    * @param damContext DAM context objects
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   DamRendition(CropDimension cropDimension, Integer rotation, MediaArgs mediaArgs, DamContext damContext) {
     this.damContext = damContext;
     this.mediaArgs = mediaArgs;

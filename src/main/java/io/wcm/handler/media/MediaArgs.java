@@ -767,6 +767,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   @Override
+  @SuppressWarnings("java:S3776") // ignore complexity
   public String toString() {
     ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE);
     if (mediaFormatOptions != null && mediaFormatOptions.length > 0) {
@@ -851,10 +852,9 @@ public final class MediaArgs implements Cloneable {
    * Custom clone-method for {@link MediaArgs}
    * @return the cloned {@link MediaArgs}
    */
-  // CHECKSTYLE:OFF
   @Override
+  @SuppressWarnings({ "java:S2975", "java:S1182", "checkstyle:SuperCloneCheck" }) // ignore clone warnings
   public MediaArgs clone() { //NOPMD
-    // CHECKSTYLE:ON
     MediaArgs clone = new MediaArgs();
 
     clone.mediaFormatOptions = ArrayUtils.clone(this.mediaFormatOptions);

@@ -36,7 +36,7 @@ import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageFileServletSelector;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop;
@@ -99,7 +99,7 @@ final class DamUriTemplate implements UriTemplate {
     MediaArgs mediaArgs = damContext.getMediaArgs();
     String mediaPath = RenditionMetadata.buildMediaPath(rendition.getPath()
         + "." + ImageFileServletSelector.build(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, imageQualityPercentage, false)
-        + "." + MediaFileServlet.EXTENSION,
+        + "." + MediaFileServletConstants.EXTENSION,
         ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
     UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
     String url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())

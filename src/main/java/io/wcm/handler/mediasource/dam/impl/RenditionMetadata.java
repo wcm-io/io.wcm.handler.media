@@ -42,7 +42,7 @@ import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryParams;
@@ -179,13 +179,13 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    */
   public @NotNull String getMediaPath(boolean contentDispositionAttachment) {
     if (contentDispositionAttachment) {
-      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServlet.SELECTOR
-          + "." + MediaFileServlet.SELECTOR_DOWNLOAD
-          + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServletConstants.SELECTOR
+          + "." + MediaFileServletConstants.SELECTOR_DOWNLOAD
+          + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
     }
     else if (MediaFileType.isVectorImage(getFileExtension())) {
-      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServlet.SELECTOR
-          + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServletConstants.SELECTOR
+          + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
     }
     else if (MediaFileType.isBrowserImage(getFileExtension()) || !MediaFileType.isImage(getFileExtension())) {
       // use "deep URL" to reference rendition directly
@@ -196,7 +196,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       // image rendition uses a file extension that cannot be displayed in browser directly - render via ImageFileServlet
       return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
           + "." + getWidth() + "." + getHeight()
-          + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+          + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
     }
   }
 
@@ -240,6 +240,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @param checkHeight Height
    * @return true if matches
    */
+  @SuppressWarnings("java:S1126")
   public boolean matches(long checkWidth, long checkHeight) {
     if (checkWidth != 0 && checkWidth != getWidth()) {
       return false;
@@ -304,6 +305,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   @Override
+  @SuppressWarnings("java:S3776") // ignore complexity
   public int compareTo(RenditionMetadata obj) {
     // always prefer the virtual rendition
     boolean thisIsVirtualRendition = this instanceof VirtualTransformedRenditionMetadata;

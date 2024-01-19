@@ -174,7 +174,7 @@ class ResourceMediaTest {
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
     assertTrue(underTest.isValid());
 
-    HtmlElement<?> img = underTest.getMetadata().getElement();
+    HtmlElement img = underTest.getMetadata().getElement();
     assertTrue(img instanceof io.wcm.handler.commons.dom.Image);
     assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.50.24.file/asset1.jpg 50w, "
         + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg 100w, "
@@ -213,20 +213,20 @@ class ResourceMediaTest {
     assertTrue(underTest.isValid());
 
     // validate picture and sources
-    HtmlElement<?> picture = underTest.getMetadata().getElement();
+    HtmlElement picture = underTest.getMetadata().getElement();
     assertTrue(picture instanceof io.wcm.handler.commons.dom.Picture);
 
     List<Element> sources = picture.getChildren("source");
     assertEquals(2, sources.size());
 
-    HtmlElement<?> source1 = (HtmlElement<?>)sources.get(0);
+    HtmlElement source1 = (HtmlElement)sources.get(0);
     assertEquals("media1", source1.getAttributeValue("media"));
     assertEquals(
         "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.150.71.file/asset1.jpg 150w, "
             + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg 100w",
         source1.getAttributeValue("srcset"));
 
-    HtmlElement<?> source2 = (HtmlElement<?>)sources.get(1);
+    HtmlElement source2 = (HtmlElement)sources.get(1);
     assertNull(source2.getAttributeValue("media"));
     assertEquals(
         "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.90.43.file/asset1.jpg 90w, "
@@ -234,7 +234,7 @@ class ResourceMediaTest {
         source2.getAttributeValue("srcset"));
 
     // validate img
-    HtmlElement<?> img = (HtmlElement<?>)picture.getChild("img");
+    HtmlElement img = (HtmlElement)picture.getChild("img");
     assertTrue(img instanceof io.wcm.handler.commons.dom.Image);
   }
 

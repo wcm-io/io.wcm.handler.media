@@ -369,7 +369,7 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  public HtmlElement<?> buildElement() {
+  public HtmlElement buildElement() {
     return build().getElement();
   }
 

@@ -122,7 +122,7 @@ public interface MediaHandler {
    * @param element Media markup element.
    * @return true if media element is invalid
    */
-  boolean isValidElement(@Nullable HtmlElement<?> element);
+  boolean isValidElement(@Nullable HtmlElement element);
 
   /**
    * Returns an empty media that is marked as invalid.

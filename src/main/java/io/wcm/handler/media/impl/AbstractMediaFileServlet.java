@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_DISPOSITION;
+import static io.wcm.handler.media.impl.MediaFileServletConstants.SELECTOR_DOWNLOAD;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,16 +49,6 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  */
 abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
-
-  /**
-   * Selector for forcing a "save-as" dialog in the browser
-   */
-  public static final String SELECTOR_DOWNLOAD = "download_attachment";
-
-  /**
-   * Content disposition header
-   */
-  public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
   @Override
   @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")

@@ -79,37 +79,32 @@ public class ImageMapParserImplTest {
   @Test
   void testMap_WithLinkResolver() {
     context.registerService(ImageMapLinkResolver.class, new DummyImageMapLinkResolver(context));
-    ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
 
-    assertEquals(EXPECTED_AREAS_RESOLVED, underTest.parseMap(MAP_STRING));
+    assertEquals(EXPECTED_AREAS_RESOLVED, getImageMapParser().parseMap(MAP_STRING));
   }
 
   @Test
   void testMap_WithoutLinkResolver() {
-    ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
-
-    assertEquals(EXPECTED_AREAS_UNRESOLVED, underTest.parseMap(MAP_STRING));
+    assertEquals(EXPECTED_AREAS_UNRESOLVED, getImageMapParser().parseMap(MAP_STRING));
   }
 
   @Test
   void testNull() {
-    ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
-
-    assertNull(underTest.parseMap(null));
+    assertNull(getImageMapParser().parseMap(null));
   }
 
   @Test
   void testEmptyString() {
-    ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
-
-    assertNull(underTest.parseMap(""));
+    assertNull(getImageMapParser().parseMap(""));
   }
 
   @Test
   void testInvalidString() {
-    ImageMapParser underTest = AdaptTo.notNull(context.request(), ImageMapParser.class);
+    assertNull(getImageMapParser().parseMap("[xyz]["));
+  }
 
-    assertNull(underTest.parseMap("[xyz]["));
+  private ImageMapParser getImageMapParser() {
+    return AdaptTo.notNull(context.request(), ImageMapParser.class);
   }
 
 }

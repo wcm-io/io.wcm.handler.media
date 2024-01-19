@@ -114,9 +114,14 @@ public final class MediaHandlerImpl implements MediaHandler {
    * @param mediaRequest Media request
    * @return Media metadata (never null)
    */
-  @SuppressWarnings({ "null", "unused" })
-  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   @NotNull
+  @SuppressWarnings({
+      "null", "unused", "java:S2589",
+      "java:S3776", "java:S6541", // ignore complexity
+      "java:S112", // allow runtime exception
+      "java:S1192" // multiple strings
+  })
+  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   Media processRequest(@NotNull final MediaRequest mediaRequest) {
 
     // detect media source
@@ -225,8 +230,8 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
-  @SuppressWarnings("null")
-  public boolean isValidElement(HtmlElement<?> element) {
+  @SuppressWarnings({ "null", "java:S2589" })
+  public boolean isValidElement(HtmlElement element) {
 
     // if it is null it is always invalid
     if (element == null) {
@@ -286,6 +291,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
+  @SuppressWarnings("java:S112") // allow runtime exception
   public Media invalid() {
     // build invalid media with first media source
     Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getSources().stream().findFirst().orElse(null);
