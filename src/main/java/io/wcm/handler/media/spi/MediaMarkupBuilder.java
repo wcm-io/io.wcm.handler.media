@@ -60,7 +60,7 @@ public interface MediaMarkupBuilder {
    * @return Media element or null if media is invalid
    */
   @Nullable
-  HtmlElement<?> build(@NotNull Media media);
+  HtmlElement build(@NotNull Media media);
 
   /**
    * Checks if the given HTML element is valid.
@@ -68,6 +68,6 @@ public interface MediaMarkupBuilder {
    * @param element Media markup element.
    * @return true if media element is invalid
    */
-  boolean isValidMedia(@NotNull HtmlElement<?> element);
+  boolean isValidMedia(@NotNull HtmlElement element);
 
 }

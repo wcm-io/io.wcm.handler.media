@@ -79,7 +79,7 @@ public final class MediaMarkupBuilderUtil {
       "java:S3776" // ignore complexity
   })
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
-  public static void addDiffDecoration(@NotNull HtmlElement<?> mediaElement, @NotNull Resource resource,
+  public static void addDiffDecoration(@NotNull HtmlElement mediaElement, @NotNull Resource resource,
       @NotNull String refProperty, @NotNull SlingHttpServletRequest request, @Nullable MediaHandlerConfig mediaHandlerConfig) {
 
     PageManager pageManager = request.getResourceResolver().adaptTo(PageManager.class);

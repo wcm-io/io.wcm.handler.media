@@ -231,7 +231,7 @@ public final class MediaHandlerImpl implements MediaHandler {
 
   @Override
   @SuppressWarnings({ "null", "java:S2589" })
-  public boolean isValidElement(HtmlElement<?> element) {
+  public boolean isValidElement(HtmlElement element) {
 
     // if it is null it is always invalid
     if (element == null) {

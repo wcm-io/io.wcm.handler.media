@@ -222,7 +222,7 @@ public final class DamMediaSource extends MediaSource {
 
   @Override
   @SuppressWarnings({ "PMD.AvoidAccessibilityAlteration", "java:S3011" })
-  public void setCustomIPECropRatios(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
+  public void setCustomIPECropRatios(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
     }

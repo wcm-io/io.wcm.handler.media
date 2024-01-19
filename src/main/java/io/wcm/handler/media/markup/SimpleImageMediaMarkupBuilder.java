@@ -77,10 +77,10 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   }
 
   @Override
-  public final HtmlElement<?> build(@NotNull Media media) {
+  public final HtmlElement build(@NotNull Media media) {
 
     // render media element for rendition
-    HtmlElement<?> mediaElement = getMediaElement(media);
+    HtmlElement mediaElement = getMediaElement(media);
 
     // further processing in edit or preview mode
     applyWcmMarkup(mediaElement, media);
@@ -93,7 +93,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param media Media metadata
    * @return Media element with properties or null if media metadata is invalid
    */
-  protected @Nullable HtmlElement<?> getMediaElement(@NotNull Media media) {
+  protected @Nullable HtmlElement getMediaElement(@NotNull Media media) {
     PictureSource[] pictureSources = media.getMediaRequest().getMediaArgs().getPictureSources();
     if (pictureSources != null && pictureSources.length > 0) {
       return getPictureElement(media);
@@ -109,7 +109,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @return <code>img</code> element with properties or null if media metadata is invalid
    */
   @SuppressWarnings("java:S3776") // ignore complexity
-  protected @Nullable HtmlElement<?> getPictureElement(@NotNull Media media) {
+  protected @Nullable HtmlElement getPictureElement(@NotNull Media media) {
     PictureSource[] pictureSources = media.getMediaRequest().getMediaArgs().getPictureSources();
 
     Picture picture = new Picture();
@@ -138,7 +138,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     }
 
     // add image element
-    HtmlElement<?> image = getImageElement(media);
+    HtmlElement image = getImageElement(media);
     if (image == null) {
       return null;
     }
@@ -167,7 +167,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @return <code>img</code> element with properties or null if media metadata is invalid
    */
   @SuppressWarnings({ "java:S3776", "java:S2589" }) // ignore complexity
-  protected @Nullable HtmlElement<?> getImageElement(@NotNull Media media) {
+  protected @Nullable HtmlElement getImageElement(@NotNull Media media) {
     Image img = null;
 
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
@@ -318,7 +318,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param media Media
    * @return Unchanged element or wrapped element with map
    */
-  protected final @Nullable HtmlElement<?> applyImageMap(@Nullable HtmlElement<?> element, @NotNull Media media) {
+  protected final @Nullable HtmlElement applyImageMap(@Nullable HtmlElement element, @NotNull Media media) {
     List<ImageMapArea> mapData = media.getMap();
     if (!(element instanceof Image) || mapData == null) {
       return element;
@@ -368,7 +368,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   }
 
   @Override
-  public final boolean isValidMedia(@NotNull HtmlElement<?> element) {
+  public final boolean isValidMedia(@NotNull HtmlElement element) {
     if (element instanceof Image) {
       Image img = (Image)element;
       return StringUtils.isNotEmpty(img.getSrc())

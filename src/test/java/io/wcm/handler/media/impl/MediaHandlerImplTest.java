@@ -392,7 +392,7 @@ class MediaHandlerImplTest {
     }
 
     @Override
-    public void enableMediaDrop(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
+    public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
       // not supported
     }
 
@@ -409,12 +409,12 @@ class MediaHandlerImplTest {
     }
 
     @Override
-    public HtmlElement<?> build(Media media) {
+    public HtmlElement build(Media media) {
       return new Image(media.getUrl());
     }
 
     @Override
-    public boolean isValidMedia(HtmlElement<?> element) {
+    public boolean isValidMedia(HtmlElement element) {
       return true;
     }
 

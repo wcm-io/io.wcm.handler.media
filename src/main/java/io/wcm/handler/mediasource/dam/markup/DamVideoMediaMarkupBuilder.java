@@ -133,7 +133,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   @Override
-  public final HtmlElement<?> build(@NotNull Media media) {
+  public final HtmlElement build(@NotNull Media media) {
     return getVideoPlayerElement(media);
   }
 
@@ -208,7 +208,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   @Override
-  public final boolean isValidMedia(@NotNull HtmlElement<?> element) {
+  public final boolean isValidMedia(@NotNull HtmlElement element) {
     return (element instanceof Video);
   }
 

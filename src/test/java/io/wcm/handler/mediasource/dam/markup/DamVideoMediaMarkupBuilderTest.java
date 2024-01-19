@@ -69,7 +69,7 @@ class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
 
   @Test
   void testBuild() throws Exception {
-    HtmlElement<?> element = underTest.build(video);
+    HtmlElement element = underTest.build(video);
     assertTrue(element instanceof Video);
 
     Video videoElement = (Video)element;

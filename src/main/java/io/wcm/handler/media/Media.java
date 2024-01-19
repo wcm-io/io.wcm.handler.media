@@ -49,8 +49,8 @@ public final class Media {
 
   private final @NotNull MediaSource mediaSource;
   private @NotNull MediaRequest mediaRequest;
-  private HtmlElement<?> element;
-  private Function<Media, HtmlElement<?>> elementBuilder;
+  private HtmlElement element;
+  private Function<Media, HtmlElement> elementBuilder;
   private String url;
   private Asset asset;
   private Collection<Rendition> renditions;
@@ -97,7 +97,7 @@ public final class Media {
    * @return Html element
    */
   @JsonIgnore
-  public @Nullable HtmlElement<?> getElement() {
+  public @Nullable HtmlElement getElement() {
     if (this.element == null && this.elementBuilder != null) {
       this.element = this.elementBuilder.apply(this);
       this.elementBuilder = null;
@@ -110,7 +110,7 @@ public final class Media {
    */
   @JsonIgnore
   public @Nullable String getMarkup() {
-    HtmlElement<?> el = getElement();
+    HtmlElement el = getElement();
     if (markup == null && el != null) {
       if (el instanceof Span) {
         // in case of span get inner HTML markup, do not include span element itself
@@ -130,7 +130,7 @@ public final class Media {
   /**
    * @param value Function that builds the HTML element representation on demand
    */
-  public void setElementBuilder(@NotNull Function<Media, HtmlElement<?>> value) {
+  public void setElementBuilder(@NotNull Function<Media, HtmlElement> value) {
     this.elementBuilder = value;
     this.markup = null;
   }

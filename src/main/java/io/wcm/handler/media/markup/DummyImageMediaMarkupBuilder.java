@@ -75,7 +75,7 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
   @SuppressWarnings({ "null", "unused", "java:S2589" })
   @SuppressFBWarnings("STYLE")
   @Override
-  public HtmlElement<?> build(@NotNull Media media) {
+  public HtmlElement build(@NotNull Media media) {
 
     // Create dummy image element to be displayed in Edit mode as placeholder.
     Dimension dimension = MediaMarkupBuilderUtil.getMediaformatDimension(media);
@@ -106,7 +106,7 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
   }
 
   @Override
-  public boolean isValidMedia(@NotNull HtmlElement<?> element) {
+  public boolean isValidMedia(@NotNull HtmlElement element) {
     return false;
   }
 
