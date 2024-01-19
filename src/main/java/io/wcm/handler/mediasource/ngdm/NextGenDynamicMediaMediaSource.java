@@ -108,7 +108,7 @@ public class NextGenDynamicMediaMediaSource extends MediaSource {
   }
 
   @Override
-  public void enableMediaDrop(@NotNull HtmlElement<?> element, @NotNull MediaRequest mediaRequest) {
+  public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     // not supported
   }
 
