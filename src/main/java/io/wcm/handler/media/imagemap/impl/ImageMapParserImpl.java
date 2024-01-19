@@ -53,7 +53,7 @@ public class ImageMapParserImpl<T> implements ImageMapParser<T> {
   @Override
   @SuppressWarnings({
       "null", "unchecked",
-      "java:S3776", "S135" // ignore complexity
+      "java:S3776", "java:S135" // ignore complexity
   })
   public @Nullable List<ImageMapArea<T>> parseMap(@Nullable String mapString) {
     if (StringUtils.isBlank(mapString)) {
