@@ -61,7 +61,7 @@ import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
-import io.wcm.testing.mock.aem.dam.MockAssetDelivery;
+import io.wcm.testing.mock.aem.dam.ngdm.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -139,7 +139,7 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
-        "/asset/delivery/" + assetId + "/sample.jpg?preferwebp=true&quality=85&width={width}");
+        "/adobe/dynamicmedia/deliver/" + assetId + "/sample.jpg?preferwebp=true&quality=85&width={width}");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 192, 120,
         "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
   }
@@ -184,7 +184,7 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 160, 120,
-        "/asset/delivery/" + assetId + "/sample.jpg?c=16%2C0%2C160%2C120&preferwebp=true&quality=85&width={width}");
+        "/adobe/dynamicmedia/deliver/" + assetId + "/sample.jpg?c=16%2C0%2C160%2C120&preferwebp=true&quality=85&width={width}");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 160, 120,
         "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.16,0,176,120.file/sample.jpg");
   }

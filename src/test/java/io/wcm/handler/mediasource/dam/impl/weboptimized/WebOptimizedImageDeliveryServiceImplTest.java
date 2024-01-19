@@ -30,7 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
-import io.wcm.testing.mock.aem.dam.MockAssetDelivery;
+import io.wcm.testing.mock.aem.dam.ngdm.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -76,10 +76,10 @@ class WebOptimizedImageDeliveryServiceImplTest {
     Asset asset = context.create().asset("/content/dam/Test_1.jpg", 10, 10, ContentType.JPEG);
     String assetId = MockAssetDelivery.getAssetId(asset);
 
-    assertEquals("/asset/delivery/" + assetId + "/test-1.jpg?preferwebp=true",
+    assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?preferwebp=true",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()));
 
-    assertEquals("/asset/delivery/" + assetId + "/test-1.jpg?c=0%2C0%2C2%2C4&preferwebp=true&r=90&width=10",
+    assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?c=0%2C0%2C2%2C4&preferwebp=true&r=90&width=10",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
             .width(10L).cropDimension(new CropDimension(0, 0, 2, 4)).rotation(90)));
   }
