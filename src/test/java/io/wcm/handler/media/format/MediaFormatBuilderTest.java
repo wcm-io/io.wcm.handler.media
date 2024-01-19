@@ -134,6 +134,7 @@ class MediaFormatBuilderTest {
   }
 
   @Test
+  @SuppressWarnings("java:S5778")
   void testNullName() {
     assertThrows(IllegalArgumentException.class, () -> {
       MediaFormatBuilder.create(null).build();
@@ -141,6 +142,7 @@ class MediaFormatBuilderTest {
   }
 
   @Test
+  @SuppressWarnings("java:S5778")
   void testIllegalName() {
     assertThrows(IllegalArgumentException.class, () -> {
       MediaFormatBuilder.create("name with spaces").build();
@@ -148,6 +150,7 @@ class MediaFormatBuilderTest {
   }
 
   @Test
+  @SuppressWarnings("java:S5778")
   void testMinWidthHeight_withOtherWidthHeightRestrictions() {
     assertThrows(IllegalArgumentException.class, () -> {
       MediaFormatBuilder.create("name")

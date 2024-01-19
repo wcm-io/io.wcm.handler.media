@@ -54,6 +54,7 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
+@SuppressWarnings("java:S2699") // all tests have assertions
 class SmartCropTest {
 
   private final AemContext context = AppAemContext.newAemContext();

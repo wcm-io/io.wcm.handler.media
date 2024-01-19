@@ -74,7 +74,10 @@ public final class MediaMarkupBuilderUtil {
    * @param request Servlet request
    * @param mediaHandlerConfig Media handler config (can be null, but should not be null)
    */
-  @SuppressWarnings("null")
+  @SuppressWarnings({
+      "null",
+      "java:S3776" // ignore complexity
+  })
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public static void addDiffDecoration(@NotNull HtmlElement<?> mediaElement, @NotNull Resource resource,
       @NotNull String refProperty, @NotNull SlingHttpServletRequest request, @Nullable MediaHandlerConfig mediaHandlerConfig) {

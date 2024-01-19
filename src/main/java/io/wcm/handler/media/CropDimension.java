@@ -148,6 +148,7 @@ public final class CropDimension extends Dimension {
    * @return Crop dimension instance
    * @throws IllegalArgumentException if crop string syntax is invalid
    */
+  @SuppressWarnings("java:S1192") // ignore duplicated strings
   public static @NotNull CropDimension fromCropString(@NotNull String cropString) {
     if (StringUtils.isEmpty(cropString)) {
       throw new IllegalArgumentException("Invalid crop string: '" + cropString + "'.");

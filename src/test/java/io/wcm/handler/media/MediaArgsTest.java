@@ -153,7 +153,10 @@ class MediaArgsTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({
+      "deprecation",
+      "java:S5961" // ignore number of asserts
+  })
   void testClone() {
     MediaFormatOption[] mediaFormatOptions = new MediaFormatOption[] {
         new MediaFormatOption(EDITORIAL_1COL, true),

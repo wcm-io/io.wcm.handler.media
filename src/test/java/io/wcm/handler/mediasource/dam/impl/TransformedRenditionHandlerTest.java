@@ -47,6 +47,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * Tests for {@link TransformedRenditionHandler}
  */
 @ExtendWith(AemContextExtension.class)
+@SuppressWarnings("java:S2699") // all tests have assertions
 class TransformedRenditionHandlerTest {
 
   private AemContext context = AppAemContext.newAemContext();

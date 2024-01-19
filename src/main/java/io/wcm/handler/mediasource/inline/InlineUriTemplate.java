@@ -36,7 +36,7 @@ import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.JcrBinary;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
@@ -74,7 +74,7 @@ final class InlineUriTemplate implements UriTemplate {
     String path = resourcePath
         + "." + ImageFileServletSelector.build(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation,
             mediaArgs.getImageQualityPercentage(), false)
-        + "." + MediaFileServlet.EXTENSION
+        + "." + MediaFileServletConstants.EXTENSION
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + "/" + ImageFileServlet.getImageFileName(fileName, mediaArgs.getEnforceOutputFileExtension());
 

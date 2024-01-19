@@ -72,7 +72,7 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
         && mediaArgs.isDummyImage();
   }
 
-  @SuppressWarnings({ "null", "unused" })
+  @SuppressWarnings({ "null", "unused", "java:S2589" })
   @SuppressFBWarnings("STYLE")
   @Override
   public HtmlElement<?> build(@NotNull Media media) {

@@ -50,6 +50,7 @@ class CropDimensionTest {
   }
 
   @Test
+  @SuppressWarnings("java:S5961") // ignore number of asserts
   void testEquals() {
     CropDimension dimension1 = new CropDimension(15, 5, 20, 10);
     CropDimension dimension2 = new CropDimension(15, 5, 20, 10);

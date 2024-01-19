@@ -64,6 +64,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * and renders the result using the ImageFileServlet.
  */
 @ExtendWith(AemContextExtension.class)
+@SuppressWarnings("java:S5976") // ignore similar tests
 class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   final AemContext context = AppAemContext.newAemContext();
