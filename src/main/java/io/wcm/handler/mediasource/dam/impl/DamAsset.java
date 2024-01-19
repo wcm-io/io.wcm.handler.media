@@ -52,7 +52,7 @@ import io.wcm.wcm.commons.util.ToStringStyle;
  */
 public final class DamAsset extends SlingAdaptable implements Asset {
 
-  private final com.day.cq.dam.api.Asset damAsset;
+  private final com.day.cq.dam.api.Asset asset;
   private final CropDimension cropDimension;
   private final Integer rotation;
   private final MediaArgs defaultMediaArgs;
@@ -60,21 +60,21 @@ public final class DamAsset extends SlingAdaptable implements Asset {
 
   /**
    * @param media Media metadata
-   * @param damAsset DAM asset
+   * @param asset DAM asset
    * @param mediaHandlerConfig Media handler config
    * @param dynamicMediaSupportService Dynamic media support service
    * @param webOptimizedImageDeliveryService Web optimized image delivery service
    * @param adaptable Adaptable from current context
    */
-  public DamAsset(Media media, com.day.cq.dam.api.Asset damAsset, MediaHandlerConfig mediaHandlerConfig,
+  public DamAsset(Media media, com.day.cq.dam.api.Asset asset, MediaHandlerConfig mediaHandlerConfig,
       DynamicMediaSupportService dynamicMediaSupportService,
       WebOptimizedImageDeliveryService webOptimizedImageDeliveryService,
       Adaptable adaptable) {
-    this.damAsset = damAsset;
-    this.cropDimension = rescaleCropDimension(damAsset, media.getCropDimension());
+    this.asset = asset;
+    this.cropDimension = rescaleCropDimension(asset, media.getCropDimension());
     this.rotation = media.getRotation();
     this.defaultMediaArgs = media.getMediaRequest().getMediaArgs();
-    this.damContext = new DamContext(damAsset, defaultMediaArgs, mediaHandlerConfig,
+    this.damContext = new DamContext(asset, defaultMediaArgs, mediaHandlerConfig,
         dynamicMediaSupportService, webOptimizedImageDeliveryService, adaptable);
   }
 
@@ -107,7 +107,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
    * @return Single value
    */
   private @Nullable String getPropertyAwareOfArray(@NotNull String propertyName) {
-    Object valueObject = damAsset.getMetadataValueFromJcr(propertyName);
+    Object valueObject = asset.getMetadataValueFromJcr(propertyName);
     String value = null;
     if (valueObject != null) {
       if (valueObject instanceof Object[]) {
@@ -146,7 +146,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
 
   @Override
   public @NotNull ValueMap getProperties() {
-    return new ValueMapDecorator(damAsset.getMetadata());
+    return new ValueMapDecorator(asset.getMetadata());
   }
 
   @Override

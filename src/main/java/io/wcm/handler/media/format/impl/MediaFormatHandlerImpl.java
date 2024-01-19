@@ -116,6 +116,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Matching media formats, sorted by size (biggest first), ranking, name
    */
   @Override
+  @SuppressWarnings({ "java:S3776", "java:S1066" }) //ignore complexity
   public @NotNull SortedSet<MediaFormat> getSameBiggerMediaFormats(@NotNull MediaFormat mediaFormatRequested, boolean filterRenditionGroup) {
     SortedSet<MediaFormat> matchingFormats = new TreeSet<>(new MediaFormatSizeRankingComparator());
 
@@ -163,6 +164,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Matching media formats, sorted by size (biggest first), ranking, name
    */
   @Override
+  @SuppressWarnings({ "java:S3776", "java:S1066" }) //ignore complexity
   public @NotNull SortedSet<MediaFormat> getSameSmallerMediaFormats(@NotNull MediaFormat mediaFormatRequested, boolean filterRenditionGroup) {
     SortedSet<MediaFormat> matchingFormats = new TreeSet<>(new MediaFormatSizeRankingComparator());
 
@@ -290,6 +292,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Matching media formats sorted by their ranking or an empty list if no matching format was found
    */
   @Override
+  @SuppressWarnings("java:S3776") //ignore complexity
   public @NotNull SortedSet<MediaFormat> detectMediaFormats(@Nullable String extension, long fileSize, long width, long height) {
 
     // sort media formats by ranking

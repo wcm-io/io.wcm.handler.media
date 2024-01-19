@@ -25,6 +25,7 @@ import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataName
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_HEIGHT;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_WIDTH;
 import static io.wcm.handler.mediasource.dam.impl.metadata.WorkflowTestUtil.PKG_ROOT;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -86,7 +87,7 @@ class RenditionMetadataWorkflowProcessTest {
     when(workflowData.getPayload()).thenReturn("/invalid/path");
 
     // execute, ensure no exceptions are thrown
-    underTest.execute(workItem, workflowSession, metaDataMap);
+    assertDoesNotThrow(() -> underTest.execute(workItem, workflowSession, metaDataMap));
   }
 
   @Test

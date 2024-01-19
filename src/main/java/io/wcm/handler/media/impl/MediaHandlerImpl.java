@@ -114,9 +114,13 @@ public final class MediaHandlerImpl implements MediaHandler {
    * @param mediaRequest Media request
    * @return Media metadata (never null)
    */
-  @SuppressWarnings({ "null", "unused" })
-  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   @NotNull
+  @SuppressWarnings({
+      "null", "unused",
+      "java:S3776", "java:S6541", // ignore complexity
+      "java:S112" // allow runtime exception
+  })
+  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   Media processRequest(@NotNull final MediaRequest mediaRequest) {
 
     // detect media source
@@ -286,6 +290,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
+  @SuppressWarnings("java:S112") // allow runtime exception
   public Media invalid() {
     // build invalid media with first media source
     Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getSources().stream().findFirst().orElse(null);

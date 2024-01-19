@@ -37,7 +37,7 @@ import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.ImageTransformation;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryParams;
@@ -101,7 +101,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
     return RenditionMetadata.buildMediaPath(getRendition().getPath()
         + "." + ImageFileServletSelector.build(getWidth(), getHeight(),
             this.cropDimension, this.rotation, this.imageQualityPercentage, contentDispositionAttachment)
-        + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+        + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
   }
 
   @Override

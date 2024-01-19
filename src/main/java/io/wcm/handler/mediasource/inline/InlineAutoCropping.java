@@ -58,10 +58,8 @@ class InlineAutoCropping {
 
   private CropDimension calculateAutoCropDimension(@NotNull MediaFormat mediaFormat) {
     double ratio = mediaFormat.getRatio();
-    if (ratio > 0) {
-      if (imageDimension.getWidth() > 0 && imageDimension.getHeight() > 0) {
-        return ImageTransformation.calculateAutoCropDimension(imageDimension.getWidth(), imageDimension.getHeight(), ratio);
-      }
+    if (ratio > 0 && imageDimension.getWidth() > 0 && imageDimension.getHeight() > 0) {
+      return ImageTransformation.calculateAutoCropDimension(imageDimension.getWidth(), imageDimension.getHeight(), ratio);
     }
     return null;
   }

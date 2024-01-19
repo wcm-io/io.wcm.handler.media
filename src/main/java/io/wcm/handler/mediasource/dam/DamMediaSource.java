@@ -122,7 +122,10 @@ public final class DamMediaSource extends MediaSource {
   }
 
   @Override
-  @SuppressWarnings("null")
+  @SuppressWarnings({
+      "null",
+      "java:S3776" // ignore complexity
+  })
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   public @NotNull Media resolveMedia(@NotNull Media media) {
     String mediaRef = getMediaRef(media.getMediaRequest(), mediaHandlerConfig);
@@ -180,7 +183,7 @@ public final class DamMediaSource extends MediaSource {
   }
 
   @Override
-  @SuppressWarnings("null")
+  @SuppressWarnings({ "null", "java:S2589" })
   public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;

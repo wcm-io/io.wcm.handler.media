@@ -72,7 +72,7 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.imagemap.impl.ImageMapParserImplTest;
 import io.wcm.handler.media.impl.ImageFileServlet;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
@@ -401,6 +401,7 @@ class InlineMediaSourceTest {
   }
 
   @Test
+  @SuppressWarnings("java:S5961") // ignore complexity
   void testWithFixedDimensions() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Rendition rendition;
@@ -476,6 +477,7 @@ class InlineMediaSourceTest {
   }
 
   @Test
+  @SuppressWarnings("java:S5961") // ignore complexity
   void testWithMediaFormats() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media;
@@ -641,7 +643,7 @@ class InlineMediaSourceTest {
     assertNotNull(media.getAsset(), "asset?");
     assertNotNull(media.getRendition(), "rendition?");
     assertEquals(ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineSampleImage/mediaInline."
-            + MediaFileServlet.SELECTOR + "." + MediaFileServlet.SELECTOR_DOWNLOAD + ".file/sample_image_215x102.jpg",
+        + MediaFileServletConstants.SELECTOR + "." + MediaFileServletConstants.SELECTOR_DOWNLOAD + ".file/sample_image_215x102.jpg",
         media.getRendition().getUrl(), "rendition.mediaUrl");
   }
 

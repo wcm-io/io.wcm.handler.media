@@ -31,8 +31,8 @@ import com.day.cq.commons.jcr.JcrConstants;
  * Optional support for Content-Disposition header ("download_attachment").
  */
 @Component(service = Servlet.class, immediate = true, property = {
-    "sling.servlet.extensions=" + MediaFileServlet.EXTENSION,
-    "sling.servlet.selectors=" + MediaFileServlet.SELECTOR,
+    "sling.servlet.extensions=" + MediaFileServletConstants.EXTENSION,
+    "sling.servlet.selectors=" + MediaFileServletConstants.SELECTOR,
     "sling.servlet.resourceTypes=" + JcrConstants.NT_FILE,
     "sling.servlet.resourceTypes=" + JcrConstants.NT_RESOURCE,
     "sling.servlet.methods=" + HttpConstants.METHOD_GET
@@ -40,14 +40,6 @@ import com.day.cq.commons.jcr.JcrConstants;
 public final class MediaFileServlet extends AbstractMediaFileServlet {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * Selector
-   */
-  public static final String SELECTOR = "media_file";
-
-  /**
-   * Extension
-   */
-  public static final String EXTENSION = "file";
+  // inherits all functionality
 
 }

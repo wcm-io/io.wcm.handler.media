@@ -40,6 +40,7 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
+@SuppressWarnings("java:S5976") // ignore similar tests
 class ImageFileServletTest {
 
   private final AemContext context = AppAemContext.newAemContext();

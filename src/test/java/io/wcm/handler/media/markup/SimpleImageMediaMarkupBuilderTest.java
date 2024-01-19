@@ -350,7 +350,7 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
-    builder.build(media);
+    assertNotNull(builder.build(media));
   }
 
   @Test

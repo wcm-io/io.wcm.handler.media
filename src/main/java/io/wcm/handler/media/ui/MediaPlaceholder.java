@@ -88,7 +88,7 @@ public class MediaPlaceholder {
       return ((ResourceMedia)media).getMetadata();
     }
     log.warn("Invalid 'media' parameter passed to MediaPlaceholder model. "
-        + "Expected: " + Media.class.getName() + ", actual: " + media.getClass().getName());
+        + "Expected: {}, actual: {}", Media.class.getName(), media.getClass().getName());
     return null;
   }
 

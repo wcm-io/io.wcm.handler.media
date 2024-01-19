@@ -108,6 +108,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param media Media metadata
    * @return <code>img</code> element with properties or null if media metadata is invalid
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   protected @Nullable HtmlElement<?> getPictureElement(@NotNull Media media) {
     PictureSource[] pictureSources = media.getMediaRequest().getMediaArgs().getPictureSources();
 
@@ -165,6 +166,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param media Media metadata
    * @return <code>img</code> element with properties or null if media metadata is invalid
    */
+  @SuppressWarnings({ "java:S3776", "java:S2589" }) // ignore complexity
   protected @Nullable HtmlElement<?> getImageElement(@NotNull Media media) {
     Image img = null;
 

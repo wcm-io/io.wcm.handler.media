@@ -126,6 +126,7 @@ class RenditionMetadataListenerServiceTest {
   }
 
   @Test
+  @SuppressWarnings("java:S2925") // allow Thread.sleep()
   void testUpdateRendition_LastModified() throws PersistenceException, InterruptedException {
     underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
         "threadPoolSize", 0);

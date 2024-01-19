@@ -354,6 +354,7 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param mediaArgs Media args
    * @return Rendition or null if none found
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   private RenditionMetadata getExactMatchRendition(final Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     // check for fixed width and/or height request
