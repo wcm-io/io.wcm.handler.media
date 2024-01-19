@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,12 @@ class NextGenDynamicMediaReferenceTest {
     assertFalse(NextGenDynamicMediaReference.isReference("/wurst/brot"));
     assertFalse(NextGenDynamicMediaReference.isReference(""));
     assertFalse(NextGenDynamicMediaReference.isReference(null));
+  }
+
+  @Test
+  void testNewInstance_IllegalArgument() {
+    assertThrows(IllegalArgumentException.class,
+        () -> new NextGenDynamicMediaReference("wurstbrot", SAMPLE_FILENAME));
   }
 
 }
