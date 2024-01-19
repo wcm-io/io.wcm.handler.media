@@ -78,7 +78,10 @@ public final class NextGenDynamicMediaReference {
    * @param reference Reference
    * @return Parsed reference or null if reference is invalid
    */
-  public static @Nullable NextGenDynamicMediaReference fromReference(@NotNull String reference) {
+  public static @Nullable NextGenDynamicMediaReference fromReference(@Nullable String reference) {
+    if (reference == null) {
+      return null;
+    }
     Matcher matcher = REFERENCE_PATTERN.matcher(reference);
     if (!matcher.matches()) {
       return null;

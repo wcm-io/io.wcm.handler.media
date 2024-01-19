@@ -49,6 +49,7 @@ class NextGenDynamicMediaReferenceTest {
     assertNull(NextGenDynamicMediaReference.fromReference("wurstbrot"));
     assertNull(NextGenDynamicMediaReference.fromReference("/wurst/brot"));
     assertNull(NextGenDynamicMediaReference.fromReference(""));
+    assertNull(NextGenDynamicMediaReference.fromReference(null));
   }
 
   @Test
