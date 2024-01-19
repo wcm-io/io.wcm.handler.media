@@ -30,14 +30,13 @@ import io.wcm.handler.media.imagemap.ImageMapArea;
 
 /**
  * Implementation of {@link ImageMapArea}.
- * @param <T> Link result type
  */
-public class ImageMapAreaImpl<T> implements ImageMapArea<T> {
+public class ImageMapAreaImpl implements ImageMapArea {
 
   private final String shape;
   private final String coordinates;
   private final String relativeCoordinates;
-  private final @Nullable T link;
+  private final Object link;
   private final String linkUrl;
   private final String linkWindowTarget;
   private final String altText;
@@ -51,7 +50,7 @@ public class ImageMapAreaImpl<T> implements ImageMapArea<T> {
    * @param altText Alt. text
    */
   public ImageMapAreaImpl(@NotNull String shape, @NotNull String coordinates, @Nullable String relativeCoordinates,
-      @Nullable T link, @NotNull String linkUrl, @Nullable String linkWindowTarget, @Nullable String altText) {
+      @Nullable Object link, @NotNull String linkUrl, @Nullable String linkWindowTarget, @Nullable String altText) {
     this.shape = shape;
     this.coordinates = coordinates;
     this.relativeCoordinates = relativeCoordinates;
@@ -92,7 +91,7 @@ public class ImageMapAreaImpl<T> implements ImageMapArea<T> {
   }
 
   @Override
-  public @Nullable T getLink() {
+  public @Nullable Object getLink() {
     return link;
   }
 

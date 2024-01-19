@@ -33,15 +33,6 @@ import org.osgi.annotation.versioning.ConsumerType;
 public interface ImageMapLinkResolver<T> {
 
   /**
-   * Resolve link URL.
-   * @param linkUrl Link URL
-   * @param context Context resource where the image map is defined
-   * @return Resolved link URL or null.
-   */
-  @Nullable
-  String resolve(@NotNull String linkUrl, @NotNull Resource context);
-
-  /**
    * Resolve link.
    * @param linkUrl Link URL
    * @param linkWindowTarget Link window target
