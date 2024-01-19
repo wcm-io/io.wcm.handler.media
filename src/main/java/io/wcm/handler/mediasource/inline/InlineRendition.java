@@ -521,6 +521,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
+  @SuppressWarnings("java:S112") // allow runtime exception
   public long getFileSize() {
     Node node = this.resource.adaptTo(Node.class);
     if (node != null) {

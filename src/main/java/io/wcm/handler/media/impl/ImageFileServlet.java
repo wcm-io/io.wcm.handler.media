@@ -67,6 +67,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
   private AssetStore assetStore;
 
   @Override
+  @SuppressWarnings("java:S3776") // ignore complexity
   protected byte @Nullable [] getBinaryData(@NotNull Resource resource, @NotNull SlingHttpServletRequest request) throws IOException {
     // get media app config
     MediaHandlerConfig config = AdaptTo.notNull(request, MediaHandlerConfig.class);

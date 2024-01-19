@@ -116,9 +116,10 @@ public final class MediaHandlerImpl implements MediaHandler {
    */
   @NotNull
   @SuppressWarnings({
-      "null", "unused",
+      "null", "unused", "java:S2589",
       "java:S3776", "java:S6541", // ignore complexity
-      "java:S112" // allow runtime exception
+      "java:S112", // allow runtime exception
+      "java:S1192" // multiple strings
   })
   @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   Media processRequest(@NotNull final MediaRequest mediaRequest) {

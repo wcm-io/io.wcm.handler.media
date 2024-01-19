@@ -111,6 +111,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return List of media formats with and without mandatory setting.
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   public @NotNull MediaFormatOption @Nullable [] getMediaFormatOptions() {
     Map<String, MediaFormatOption> mediaFormatOptions = new LinkedHashMap<>();
 
