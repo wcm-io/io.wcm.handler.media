@@ -47,11 +47,12 @@ public class ImageMapParserImpl<T> implements ImageMapParser {
   private Resource resource;
 
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
-  private ImageMapLinkResolver<T> linkResolver;
+  @SuppressWarnings("java:S3740") // don't use generic here
+  private ImageMapLinkResolver linkResolver;
 
   @Override
   @SuppressWarnings({
-      "null",
+      "unchecked",
       "java:S3776", "java:S135" // ignore complexity
   })
   public @Nullable List<ImageMapArea> parseMap(@Nullable String mapString) {
@@ -83,7 +84,7 @@ public class ImageMapParserImpl<T> implements ImageMapParser {
         relativeCoordinates = StringUtils.substringBetween(relativeCoordinates, "(", ")");
 
         // resolve and validate via link handler
-        T link = null;
+        Object link = null;
         if (linkResolver != null) {
           link = linkResolver.resolveLink(linkUrl, linkWindowTarget, resource);
           if (link != null) {
