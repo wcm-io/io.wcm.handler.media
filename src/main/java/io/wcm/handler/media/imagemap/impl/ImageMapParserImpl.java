@@ -41,7 +41,7 @@ import io.wcm.handler.media.spi.ImageMapLinkResolver;
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 }, adapters = ImageMapParser.class)
-public class ImageMapParserImpl<T> implements ImageMapParser {
+public class ImageMapParserImpl implements ImageMapParser {
 
   @SlingObject
   private Resource resource;
