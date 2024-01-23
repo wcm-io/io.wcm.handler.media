@@ -33,16 +33,20 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
+import com.day.cq.wcm.api.WCMMode;
+import com.day.cq.wcm.api.components.ComponentContext;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaRequest;
+import io.wcm.handler.media.markup.MediaMarkupBuilderUtil;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
+import io.wcm.sling.models.annotations.AemObject;
 
 /**
  * Handles remote asset referenced via Next Generation Dynamic Media.
@@ -66,6 +70,11 @@ public class NextGenDynamicMediaMediaSource extends MediaSource {
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
   @OSGiService
   private MimeTypeService mimeTypeService;
+
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private WCMMode wcmMode;
+  @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private ComponentContext componentContext;
 
   @Override
   public @NotNull String getId() {
@@ -137,7 +146,14 @@ public class NextGenDynamicMediaMediaSource extends MediaSource {
 
   @Override
   public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
-    // not supported
+    if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
+      return;
+    }
+    if (componentContext != null && componentContext.getEditContext() != null
+        && MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext)) {
+      // check for this class is hard-coded in smartcropaction.js from core components
+      element.addCssClass("cq-dd-image");
+    }
   }
 
 }
