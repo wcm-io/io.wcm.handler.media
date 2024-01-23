@@ -65,8 +65,7 @@ final class NextGenDynamicMediaAsset implements Asset {
 
   @Override
   public @Nullable String getPath() {
-    // not supported
-    return null;
+    return context.getReference().toReference();
   }
 
   @Override
