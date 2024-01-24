@@ -466,11 +466,6 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     assertEquals(mediaUrl, media.getUrl(), "mediaUrl");
 
     Rendition rendition = media.getRendition();
-    /*  // TODO: check width/height here?
-    assertEquals(width, rendition.getWidth(), "rendition width");
-    assertEquals(height, rendition.getHeight(), "rendition height");
-    */
-
     Layer layer = media.getRendition().adaptTo(Layer.class);
     if (layer != null) {
       assertEquals(width, layer.getWidth(), "rendition layer width");
