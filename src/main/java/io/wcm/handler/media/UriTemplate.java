@@ -41,12 +41,12 @@ public interface UriTemplate {
   UriTemplateType getType();
 
   /**
-   * @return Maximum width that can be requested for the given asset
+   * @return Maximum width that can be requested for the given asset. Returns -1 if no maximum width is defined.
    */
   long getMaxWidth();
 
   /**
-   * @return Maximum height that can be requested for the given asset
+   * @return Maximum height that can be requested for the given asset. Returns -1 if no maximum height is defined.
    */
   long getMaxHeight();
 

@@ -20,8 +20,10 @@
 package io.wcm.handler.mediasource.ngdm;
 
 import java.util.Date;
+import java.util.Objects;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,19 +49,39 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   private final NextGenDynamicMediaContext context;
   private final NextGenDynamicMediaReference reference;
+  private final MediaArgs mediaArgs;
   private final String url;
+  private MediaFormat resolvedMediaFormat;
+  private long width;
+  private long height;
 
   NextGenDynamicMediaRendition(@NotNull NextGenDynamicMediaContext context, @NotNull MediaArgs mediaArgs) {
     this.context = context;
     this.reference = context.getReference();
+    this.mediaArgs = mediaArgs;
+
+    // set first media format as resolved format - because only the first is supported
+    MediaFormat firstMediaFormat = MediaArgsDimension.getFirstMediaFormat(mediaArgs);
+    if (firstMediaFormat != null) {
+      this.resolvedMediaFormat = firstMediaFormat;
+
+      // calculate width/height
+      this.width = firstMediaFormat.getEffectiveMinWidth();
+      if (this.width > 0) {
+        double ratio = MediaArgsDimension.getRequestedRatio(mediaArgs);
+        this.height = Math.round(this.width / ratio);
+      }
+    }
 
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .rotation(context.getMedia().getRotation())
         .quality(ImageQualityPercentage.getAsInteger(mediaArgs, context.getMediaHandlerConfig()));
-
-    Dimension ratio = MediaArgsDimension.getRequestedRatioAsWidthHeight(mediaArgs);
-    if (ratio != null) {
-      params.cropSmartRatio(ratio);
+    if (this.width > 0) {
+      params.width(this.width);
+    }
+    Dimension ratioDimension = MediaArgsDimension.getRequestedRatioAsWidthHeight(mediaArgs);
+    if (ratioDimension != null) {
+      params.cropSmartRatio(ratioDimension);
     }
 
     this.url = new NextGenDynamicMediaUrlBuilder(context).build(params);
@@ -83,8 +105,11 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @Nullable String getFileExtension() {
-    // TODO: selected/forced file name or original file name
-    return FilenameUtils.getExtension(reference.getFileName());
+    String extension = mediaArgs.getEnforceOutputFileExtension();
+    if (StringUtils.isEmpty(extension)) {
+      extension = FilenameUtils.getExtension(reference.getFileName());
+    }
+    return extension;
   }
 
   @Override
@@ -100,8 +125,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @Nullable MediaFormat getMediaFormat() {
-    // TODO: resolved media format
-    return null;
+    return this.resolvedMediaFormat;
   }
 
   @Override
@@ -131,14 +155,12 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public long getWidth() {
-    // TODO: width/height?
-    return 0;
+    return width;
   }
 
   @Override
   public long getHeight() {
-    // TODO: width/height?
-    return 0;
+    return height;
   }
 
   @Override
@@ -162,6 +184,11 @@ final class NextGenDynamicMediaRendition implements Rendition {
   public <AdapterType> @Nullable AdapterType adaptTo(@NotNull Class<AdapterType> arg0) {
     // not adaption supported
     return null;
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toString(url, "#invalid");
   }
 
 }

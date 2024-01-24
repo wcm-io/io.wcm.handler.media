@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import static io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension.getFirstMediaFormat;
 import static io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension.getRequestedDimension;
 import static io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension.getRequestedRatio;
 import static io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension.getRequestedRatioAsWidthHeight;
@@ -66,6 +67,16 @@ class MediaArgsDimensionTest {
     assertEquals(2d / 1.5d, Ratio.get(getRequestedRatioAsWidthHeight(mediaFormat(mf -> mf.ratio(2d, 1.5d)))), 0.0001d);
     assertEquals(16d / 9d, Ratio.get(getRequestedRatioAsWidthHeight(mediaFormat(mf -> mf.ratio(16L, 9L)))), 0.0001d);
     assertNull(getRequestedRatioAsWidthHeight(new MediaArgs()));
+  }
+
+  @Test
+  void testGetFirstMediaFormat() {
+    MediaFormat mf1 = MediaFormatBuilder.create("mf1").build();
+    MediaFormat mf2 = MediaFormatBuilder.create("mf1").build();
+
+    assertEquals(mf1, getFirstMediaFormat(new MediaArgs().mediaFormat(mf1)));
+    assertEquals(mf2, getFirstMediaFormat(new MediaArgs().mediaFormats(mf2, mf1)));
+    assertNull(getFirstMediaFormat(new MediaArgs()));
   }
 
   private static @NotNull Dimension dimension(long width, long height) {

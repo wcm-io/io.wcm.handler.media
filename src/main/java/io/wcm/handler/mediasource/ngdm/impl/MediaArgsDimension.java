@@ -117,7 +117,12 @@ public final class MediaArgsDimension {
     return null;
   }
 
-  private static @Nullable MediaFormat getFirstMediaFormat(@NotNull MediaArgs mediaArgs) {
+  /**
+   * Gets first media format.
+   * @param mediaArgs Media args
+   * @return First media format or null
+   */
+  public static @Nullable MediaFormat getFirstMediaFormat(@NotNull MediaArgs mediaArgs) {
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     if (mediaFormats != null && mediaFormats.length > 0) {
       return mediaFormats[0];

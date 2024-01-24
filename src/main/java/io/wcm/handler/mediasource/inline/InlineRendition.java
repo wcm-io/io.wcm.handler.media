@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -184,11 +185,10 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
     this.url = buildMediaUrl(scaledDimension);
 
     // set first media format as resolved format - because only the first is supported
-    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    if (url != null && mediaFormats != null && mediaFormats.length > 0) {
-      this.resolvedMediaFormat = mediaFormats[0];
+    MediaFormat firstMediaFormat = MediaArgsDimension.getFirstMediaFormat(mediaArgs);
+    if (url != null && firstMediaFormat != null) {
+      this.resolvedMediaFormat = firstMediaFormat;
     }
-
   }
 
   private boolean isValidScalingDimension(@Nullable Dimension dimension) {
@@ -615,6 +615,11 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
       }
     }
     return layer;
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toString(url, "#invalid");
   }
 
 }
