@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Parses and validates Next Generation Dynamic Media references.
  * <p>
- * Example: <code>/urn:aaid:aem:18412592-06f9-4d97-afac-a9387237c243/my-image.jpg</code>
+ * Example: <code>/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg</code>
  * </p>
  */
 public final class NextGenDynamicMediaReference {

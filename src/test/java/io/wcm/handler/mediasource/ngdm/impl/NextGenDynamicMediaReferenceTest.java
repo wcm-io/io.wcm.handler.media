@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 
 class NextGenDynamicMediaReferenceTest {
 
-  private static final String SAMPLE_ASSET_ID = "urn:aaid:aem:18412592-06f9-4d97-afac-a9387237c243";
+  private static final String SAMPLE_ASSET_ID = "urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678";
   private static final String SAMPLE_FILENAME = "my-image.jpg";
   private static final String SAMPLE_REFERENCE = "/" + SAMPLE_ASSET_ID + "/" + SAMPLE_FILENAME;
 
