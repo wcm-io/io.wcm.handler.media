@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.sling.commons.mime.MimeTypeService;
@@ -37,8 +38,6 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
 class NextGenDynamicMediaUrlBuilderTest {
-
-  private static final String SAMPLE_REFERENCE = "/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg";
 
   private final AemContext context = AppAemContext.newAemContext();
 

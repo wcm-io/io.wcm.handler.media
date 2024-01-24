@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,10 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 class NextGenDynamicMediaReferenceTest {
-
-  private static final String SAMPLE_ASSET_ID = "urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678";
-  private static final String SAMPLE_FILENAME = "my-image.jpg";
-  private static final String SAMPLE_REFERENCE = "/" + SAMPLE_ASSET_ID + "/" + SAMPLE_FILENAME;
 
   @Test
   void testFromReference() {

@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,8 +41,6 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ExtendWith(AemContextExtension.class)
 @SuppressWarnings("java:S2699") // all tests have assertions
 class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
-
-  private static final String SAMPLE_ASSET_ID = "urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678";
 
   @Override
   void setUp() {

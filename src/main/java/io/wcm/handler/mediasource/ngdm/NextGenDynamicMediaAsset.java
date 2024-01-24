@@ -96,9 +96,7 @@ final class NextGenDynamicMediaAsset implements Asset {
     if (rendition != null && rendition.isImage()) {
       return rendition;
     }
-    else {
-      return null;
-    }
+    return null;
   }
 
   @Override
@@ -107,13 +105,14 @@ final class NextGenDynamicMediaAsset implements Asset {
     if (rendition != null && rendition.isDownload()) {
       return rendition;
     }
-    else {
-      return null;
-    }
+    return null;
   }
 
   @Override
   public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
+    if (type == UriTemplateType.SCALE_HEIGHT) {
+      throw new IllegalArgumentException("URI template type not supported: " + type);
+    }
     return new NextGenDynamicMediaUriTemplate(context, type);
   }
 

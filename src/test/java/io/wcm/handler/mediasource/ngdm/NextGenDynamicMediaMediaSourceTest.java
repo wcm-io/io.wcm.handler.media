@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm;
 
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -45,8 +46,6 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
 class NextGenDynamicMediaMediaSourceTest {
-
-  private static final String SAMPLE_REFERENCE = "/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg";
 
   private final AemContext context = AppAemContext.newAemContext();
 

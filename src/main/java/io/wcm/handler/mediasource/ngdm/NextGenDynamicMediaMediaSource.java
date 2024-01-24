@@ -118,11 +118,6 @@ public class NextGenDynamicMediaMediaSource extends MediaSource {
       updateMediaArgsFromResource(mediaArgs, referencedResource, mediaHandlerConfig);
     }
 
-    // Check for transformations
-    media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
-    media.setRotation(getMediaRotation(media.getMediaRequest(), mediaHandlerConfig));
-    media.setMap(getMediaMap(media.getMediaRequest(), mediaHandlerConfig));
-
     NextGenDynamicMediaContext context = new NextGenDynamicMediaContext(reference, media, mediaArgs,
         nextGenDynamicMediaConfig, mediaHandlerConfig, mimeTypeService);
     NextGenDynamicMediaAsset asset = new NextGenDynamicMediaAsset(context);
