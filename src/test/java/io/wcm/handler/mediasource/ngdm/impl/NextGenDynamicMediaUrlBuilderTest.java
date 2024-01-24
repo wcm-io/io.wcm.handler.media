@@ -39,7 +39,6 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 class NextGenDynamicMediaUrlBuilderTest {
 
   private static final String SAMPLE_REFERENCE = "/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg";
-  private static final String SAMPLE_REPOSITORY = "repo1";
 
   private final AemContext context = AppAemContext.newAemContext();
 
@@ -50,7 +49,7 @@ class NextGenDynamicMediaUrlBuilderTest {
   @BeforeEach
   void setUp() throws Exception {
     nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
-    nextGenDynamicMediaConfig.setRepositoryId(SAMPLE_REPOSITORY);
+    nextGenDynamicMediaConfig.setRepositoryId("repo1");
 
     mediaHandlerConfig = AdaptTo.notNull(context.request(), MediaHandlerConfig.class);
     mimeTypeService = context.getService(MimeTypeService.class);
