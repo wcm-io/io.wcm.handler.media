@@ -35,6 +35,7 @@ The Media Handler provides:
 * Generic HTL Placeholder template
 * Generic [Granite UI components][graniteui-components] that can be used in media/image component dialogs
 * Support for Web-Optimized Image Delivery: On AEMaaCS instances renditions are transparently rendered on the edge
+* Support for [Next Generation Dynamic Media][nextgen-dm] on AEMaaCS
 * Support for [Dynamic Media][dynamic-media]
 
 Read the [general concepts][general-concepts] to get an overview of the functionality.
@@ -78,6 +79,7 @@ Sources: https://github.com/wcm-io/io.wcm.handler.media
 [component-properties]: component-properties.html
 [configuration]: configuration.html
 [file-format-support]: file-format-support.html
+[nextgen-dm]: https://experienceleague.adobe.com/docs/experience-manager-core-components/using/developing/next-gen-dm.html?lang=en
 [dynamic-media]: dynamic-media.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html

@@ -155,6 +155,7 @@ Map<String,Object> fileUploadProps = new HashMap<>();
 fileUploadProps.put("name", cfg.get("name", propNameDefault));
 fileUploadProps.put("fileNameParameter", cfg.get("fileNameParameter", propFileNameDefault));
 fileUploadProps.put("fileReferenceParameter", cfg.get("fileReferenceParameter", propFileReferenceDefault));
+fileUploadProps.put("enableNextGenDynamicMedia", true);
 
 // default values for allowUpload and mimeTypes
 fileUploadProps.put("allowUpload", ex.getBoolean(cfg.get("allowUpload", String.class)));

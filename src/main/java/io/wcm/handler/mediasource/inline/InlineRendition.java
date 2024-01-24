@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -60,6 +61,7 @@ import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.media.impl.JcrBinary;
 import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.wcm.commons.caching.ModificationDate;
@@ -183,11 +185,10 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
     this.url = buildMediaUrl(scaledDimension);
 
     // set first media format as resolved format - because only the first is supported
-    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    if (url != null && mediaFormats != null && mediaFormats.length > 0) {
-      this.resolvedMediaFormat = mediaFormats[0];
+    MediaFormat firstMediaFormat = MediaArgsDimension.getFirstMediaFormat(mediaArgs);
+    if (url != null && firstMediaFormat != null) {
+      this.resolvedMediaFormat = firstMediaFormat;
     }
-
   }
 
   private boolean isValidScalingDimension(@Nullable Dimension dimension) {
@@ -239,8 +240,8 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
   private @Nullable Dimension getScaledDimension(@NotNull Dimension originalDimension) {
 
     // check if image has to be rescaled
-    Dimension requestedDimension = getRequestedDimension();
-    double requestedRatio = getRequestedRatio();
+    Dimension requestedDimension = MediaArgsDimension.getRequestedDimension(mediaArgs);
+    double requestedRatio = MediaArgsDimension.getRequestedRatio(mediaArgs);
     double imageRatio = Ratio.get(originalDimension);
     if (requestedRatio > 0 && !Ratio.matches(requestedRatio, imageRatio)) {
       return SCALING_NOT_POSSIBLE_DIMENSION;
@@ -449,51 +450,6 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
     return false;
   }
 
-  /**
-   * Requested dimensions either from media format or fixed dimensions from media args.
-   * @return Requested dimensions
-   */
-  private @NotNull Dimension getRequestedDimension() {
-
-    // check for fixed dimensions from media args
-    if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
-      return new Dimension(mediaArgs.getFixedWidth(), mediaArgs.getFixedHeight());
-    }
-
-    // check for dimensions from mediaformat (evaluate only first media format)
-    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    if (mediaFormats != null && mediaFormats.length > 0) {
-      Dimension dimension = mediaFormats[0].getMinDimension();
-      if (dimension != null) {
-        return dimension;
-      }
-    }
-
-    // fallback to 0/0 - no specific dimension requested
-    return new Dimension(0, 0);
-  }
-
-  /**
-   * Requested ratio either from media format or fixed dimensions from media args.
-   * @return Requests ratio
-   */
-  private double getRequestedRatio() {
-
-    // check for fixed dimensions from media args
-    if (mediaArgs.getFixedWidth() > 0 && mediaArgs.getFixedHeight() > 0) {
-      return Ratio.get(mediaArgs.getFixedWidth(), mediaArgs.getFixedHeight());
-    }
-
-    // check for dimensions from mediaformat (evaluate only first media format)
-    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
-    if (mediaFormats != null && mediaFormats.length > 0 && mediaFormats[0].getRatio() > 0) {
-      return mediaFormats[0].getRatio();
-    }
-
-    // no ratio
-    return 0d;
-  }
-
   @Override
   public String getUrl() {
     return this.url;
@@ -659,6 +615,11 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
       }
     }
     return layer;
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toString(url, "#invalid");
   }
 
 }

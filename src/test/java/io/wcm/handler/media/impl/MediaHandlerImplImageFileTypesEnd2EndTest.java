@@ -36,6 +36,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.osgi.MapUtil;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -412,7 +413,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
         .dynamicMediaDisabled(dynamicMediaDisabled)
         .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .build();
-    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+    assertMedia(asset.getOriginal().adaptTo(Resource.class), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertMedia_ContentDisposition(Asset asset, int width, int height, String mediaUrl,
@@ -422,7 +423,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
         .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .contentDispositionAttachment(true)
         .build();
-    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+    assertMedia(asset.getOriginal().adaptTo(Resource.class), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertMedia_Rescale(Asset asset, int width, int height, String mediaUrl, String contentType) {
@@ -431,7 +432,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
         .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .fixedDimension(width, height)
         .build();
-    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+    assertMedia(asset.getOriginal().adaptTo(Resource.class), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType) {
@@ -446,7 +447,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
         .autoCrop(true)
         .imageQualityPercentage(imageQualityPercentage)
         .build();
-    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+    assertMedia(asset.getOriginal().adaptTo(Resource.class), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertInvalidMedia_AutoCrop(Asset asset) {
@@ -460,24 +461,26 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   }
 
   @SuppressWarnings("null")
-  void assertMedia(Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
+  void assertMedia(@Nullable Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
     assertTrue(media.isValid(), "media valid");
     assertEquals(mediaUrl, media.getUrl(), "mediaUrl");
 
-    Layer layer = AdaptTo.notNull(media.getRendition(), Layer.class);
-    assertEquals(width, layer.getWidth(), "rendition layer width");
-    assertEquals(height, layer.getHeight(), "rendition layer height");
+    Rendition rendition = media.getRendition();
+    Layer layer = media.getRendition().adaptTo(Layer.class);
+    if (layer != null) {
+      assertEquals(width, layer.getWidth(), "rendition layer width");
+      assertEquals(height, layer.getHeight(), "rendition layer height");
+    }
 
     if (!StringUtils.contains(mediaUrl, ".download_attachment.")
         && !StringUtils.contains(mediaUrl, "/is/image/")
         && !StringUtils.contains(mediaUrl, "/adobe/dynamicmedia/deliver/")) {
-      Rendition rendition = media.getRendition();
       String strippedMediaUrl = StringUtils.removeEnd(mediaUrl, DynamicMediaPath.DOWNLOAD_SUFFIX);
       assertEquals(FilenameUtils.getName(strippedMediaUrl), rendition.getFileName());
       assertEquals(FilenameUtils.getExtension(strippedMediaUrl), rendition.getFileExtension());
     }
 
-    if (StringUtils.contains(mediaUrl, ".image_file.")) {
+    if (resource != null && StringUtils.contains(mediaUrl, ".image_file.")) {
       // extract selector string from media url
       String selectors = "image_file." + StringUtils.substringBefore(StringUtils.substringAfter(mediaUrl, ".image_file."), ".file/");
 

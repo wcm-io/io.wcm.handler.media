@@ -57,9 +57,9 @@ public interface Asset extends Adaptable {
 
   /**
    * Internal path pointing to media item, if it is stored in the JCR repository.
-   * @return Repository path
+   * @return Repository path or null if not stored in repository
    */
-  @NotNull
+  @Nullable
   String getPath();
 
   /**
