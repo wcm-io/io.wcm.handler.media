@@ -22,7 +22,7 @@ package io.wcm.handler.mediasource.ngdm.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -37,7 +37,7 @@ class ImageQualityPercentageTest {
   @Mock
   MediaHandlerConfig mediaHandlerConfig;
 
-  @BeforeAll
+  @BeforeEach
   void setUp() {
     when(mediaHandlerConfig.getDefaultImageQualityPercentage()).thenReturn(0.75d);
   }
