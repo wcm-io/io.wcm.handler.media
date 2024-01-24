@@ -126,12 +126,25 @@ public final class NextGenDynamicMediaUrlBuilder {
         .append(repositoryId)
         .append(imageDeliveryPath);
     String urlParams = urlParamMap.entrySet().stream()
-        .map(entry -> URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8) + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8))
+        .map(entry -> toUrlParam(entry.getKey(), entry.getValue()))
         .collect(Collectors.joining("&"));
     if (StringUtils.isNotEmpty(urlParams)) {
       url.append("?").append(urlParams);
     }
     return url.toString();
+  }
+
+  private static @NotNull String toUrlParam(@NotNull String key, @NotNull String value) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(key).append("=");
+    // we only need to encode crop, all other parameters are numbers only
+    if (StringUtils.equals(key, PARAM_CROP)) {
+      sb.append(URLEncoder.encode(value, StandardCharsets.UTF_8));
+    }
+    else {
+      sb.append(value);
+    }
+    return sb.toString();
   }
 
 }
