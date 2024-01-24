@@ -68,12 +68,12 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
 
   @Override
   public long getMaxWidth() {
-    return -1; // unknown
+    return 0; // unknown
   }
 
   @Override
   public long getMaxHeight() {
-    return -1; // unknown
+    return 0; // unknown
   }
 
 }

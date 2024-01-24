@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.ngdm;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,10 +42,12 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
 class NextGenDynamicMediaTest {
@@ -69,7 +72,8 @@ class NextGenDynamicMediaTest {
 
   @Test
   void testAsset() {
-    Media media = mediaHandler.get(resource).build();
+    Media media = mediaHandler.get(resource)
+        .build();
     assertTrue(media.isValid());
     assertUrl(media, "preferwebp=true&quality=85");
 
@@ -92,9 +96,40 @@ class NextGenDynamicMediaTest {
     assertNull(asset.getDownloadRendition(new MediaArgs().download(true)));
 
     UriTemplate uriTemplate = asset.getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertUrl(uriTemplate, "preferwebp=true&quality=85&width={width}");
-    assertEquals(-1, uriTemplate.getMaxWidth());
-    assertEquals(-1, uriTemplate.getMaxHeight());
+    assertUriTemplate(uriTemplate, "preferwebp=true&quality=85&width={width}");
+  }
+
+  @Test
+  void testRendition_16_10() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.RATIO_16_10)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "crop=16%3A10%2Csmart&preferwebp=true&quality=85");
+
+    assertNull(rendition.getPath());
+    assertEquals(SAMPLE_FILENAME, rendition.getFileName());
+    assertEquals("jpg", rendition.getFileExtension());
+    assertEquals(-1, rendition.getFileSize());
+    assertEquals(ContentType.JPEG, rendition.getMimeType());
+    assertEquals(DummyMediaFormats.RATIO_16_10, rendition.getMediaFormat());
+    assertEquals(ValueMap.EMPTY, rendition.getProperties());
+    assertTrue(rendition.isImage());
+    assertTrue(rendition.isBrowserImage());
+    assertFalse(rendition.isVectorImage());
+    assertFalse(rendition.isDownload());
+    assertEquals(0, rendition.getWidth());
+    assertEquals(0, rendition.getHeight());
+    assertNull(rendition.getModificationDate());
+    assertFalse(rendition.isFallback());
+    assertNull(rendition.adaptTo(Resource.class));
+    assertNotNull(rendition.toString());
+
+    UriTemplate uriTemplate = rendition.getUriTemplate(UriTemplateType.SCALE_WIDTH);
+    assertUriTemplate(uriTemplate, "crop=16%3A10%2Csmart&preferwebp=true&quality=85&width={width}");
   }
 
   private static void assertUrl(Media media, String urlParams) {
@@ -105,8 +140,11 @@ class NextGenDynamicMediaTest {
     assertEquals(buildUrl(urlParams), rendition.getUrl());
   }
 
-  private static void assertUrl(UriTemplate uriTemplate, String urlParams) {
+  private static void assertUriTemplate(UriTemplate uriTemplate, String urlParams) {
     assertEquals(buildUrl(urlParams), uriTemplate.getUriTemplate());
+    assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplate.getType());
+    assertEquals(0, uriTemplate.getMaxWidth());
+    assertEquals(0, uriTemplate.getMaxHeight());
   }
 
   private static String buildUrl(String urlParams) {

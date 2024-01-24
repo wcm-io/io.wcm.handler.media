@@ -126,7 +126,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @Nullable String getMimeType() {
-    return context.getMimeTypeService().getExtension(getFileExtension());
+    return context.getMimeTypeService().getMimeType(getFileExtension());
   }
 
   @Override
