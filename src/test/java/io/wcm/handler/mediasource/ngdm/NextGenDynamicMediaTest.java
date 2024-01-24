@@ -75,7 +75,7 @@ class NextGenDynamicMediaTest {
     Media media = mediaHandler.get(resource)
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "preferwebp=true&quality=85");
+    assertUrl(media, "preferwebp=true&quality=85", "jpg");
 
     Asset asset = media.getAsset();
     assertNotNull(asset);
@@ -86,17 +86,17 @@ class NextGenDynamicMediaTest {
     assertEquals(ValueMap.EMPTY, asset.getProperties());
     assertNull(asset.adaptTo(Resource.class));
 
-    assertUrl(asset.getDefaultRendition(), "preferwebp=true&quality=85");
+    assertUrl(asset.getDefaultRendition(), "preferwebp=true&quality=85", "jpg");
 
     Rendition fixedRendition = asset.getRendition(new MediaArgs().fixedDimension(100, 50));
     assertNotNull(fixedRendition);
-    assertUrl(fixedRendition, "crop=100%3A50%2Csmart&preferwebp=true&quality=85&width=100");
+    assertUrl(fixedRendition, "crop=100%3A50%2Csmart&preferwebp=true&quality=85&width=100", "jpg");
 
     assertNotNull(asset.getImageRendition(new MediaArgs()));
     assertNull(asset.getDownloadRendition(new MediaArgs().download(true)));
 
     UriTemplate uriTemplate = asset.getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertUriTemplate(uriTemplate, "preferwebp=true&quality=85&width={width}");
+    assertUriTemplate(uriTemplate, "preferwebp=true&quality=85&width={width}", "jpg");
   }
 
   @Test
@@ -108,7 +108,7 @@ class NextGenDynamicMediaTest {
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
-    assertUrl(rendition, "crop=16%3A10%2Csmart&preferwebp=true&quality=85");
+    assertUrl(rendition, "crop=16%3A10%2Csmart&preferwebp=true&quality=85", "jpg");
 
     assertNull(rendition.getPath());
     assertEquals(SAMPLE_FILENAME, rendition.getFileName());
@@ -129,26 +129,90 @@ class NextGenDynamicMediaTest {
     assertNotNull(rendition.toString());
 
     UriTemplate uriTemplate = rendition.getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertUriTemplate(uriTemplate, "crop=16%3A10%2Csmart&preferwebp=true&quality=85&width={width}");
+    assertUriTemplate(uriTemplate, "crop=16%3A10%2Csmart&preferwebp=true&quality=85&width={width}", "jpg");
   }
 
-  private static void assertUrl(Media media, String urlParams) {
-    assertEquals(buildUrl(urlParams), media.getUrl());
+  @Test
+  void testRendition_16_10_PNG() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.RATIO_16_10)
+        .enforceOutputFileExtension("png")
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "crop=16%3A10%2Csmart&preferwebp=true&quality=85", "png");
+
+    assertEquals("png", rendition.getFileExtension());
   }
 
-  private static void assertUrl(Rendition rendition, String urlParams) {
-    assertEquals(buildUrl(urlParams), rendition.getUrl());
+  @Test
+  void testRendition_FixedDimension() {
+    Media media = mediaHandler.get(resource)
+        .fixedDimension(100, 50)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "crop=100%3A50%2Csmart&preferwebp=true&quality=85&width=100", "jpg");
   }
 
-  private static void assertUriTemplate(UriTemplate uriTemplate, String urlParams) {
-    assertEquals(buildUrl(urlParams), uriTemplate.getUriTemplate());
+  @Test
+  void testRendition_FixedMediaFormat() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.EDITORIAL_1COL)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "crop=210784%3A100000%2Csmart&preferwebp=true&quality=85&width=215", "jpg");
+  }
+
+  @Test
+  void testRendition_NonFixedSmallMediaFormat() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.NONFIXED_SMALL)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "preferwebp=true&quality=85&width=164", "jpg");
+  }
+
+  @Test
+  void testRendition_NonFixedMinWidthHeightMediaFormat() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.NONFIXED_MINWIDTHHEIGHT)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "preferwebp=true&quality=85", "jpg");
+  }
+
+  private static void assertUrl(Media media, String urlParams, String extension) {
+    assertEquals(buildUrl(urlParams, extension), media.getUrl());
+  }
+
+  private static void assertUrl(Rendition rendition, String urlParams, String extension) {
+    assertEquals(buildUrl(urlParams, extension), rendition.getUrl());
+  }
+
+  private static void assertUriTemplate(UriTemplate uriTemplate, String urlParams, String extension) {
+    assertEquals(buildUrl(urlParams, extension), uriTemplate.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplate.getType());
     assertEquals(0, uriTemplate.getMaxWidth());
     assertEquals(0, uriTemplate.getMaxHeight());
   }
 
-  private static String buildUrl(String urlParams) {
-    return "https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg?" + urlParams;
+  private static String buildUrl(String urlParams, String extension) {
+    return "https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image."
+        + extension + "?" + urlParams;
   }
 
 }
