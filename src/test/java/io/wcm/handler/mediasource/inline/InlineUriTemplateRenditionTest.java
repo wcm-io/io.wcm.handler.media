@@ -43,7 +43,7 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Rendition;
-import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -55,7 +55,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ExtendWith(AemContextExtension.class)
 class InlineUriTemplateRenditionTest {
 
-  final AemContext context = MediaSourceInlineAppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   private MediaHandler mediaHandler;
   private Resource inlineImage;

@@ -32,7 +32,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
-import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -45,7 +45,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 @ExtendWith(AemContextExtension.class)
 class InlineUriTemplateTest {
 
-  final AemContext context = MediaSourceInlineAppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   private MediaHandler mediaHandler;
   private Resource inlineImage;

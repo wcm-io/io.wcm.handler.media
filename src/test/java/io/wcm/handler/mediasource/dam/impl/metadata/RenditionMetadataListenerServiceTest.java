@@ -42,7 +42,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.DamEvent;
 
-import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.testing.mock.wcmio.wcm.MockInstanceType;
@@ -50,11 +50,11 @@ import io.wcm.testing.mock.wcmio.wcm.MockInstanceType;
 @ExtendWith(AemContextExtension.class)
 class RenditionMetadataListenerServiceTest {
 
-  private static final String ASSET_PATH = MediaSourceDamAppAemContext.DAM_PATH + "/standard.jpg";
+  private static final String ASSET_PATH = AppAemContext.DAM_PATH + "/standard.jpg";
   private static final String RENDITIONS_PATH = ASSET_PATH + "/jcr:content/renditions";
   private static final String RENDITIONS_METADATA_PATH = ASSET_PATH + "/jcr:content/" + NN_RENDITIONS_METADATA;
 
-  private final AemContext context = MediaSourceDamAppAemContext.newAemContext(ResourceResolverType.JCR_MOCK);
+  private final AemContext context = AppAemContext.newAemContext(ResourceResolverType.JCR_MOCK);
 
   private RenditionMetadataListenerService underTest;
   private Resource assetResource;
@@ -63,7 +63,7 @@ class RenditionMetadataListenerServiceTest {
   void setUp() {
     context.registerInjectActivateService(new AssetSynchonizationService());
 
-    context.load().json("/mediasource/dam/damcontent-sample.json", MediaSourceDamAppAemContext.DAM_PATH);
+    context.load().json("/mediasource/dam/damcontent-sample.json", AppAemContext.DAM_PATH);
     assetResource = context.resourceResolver().getResource(ASSET_PATH);
     assertNotNull(assetResource);
 
@@ -163,7 +163,7 @@ class RenditionMetadataListenerServiceTest {
         "threadPoolSize", 0);
 
     // simulate rendition update on video rendition
-    String assetPath = MediaSourceDamAppAemContext.DAM_PATH + "/movie.wmf";
+    String assetPath = AppAemContext.DAM_PATH + "/movie.wmf";
     String renditionPath = assetPath + "/jcr:content/renditions/cq5dam.video.hq.m4v";
     assertNotNull(context.resourceResolver().getResource(renditionPath));
     underTest.handleEvent(DamEvent.renditionUpdated(assetPath, null, renditionPath).toEvent());

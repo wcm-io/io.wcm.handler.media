@@ -53,6 +53,11 @@ import io.wcm.testing.mock.wcmio.caconfig.MockCAConfig;
 public final class AppAemContext {
 
   /**
+   * Media formats path
+   */
+  public static final String MEDIAFORMATS_PATH = "/apps/test/mediaformat";
+
+  /**
    * DAM root path
    */
   public static final String DAM_PATH = "/content/dam/test";

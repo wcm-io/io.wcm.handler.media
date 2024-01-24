@@ -39,7 +39,7 @@ import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -50,7 +50,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ExtendWith(AemContextExtension.class)
 class AssetRenditionTest {
 
-  private final AemContext context = MediaSourceDamAppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private Asset asset;
   private Rendition original;
