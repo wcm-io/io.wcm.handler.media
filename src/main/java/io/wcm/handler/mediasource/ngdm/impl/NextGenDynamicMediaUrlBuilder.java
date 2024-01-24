@@ -32,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.CropDimension;
-import io.wcm.handler.media.Rendition;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -67,11 +66,10 @@ public final class NextGenDynamicMediaUrlBuilder {
 
   /**
    * Builds the URL for a rendition.
-   * @param rendition Rendition
    * @param params Parameters
    * @return URL or null if invalid/not possible
    */
-  public @Nullable String build(@NotNull Rendition rendition, @NotNull NextGenDynamicMediaImageDeliveryParams params) {
+  public @Nullable String build(@NotNull NextGenDynamicMediaImageDeliveryParams params) {
 
     // get parameters from nextgen dynamic media config for URL parameters
     String repositoryId = context.getNextGenDynamicMediaConfig().getRepositoryId();
@@ -81,8 +79,8 @@ public final class NextGenDynamicMediaUrlBuilder {
     }
 
     // replace placeholders in image delivery path
-    String seoName = FilenameUtils.getBaseName(rendition.getFileName());
-    String format = StringUtils.toRootLowerCase(rendition.getFileExtension());
+    String seoName = FilenameUtils.getBaseName(context.getReference().getFileName());
+    String format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(context.getReference().getFileName()));
     if (!SUPPORTED_FORMATS.contains(format)) {
       format = FileExtension.JPEG;
     }
@@ -92,13 +90,17 @@ public final class NextGenDynamicMediaUrlBuilder {
 
     // prepare URL params
     Long width = params.getWidth();
+    String widthPlaceholder = params.getWidthPlaceholder();
     CropDimension cropDimension = params.getCropDimension();
     Integer rotation = params.getRotation();
     Integer quality = params.getQuality();
 
     SortedMap<String, String> urlParamMap = new TreeMap<>();
     urlParamMap.put(PARAM_PREFER_WEBP, "true");
-    if (width != null) {
+    if (widthPlaceholder != null) {
+      urlParamMap.put(PARAM_WIDTH, widthPlaceholder);
+    }
+    else if (width != null) {
       urlParamMap.put(PARAM_WIDTH, width.toString());
     }
     // TODO: different support for cropping?

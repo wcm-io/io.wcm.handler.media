@@ -30,6 +30,7 @@ import io.wcm.handler.media.CropDimension;
 public class NextGenDynamicMediaImageDeliveryParams {
 
   private Long width;
+  private String widthPlaceholder;
   private CropDimension cropDimension;
   private Integer rotation;
   private Integer quality;
@@ -47,6 +48,22 @@ public class NextGenDynamicMediaImageDeliveryParams {
    */
   public @NotNull NextGenDynamicMediaImageDeliveryParams width(@Nullable Long value) {
     this.width = value;
+    return this;
+  }
+
+  /**
+   * @return Width placeholder
+   */
+  public @Nullable String getWidthPlaceholder() {
+    return this.widthPlaceholder;
+  }
+
+  /**
+   * @param value Width placeholder
+   * @return this
+   */
+  public @NotNull NextGenDynamicMediaImageDeliveryParams widthPlaceholder(@Nullable String value) {
+    this.widthPlaceholder = value;
     return this;
   }
 

@@ -114,7 +114,7 @@ final class NextGenDynamicMediaAsset implements Asset {
 
   @Override
   public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
-    return new NextGenDynamicMediaUriTemplate();
+    return new NextGenDynamicMediaUriTemplate(context, type);
   }
 
   @Override

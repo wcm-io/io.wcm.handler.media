@@ -21,35 +21,57 @@ package io.wcm.handler.mediasource.ngdm;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
+import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaUrlBuilder;
 
 /**
  * {@link UriTemplate} implementation for Next Gen. Dynamic Media remote assets.
  */
 final class NextGenDynamicMediaUriTemplate implements UriTemplate {
 
+  private final UriTemplateType type;
+  private final String uriTemplate;
+
+  NextGenDynamicMediaUriTemplate(@NotNull NextGenDynamicMediaContext context,
+      @NotNull UriTemplateType type) {
+    this.type = type;
+
+    // TODO: build URL properly
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .widthPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH)
+        .rotation(context.getMedia().getRotation())
+        .cropDimension(context.getMedia().getCropDimension());
+
+    // set image quality.
+    params.quality(ImageQualityPercentage.getAsInteger(context.getDefaultMediaArgs(), context.getMediaHandlerConfig()));
+
+    this.uriTemplate = new NextGenDynamicMediaUrlBuilder(context).build(params);
+  }
+
   @Override
   public @NotNull String getUriTemplate() {
-    // TODO: implement uri template support
-    return null;
+    return uriTemplate;
   }
 
   @Override
   public @NotNull UriTemplateType getType() {
-    // TODO: implement uri template support
-    return null;
+    return type;
   }
 
   @Override
   public long getMaxWidth() {
-    // TODO: implement uri template support
+    // TODO: width/height?
     return 0;
   }
 
   @Override
   public long getMaxHeight() {
-    // TODO: implement uri template support
+    // TODO: width/height?
     return 0;
   }
 

@@ -32,6 +32,7 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
@@ -56,13 +57,9 @@ final class NextGenDynamicMediaRendition implements Rendition {
         .cropDimension(context.getMedia().getCropDimension());
 
     // set image quality.
-    Double quality = mediaArgs.getImageQualityPercentage();
-    if (quality == null) {
-      quality = this.context.getMediaHandlerConfig().getDefaultImageQualityPercentage();
-    }
-    params.quality((int)Math.round(quality * 100d));
+    params.quality(ImageQualityPercentage.getAsInteger(mediaArgs, context.getMediaHandlerConfig()));
 
-    this.url = new NextGenDynamicMediaUrlBuilder(context).build(this, params);
+    this.url = new NextGenDynamicMediaUrlBuilder(context).build(params);
   }
 
   @Override
@@ -155,7 +152,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
-    return new NextGenDynamicMediaUriTemplate();
+    return new NextGenDynamicMediaUriTemplate(context, type);
   }
 
   @Override
