@@ -39,7 +39,7 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTRO
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_FLYOUT_FEATURE;
-import static io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext.ROOTPATH_CONTENT;
+import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -75,9 +75,9 @@ import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.media.spi.ImageMapLinkResolver;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyImageMapLinkResolver;
 import io.wcm.handler.media.testcontext.DummyMediaHandlerConfig;
-import io.wcm.handler.media.testcontext.MediaSourceInlineAppAemContext;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
@@ -93,7 +93,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 @SuppressWarnings("null")
 class InlineMediaSourceTest {
 
-  final AemContext context = MediaSourceInlineAppAemContext.newAemContext();
+  final AemContext context = AppAemContext.newAemContext();
 
   private static final byte[] DUMMY_BINARY = new byte[] {
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10
