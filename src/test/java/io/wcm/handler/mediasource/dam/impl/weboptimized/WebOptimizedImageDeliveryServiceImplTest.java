@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.dam.ngdm.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -38,7 +39,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ExtendWith(AemContextExtension.class)
 class WebOptimizedImageDeliveryServiceImplTest {
 
-  private final AemContext context = new AemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Test
   void testEnabled_AssetDeliveryNotPresent() {
