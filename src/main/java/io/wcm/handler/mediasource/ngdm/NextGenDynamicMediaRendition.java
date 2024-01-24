@@ -59,16 +59,22 @@ final class NextGenDynamicMediaRendition implements Rendition {
     this.context = context;
     this.reference = context.getReference();
     this.mediaArgs = mediaArgs;
+    this.width = mediaArgs.getFixedWidth();
+    this.height = mediaArgs.getFixedHeight();
 
     // set first media format as resolved format - because only the first is supported
     MediaFormat firstMediaFormat = MediaArgsDimension.getFirstMediaFormat(mediaArgs);
     if (firstMediaFormat != null) {
       this.resolvedMediaFormat = firstMediaFormat;
+      if (this.width == 0) {
+        this.width = firstMediaFormat.getEffectiveMinWidth();
+      }
+    }
 
-      // calculate width/height
-      this.width = firstMediaFormat.getEffectiveMinWidth();
-      if (this.width > 0) {
-        double ratio = MediaArgsDimension.getRequestedRatio(mediaArgs);
+    // calculate height
+    if (this.width > 0) {
+      double ratio = MediaArgsDimension.getRequestedRatio(mediaArgs);
+      if (ratio > 0) {
         this.height = Math.round(this.width / ratio);
       }
     }
