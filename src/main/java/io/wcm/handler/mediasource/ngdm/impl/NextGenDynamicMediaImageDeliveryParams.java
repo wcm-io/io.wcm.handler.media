@@ -22,7 +22,7 @@ package io.wcm.handler.mediasource.ngdm.impl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
 
 /**
  * Parameters for rendering a rendition.
@@ -31,7 +31,7 @@ public class NextGenDynamicMediaImageDeliveryParams {
 
   private Long width;
   private String widthPlaceholder;
-  private CropDimension cropDimension;
+  private Dimension cropSmartRatio;
   private Integer rotation;
   private Integer quality;
 
@@ -68,18 +68,18 @@ public class NextGenDynamicMediaImageDeliveryParams {
   }
 
   /**
-   * @return Crop dimension
+   * @return Dimension with aspect ratio for smart cropping
    */
-  public @Nullable CropDimension getCropDimension() {
-    return this.cropDimension;
+  public @Nullable Dimension getCropSmartRatio() {
+    return this.cropSmartRatio;
   }
 
   /**
-   * @param value Crop dimension
+   * @param value Dimension with aspect ratio for smart cropping
    * @return this
    */
-  public @NotNull NextGenDynamicMediaImageDeliveryParams cropDimension(@Nullable CropDimension value) {
-    this.cropDimension = value;
+  public @NotNull NextGenDynamicMediaImageDeliveryParams cropSmartRatio(@Nullable Dimension value) {
+    this.cropSmartRatio = value;
     return this;
   }
 

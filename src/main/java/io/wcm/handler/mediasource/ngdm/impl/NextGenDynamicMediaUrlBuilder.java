@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -84,7 +84,10 @@ public final class NextGenDynamicMediaUrlBuilder {
 
     // replace placeholders in image delivery path
     String seoName = FilenameUtils.getBaseName(context.getReference().getFileName());
-    String format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(context.getReference().getFileName()));
+    String format = context.getDefaultMediaArgs().getEnforceOutputFileExtension();
+    if (StringUtils.isEmpty(format)) {
+      format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(context.getReference().getFileName()));
+    }
     if (!SUPPORTED_FORMATS.contains(format)) {
       format = FileExtension.JPEG;
     }
@@ -95,7 +98,7 @@ public final class NextGenDynamicMediaUrlBuilder {
     // prepare URL params
     Long width = params.getWidth();
     String widthPlaceholder = params.getWidthPlaceholder();
-    CropDimension cropDimension = params.getCropDimension();
+    Dimension cropSmartRatio = params.getCropSmartRatio();
     Integer rotation = params.getRotation();
     Integer quality = params.getQuality();
 
@@ -107,9 +110,8 @@ public final class NextGenDynamicMediaUrlBuilder {
     else if (width != null) {
       urlParamMap.put(PARAM_WIDTH, width.toString());
     }
-    // TODO: different support for cropping?
-    if (cropDimension != null) {
-      urlParamMap.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
+    if (cropSmartRatio != null) {
+      urlParamMap.put(PARAM_CROP, cropSmartRatio.getWidth() + ":" + cropSmartRatio.getHeight() + ",smart");
     }
     if (rotation != null && rotation != 0) {
       urlParamMap.put(PARAM_ROTATE, rotation.toString());

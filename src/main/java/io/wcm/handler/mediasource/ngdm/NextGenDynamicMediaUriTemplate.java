@@ -21,10 +21,12 @@ package io.wcm.handler.mediasource.ngdm;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
+import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaUrlBuilder;
@@ -41,14 +43,15 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
       @NotNull UriTemplateType type) {
     this.type = type;
 
-    // TODO: build URL properly
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .widthPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH)
         .rotation(context.getMedia().getRotation())
-        .cropDimension(context.getMedia().getCropDimension());
+        .quality(ImageQualityPercentage.getAsInteger(context.getDefaultMediaArgs(), context.getMediaHandlerConfig()));
 
-    // set image quality.
-    params.quality(ImageQualityPercentage.getAsInteger(context.getDefaultMediaArgs(), context.getMediaHandlerConfig()));
+    Dimension ratio = MediaArgsDimension.getRequestedRatioAsWidthHeight(context.getDefaultMediaArgs());
+    if (ratio != null) {
+      params.cropSmartRatio(ratio);
+    }
 
     this.uriTemplate = new NextGenDynamicMediaUrlBuilder(context).build(params);
   }

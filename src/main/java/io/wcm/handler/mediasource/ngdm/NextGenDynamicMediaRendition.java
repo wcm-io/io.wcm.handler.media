@@ -26,6 +26,7 @@ import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
@@ -33,6 +34,7 @@ import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
+import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
@@ -51,13 +53,14 @@ final class NextGenDynamicMediaRendition implements Rendition {
     this.context = context;
     this.reference = context.getReference();
 
-    // TODO: build URL properly
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .rotation(context.getMedia().getRotation())
-        .cropDimension(context.getMedia().getCropDimension());
+        .quality(ImageQualityPercentage.getAsInteger(mediaArgs, context.getMediaHandlerConfig()));
 
-    // set image quality.
-    params.quality(ImageQualityPercentage.getAsInteger(mediaArgs, context.getMediaHandlerConfig()));
+    Dimension ratio = MediaArgsDimension.getRequestedRatioAsWidthHeight(mediaArgs);
+    if (ratio != null) {
+      params.cropSmartRatio(ratio);
+    }
 
     this.url = new NextGenDynamicMediaUrlBuilder(context).build(params);
   }
