@@ -386,9 +386,6 @@ class MediaFormatHandlerTest {
 
     assertTrue(underTest.detectMediaFormats("txt", 100, 570, 270).isEmpty(), "invalid");
 
-    // test extension match
-    assertEquals(11, underTest.detectMediaFormats("swf", 0, 0, 0).size(), "swf");
-
     // test direct match
     assertEquals(7, underTest.detectMediaFormats("jpg", 100, 450, 213).size(), "editorial_2col");
 
