@@ -118,8 +118,19 @@
     var mimeType = self._detectMimeType(assetPath);
     var thumbnailObject;
     if (mimeType) {
-      var thumbnailUrl = assetPath + ".thumb.319.319.png?ck=" + new Date().getTime();
-      thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
+      if (assetPath.startsWith("/urn:")) {
+        // thumbnail for NGDM asset reference  
+        const cfg = $(".cq-FileUpload-picker-polaris").attr("polaris-config");
+        if (cfg) {
+          repositoryId = JSON.parse(cfg).repositoryId;
+          const thumbnailUrl = `https://${repositoryId}/adobe/dynamicmedia/deliver${assetPath}?width=320&preferwebp=true`;
+          thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
+        }
+      }
+      else {
+        const thumbnailUrl = assetPath + ".thumb.319.319.png?ck=" + new Date().getTime();
+        thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
+      }
     }
     self._$element.trigger($.Event("assetselected", {
       path: assetPath,
