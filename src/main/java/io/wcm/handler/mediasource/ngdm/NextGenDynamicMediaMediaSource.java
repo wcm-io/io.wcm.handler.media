@@ -34,6 +34,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.ComponentContext;
+import com.day.cq.wcm.api.components.EditConfig;
 
 import io.wcm.handler.commons.dom.HtmlElement;
 import io.wcm.handler.media.Media;
@@ -144,10 +145,16 @@ public class NextGenDynamicMediaMediaSource extends MediaSource {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
     }
-    if (componentContext != null && componentContext.getEditContext() != null
-        && MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext)) {
-      // check for this class is hard-coded in smartcropaction.js from core components
-      element.addCssClass("cq-dd-image");
+    if (componentContext != null && componentContext.getEditContext() != null) {
+      if (MediaMarkupBuilderUtil.canApplyDragDropSupport(mediaRequest, componentContext)) {
+        // check for this class is hard-coded in smartcropaction.js from core components
+        element.addCssClass("cq-dd-image");
+      }
+      EditConfig editConfig = componentContext.getEditContext().getEditConfig();
+      if (editConfig != null) {
+        // inline editing is not supported for NGDM asset references
+        editConfig.setInplaceEditingConfig(null);
+      }
     }
   }
 
