@@ -39,6 +39,7 @@ import io.wcm.handler.commons.dom.Image;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaRequest;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -121,5 +122,6 @@ class NextGenDynamicMediaMediaSourceTest {
     MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     nextGenDynamicMediaConfig.setEnabled(enabled);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
   }
 }

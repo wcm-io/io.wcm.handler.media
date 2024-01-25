@@ -41,14 +41,15 @@ class NextGenDynamicMediaUrlBuilderTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  private MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig;
+  private NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
   private MediaHandlerConfig mediaHandlerConfig;
   private MimeTypeService mimeTypeService;
 
   @BeforeEach
   void setUp() throws Exception {
-    nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
-    nextGenDynamicMediaConfig.setRepositoryId("repo1");
+    context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
+        .setRepositoryId("repo1");
+    nextGenDynamicMediaConfig = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
 
     mediaHandlerConfig = AdaptTo.notNull(context.request(), MediaHandlerConfig.class);
     mimeTypeService = context.getService(MimeTypeService.class);

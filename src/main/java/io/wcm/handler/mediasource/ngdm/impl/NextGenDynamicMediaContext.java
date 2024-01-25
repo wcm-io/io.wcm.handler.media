@@ -22,8 +22,6 @@ package io.wcm.handler.mediasource.ngdm.impl;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.jetbrains.annotations.NotNull;
 
-import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
-
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
@@ -36,7 +34,7 @@ public final class NextGenDynamicMediaContext {
   private final NextGenDynamicMediaReference reference;
   private final Media media;
   private final MediaArgs defaultMediaArgs;
-  private final NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
+  private final NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
   private final MediaHandlerConfig mediaHandlerConfig;
   private final MimeTypeService mimeTypeService;
 
@@ -50,7 +48,7 @@ public final class NextGenDynamicMediaContext {
   public NextGenDynamicMediaContext(@NotNull NextGenDynamicMediaReference reference,
       @NotNull Media media,
       @NotNull MediaArgs defaultMediaArgs,
-      @NotNull NextGenDynamicMediaConfig nextGenDynamicMediaConfig,
+      @NotNull NextGenDynamicMediaConfigService nextGenDynamicMediaConfig,
       @NotNull MediaHandlerConfig mediaHandlerConfig,
       @NotNull MimeTypeService mimeTypeService) {
     this.reference = reference;
@@ -73,7 +71,7 @@ public final class NextGenDynamicMediaContext {
     return this.defaultMediaArgs;
   }
 
-  public @NotNull NextGenDynamicMediaConfig getNextGenDynamicMediaConfig() {
+  public @NotNull NextGenDynamicMediaConfigService getNextGenDynamicMediaConfig() {
     return this.nextGenDynamicMediaConfig;
   }
 

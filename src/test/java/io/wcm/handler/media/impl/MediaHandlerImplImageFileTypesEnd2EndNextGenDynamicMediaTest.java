@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
@@ -47,6 +48,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
     MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     nextGenDynamicMediaConfig.setEnabled(true);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
     super.setUp();
   }
 
