@@ -56,7 +56,7 @@ import io.wcm.sling.models.annotations.AemObject;
     SlingHttpServletRequest.class, Resource.class
 })
 @ProviderType
-public class NextGenDynamicMediaMediaSource extends MediaSource {
+public final class NextGenDynamicMediaMediaSource extends MediaSource {
 
   /**
    * Media source ID
