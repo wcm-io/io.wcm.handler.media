@@ -157,7 +157,7 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
     assertTrue(element instanceof Image);
     assertEquals("/media/dummy.gif", element.getAttributeValue("src"));
     assertNull(element.getAttributeValue("width"));
@@ -181,7 +181,7 @@ class SimpleImageMediaMarkupBuilderTest {
     when(rendition.getHeight()).thenReturn(50L);
     when(asset.getAltText()).thenReturn("Der Jodelkaiser");
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
     assertTrue(element instanceof Image);
     assertEquals("/media/dummy.gif", element.getAttributeValue("src"));
     assertEquals(100, element.getAttributeValueAsInteger("width"));
@@ -205,7 +205,7 @@ class SimpleImageMediaMarkupBuilderTest {
     when(rendition.getHeight()).thenReturn(50L);
     when(asset.getAltText()).thenReturn("");
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
     assertTrue(element instanceof Image);
     assertEquals("/media/dummy.gif", element.getAttributeValue("src"));
     assertEquals(100, element.getAttributeValueAsInteger("width"));
@@ -225,7 +225,7 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setAsset(asset);
     media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 16)));
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
     assertTrue(element instanceof Image);
     assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
     assertNull(element.getAttributeValue("width"));
@@ -247,7 +247,7 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setAsset(asset);
     media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 16)));
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
     assertTrue(element instanceof Image);
     assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
     assertNull(element.getAttributeValue("width"));
@@ -268,7 +268,7 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setAsset(asset);
     media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 16)));
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
     assertTrue(element instanceof Image);
     assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
     assertNull(element.getAttributeValue("width"));
@@ -294,20 +294,20 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 32), rendition(RATIO_16_10, 16),
         rendition(RATIO_4_3, 40), rendition(RATIO_4_3, 20)));
 
-    HtmlElement<?> picture = builder.build(media);
+    HtmlElement picture = builder.build(media);
     assertTrue(picture instanceof Picture);
 
     List<Element> sources = picture.getChildren("source");
     assertEquals(2, sources.size());
-    HtmlElement<?> source1 = (HtmlElement<?>)sources.get(0);
+    HtmlElement source1 = (HtmlElement)sources.get(0);
     assertEquals("media1", source1.getAttributeValue("media"));
     assertEquals("sizes1", source1.getAttributeValue("sizes"));
     assertEquals("/media/dummy.64.png 64w, /media/dummy.32.png 32w", source1.getAttributeValue("srcset"));
-    HtmlElement<?> source2 = (HtmlElement<?>)sources.get(1);
+    HtmlElement source2 = (HtmlElement)sources.get(1);
     assertNull(source2.getAttributeValue("media"));
     assertEquals("/media/dummy.40.png 40w", source2.getAttributeValue("srcset"));
 
-    HtmlElement<?> img = (HtmlElement<?>)picture.getChild("img");
+    HtmlElement img = (HtmlElement)picture.getChild("img");
     assertTrue(img instanceof Image);
 
     assertEquals("/media/dummy.128.png", img.getAttributeValue("src"));
@@ -332,7 +332,7 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
     verify(mediaSource).enableMediaDrop(element, mediaRequest);
   }
 
@@ -350,11 +350,10 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setRenditions(List.of(rendition));
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
-    builder.build(media);
+    assertNotNull(builder.build(media));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   void testBuild_Image_Map() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
@@ -363,21 +362,20 @@ class SimpleImageMediaMarkupBuilderTest {
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
     media.setRenditions(List.of(rendition));
-    media.setMap((List)EXPECTED_AREAS_RESOLVED);
+    media.setMap(EXPECTED_AREAS_RESOLVED);
     when(rendition.getUrl()).thenReturn("/media/dummy.gif");
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
     assertTrue(element instanceof Span);
 
-    HtmlElement<?> img = (HtmlElement<?>)element.getChild("img");
+    HtmlElement img = (HtmlElement)element.getChild("img");
     assertTrue(img instanceof Image);
     assertEquals("/media/dummy.gif", img.getAttributeValue("src"));
 
-    assertMap((HtmlElement<?>)element.getChild("map"));
+    assertMap((HtmlElement)element.getChild("map"));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   void testBuild_Picture_Map() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
@@ -393,22 +391,22 @@ class SimpleImageMediaMarkupBuilderTest {
     media.setAsset(asset);
     media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 32), rendition(RATIO_16_10, 16),
         rendition(RATIO_4_3, 40), rendition(RATIO_4_3, 20)));
-    media.setMap((List)EXPECTED_AREAS_RESOLVED);
+    media.setMap(EXPECTED_AREAS_RESOLVED);
 
-    HtmlElement<?> picture = builder.build(media);
+    HtmlElement picture = builder.build(media);
     assertTrue(picture instanceof Picture);
 
     List<Element> sources = picture.getChildren("source");
     assertEquals(2, sources.size());
 
-    HtmlElement<?> img = (HtmlElement<?>)picture.getChild("img");
+    HtmlElement img = (HtmlElement)picture.getChild("img");
     assertTrue(img instanceof Image);
 
-    assertMap((HtmlElement<?>)picture.getChild("map"));
+    assertMap((HtmlElement)picture.getChild("map"));
   }
 
   @SuppressWarnings("unchecked")
-  private void assertMap(HtmlElement<?> element) {
+  private void assertMap(HtmlElement element) {
     assertNotNull(element, "has map element");
     assertTrue(element instanceof Map, "is map");
     assertNotNull(element.getAttributeValue("name"));

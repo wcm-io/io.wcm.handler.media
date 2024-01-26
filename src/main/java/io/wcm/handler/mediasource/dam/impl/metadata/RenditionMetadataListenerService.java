@@ -135,16 +135,11 @@ public final class RenditionMetadataListenerService implements EventHandler {
   }
 
   @Deactivate
-  private void deactivate() {
+  private void deactivate() throws InterruptedException {
     this.enabled = false;
     if (executorService != null) {
       executorService.shutdown();
-      try {
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
-      }
-      catch (InterruptedException ex) {
-        // ignore
-      }
+      executorService.awaitTermination(10, TimeUnit.SECONDS);
       executorService = null;
     }
   }

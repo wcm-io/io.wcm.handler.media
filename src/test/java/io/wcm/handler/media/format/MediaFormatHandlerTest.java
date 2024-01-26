@@ -371,13 +371,13 @@ class MediaFormatHandlerTest {
     assertNull(underTest.detectMediaFormat("txt", 100, 570, 270));
 
     // test extension match
-    assertEquals("download", "download", underTest.detectMediaFormat("zip", 0, 0, 0).getName());
+    assertEquals("download", underTest.detectMediaFormat("zip", 0, 0, 0).getName());
 
     // test direct match
-    assertEquals("editorial_2col", "editorial_2col", underTest.detectMediaFormat("jpg", 100, 450, 213).getName());
+    assertEquals("editorial_2col", underTest.detectMediaFormat("jpg", 100, 450, 213).getName());
 
     // test ranking match
-    assertEquals("showroom_campaign", "showroom_campaign", underTest.detectMediaFormat("jpg", 100, 960, 455).getName());
+    assertEquals("showroom_campaign", underTest.detectMediaFormat("jpg", 100, 960, 455).getName());
 
   }
 
@@ -385,9 +385,6 @@ class MediaFormatHandlerTest {
   void testDetectMediaFormats() {
 
     assertTrue(underTest.detectMediaFormats("txt", 100, 570, 270).isEmpty(), "invalid");
-
-    // test extension match
-    assertEquals(11, underTest.detectMediaFormats("swf", 0, 0, 0).size(), "swf");
 
     // test direct match
     assertEquals(7, underTest.detectMediaFormats("jpg", 100, 450, 213).size(), "editorial_2col");

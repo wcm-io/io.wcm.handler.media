@@ -34,6 +34,8 @@ The Media Handler provides:
 * Generic Sling Models for usage in views: [Sling Models][ui-package]
 * Generic HTL Placeholder template
 * Generic [Granite UI components][graniteui-components] that can be used in media/image component dialogs
+* Support for Web-Optimized Image Delivery: On AEMaaCS instances renditions are transparently rendered on the edge
+* Support for [Next Generation Dynamic Media][nextgen-dm] on AEMaaCS
 * Support for [Dynamic Media][dynamic-media]
 
 Read the [general concepts][general-concepts] to get an overview of the functionality.
@@ -43,6 +45,7 @@ Read the [general concepts][general-concepts] to get an overview of the function
 
 |Media Handler version |AEM version supported
 |----------------------|----------------------
+|2.0.x or higher       |AEM 6.5.17+, AEMaaCS
 |1.14.4 or higher      |AEM 6.5.7+, AEMaaCS
 |1.14.0 - 1.14.2       |AEM 6.5+, AEMaaCS
 |1.10.x - 1.13.x       |AEM 6.4.5+, AEMaaCS
@@ -76,6 +79,7 @@ Sources: https://github.com/wcm-io/io.wcm.handler.media
 [component-properties]: component-properties.html
 [configuration]: configuration.html
 [file-format-support]: file-format-support.html
+[nextgen-dm]: https://experienceleague.adobe.com/docs/experience-manager-core-components/using/developing/next-gen-dm.html?lang=en
 [dynamic-media]: dynamic-media.html
 [apidocs]: apidocs/
 [changelog]: changes-report.html

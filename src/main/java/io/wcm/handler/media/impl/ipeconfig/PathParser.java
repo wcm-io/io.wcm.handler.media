@@ -33,6 +33,7 @@ class PathParser {
   static final String NN_MEDIA_FORMAT = "wcmio:mediaFormat";
   static final String NN_CONFIG = "wcmio:config";
 
+  @SuppressWarnings("java:S1075") // not a file path
   private static final Pattern PATH_PATTERN = Pattern.compile(
       "^" + IPEConfigResourceProvider.IPECONFIG_OVERLAY_ROOTPATH + "((/[^/]+)+)"
           + "/" + NN_MEDIA_FORMAT + "((/[^/]+)+)"

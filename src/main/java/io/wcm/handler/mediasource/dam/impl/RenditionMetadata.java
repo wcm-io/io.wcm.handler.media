@@ -42,9 +42,10 @@ import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageFileServlet;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
+import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryParams;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -178,9 +179,13 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    */
   public @NotNull String getMediaPath(boolean contentDispositionAttachment) {
     if (contentDispositionAttachment) {
-      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServlet.SELECTOR
-          + "." + MediaFileServlet.SELECTOR_DOWNLOAD
-          + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServletConstants.SELECTOR
+          + "." + MediaFileServletConstants.SELECTOR_DOWNLOAD
+          + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
+    }
+    else if (MediaFileType.isVectorImage(getFileExtension())) {
+      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServletConstants.SELECTOR
+          + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
     }
     else if (MediaFileType.isBrowserImage(getFileExtension()) || !MediaFileType.isImage(getFileExtension())) {
       // use "deep URL" to reference rendition directly
@@ -191,7 +196,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       // image rendition uses a file extension that cannot be displayed in browser directly - render via ImageFileServlet
       return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
           + "." + getWidth() + "." + getHeight()
-          + "." + MediaFileServlet.EXTENSION, getFileName(contentDispositionAttachment));
+          + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
     }
   }
 
@@ -221,11 +226,21 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   /**
+   * Returns a web-optimized image delivery URL.
+   * @param damContext DAM context
+   * @return URL or null if web-optimized image delivery is not supported
+   */
+  public @Nullable String getWebOptimizedImageDeliveryPath(DamContext damContext) {
+    return damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams());
+  }
+
+  /**
    * Checks if this rendition matches the given width/height.
    * @param checkWidth Width
    * @param checkHeight Height
    * @return true if matches
    */
+  @SuppressWarnings("java:S1126")
   public boolean matches(long checkWidth, long checkHeight) {
     if (checkWidth != 0 && checkWidth != getWidth()) {
       return false;
@@ -290,6 +305,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   @Override
+  @SuppressWarnings("java:S3776") // ignore complexity
   public int compareTo(RenditionMetadata obj) {
     // always prefer the virtual rendition
     boolean thisIsVirtualRendition = this instanceof VirtualTransformedRenditionMetadata;
@@ -401,6 +417,16 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       return (AdapterType)getInputStream();
     }
     return super.adaptTo(type);
+  }
+
+  /**
+   * @deprecated Prevent finalize attack (PMD CT_CONSTRUCTOR_THROW / SEI CERT Rule OBJ-11)
+   */
+  @Override
+  @SuppressWarnings({ "PMD.EmptyFinalizer", "checkstyle:SuperFinalize", "checkstyle:NoFinalizerCheck", "java:S1113" })
+  @Deprecated(since = "2.0.0")
+  protected final void finalize() {
+    // do nothing
   }
 
 }

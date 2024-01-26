@@ -21,7 +21,6 @@ package io.wcm.handler.media.testcontext;
 
 import static io.wcm.handler.media.format.MediaFormatBuilder.create;
 
-import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.format.MediaFormat;
 
 public final class DummyMediaFormats {
@@ -35,7 +34,7 @@ public final class DummyMediaFormats {
       .label("Home Stage")
       .width(960)
       .height(485)
-      .extensions("gif", "jpg", "png", "swf")
+      .extensions("gif", "jpg", "png")
       .build();
 
   /* home_teaser */
@@ -214,16 +213,8 @@ public final class DummyMediaFormats {
       .label("Showroom Campaign Special")
       .width(960)
       .height(455)
-      .extensions("gif", "jpg", "png", "swf")
+      .extensions("gif", "jpg", "png")
       .ranking(10)
-      .build();
-
-  /* feature_flash */
-  public static final MediaFormat FEATURE_FLASH = create("feature_flash")
-      .label("Feature Flash Demo")
-      .width(570)
-      .height(270)
-      .extensions("gif", "jpg", "png", "swf")
       .build();
 
   /* wallpaper */
@@ -286,7 +277,7 @@ public final class DummyMediaFormats {
       .label("Editorial Stage Large")
       .width(960)
       .height(335)
-      .extensions("gif","jpg","png","swf")
+      .extensions("gif", "jpg", "png")
       .build();
 
   /* editorial_stage_medium */
@@ -294,7 +285,7 @@ public final class DummyMediaFormats {
       .label("Editorial Stage Medium")
       .width(705)
       .height(335)
-      .extensions("gif","jpg","png","swf")
+      .extensions("gif", "jpg", "png")
       .build();
 
   /* editorial_stage_small */
@@ -302,7 +293,7 @@ public final class DummyMediaFormats {
       .label("Editorial Stage Small")
       .width(960)
       .height(150)
-      .extensions("gif","jpg","png","swf")
+      .extensions("gif", "jpg", "png")
       .build();
 
   /* editorial_standard */
@@ -310,35 +301,35 @@ public final class DummyMediaFormats {
       .label("Editorial Standard")
       .width(1055)
       .height(500)
-      .extensions("gif","jpg","png","swf")
+      .extensions("gif", "jpg", "png")
       .renditionGroup("/apps/test/renditiongroup/editorial_standard")
       .build();
   public static final MediaFormat EDITORIAL_1COL = create("editorial_1col")
       .label("Editorial Standard 1 Column")
       .width(215)
       .height(102)
-      .extensions("gif","jpg","png","swf")
+      .extensions("gif", "jpg", "png")
       .renditionGroup("/apps/test/renditiongroup/editorial_standard")
       .build();
   public static final MediaFormat EDITORIAL_2COL = create("editorial_2col")
       .label("Editorial Standard 2 Columns")
       .width(450)
       .height(213)
-      .extensions("gif","jpg","png","swf")
+      .extensions("gif", "jpg", "png")
       .renditionGroup("/apps/test/renditiongroup/editorial_standard")
       .build();
   public static final MediaFormat EDITORIAL_3COL = create("editorial_3col")
       .label("Editorial Standard 3 Columns")
       .width(685)
       .height(325)
-      .extensions("gif","jpg","png","swf")
+      .extensions("gif", "jpg", "png")
       .renditionGroup("/apps/test/renditiongroup/editorial_standard")
       .build();
   public static final MediaFormat SPECIAL_4COL = create("special_4col")
       .label("Flash Special")
       .width(960)
       .height(455)
-      .extensions("gif","jpg","png","swf")
+      .extensions("gif", "jpg", "png")
       .renditionGroup("/apps/test/renditiongroup/editorial_standard")
       .ranking(30)
       .build();
@@ -521,22 +512,6 @@ public final class DummyMediaFormats {
       .label("Ratio (1:1)")
       .ratio(1, 1)
       .extensions("gif", "jpg", "png", "tif", "svg")
-      .build();
-
-  /* formats for testing responsive images */
-  @SuppressWarnings("deprecation")
-  public static final MediaFormat RESPONSIVE_32_9_M1 = create("responsive_32_9_m1")
-      .label("Responsive 32:9")
-      .fixedDimension(1281, 360)
-      .extensions("gif", "jpg", "jpeg", "png")
-      .property(MediaNameConstants.PROP_BREAKPOINT, "M1")
-      .build();
-  @SuppressWarnings("deprecation")
-  public static final MediaFormat RESPONSIVE_32_9_L1 = create("responsive_32_9_l1")
-      .label("Responsive 32:9")
-      .fixedDimension(1920, 540)
-      .extensions("gif", "jpg", "jpeg", "png")
-      .property(MediaNameConstants.PROP_BREAKPOINT, "L1")
       .build();
 
 }

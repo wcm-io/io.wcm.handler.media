@@ -89,6 +89,15 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
 
   @Override
   @Test
+  void testAsset_JPEG_AutoCrop_ImageQuality() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
+        ContentType.JPEG, 0.6d);
+  }
+
+  @Override
+  @Test
   void testAsset_JPEG_CropWithExplicitRendition() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);

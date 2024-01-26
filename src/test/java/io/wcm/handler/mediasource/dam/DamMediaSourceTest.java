@@ -849,48 +849,6 @@ class DamMediaSourceTest extends AbstractDamTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
-  void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats() {
-    MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(new io.wcm.handler.media.format.ResponsiveMediaFormatsBuilder(RATIO_16_10)
-        .breakpoint("B1", 160, 100)
-        .breakpoint("B2", 320, 200)
-        .build());
-
-    Media media = mediaHandler().get(MEDIAITEM_PATH_16_10, mediaArgs).build();
-    assertTrue(media.isValid(), "valid?");
-    assertNotNull(media.getAsset(), "asset?");
-    assertEquals(2, media.getRenditions().size(), "renditions");
-    List<Rendition> renditions = List.copyOf(media.getRenditions());
-
-    Rendition rendition0 = renditions.get(0);
-    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.160.100.file/sixteen-ten.jpg",
-        rendition0.getUrl(), "rendition.mediaUrl.1");
-    assertEquals(160, rendition0.getWidth());
-    assertEquals(100, rendition0.getHeight());
-    assertEquals(160d / 100d, rendition0.getRatio(), 0.0001);
-
-    MediaFormat mediaFormat0 = renditions.get(0).getMediaFormat();
-    assertEquals(RATIO_16_10.getLabel(), mediaFormat0.getLabel());
-    assertEquals(RATIO_16_10.getRatio(), mediaFormat0.getRatio(), 0.001d);
-    assertEquals(160, mediaFormat0.getWidth());
-    assertEquals(100, mediaFormat0.getHeight());
-    assertEquals("B1", mediaFormat0.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
-
-    Rendition rendition1 = renditions.get(1);
-    assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original.image_file.320.200.file/sixteen-ten.jpg",
-        rendition1.getUrl(), "rendition.mediaUrl.2");
-    assertEquals(320, rendition1.getWidth());
-    assertEquals(200, rendition1.getHeight());
-
-    MediaFormat mediaFormat1 = renditions.get(1).getMediaFormat();
-    assertEquals(RATIO_16_10.getLabel(), mediaFormat1.getLabel());
-    assertEquals(RATIO_16_10.getRatio(), mediaFormat1.getRatio(), 0.001d);
-    assertEquals(320, mediaFormat1.getWidth());
-    assertEquals(200, mediaFormat1.getHeight());
-    assertEquals("B2", mediaFormat1.getProperties().get(MediaNameConstants.PROP_BREAKPOINT));
-  }
-
-  @Test
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
         .mediaFormat(RATIO_16_10)

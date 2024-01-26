@@ -57,9 +57,9 @@ public interface Asset extends Adaptable {
 
   /**
    * Internal path pointing to media item, if it is stored in the JCR repository.
-   * @return Repository path
+   * @return Repository path or null if not stored in repository
    */
-  @NotNull
+  @Nullable
   String getPath();
 
   /**
@@ -92,16 +92,6 @@ public interface Asset extends Adaptable {
    */
   @Nullable
   Rendition getImageRendition(@NotNull MediaArgs mediaArgs);
-
-  /**
-   * Get the first flash rendition that matches the given media args.
-   * @param mediaArgs Media args to filter specific media formats or extensions.
-   * @return {@link Rendition} for the first matching rendition or null if no match found.
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  @Nullable
-  Rendition getFlashRendition(@NotNull MediaArgs mediaArgs);
 
   /**
    * Get the first download rendition that matches the given media args.

@@ -49,8 +49,8 @@ public final class Media {
 
   private final @NotNull MediaSource mediaSource;
   private @NotNull MediaRequest mediaRequest;
-  private HtmlElement<?> element;
-  private Function<Media, HtmlElement<?>> elementBuilder;
+  private HtmlElement element;
+  private Function<Media, HtmlElement> elementBuilder;
   private String url;
   private Asset asset;
   private Collection<Rendition> renditions;
@@ -97,7 +97,7 @@ public final class Media {
    * @return Html element
    */
   @JsonIgnore
-  public HtmlElement<?> getElement() {
+  public @Nullable HtmlElement getElement() {
     if (this.element == null && this.elementBuilder != null) {
       this.element = this.elementBuilder.apply(this);
       this.elementBuilder = null;
@@ -109,8 +109,8 @@ public final class Media {
    * @return Media HTML element serialized to string. Returns null if media element is null.
    */
   @JsonIgnore
-  public String getMarkup() {
-    HtmlElement<?> el = getElement();
+  public @Nullable String getMarkup() {
+    HtmlElement el = getElement();
     if (markup == null && el != null) {
       if (el instanceof Span) {
         // in case of span get inner HTML markup, do not include span element itself
@@ -128,19 +128,9 @@ public final class Media {
   }
 
   /**
-   * @param value Html element
-   * @deprecated Use {@link #setElementBuilder(Function)} to build anchor on-demand
-   */
-  @Deprecated
-  public void setElement(HtmlElement<?> value) {
-    this.element = value;
-    this.markup = null;
-  }
-
-  /**
    * @param value Function that builds the HTML element representation on demand
    */
-  public void setElementBuilder(Function<Media, HtmlElement<?>> value) {
+  public void setElementBuilder(@NotNull Function<Media, HtmlElement> value) {
     this.elementBuilder = value;
     this.markup = null;
   }
@@ -148,14 +138,14 @@ public final class Media {
   /**
    * @return Media URL
    */
-  public String getUrl() {
+  public @Nullable String getUrl() {
     return this.url;
   }
 
   /**
    * @param value Media URL
    */
-  public void setUrl(String value) {
+  public void setUrl(@Nullable String value) {
     this.url = value;
   }
 
@@ -163,7 +153,7 @@ public final class Media {
    * Get media item info that was resolved during media handler processing
    * @return Media item
    */
-  public Asset getAsset() {
+  public @Nullable Asset getAsset() {
     return this.asset;
   }
 
@@ -171,7 +161,7 @@ public final class Media {
    * Set media item that was resolved during media handler processing
    * @param asset Media item
    */
-  public void setAsset(Asset asset) {
+  public void setAsset(@Nullable Asset asset) {
     this.asset = asset;
   }
 
@@ -180,7 +170,7 @@ public final class Media {
    * @return Rendition
    */
   @JsonIgnore
-  public Rendition getRendition() {
+  public @Nullable Rendition getRendition() {
     if (this.renditions == null || this.renditions.isEmpty()) {
       return null;
     }
@@ -191,7 +181,7 @@ public final class Media {
    * Get all renditions that were resolved during media handler processing
    * @return Renditions
    */
-  public Collection<Rendition> getRenditions() {
+  public @NotNull Collection<Rendition> getRenditions() {
     if (this.renditions == null) {
       return Collections.emptyList();
     }
@@ -204,7 +194,7 @@ public final class Media {
    * Set all renditions that was resolved during media handler processing
    * @param renditions Renditions
    */
-  public void setRenditions(Collection<Rendition> renditions) {
+  public void setRenditions(@Nullable Collection<Rendition> renditions) {
     this.renditions = renditions;
   }
 
@@ -264,14 +254,14 @@ public final class Media {
    * @return Reason why the requested media could not be resolved and is invalid
    */
   @JsonIgnore
-  public MediaInvalidReason getMediaInvalidReason() {
+  public @Nullable MediaInvalidReason getMediaInvalidReason() {
     return this.mediaInvalidReason;
   }
 
   /**
    * @param mediaInvalidReason Reason why the requested media could not be resolved and is invalid
    */
-  public void setMediaInvalidReason(MediaInvalidReason mediaInvalidReason) {
+  public void setMediaInvalidReason(@Nullable MediaInvalidReason mediaInvalidReason) {
     this.mediaInvalidReason = mediaInvalidReason;
   }
 
@@ -279,7 +269,7 @@ public final class Media {
    * @return Custom message when {@link #getMediaInvalidReason()} is set to {@link MediaInvalidReason#CUSTOM}.
    *         Message is interpreted as i18n key.
    */
-  public String getMediaInvalidReasonCustomMessage() {
+  public @Nullable String getMediaInvalidReasonCustomMessage() {
     return this.mediaInvalidReasonCustomMessage;
   }
 
@@ -287,7 +277,7 @@ public final class Media {
    * @param mediaInvalidReasonCustomMessage Custom message when {@link #getMediaInvalidReason()} is set to
    *          {@link MediaInvalidReason#CUSTOM}. Message is interpreted as i18n key.
    */
-  public void setMediaInvalidReasonCustomMessage(String mediaInvalidReasonCustomMessage) {
+  public void setMediaInvalidReasonCustomMessage(@Nullable String mediaInvalidReasonCustomMessage) {
     this.mediaInvalidReasonCustomMessage = mediaInvalidReasonCustomMessage;
   }
 

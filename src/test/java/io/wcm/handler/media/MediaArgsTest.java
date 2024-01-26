@@ -23,13 +23,14 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
+import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.url.UrlModes;
 import io.wcm.sling.commons.resource.ImmutableValueMap;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -47,7 +49,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
 class MediaArgsTest {
 
   @Test
-  @SuppressWarnings("deprecation")
   void testGetMediaFormats() {
     MediaArgs mediaArgs;
 
@@ -55,32 +56,27 @@ class MediaArgsTest {
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL
     }, mediaArgs.getMediaFormats());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs("editorial_1col");
     assertArrayEquals(new String[] {
         "editorial_1col"
     }, mediaArgs.getMediaFormatNames());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs(EDITORIAL_1COL, EDITORIAL_2COL);
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL, EDITORIAL_2COL
     }, mediaArgs.getMediaFormats());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs("editorial_1col", "editorial_2col");
     assertArrayEquals(new String[] {
         "editorial_1col", "editorial_2col"
     }, mediaArgs.getMediaFormatNames());
-    assertFalse(mediaArgs.isMediaFormatsMandatory());
 
     assertNull(new MediaArgs().mediaFormat((MediaFormat)null).getMediaFormats());
     assertNull(new MediaArgs().mediaFormatName((String)null).getMediaFormatNames());
   }
 
   @Test
-  @SuppressWarnings("deprecation")
   void testGetMediaFormatsMandatory() {
     MediaArgs mediaArgs;
 
@@ -88,13 +84,11 @@ class MediaArgsTest {
     assertArrayEquals(new MediaFormat[] {
         EDITORIAL_1COL, EDITORIAL_2COL
     }, mediaArgs.getMediaFormats());
-    assertTrue(mediaArgs.isMediaFormatsMandatory());
 
     mediaArgs = new MediaArgs().mandatoryMediaFormatNames("editorial_1col", "editorial_2col");
     assertArrayEquals(new String[] {
         "editorial_1col", "editorial_2col"
     }, mediaArgs.getMediaFormatNames());
-    assertTrue(mediaArgs.isMediaFormatsMandatory());
   }
 
   @Test
@@ -159,6 +153,10 @@ class MediaArgsTest {
   }
 
   @Test
+  @SuppressWarnings({
+      "deprecation",
+      "java:S5961" // ignore number of asserts
+  })
   void testClone() {
     MediaFormatOption[] mediaFormatOptions = new MediaFormatOption[] {
         new MediaFormatOption(EDITORIAL_1COL, true),
@@ -190,13 +188,16 @@ class MediaArgsTest {
     mediaArgs.decorative(true);
     mediaArgs.dummyImage(true);
     mediaArgs.dummyImageUrl("/dummy/url");
+    mediaArgs.includeAssetAemRenditions(Set.of(AemRenditionType.THUMBNAIL_RENDITION, AemRenditionType.WEB_RENDITION));
     mediaArgs.includeAssetThumbnails(true);
     mediaArgs.includeAssetWebRenditions(true);
     mediaArgs.imageSizes(imageSizes);
     mediaArgs.pictureSources(pictureSourceSets);
+    mediaArgs.imageQualityPercentage(0.5d);
     mediaArgs.dragDropSupport(DragDropSupport.NEVER);
     mediaArgs.ipeRatioCustomize(IPERatioCustomize.NEVER);
     mediaArgs.dynamicMediaDisabled(true);
+    mediaArgs.webOptimizedImageDeliveryDisabled(true);
     mediaArgs.properties(props);
 
     MediaArgs clone = mediaArgs.clone();
@@ -222,13 +223,16 @@ class MediaArgsTest {
     assertEquals(mediaArgs.isDecorative(), clone.isDecorative());
     assertEquals(mediaArgs.isDummyImage(), clone.isDummyImage());
     assertEquals(mediaArgs.getDummyImageUrl(), clone.getDummyImageUrl());
+    assertEquals(mediaArgs.getIncludeAssetAemRenditions(), clone.getIncludeAssetAemRenditions());
     assertEquals(mediaArgs.isIncludeAssetThumbnails(), clone.isIncludeAssetThumbnails());
     assertEquals(mediaArgs.isIncludeAssetWebRenditions(), clone.isIncludeAssetWebRenditions());
     assertEquals(mediaArgs.getImageSizes(), clone.getImageSizes());
     assertArrayEquals(mediaArgs.getPictureSources(), clone.getPictureSources());
+    assertEquals(mediaArgs.getImageQualityPercentage(), clone.getImageQualityPercentage());
     assertEquals(mediaArgs.getDragDropSupport(), clone.getDragDropSupport());
     assertEquals(IPERatioCustomize.NEVER, clone.getIPERatioCustomize());
     assertEquals(mediaArgs.isDynamicMediaDisabled(), clone.isDynamicMediaDisabled());
+    assertEquals(mediaArgs.isWebOptimizedImageDeliveryDisabled(), clone.isWebOptimizedImageDeliveryDisabled());
     assertEquals(ImmutableValueMap.copyOf(mediaArgs.getProperties()), ImmutableValueMap.copyOf(clone.getProperties()));
   }
 
@@ -238,10 +242,10 @@ class MediaArgsTest {
     MediaArgs mediaArgs2 = new MediaArgs().mediaFormat(EDITORIAL_1COL).urlMode(UrlModes.FULL_URL).altText("abc");
     MediaArgs mediaArgs3 = new MediaArgs().mediaFormat(EDITORIAL_2COL).urlMode(UrlModes.FULL_URL).altText("abc");
 
-    assertTrue(mediaArgs1.equals(mediaArgs2));
-    assertTrue(mediaArgs2.equals(mediaArgs1));
-    assertFalse(mediaArgs1.equals(mediaArgs3));
-    assertFalse(mediaArgs2.equals(mediaArgs3));
+    assertEquals(mediaArgs1, mediaArgs2);
+    assertEquals(mediaArgs2, mediaArgs1);
+    assertNotEquals(mediaArgs1, mediaArgs3);
+    assertNotEquals(mediaArgs2, mediaArgs3);
   }
 
   @Test

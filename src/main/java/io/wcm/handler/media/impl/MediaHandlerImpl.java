@@ -26,7 +26,6 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
@@ -65,43 +64,43 @@ public final class MediaHandlerImpl implements MediaHandler {
   private MediaHandlerConfig mediaHandlerConfig;
   @Self
   private MediaFormatHandler mediaFormatHandler;
-  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
+  @OSGiService
   private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
   private static final Logger log = LoggerFactory.getLogger(MediaHandlerImpl.class);
 
   @Override
-  public @NotNull MediaBuilder get(Resource resource) {
+  public @NotNull MediaBuilder get(@Nullable Resource resource) {
     return new MediaBuilderImpl(resource, this, componentPropertyResolverFactory);
   }
 
   @Override
-  public @NotNull MediaBuilder get(Resource resource, MediaArgs mediaArgs) {
+  public @NotNull MediaBuilder get(@Nullable Resource resource, @NotNull MediaArgs mediaArgs) {
     return get(resource).args(mediaArgs);
   }
 
   @Override
-  public @NotNull MediaBuilder get(Resource resource, MediaFormat... mediaFormats) {
+  public @NotNull MediaBuilder get(@Nullable Resource resource, MediaFormat @NotNull... mediaFormats) {
     return get(resource).mediaFormats(mediaFormats);
   }
 
   @Override
-  public @NotNull MediaBuilder get(String mediaRef) {
-    return new MediaBuilderImpl(mediaRef, this);
+  public @NotNull MediaBuilder get(@Nullable String mediaRef) {
+    return new MediaBuilderImpl(mediaRef, null, this, componentPropertyResolverFactory);
   }
 
   @Override
-  public @NotNull MediaBuilder get(String mediaRef, @Nullable Resource contextResource) {
+  public @NotNull MediaBuilder get(@Nullable String mediaRef, @Nullable Resource contextResource) {
     return new MediaBuilderImpl(mediaRef, contextResource, this, componentPropertyResolverFactory);
   }
 
   @Override
-  public @NotNull MediaBuilder get(String mediaRef, MediaArgs mediaArgs) {
+  public @NotNull MediaBuilder get(@Nullable String mediaRef, @NotNull MediaArgs mediaArgs) {
     return get(mediaRef).args(mediaArgs);
   }
 
   @Override
-  public @NotNull MediaBuilder get(String mediaRef, MediaFormat... mediaFormats) {
+  public @NotNull MediaBuilder get(@Nullable String mediaRef, MediaFormat @NotNull... mediaFormats) {
     return get(mediaRef).mediaFormats(mediaFormats);
   }
 
@@ -115,9 +114,14 @@ public final class MediaHandlerImpl implements MediaHandler {
    * @param mediaRequest Media request
    * @return Media metadata (never null)
    */
-  @SuppressWarnings({ "null", "unused" })
-  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   @NotNull
+  @SuppressWarnings({
+      "null", "unused", "java:S2589",
+      "java:S3776", "java:S6541", // ignore complexity
+      "java:S112", // allow runtime exception
+      "java:S1192" // multiple strings
+  })
+  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
   Media processRequest(@NotNull final MediaRequest mediaRequest) {
 
     // detect media source
@@ -157,8 +161,8 @@ public final class MediaHandlerImpl implements MediaHandler {
     }
 
     // apply defaults to media args
-    if (mediaRequest.getMediaArgs().isIncludeAssetWebRenditions() == null) {
-      mediaRequest.getMediaArgs().includeAssetWebRenditions(mediaHandlerConfig.includeAssetWebRenditionsByDefault());
+    if (mediaRequest.getMediaArgs().getIncludeAssetAemRenditions() == null) {
+      mediaRequest.getMediaArgs().includeAssetAemRenditions(mediaHandlerConfig.getIncludeAssetAemRenditionsByDefault());
     }
 
     if (log.isTraceEnabled()) {
@@ -226,8 +230,8 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
-  @SuppressWarnings("null")
-  public boolean isValidElement(HtmlElement<?> element) {
+  @SuppressWarnings({ "null", "java:S2589" })
+  public boolean isValidElement(HtmlElement element) {
 
     // if it is null it is always invalid
     if (element == null) {
@@ -287,8 +291,7 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
-  @SuppressWarnings("null")
-  @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+  @SuppressWarnings("java:S112") // allow runtime exception
   public Media invalid() {
     // build invalid media with first media source
     Class<? extends MediaSource> mediaSourceClass = mediaHandlerConfig.getSources().stream().findFirst().orElse(null);

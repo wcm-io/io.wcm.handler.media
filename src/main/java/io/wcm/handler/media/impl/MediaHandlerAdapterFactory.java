@@ -21,11 +21,14 @@ package io.wcm.handler.media.impl;
 
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.AdapterFactory;
+import org.apache.sling.api.resource.Resource;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import io.wcm.handler.media.MediaComponentPropertyResolver;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
+import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 /**
  * Adapts resources or requests to {@link MediaHandlerConfig} via {@link ContextAwareServiceResolver}.
@@ -34,18 +37,24 @@ import io.wcm.sling.commons.caservice.ContextAwareServiceResolver;
     property = {
         AdapterFactory.ADAPTABLE_CLASSES + "=org.apache.sling.api.resource.Resource",
         AdapterFactory.ADAPTABLE_CLASSES + "=org.apache.sling.api.SlingHttpServletRequest",
-        AdapterFactory.ADAPTER_CLASSES + "=io.wcm.handler.media.spi.MediaHandlerConfig"
+        AdapterFactory.ADAPTER_CLASSES + "=io.wcm.handler.media.spi.MediaHandlerConfig",
+        AdapterFactory.ADAPTER_CLASSES + "=io.wcm.handler.media.MediaComponentPropertyResolver"
     })
-public class MediaHandlerConfigAdapterFactory implements AdapterFactory {
+public class MediaHandlerAdapterFactory implements AdapterFactory {
 
   @Reference
   private ContextAwareServiceResolver serviceResolver;
+  @Reference
+  private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
   @SuppressWarnings({ "unchecked", "null" })
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == MediaHandlerConfig.class) {
       return (AdapterType)serviceResolver.resolve(MediaHandlerConfig.class, (Adaptable)adaptable);
+    }
+    if (type == MediaComponentPropertyResolver.class && adaptable instanceof Resource) {
+      return (AdapterType)new MediaComponentPropertyResolver((Resource)adaptable, componentPropertyResolverFactory);
     }
     return null;
   }

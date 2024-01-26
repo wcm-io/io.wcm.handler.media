@@ -86,6 +86,28 @@
       self._validate.validateMediaFormat(null);
     });
 
+    // NGDM/Polaris asset picker does not send an assetselected event - so we look for DOM mutations
+    // when a thumbnail is added after picking 
+    self._$element.find("[data-cq-fileupload-thumbnail-img]").each(function() {
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          mutation.addedNodes.forEach(node => {
+            // detect thumbnail image with '/urn:' in the source, which is an polaris thumbnail
+            if (node.tagName == "IMG" && node.src && node.src.includes('/urn:')) {
+              // fileupload-polaris.js stores the references hardcoded in this input field - regardless 
+              // of the configured property name
+              const $fileReferenceInput = $('input[name="./fileReference"]');
+              const assetPath = $fileReferenceInput.val();
+              self._$pathfield.val(assetPath);
+              self._validate.validateMediaFormat(assetPath);
+              self._removeDuplicatedFileRefInput();
+            }
+          });
+        });
+      });
+      observer.observe(this, { childList: true });
+    });
+
   };
 
   /**
@@ -96,8 +118,19 @@
     var mimeType = self._detectMimeType(assetPath);
     var thumbnailObject;
     if (mimeType) {
-      var thumbnailUrl = assetPath + ".thumb.319.319.png?ck=" + new Date().getTime();
-      thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
+      if (assetPath.startsWith("/urn:")) {
+        // thumbnail for NGDM asset reference  
+        const cfg = $(".cq-FileUpload-picker-polaris").attr("polaris-config");
+        if (cfg) {
+          repositoryId = JSON.parse(cfg).repositoryId;
+          const thumbnailUrl = `https://${repositoryId}/adobe/dynamicmedia/deliver${assetPath}?width=320&preferwebp=true`;
+          thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
+        }
+      }
+      else {
+        const thumbnailUrl = assetPath + ".thumb.319.319.png?ck=" + new Date().getTime();
+        thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
+      }
     }
     self._$element.trigger($.Event("assetselected", {
       path: assetPath,

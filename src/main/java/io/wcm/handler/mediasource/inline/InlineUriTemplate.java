@@ -34,12 +34,13 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
+import io.wcm.handler.media.impl.ImageFileServletSelector;
 import io.wcm.handler.media.impl.JcrBinary;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
-class InlineUriTemplate implements UriTemplate {
+final class InlineUriTemplate implements UriTemplate {
 
   private final String uriTemplate;
   private final UriTemplateType type;
@@ -55,6 +56,7 @@ class InlineUriTemplate implements UriTemplate {
     this.dimension = dimension;
   }
 
+  @SuppressWarnings("java:S1075") // not a file path
   private static String buildUriTemplate(@NotNull UriTemplateType type, @NotNull Resource resource,
       @NotNull String fileName, @Nullable CropDimension cropDimension, @Nullable Integer rotation,
       @NotNull MediaArgs mediaArgs, @NotNull Adaptable adaptable) {
@@ -70,8 +72,9 @@ class InlineUriTemplate implements UriTemplate {
     final long DUMMY_WIDTH = 999991;
     final long DUMMY_HEIGHT = 999992;
     String path = resourcePath
-        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, false)
-        + "." + MediaFileServlet.EXTENSION
+        + "." + ImageFileServletSelector.build(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation,
+            mediaArgs.getImageQualityPercentage(), false)
+        + "." + MediaFileServletConstants.EXTENSION
         // replace extension based on the format supported by ImageFileServlet for rendering for this rendition
         + "/" + ImageFileServlet.getImageFileName(fileName, mediaArgs.getEnforceOutputFileExtension());
 
@@ -99,12 +102,12 @@ class InlineUriTemplate implements UriTemplate {
   }
 
   @Override
-  public UriTemplateType getType() {
+  public @NotNull UriTemplateType getType() {
     return type;
   }
 
   @Override
-  public String getUriTemplate() {
+  public @NotNull String getUriTemplate() {
     return uriTemplate;
   }
 

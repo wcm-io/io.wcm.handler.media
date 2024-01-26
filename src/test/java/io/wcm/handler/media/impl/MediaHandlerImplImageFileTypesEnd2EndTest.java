@@ -36,6 +36,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.osgi.MapUtil;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,6 +65,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * and renders the result using the ImageFileServlet.
  */
 @ExtendWith(AemContextExtension.class)
+@SuppressWarnings("java:S5976") // ignore similar tests
 class MediaHandlerImplImageFileTypesEnd2EndTest {
 
   final AemContext context = AppAemContext.newAemContext();
@@ -71,6 +73,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   ImageFileServlet imageFileServlet;
   MediaHandler mediaHandler;
   boolean dynamicMediaDisabled;
+  boolean webOptimizedImageDeliveryDisabled;
 
   @BeforeEach
   void setUp() {
@@ -118,6 +121,14 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     buildAssertMedia_AutoCrop(asset, 50, 50,
         "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.50.50.25,0,75,50.file/sample.jpg",
         ContentType.JPEG);
+  }
+
+  @Test
+  void testAsset_JPEG_AutoCrop_ImageQuality() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_AutoCrop(asset, 50, 50,
+        "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.50.50.25,0,75,50.0.60.file/sample.jpg",
+        ContentType.JPEG, 0.6d);
   }
 
   @Test
@@ -325,7 +336,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void testAsset_SVG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
     buildAssertMedia(asset, 100, 50,
-        "/content/dam/sample.svg/_jcr_content/renditions/original./sample.svg",
+        "/content/dam/sample.svg/_jcr_content/renditions/original.media_file.file/sample.svg",
         ContentType.SVG);
   }
 
@@ -341,7 +352,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void testAsset_SVG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "/content/dam/sample.svg/_jcr_content/renditions/original./sample.svg",
+        "/content/dam/sample.svg/_jcr_content/renditions/original.media_file.file/sample.svg",
         ContentType.SVG);
   }
 
@@ -400,61 +411,76 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
       String contentType) {
     Media media = mediaHandler.get(asset.getPath())
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .build();
-    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+    assertMedia(asset.getOriginal().adaptTo(Resource.class), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertMedia_ContentDisposition(Asset asset, int width, int height, String mediaUrl,
       String contentType) {
     Media media = mediaHandler.get(asset.getPath())
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .contentDispositionAttachment(true)
         .build();
-    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+    assertMedia(asset.getOriginal().adaptTo(Resource.class), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertMedia_Rescale(Asset asset, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(asset.getPath())
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .fixedDimension(width, height)
         .build();
-    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+    assertMedia(asset.getOriginal().adaptTo(Resource.class), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType) {
+    buildAssertMedia_AutoCrop(asset, width, height, mediaUrl, contentType, null);
+  }
+
+  void buildAssertMedia_AutoCrop(Asset asset, int width, int height, String mediaUrl, String contentType, Double imageQualityPercentage) {
     Media media = mediaHandler.get(asset.getPath())
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
+        .imageQualityPercentage(imageQualityPercentage)
         .build();
-    assertMedia(AdaptTo.notNull(asset.getOriginal(), Resource.class), media, width, height, mediaUrl, contentType);
+    assertMedia(asset.getOriginal().adaptTo(Resource.class), media, width, height, mediaUrl, contentType);
   }
 
   void buildAssertInvalidMedia_AutoCrop(Asset asset) {
     Media media = mediaHandler.get(asset.getPath())
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
     assertFalse(media.isValid(), "media valid");
   }
 
-  void assertMedia(Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
+  @SuppressWarnings("null")
+  void assertMedia(@Nullable Resource resource, Media media, int width, int height, String mediaUrl, String contentType) {
     assertTrue(media.isValid(), "media valid");
     assertEquals(mediaUrl, media.getUrl(), "mediaUrl");
 
-    Layer layer = AdaptTo.notNull(media.getRendition(), Layer.class);
-    assertEquals(width, layer.getWidth(), "rendition layer width");
-    assertEquals(height, layer.getHeight(), "rendition layer height");
+    Rendition rendition = media.getRendition();
+    Layer layer = media.getRendition().adaptTo(Layer.class);
+    if (layer != null) {
+      assertEquals(width, layer.getWidth(), "rendition layer width");
+      assertEquals(height, layer.getHeight(), "rendition layer height");
+    }
 
-    if (!StringUtils.contains(mediaUrl, ".download_attachment.") && !StringUtils.contains(mediaUrl, "/is/image/")) {
-      Rendition rendition = media.getRendition();
+    if (!StringUtils.contains(mediaUrl, ".download_attachment.")
+        && !StringUtils.contains(mediaUrl, "/is/image/")
+        && !StringUtils.contains(mediaUrl, "/adobe/dynamicmedia/deliver/")) {
       String strippedMediaUrl = StringUtils.removeEnd(mediaUrl, DynamicMediaPath.DOWNLOAD_SUFFIX);
       assertEquals(FilenameUtils.getName(strippedMediaUrl), rendition.getFileName());
       assertEquals(FilenameUtils.getExtension(strippedMediaUrl), rendition.getFileExtension());
     }
 
-    if (StringUtils.contains(mediaUrl, ".image_file.")) {
+    if (resource != null && StringUtils.contains(mediaUrl, ".image_file.")) {
       // extract selector string from media url
       String selectors = "image_file." + StringUtils.substringBefore(StringUtils.substringAfter(mediaUrl, ".image_file."), ".file/");
 
@@ -494,6 +520,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void buildAssertMedia_Rescale(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .fixedDimension(width, height)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
@@ -502,6 +529,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void buildAssertMedia_AutoCrop(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
@@ -511,6 +539,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void buildAssertInvalidMedia_AutoCrop(Resource resource) {
     Media media = mediaHandler.get(resource)
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .mediaFormat(DummyMediaFormats.RATIO_SQUARE)
         .autoCrop(true)
         .build();
@@ -520,6 +549,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void buildAssertMedia(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);
   }
@@ -527,6 +557,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   void buildAssertMedia_ContentDisposition(Resource resource, int width, int height, String mediaUrl, String contentType) {
     Media media = mediaHandler.get(resource)
         .dynamicMediaDisabled(dynamicMediaDisabled)
+        .webOptimizedImageDeliveryDisabled(webOptimizedImageDeliveryDisabled)
         .contentDispositionAttachment(true)
         .build();
     assertMedia(resource.getChild(NN_MEDIA_INLINE), media, width, height, mediaUrl, contentType);

@@ -60,6 +60,7 @@ class DamRendition extends SlingAdaptable implements Rendition {
    * @param mediaArgs Media args
    * @param damContext DAM context objects
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   DamRendition(CropDimension cropDimension, Integer rotation, MediaArgs mediaArgs, DamContext damContext) {
     this.damContext = damContext;
     this.mediaArgs = mediaArgs;
@@ -120,6 +121,8 @@ class DamRendition extends SlingAdaptable implements Rendition {
       return null;
     }
     String url = null;
+
+    // check for dynamic media support
     if (damContext.isDynamicMediaEnabled()) {
       if (damContext.isDynamicMediaAsset()) {
         url = buildDynamicMediaUrl();
@@ -140,13 +143,20 @@ class DamRendition extends SlingAdaptable implements Rendition {
         }
       }
     }
+
+    // check for web-optimized image delivery
     if (url == null) {
-      // Render renditions in AEM: build externalized URL
+      url = buildWebOptimizedImageDeliveryUrl();
+    }
+
+    // Fallback: Render renditions in AEM - build externalized URL
+    if (url == null) {
       UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
       String mediaPath = rendition.getMediaPath(mediaArgs.isContentDispositionAttachment());
       url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())
           .buildExternalResourceUrl(rendition.adaptTo(Resource.class));
     }
+
     return url;
   }
 
@@ -164,6 +174,23 @@ class DamRendition extends SlingAdaptable implements Rendition {
       return null;
     }
   }
+
+  /**
+   * Build web-optimized image delivery URL if this is a raster image.
+   * @return URL or null
+   */
+  private @Nullable String buildWebOptimizedImageDeliveryUrl() {
+    if (MediaFileType.isImage(getFileExtension())
+        && !MediaFileType.isVectorImage(getFileExtension())
+        && !mediaArgs.isContentDispositionAttachment()
+        && !mediaArgs.isWebOptimizedImageDeliveryDisabled()) {
+      return rendition.getWebOptimizedImageDeliveryPath(damContext);
+    }
+    else {
+      return null;
+    }
+  }
+
 
   @Override
   public String getPath() {
@@ -258,14 +285,8 @@ class DamRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
-  @SuppressWarnings("deprecation")
-  public boolean isFlash() {
-    return MediaFileType.isFlash(getFileExtension());
-  }
-
-  @Override
   public boolean isDownload() {
-    return !isImage() && !isFlash();
+    return !isImage();
   }
 
   @Override

@@ -22,6 +22,8 @@ package io.wcm.handler.mediasource.dam.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +36,7 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -69,11 +72,13 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
-  void testWithDefaultSettings() {
+  @SuppressWarnings({ "deprecation", "null" })
+  void testWithAllowWebRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     Media media = mediaHandler.get(asset.getPath())
         .fixedDimension(30, 15)
+        .includeAssetWebRenditions(true)
         .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
@@ -84,6 +89,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings({ "deprecation", "null" })
   void testWithDisallowWebRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
@@ -100,6 +106,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings({ "deprecation", "null" })
   void testWithAllowThumbnailRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
@@ -116,6 +123,24 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
+  @SuppressWarnings("null")
+  void testWithAllowSpecificRenditions() {
+    mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    Media media = mediaHandler.get(asset.getPath())
+        .fixedDimension(30, 15)
+        .includeAssetAemRenditions(Set.of(AemRenditionType.WEB_RENDITION, AemRenditionType.THUMBNAIL_RENDITION))
+        .build();
+    assertTrue(media.isValid());
+    Rendition rendition = media.getRendition();
+    assertEquals(30, rendition.getWidth());
+    assertEquals(15, rendition.getHeight());
+    // expected: rendition derived from cq5dam.thumbnail because best match
+    assertEquals("/content/dam/test.jpg/_jcr_content/renditions/cq5dam.thumbnail.60.30.jpg.image_file.30.15.file/cq5dam.thumbnail.60.30.jpg", media.getUrl());
+  }
+
+  @Test
+  @SuppressWarnings("null")
   void testWithDisallowWebRenditionsViaMediaHandlerConfig() {
     context.registerService(MediaHandlerConfig.class, new MediaHandlerConfig() {
       @Override

@@ -88,7 +88,7 @@ public class MediaPlaceholder {
       return ((ResourceMedia)media).getMetadata();
     }
     log.warn("Invalid 'media' parameter passed to MediaPlaceholder model. "
-        + "Expected: " + Media.class.getName() + ", actual: " + media.getClass().getName());
+        + "Expected: {}, actual: {}", Media.class.getName(), media.getClass().getName());
     return null;
   }
 
@@ -99,10 +99,10 @@ public class MediaPlaceholder {
   }
 
   private String getMediaInvalidReasonText(Media mediaMetadata) {
-    if (mediaMetadata.getMediaInvalidReason() != null
-        && mediaMetadata.getMediaInvalidReason() != MediaInvalidReason.MEDIA_REFERENCE_MISSING) {
+    MediaInvalidReason reason = mediaMetadata.getMediaInvalidReason();
+    if (reason != null && reason != MediaInvalidReason.MEDIA_REFERENCE_MISSING) {
       // build i18n key
-      return MEDIA_INVALID_REASON_I18N_PREFIX + mediaMetadata.getMediaInvalidReason().name();
+      return MEDIA_INVALID_REASON_I18N_PREFIX + reason.name();
     }
     else {
       return null;
@@ -134,6 +134,7 @@ public class MediaPlaceholder {
    * allow drag&amp;drop of assets into an empty component.
    * @return CSS class or null
    */
+  @SuppressWarnings("java:S4275") // naming is by intention
   public @Nullable String getClassAppend() {
     return this.classAppendCombined;
   }

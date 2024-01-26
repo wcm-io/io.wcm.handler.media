@@ -24,6 +24,7 @@ import static io.wcm.handler.media.format.impl.MediaFormatSupport.visitMediaForm
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -47,6 +48,7 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.format.impl.MediaFormatVisitor;
+import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop;
@@ -86,6 +88,25 @@ class DefaultRenditionHandler implements RenditionHandler {
       for (Rendition rendition : damContext.getAsset().getRenditions()) {
         addRendition(candidates, rendition, mediaArgs);
       }
+
+      // special handling for dynamic media
+      if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
+        // check if there are matching smart crop renditions for the requested media format(s)
+        // and return those instead of the original rendition for further processing
+        String fileExtension = FilenameUtils.getExtension(damContext.getAsset().getName());
+        if (damContext.isDynamicMediaValidateSmartCropRenditionSizes()
+            && MediaFileType.isImage(fileExtension) && !MediaFileType.isVectorImage(fileExtension)) {
+          List<CropDimension> cropDimensions = getDynamicMediaCropDimensions(mediaArgs);
+          if (!cropDimensions.isEmpty()) {
+            candidates.addAll(cropDimensions.stream()
+                .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
+                    cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension,
+                    null, mediaArgs.getImageQualityPercentage()))
+                .collect(Collectors.toList()));
+          }
+        }
+      }
+
       candidates = postProcessCandidates(candidates, mediaArgs);
       this.renditions = Collections.unmodifiableSet(candidates);
     }
@@ -108,41 +129,54 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param rendition Rendition
    */
   private void addRendition(Set<RenditionMetadata> candidates, Rendition rendition, MediaArgs mediaArgs) {
-    // ignore AEM-generated thumbnail renditions unless allowed via mediaargs
-    if (!mediaArgs.isIncludeAssetThumbnails() && AssetRendition.isThumbnailRendition(rendition)) {
-      return;
-    }
-    // ignore AEM-generated web renditions unless allowed via mediaargs
-    boolean isIncludeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions() == null || mediaArgs.isIncludeAssetWebRenditions();
-    if (!isIncludeAssetWebRenditions && AssetRendition.isWebRendition(rendition)) {
+    AemRenditionType aemRenditionType = AemRenditionType.forRendition(rendition);
+    if (aemRenditionType != null && !getIncludeAssetAemRenditions(mediaArgs).contains(aemRenditionType)) {
+      // ignore all other AEM-generated renditions unless allowed via mediaargs
       return;
     }
 
-    // special handling for dynamic media
-    if (damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) {
-      // skip all non-original renditions for dynamic media assets. dynamic media does not support them.
-      if (!AssetRendition.isOriginal(rendition)) {
-        return;
-      }
-
-      // check if there are matching smart crop renditions for the requested media format(s)
-      // and return those instead of the original rendition for further processing
-      String fileExtension = FilenameUtils.getExtension(damContext.getAsset().getName());
-      if (damContext.isDynamicMediaValidateSmartCropRenditionSizes()
-          && MediaFileType.isImage(fileExtension) && !MediaFileType.isVectorImage(fileExtension)) {
-        List<CropDimension> cropDimensions = getDynamicMediaCropDimensions(mediaArgs);
-        if (!cropDimensions.isEmpty()) {
-          candidates.addAll(cropDimensions.stream()
-              .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
-                  cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension, null))
-              .collect(Collectors.toList()));
-          return;
-        }
-      }
+    if (!AssetRendition.isOriginal(rendition)
+        && ((damContext.isDynamicMediaEnabled() && damContext.isDynamicMediaAsset()) || damContext.isWebOptimizedImageDeliveryEnabled())) {
+      // skip all non-original renditions for dynamic media and web-optimized delivery - they are not supported
+      return;
     }
 
     RenditionMetadata renditionMetadata = createRenditionMetadata(rendition);
     candidates.add(renditionMetadata);
+  }
+
+  /**
+   * Get combined set of allowed AEM-generated rendition types.
+   * @param mediaArgs Media args
+   * @return All allowed AEM-generated rendition types
+   */
+  @SuppressWarnings("deprecation")
+  private @NotNull Set<AemRenditionType> getIncludeAssetAemRenditions(MediaArgs mediaArgs) {
+    Set<AemRenditionType> fromMediaArgs = mediaArgs.getIncludeAssetAemRenditions();
+    if (fromMediaArgs == null) {
+      fromMediaArgs = Set.of();
+    }
+    Set<AemRenditionType> result = new HashSet<>(fromMediaArgs);
+    // check deprecated flags for web renditions and asset thumbnails
+    Boolean includeAssetWebRenditions = mediaArgs.isIncludeAssetWebRenditions();
+    if (includeAssetWebRenditions != null) {
+      if (includeAssetWebRenditions) {
+        result.add(AemRenditionType.WEB_RENDITION);
+      }
+      else {
+        result.remove(AemRenditionType.WEB_RENDITION);
+      }
+    }
+    Boolean includeAssetThumbnails = mediaArgs.isIncludeAssetThumbnails();
+    if (includeAssetThumbnails != null) {
+      if (includeAssetThumbnails) {
+        result.add(AemRenditionType.THUMBNAIL_RENDITION);
+      }
+      else {
+        result.remove(AemRenditionType.THUMBNAIL_RENDITION);
+      }
+    }
+    return result;
   }
 
   /**
@@ -151,16 +185,17 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @return Cropping dimensions or empty list if not found
    */
   private @NotNull List<CropDimension> getDynamicMediaCropDimensions(MediaArgs mediaArgs) {
-    if (mediaArgs.getMediaFormatOptions() == null) {
+    MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+    if (mediaFormatOptions == null) {
       return Collections.emptyList();
     }
     List<CropDimension> result = new ArrayList<>();
-    for (MediaFormatOption mediaFormatOption : mediaArgs.getMediaFormatOptions()) {
+    for (MediaFormatOption mediaFormatOption : mediaFormatOptions) {
       MediaFormat mediaFormat = mediaFormatOption.getMediaFormat();
       if (mediaFormat != null && mediaFormat.hasRatio()) {
         NamedDimension smartCropDef = SmartCrop.getDimensionForRatio(damContext.getImageProfile(), mediaFormat.getRatio());
         if (smartCropDef != null) {
-          CropDimension cropDimension =  SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
+          CropDimension cropDimension = SmartCrop.getCropDimensionForAsset(damContext.getAsset(), damContext.getResourceResolver(), smartCropDef);
           if (cropDimension != null) {
             result.add(cropDimension);
           }
@@ -319,7 +354,9 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param mediaArgs Media args
    * @return Rendition or null if none found
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   private RenditionMetadata getExactMatchRendition(final Set<RenditionMetadata> candidates, MediaArgs mediaArgs) {
+    MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     // check for fixed width and/or height request
     if (mediaArgs.getFixedWidth() > 0 || mediaArgs.getFixedHeight() > 0) {
       for (RenditionMetadata candidate : candidates) {
@@ -330,7 +367,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     }
 
     // otherwise check for media format restriction
-    else if (mediaArgs.getMediaFormats() != null && mediaArgs.getMediaFormats().length > 0) {
+    else if (mediaFormats != null && mediaFormats.length > 0) {
       return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
         @Override
         public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
@@ -395,7 +432,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         destRatio = Ratio.get(destWidth, destHeight);
       }
       return getVirtualRendition(candidates, destWidth, destHeight, 0, destRatio,
-          mediaArgs.getEnforceOutputFileExtension());
+          mediaArgs.getEnforceOutputFileExtension(), mediaArgs.getImageQualityPercentage());
     }
 
     // or from any media format
@@ -408,7 +445,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         double destRatio = mediaFormat.getRatio();
         // try to find matching rendition, otherwise check for next media format
         RenditionMetadata rendition = getVirtualRendition(candidates, destWidth, destHeight, minWidthHeight, destRatio,
-            mediaArgs.getEnforceOutputFileExtension());
+            mediaArgs.getEnforceOutputFileExtension(), mediaArgs.getImageQualityPercentage());
         if (rendition != null) {
           rendition.setMediaFormat(mediaFormat);
         }
@@ -428,15 +465,15 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param enforceOutputFileExtension Enforce output file extension
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(Set<RenditionMetadata> candidates,
+  private RenditionMetadata getVirtualRendition(@NotNull Set<RenditionMetadata> candidates,
       long destWidth, long destHeight, long minWidthHeight, double destRatio,
-      String enforceOutputFileExtension) {
+      @Nullable String enforceOutputFileExtension, @Nullable Double imageQualityPercentage) {
 
     // if ratio is defined get first rendition with matching ratio and same or bigger size
     if (destRatio > 0) {
       for (RenditionMetadata candidate : candidates) {
         if (candidate.matches(destWidth, destHeight, 0, 0, minWidthHeight, destRatio)) {
-          return getVirtualRendition(candidate, destWidth, destHeight, destRatio, enforceOutputFileExtension);
+          return getVirtualRendition(candidate, destWidth, destHeight, destRatio, enforceOutputFileExtension, imageQualityPercentage);
         }
       }
     }
@@ -444,7 +481,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     else {
       for (RenditionMetadata candidate : candidates) {
         if (candidate.matches(destWidth, destHeight, 0, 0, minWidthHeight, 0d)) {
-          return getVirtualRendition(candidate, destWidth, destHeight, 0d, enforceOutputFileExtension);
+          return getVirtualRendition(candidate, destWidth, destHeight, 0d, enforceOutputFileExtension, imageQualityPercentage);
         }
       }
     }
@@ -460,10 +497,11 @@ class DefaultRenditionHandler implements RenditionHandler {
    * @param heightValue Height
    * @param ratioValue Ratio
    * @param enforceOutputFileExtension Enforce output file extension
+   * @param imageQualityPercentage Image quality
    * @return Rendition or null
    */
-  private RenditionMetadata getVirtualRendition(RenditionMetadata rendition, long widthValue, long heightValue,
-      double ratioValue, String enforceOutputFileExtension) {
+  private RenditionMetadata getVirtualRendition(@NotNull RenditionMetadata rendition, long widthValue, long heightValue,
+      double ratioValue, @Nullable String enforceOutputFileExtension, @Nullable Double imageQualityPercentage) {
 
     long width = widthValue;
     long height = heightValue;
@@ -489,10 +527,10 @@ class DefaultRenditionHandler implements RenditionHandler {
       if (rendition instanceof VirtualTransformedRenditionMetadata) {
         VirtualTransformedRenditionMetadata cropRendition = (VirtualTransformedRenditionMetadata)rendition;
         return new VirtualTransformedRenditionMetadata(cropRendition.getRendition(), width, height, enforceOutputFileExtension,
-            cropRendition.getCropDimension(), cropRendition.getRotation());
+            cropRendition.getCropDimension(), cropRendition.getRotation(), imageQualityPercentage);
       }
       else {
-        return new VirtualRenditionMetadata(rendition.getRendition(), width, height, enforceOutputFileExtension);
+        return new VirtualRenditionMetadata(rendition.getRendition(), width, height, enforceOutputFileExtension, imageQualityPercentage);
       }
     }
     else {

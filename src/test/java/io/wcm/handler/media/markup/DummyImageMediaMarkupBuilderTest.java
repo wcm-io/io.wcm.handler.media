@@ -192,7 +192,7 @@ class DummyImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
 
     assertNotNull(element);
     assertEquals(MediaMarkupBuilder.DUMMY_IMAGE, element.getAttributeValue("src"));
@@ -210,7 +210,7 @@ class DummyImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(DUMMY_FORMAT);
     Media media = new Media(mediaSource, mediaRequest);
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
 
     assertNotNull(element);
     assertEquals("http://www.dummysite.org" + MediaMarkupBuilder.DUMMY_IMAGE, element.getAttributeValue("src"));
@@ -240,7 +240,7 @@ class DummyImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().mediaFormat(EDITORIAL_1COL);
     Media media = new Media(mediaSource, mediaRequest);
 
-    HtmlElement<?> element = builder.build(media);
+    HtmlElement element = builder.build(media);
 
     assertNotNull(element);
     assertEquals(MediaMarkupBuilder.DUMMY_IMAGE, element.getAttributeValue("src"));

@@ -61,6 +61,7 @@ import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.testing.mock.aem.dam.ngdm.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -87,6 +88,7 @@ class DamUriTemplateRenditionTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testOriginal_CropCenter() {
     Asset asset = createSampleAsset();
     Media media = mediaHandler.get(asset.getPath())
@@ -127,6 +129,22 @@ class DamUriTemplateRenditionTest {
   }
 
   @Test
+  void testOriginal_WebOptimizedImageDelivery() {
+    context.registerInjectActivateService(MockAssetDelivery.class);
+
+    Asset asset = createSampleAsset();
+    String assetId = MockAssetDelivery.getAssetId(asset);
+    Media media = mediaHandler.get(asset.getPath())
+        .mediaFormat(RATIO_16_10)
+        .build();
+
+    assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
+        "/adobe/dynamicmedia/deliver/" + assetId + "/sample.jpg?preferwebp=true&quality=85&width={width}");
+    assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 192, 120,
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.file/sample.jpg");
+  }
+
+  @Test
   void test4_3() {
     Asset asset = createSampleAsset();
     Media media = mediaHandler.get(asset.getPath())
@@ -152,6 +170,23 @@ class DamUriTemplateRenditionTest {
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&wid={width}");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 160, 120,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&hei={height}");
+  }
+
+  @Test
+  void test4_3_WebOptimizedImageDelivery() {
+    context.registerInjectActivateService(MockAssetDelivery.class);
+
+    Asset asset = createSampleAsset();
+    String assetId = MockAssetDelivery.getAssetId(asset);
+    Media media = mediaHandler.get(asset.getPath())
+        .mediaFormat(RATIO_4_3)
+        .autoCrop(true)
+        .build();
+
+    assertUriTemplate(media.getRendition(), SCALE_WIDTH, 160, 120,
+        "/adobe/dynamicmedia/deliver/" + assetId + "/sample.jpg?c=16%2C0%2C160%2C120&preferwebp=true&quality=85&width={width}");
+    assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 160, 120,
+        "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.16,0,176,120.file/sample.jpg");
   }
 
   @Test

@@ -61,7 +61,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
    * @param mediaElement Media element
    * @param media Media
    */
-  protected void applyWcmMarkup(@Nullable HtmlElement<?> mediaElement, @NotNull Media media) {
+  protected void applyWcmMarkup(@Nullable HtmlElement mediaElement, @NotNull Media media) {
     // further processing in edit or preview mode
     Resource resource = media.getMediaRequest().getResource();
     if (mediaElement != null && resource != null && wcmMode != null) {
@@ -100,7 +100,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
    * @param mediaElement Media element
    * @param media Media
    */
-  protected void setAdditionalAttributes(@Nullable HtmlElement<?> mediaElement, @NotNull Media media) {
+  protected void setAdditionalAttributes(@Nullable HtmlElement mediaElement, @NotNull Media media) {
     if (mediaElement == null) {
       return;
     }

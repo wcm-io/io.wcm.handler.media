@@ -116,14 +116,6 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   boolean isVectorImage();
 
   /**
-   * @return true if the rendition has a flash movie.
-   * @deprecated Flash support is deprecated
-   */
-  @Deprecated
-  @JsonIgnore
-  boolean isFlash();
-
-  /**
    * @return true if the rendition is not and image nor a flash movie.
    */
   @JsonIgnore

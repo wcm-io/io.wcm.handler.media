@@ -35,17 +35,22 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
-import io.wcm.handler.media.impl.MediaFileServlet;
+import io.wcm.handler.media.impl.ImageFileServletSelector;
+import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop;
+import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryParams;
 import io.wcm.handler.url.UrlHandler;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
 /**
  * Generates URI templates for asset renditions - with or without Dynamic Media.
  */
-class DamUriTemplate implements UriTemplate {
+final class DamUriTemplate implements UriTemplate {
+
+  private static final long DUMMY_WIDTH = 999991;
+  private static final long DUMMY_HEIGHT = 999992;
 
   private final UriTemplateType type;
   private final String uriTemplate;
@@ -68,8 +73,15 @@ class DamUriTemplate implements UriTemplate {
       }
     }
     if (url == null && (!damContext.isDynamicMediaEnabled() || !damContext.isDynamicMediaAemFallbackDisabled())) {
-      // Render renditions in AEM: build externalized URL
-      url = buildUriTemplateDam(type, rendition, cropDimension, rotation, damContext);
+      if (damContext.isWebOptimizedImageDeliveryEnabled()) {
+        // Render renditions via web-optimized image delivery: build externalized URL
+        url = buildUriTemplateWebOptimizedImageDelivery(type, cropDimension, rotation, damContext);
+      }
+      if (url == null) {
+        // Render renditions in AEM: build externalized URL
+        url = buildUriTemplateDam(type, rendition, cropDimension, rotation,
+            damContext.getMediaArgs().getImageQualityPercentage(), damContext);
+      }
     }
     this.uriTemplate = url;
 
@@ -80,16 +92,14 @@ class DamUriTemplate implements UriTemplate {
   }
 
   private static String buildUriTemplateDam(@NotNull UriTemplateType type, @NotNull Rendition rendition,
-      @Nullable CropDimension cropDimension, @Nullable Integer rotation,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation, @Nullable Double imageQualityPercentage,
       @NotNull DamContext damContext) {
-    final long DUMMY_WIDTH = 999991;
-    final long DUMMY_HEIGHT = 999992;
 
     // build rendition URL with dummy width/height parameters (otherwise externalization will fail)
     MediaArgs mediaArgs = damContext.getMediaArgs();
     String mediaPath = RenditionMetadata.buildMediaPath(rendition.getPath()
-        + "." + ImageFileServlet.buildSelectorString(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, false)
-        + "." + MediaFileServlet.EXTENSION,
+        + "." + ImageFileServletSelector.build(DUMMY_WIDTH, DUMMY_HEIGHT, cropDimension, rotation, imageQualityPercentage, false)
+        + "." + MediaFileServletConstants.EXTENSION,
         ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
     UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
     String url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())
@@ -111,6 +121,34 @@ class DamUriTemplate implements UriTemplate {
         break;
       default:
         throw new IllegalArgumentException("Unsupported type: " + type);
+    }
+    return url;
+  }
+
+  private static String buildUriTemplateWebOptimizedImageDelivery(@NotNull UriTemplateType type,
+      @Nullable CropDimension cropDimension, @Nullable Integer rotation, @NotNull DamContext damContext) {
+    // scale by height is not supported by Web-Optimized Image Delivery
+    if (type == UriTemplateType.SCALE_HEIGHT) {
+      return null;
+    }
+
+    // build rendition URL with dummy width/height parameters (otherwise API call will fail)
+    String url = damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams()
+        .width(DUMMY_WIDTH).cropDimension(cropDimension).rotation(rotation));
+    if (url == null) {
+      return null;
+    }
+
+    // replace dummy width/height parameters with actual placeholders
+    switch (type) {
+      case CROP_CENTER:
+        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        break;
+      case SCALE_WIDTH:
+        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported type for Web-optimized image delivery: " + type);
     }
     return url;
   }
@@ -154,7 +192,7 @@ class DamUriTemplate implements UriTemplate {
       case SCALE_HEIGHT:
         return "hei=" + URI_TEMPLATE_PLACEHOLDER_HEIGHT;
       default:
-        throw new IllegalArgumentException("Unsupported type: " + type);
+        throw new IllegalArgumentException("Unsupported type for Dynamic Media: " + type);
     }
   }
 
@@ -168,12 +206,12 @@ class DamUriTemplate implements UriTemplate {
   }
 
   @Override
-  public UriTemplateType getType() {
+  public @NotNull UriTemplateType getType() {
     return type;
   }
 
   @Override
-  public String getUriTemplate() {
+  public @NotNull String getUriTemplate() {
     return uriTemplate;
   }
 

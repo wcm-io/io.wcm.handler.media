@@ -27,6 +27,7 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
 import io.wcm.handler.mediasource.inline.InlineMediaSource;
+import io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaMediaSource;
 
 /**
  * Dummy media configuration
@@ -35,11 +36,18 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES = List.of(
       DamMediaSource.class,
-      InlineMediaSource.class);
+      InlineMediaSource.class,
+      NextGenDynamicMediaMediaSource.class);
 
   @Override
   public @NotNull List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
+  }
+
+  @Override
+  public boolean includeAssetWebRenditionsByDefault() {
+    // unit tests rely on old behavior
+    return true;
   }
 
 }

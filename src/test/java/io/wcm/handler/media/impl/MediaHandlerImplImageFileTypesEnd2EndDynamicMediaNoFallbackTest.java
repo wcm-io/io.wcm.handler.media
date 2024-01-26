@@ -39,6 +39,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * with rendering via dynamic media. The fallback to AEM-rendered renditions is disabled.
  */
 @ExtendWith(AemContextExtension.class)
+@SuppressWarnings("java:S5976") // ignore similar tests
 class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaNoFallbackTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
 
   @Override
@@ -94,6 +95,14 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaNoFallbackTest extends Me
   @Override
   @Test
   void testAsset_JPEG_AutoCrop() {
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    Media media = mediaHandler.get(asset.getPath()).build();
+    assertFalse(media.isValid());
+  }
+
+  @Override
+  @Test
+  void testAsset_JPEG_AutoCrop_ImageQuality() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     Media media = mediaHandler.get(asset.getPath()).build();
     assertFalse(media.isValid());

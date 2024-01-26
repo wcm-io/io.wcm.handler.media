@@ -46,7 +46,7 @@ public interface MediaHandler {
    * @return Media builder
    */
   @NotNull
-  MediaBuilder get(Resource resource);
+  MediaBuilder get(@Nullable Resource resource);
 
   /**
    * Build media which is referenced in the resource (as property or inline binary data).
@@ -57,7 +57,7 @@ public interface MediaHandler {
    * @return Media builder
    */
   @NotNull
-  MediaBuilder get(Resource resource, MediaArgs mediaArgs);
+  MediaBuilder get(@Nullable Resource resource, @NotNull MediaArgs mediaArgs);
 
   /**
    * Build media which is referenced in the resource (as property or inline binary data).
@@ -68,7 +68,7 @@ public interface MediaHandler {
    * @return Media builder
    */
   @NotNull
-  MediaBuilder get(Resource resource, MediaFormat... mediaFormats);
+  MediaBuilder get(@Nullable Resource resource, MediaFormat @NotNull... mediaFormats);
 
   /**
    * Build media which is referenced via its string address.
@@ -78,7 +78,7 @@ public interface MediaHandler {
    * @see #get(String, Resource)
    */
   @NotNull
-  MediaBuilder get(String mediaRef);
+  MediaBuilder get(@Nullable String mediaRef);
 
   /**
    * Build media which is referenced via its string address.
@@ -88,7 +88,7 @@ public interface MediaHandler {
    * @return Media builder
    */
   @NotNull
-  MediaBuilder get(String mediaRef, @Nullable Resource contextResource);
+  MediaBuilder get(@Nullable String mediaRef, @Nullable Resource contextResource);
 
   /**
    * Build media which is referenced via its string address.
@@ -97,7 +97,7 @@ public interface MediaHandler {
    * @return Media builder
    */
   @NotNull
-  MediaBuilder get(String mediaRef, MediaArgs mediaArgs);
+  MediaBuilder get(@Nullable String mediaRef, @NotNull MediaArgs mediaArgs);
 
   /**
    * Build media which is referenced via its string address.
@@ -106,7 +106,7 @@ public interface MediaHandler {
    * @return Media builder
    */
   @NotNull
-  MediaBuilder get(String mediaRef, MediaFormat... mediaFormats);
+  MediaBuilder get(@Nullable String mediaRef, MediaFormat @NotNull... mediaFormats);
 
   /**
    * Build media for the given request holding all further request properties.
@@ -122,7 +122,7 @@ public interface MediaHandler {
    * @param element Media markup element.
    * @return true if media element is invalid
    */
-  boolean isValidElement(HtmlElement<?> element);
+  boolean isValidElement(@Nullable HtmlElement element);
 
   /**
    * Returns an empty media that is marked as invalid.

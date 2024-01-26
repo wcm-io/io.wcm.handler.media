@@ -126,11 +126,15 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
   }
 
   private String getMediaInvalidReasonI18nKeyOrMessage(@NotNull Media media) {
-    if (media.getMediaInvalidReason() == MediaInvalidReason.CUSTOM) {
+    MediaInvalidReason reason = media.getMediaInvalidReason();
+    if (reason == MediaInvalidReason.CUSTOM) {
       return media.getMediaInvalidReasonCustomMessage();
     }
+    else if (reason != null) {
+      return MEDIA_INVALID_REASON_I18N_PREFIX + reason.name();
+    }
     else {
-      return MEDIA_INVALID_REASON_I18N_PREFIX + media.getMediaInvalidReason().name();
+      return "";
     }
   }
 

@@ -67,17 +67,6 @@ class MediaTest {
   }
 
   @Test
-  @SuppressWarnings("deprecation")
-  void testElement() {
-    Div div = new Div();
-    div.setText("test");
-
-    underTest.setElement(div);
-    assertSame(div, underTest.getElement());
-    assertEquals("<div>test</div>", underTest.getMarkup());
-  }
-
-  @Test
   void testElementBuilder() {
     Div div = new Div();
     div.setText("test");

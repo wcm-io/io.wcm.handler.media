@@ -150,15 +150,14 @@ final class MediaFormatResolver {
     if (!resolveForImageSizes(mediaArgs, additionalMediaFormats)) {
       return false;
     }
-    if (!resolveForResponsivePictureSources(mediaArgs, additionalMediaFormats)) {
-      return false;
-    }
+    resolveForResponsivePictureSources(mediaArgs, additionalMediaFormats);
 
     // if additional media formats where found add them to the media format list in media args
     if (!additionalMediaFormats.isEmpty()) {
       List<MediaFormatOption> allMediaFormats = new ArrayList<>();
-      if (mediaArgs.getMediaFormatOptions() != null) {
-        allMediaFormats.addAll(Arrays.asList(mediaArgs.getMediaFormatOptions()));
+      MediaFormatOption[] mediaFormatOptions = mediaArgs.getMediaFormatOptions();
+      if (mediaFormatOptions != null) {
+        allMediaFormats.addAll(Arrays.asList(mediaFormatOptions));
       }
       allMediaFormats.addAll(additionalMediaFormats.values());
       mediaArgs.mediaFormatOptions(allMediaFormats.toArray(new MediaFormatOption[0]));
@@ -185,15 +184,14 @@ final class MediaFormatResolver {
     return true;
   }
 
-  private boolean resolveForResponsivePictureSources(MediaArgs mediaArgs, Map<String, MediaFormatOption> additionalMediaFormats) {
+  private void resolveForResponsivePictureSources(MediaArgs mediaArgs, Map<String, MediaFormatOption> additionalMediaFormats) {
     PictureSource[] pictureSources = mediaArgs.getPictureSources();
     if (pictureSources == null || pictureSources.length == 0) {
-      return true;
+      return;
     }
     for (PictureSource pictureSource : pictureSources) {
       generateMediaFormatsForWidths(additionalMediaFormats, pictureSource.getMediaFormat(), false, pictureSource.getWidthOptions());
     }
-    return true;
   }
 
   private void generateMediaFormatsForWidths(@NotNull Map<String, MediaFormatOption> additionalMediaFormats,

@@ -39,7 +39,7 @@ import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.media.testcontext.MediaSourceDamAppAemContext;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -50,7 +50,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ExtendWith(AemContextExtension.class)
 class AssetRenditionTest {
 
-  private final AemContext context = MediaSourceDamAppAemContext.newAemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private Asset asset;
   private Rendition original;
@@ -119,14 +119,12 @@ class AssetRenditionTest {
   void testIsThumbnailRendition() {
     assertTrue(AssetRendition.isThumbnailRendition(renditionByName("cq5dam.thumbnail.10.10.png")));
     assertFalse(AssetRendition.isThumbnailRendition(renditionByName("cq5dam.web.100.100.jpg")));
-    assertFalse(AssetRendition.isThumbnailRendition(renditionByName("othername.gif")));
   }
 
   @Test
   void testIsWebRendition() {
     assertFalse(AssetRendition.isWebRendition(renditionByName("cq5dam.thumbnail.10.10.png")));
     assertTrue(AssetRendition.isWebRendition(renditionByName("cq5dam.web.100.100.jpg")));
-    assertFalse(AssetRendition.isWebRendition(renditionByName("othername.gif")));
   }
 
   @SuppressWarnings("null")

@@ -19,7 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl.dynamicmedia;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -42,11 +41,13 @@ public final class DynamicMediaPath {
   /**
    * Fixed path part for dynamic media image serving API for serving images.
    */
+  @SuppressWarnings("java:S1075") // not a file path
   private static final String IMAGE_SERVER_PATH = "/is/image/";
 
   /**
    * Fixed path part for dynamic media image serving API for serving static content.
    */
+  @SuppressWarnings("java:S1075") // not a file path
   private static final String CONTENT_SERVER_PATH = "/is/content/";
 
   /**
@@ -186,15 +187,10 @@ public final class DynamicMediaPath {
    */
   private static String encodeDynamicMediaObject(@NotNull DamContext damContext) {
     String[] pathParts = StringUtils.split(damContext.getDynamicMediaObject(), "/");
-    try {
-      for (int i = 0; i < pathParts.length; i++) {
-        pathParts[i] = URLEncoder.encode(pathParts[i], StandardCharsets.UTF_8.name());
-        // replace "+" with %20 in URL paths
-        pathParts[i] = StringUtils.replace(pathParts[i], "+", "%20");
-      }
-    }
-    catch (UnsupportedEncodingException ex) {
-      throw new RuntimeException("Unsupported encoding.", ex);
+    for (int i = 0; i < pathParts.length; i++) {
+      pathParts[i] = URLEncoder.encode(pathParts[i], StandardCharsets.UTF_8);
+      // replace "+" with %20 in URL paths
+      pathParts[i] = StringUtils.replace(pathParts[i], "+", "%20");
     }
     return StringUtils.join(pathParts, "/");
   }

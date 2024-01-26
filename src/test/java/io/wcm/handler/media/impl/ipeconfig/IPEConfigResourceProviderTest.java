@@ -54,6 +54,7 @@ import com.day.cq.wcm.api.components.InplaceEditingConfig;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.testing.mock.wcmio.wcm.MockInstanceType;
@@ -62,7 +63,7 @@ import io.wcm.testing.mock.wcmio.wcm.MockInstanceType;
 @ExtendWith(MockitoExtension.class)
 class IPEConfigResourceProviderTest {
 
-  private final AemContext context = new AemContext(ResourceResolverType.JCR_MOCK);
+  private final AemContext context = AppAemContext.newAemContext(ResourceResolverType.JCR_MOCK);
   @Mock
   ComponentManager componentManager;
   @Mock
@@ -76,7 +77,7 @@ class IPEConfigResourceProviderTest {
 
     context.registerAdapter(ResourceResolver.class, ComponentManager.class, componentManager);
     context.registerAdapter(Resource.class, MediaFormatHandler.class, mediaFormatHandler);
-    context.registerInjectActivateService(new IPEConfigResourceProvider());
+    context.registerInjectActivateService(IPEConfigResourceProvider.class);
 
     context.build().resource("/apps/app1/components/comp1")
         .resource("cq:editConfig/cq:inplaceEditing",

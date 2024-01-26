@@ -87,7 +87,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
         .map(rendition -> new VirtualTransformedRenditionMetadata(rendition.getRendition(),
             rotateMapWidth(rendition.getWidth(), rendition.getHeight(), rotation),
             rotateMapHeight(rendition.getWidth(), rendition.getHeight(), rotation),
-            mediaArgs.getEnforceOutputFileExtension(), null, rotation))
+            mediaArgs.getEnforceOutputFileExtension(), null, rotation, mediaArgs.getImageQualityPercentage()))
         .collect(Collectors.toCollection(TreeSet::new));
   }
 
@@ -104,7 +104,7 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
     return new VirtualTransformedRenditionMetadata(original.getRendition(),
         rotateMapWidth(cropDimension.getWidth(), cropDimension.getHeight(), rotation),
         rotateMapHeight(cropDimension.getWidth(), cropDimension.getHeight(), rotation),
-        mediaArgs.getEnforceOutputFileExtension(), cropDimension, rotation);
+        mediaArgs.getEnforceOutputFileExtension(), cropDimension, rotation, mediaArgs.getImageQualityPercentage());
   }
 
 }

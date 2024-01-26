@@ -31,8 +31,6 @@ import static io.wcm.handler.media.MediaComponentPropertyResolver.RESPONSIVE_TYP
 import static io.wcm.handler.media.MediaComponentPropertyResolver.RESPONSIVE_TYPE_PICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEIMAGE_SIZES;
 import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVEPICTURE_SOURCES;
-import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES;
-import static io.wcm.handler.media.MediaNameConstants.NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS;
 import static io.wcm.handler.media.MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY;
@@ -51,7 +49,6 @@ import java.util.Map;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -60,9 +57,9 @@ import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
-import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
 @ExtendWith(AemContextExtension.class)
 class MediaComponentPropertyResolverTest {
@@ -71,19 +68,12 @@ class MediaComponentPropertyResolverTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  private ComponentPropertyResolverFactory componentPropertyResolverFactory;
-
-  @BeforeEach
-  void setUp() {
-    componentPropertyResolverFactory = context.getService(ComponentPropertyResolverFactory.class);
-  }
-
   @Test
   void testIsAutoCrop_Default() throws Exception {
     Resource resource = context.create().resource("/content/r1");
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertFalse(underTest.isAutoCrop());
     }
   }
@@ -96,7 +86,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertTrue(underTest.isAutoCrop());
     }
   }
@@ -112,7 +102,7 @@ class MediaComponentPropertyResolverTest {
     Resource subresource2 = context.create().resource(subresource1, "subresource2");
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(subresource2, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(subresource2, MediaComponentPropertyResolver.class)) {
       assertTrue(underTest.isAutoCrop());
     }
   }
@@ -128,7 +118,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertFalse(underTest.isAutoCrop());
     }
   }
@@ -150,7 +140,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", false)
       }, underTest.getMediaFormatOptions());
@@ -165,7 +155,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", false),
           new MediaFormatOption("home_teaser", false)
@@ -188,7 +178,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", true),
           new MediaFormatOption("home_teaser", true)
@@ -214,7 +204,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", true),
           new MediaFormatOption("home_teaser", false)
@@ -239,7 +229,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new MediaFormatOption[] {
           new MediaFormatOption("home_stage", true),
           new MediaFormatOption("home_teaser", false),
@@ -285,7 +275,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -298,7 +288,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -313,7 +303,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertEquals(new ImageSizes("sizes1", new WidthOption[] {
           new WidthOption(200, true),
           new WidthOption(400, true),
@@ -332,7 +322,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -348,7 +338,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertEquals(new ImageSizes("sizes1", 200, 400), underTest.getImageSizes());
     }
   }
@@ -364,95 +354,10 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetImageSizes_Empty_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES);
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertNull(underTest.getImageSizes());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetImageSizes_Valid_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
-        PN_IMAGES_SIZES_SIZES, "sizes1",
-        PN_IMAGES_SIZES_WIDTHS, "200,400,600?");
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertEquals(new ImageSizes("sizes1", new WidthOption[] {
-          new WidthOption(200, true),
-          new WidthOption(400, true),
-          new WidthOption(600, false),
-      }), underTest.getImageSizes());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetImageSizes_Invalid_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
-        PN_IMAGES_SIZES_SIZES, "sizes1",
-        PN_IMAGES_SIZES_WIDTHS, "wurst?");
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertNull(underTest.getImageSizes());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetImageSizes_Valid_Active_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_IMAGE_SIZES);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
-        PN_IMAGES_SIZES_SIZES, "sizes1",
-        PN_IMAGES_SIZES_WIDTHS, "200,400");
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertEquals(new ImageSizes("sizes1", 200, 400), underTest.getImageSizes());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetImageSizes_Valid_NotActive_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_PICTURE_SOURCES);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_IMAGE_SIZES,
-        PN_IMAGES_SIZES_SIZES, "sizes1",
-        PN_IMAGES_SIZES_WIDTHS, "200,400");
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertNull(underTest.getImageSizes());
-    }
-  }
-
 
   @Test
   void testGetPictureSources_NotExisting() throws Exception {
@@ -461,7 +366,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getPictureSources());
     }
   }
@@ -474,7 +379,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getImageSizes());
     }
   }
@@ -495,7 +400,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new PictureSource[] {
           new PictureSource("home_stage")
               .media("media1")
@@ -524,7 +429,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getPictureSources());
     }
   }
@@ -542,7 +447,7 @@ class MediaComponentPropertyResolverTest {
     context.resourceResolver().commit();
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new PictureSource[] {
           new PictureSource("home_stage").widths(200, 400)
       }, underTest.getPictureSources());
@@ -561,111 +466,7 @@ class MediaComponentPropertyResolverTest {
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
 
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertNull(underTest.getPictureSources());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetPictureSources_Empty_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE);
-    context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertNull(underTest.getImageSizes());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetPictureSources_Valid_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE);
-    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
-    context.create().resource(sources, "source1",
-        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
-        PN_PICTURE_SOURCES_MEDIA, "media1",
-        PN_PICTURE_SOURCES_SIZES, "sizes1",
-        PN_PICTURE_SOURCES_WIDTHS, "200,400?");
-    context.create().resource(sources, "source2",
-        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_teaser",
-        PN_PICTURE_SOURCES_WIDTHS, "200,300");
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertArrayEquals(new PictureSource[] {
-          new PictureSource("home_stage")
-              .media("media1")
-              .sizes("sizes1")
-              .widthOptions(new WidthOption[] {
-                  new WidthOption(200, true),
-                  new WidthOption(400, false)
-              }),
-          new PictureSource("home_teaser")
-              .widths(200, 300)
-      }, underTest.getPictureSources());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetPictureSources_Invalid_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE);
-    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
-    context.create().resource(sources, "source1",
-        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
-        PN_PICTURE_SOURCES_MEDIA, "media1",
-        PN_PICTURE_SOURCES_WIDTHS, "jodel,kaiser");
-    context.create().resource(sources, "source2",
-        PN_PICTURE_SOURCES_WIDTHS, "200,300");
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertNull(underTest.getPictureSources());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetPictureSources_Valid_Active_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_PICTURE_SOURCES);
-    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
-    context.create().resource(sources, "source1",
-        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
-        PN_PICTURE_SOURCES_WIDTHS, "200,400");
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
-      assertArrayEquals(new PictureSource[] {
-          new PictureSource("home_stage").widths(200, 400)
-      }, underTest.getPictureSources());
-    }
-  }
-
-  @Test
-  @SuppressWarnings("deprecation")
-  void testGetPictureSources_Valid_Inactive_Deprecated() throws Exception {
-    Resource component = context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_MEDIA_RESPONSIVE_TYPE, RESPONSIVE_TYPE_IMAGE_SIZES);
-    Resource sources = context.create().resource(component, NN_COMPONENT_MEDIA_RESPONSIVE_PICTURE_SOURCES);
-    context.create().resource(sources, "source1",
-        PN_PICTURE_SOURCES_MEDIAFORMAT, "home_stage",
-        PN_PICTURE_SOURCES_WIDTHS, "200,400");
-    Resource resource = context.create().resource("/content/r1",
-        PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
-    context.resourceResolver().commit();
-
-    try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(resource, componentPropertyResolverFactory)) {
+    try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertNull(underTest.getPictureSources());
     }
   }

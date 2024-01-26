@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.media.impl;
 
+import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_DISPOSITION;
+import static io.wcm.handler.media.impl.MediaFileServletConstants.SELECTOR_DOWNLOAD;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,6 +36,7 @@ import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.sling.commons.request.RequestPath;
@@ -45,16 +49,6 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  */
 abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
-
-  /**
-   * Selector for forcing a "save-as" dialog in the browser
-   */
-  public static final String SELECTOR_DOWNLOAD = "download_attachment";
-
-  /**
-   * Content disposition header
-   */
-  public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
   @Override
   @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
@@ -89,7 +83,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param request Request
    * @return Resource pointing to nt:file or nt:resource node
    */
-  protected Resource getBinaryDataResource(SlingHttpServletRequest request) {
+  protected @Nullable Resource getBinaryDataResource(SlingHttpServletRequest request) {
     return request.getResource();
   }
 
@@ -100,8 +94,8 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param response Response
    * @return true if the resource is not modified and should not be delivered anew
    */
-  protected boolean isNotModified(Resource resource, SlingHttpServletRequest request,
-      SlingHttpServletResponse response) throws IOException {
+  protected boolean isNotModified(@NotNull Resource resource, @NotNull SlingHttpServletRequest request,
+      @NotNull SlingHttpServletResponse response) {
     // check resource's modification date against the If-Modified-Since header and send 304 if resource wasn't modified
     // never send expires header on author or publish instance (performance optimization - if medialib items changes
     // users have to refresh browsers cache)
@@ -113,7 +107,8 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param resource Resource
    * @return Binary data or null if not binary data found
    */
-  protected byte[] getBinaryData(Resource resource, @SuppressWarnings("unused") SlingHttpServletRequest request) throws IOException {
+  protected byte @Nullable [] getBinaryData(@NotNull Resource resource,
+      @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {
       return null;
@@ -131,7 +126,8 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param resource Resource
    * @return Content type (never null)
    */
-  protected String getContentType(Resource resource, @SuppressWarnings("unused") SlingHttpServletRequest request) {
+  protected @NotNull String getContentType(@NotNull Resource resource,
+      @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) {
     String mimeType = JcrBinary.getMimeType(resource);
     if (StringUtils.isEmpty(mimeType)) {
       mimeType = ContentType.OCTET_STREAM;
@@ -146,8 +142,8 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param request Request
    * @param response Response
    */
-  protected void sendBinaryData(byte[] binaryData, String contentType,
-      SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
+  protected void sendBinaryData(byte @NotNull [] binaryData, @NotNull String contentType,
+      @NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws IOException {
 
     // set content type and length
     response.setContentType(contentType);
@@ -158,22 +154,31 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
       // Overwrite MIME type with one suited for downloads
       response.setContentType(ContentType.DOWNLOAD);
 
-      // Construct disposition header
-      StringBuilder dispositionHeader = new StringBuilder("attachment;");
-      String suffix = request.getRequestPathInfo().getSuffix();
-      suffix = StringUtils.stripStart(suffix, "/");
-      if (StringUtils.isNotEmpty(suffix)) {
-        dispositionHeader.append("filename=\"").append(suffix).append('\"');
-      }
+      // set content disposition header to file name from suffix
+      setContentDispositionAttachmentHeader(request, response);
+    }
 
-      response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader.toString());
+    // special handling for SVG images which are not treated as download:
+    // force content disposition header to prevent stored XSS attack with malicious JavaScript in SVG file
+    else if (StringUtils.equals(contentType, ContentType.SVG)) {
+      setContentDispositionAttachmentHeader(request, response);
     }
 
     // write binary data
     OutputStream out = response.getOutputStream();
     out.write(binaryData);
     out.flush();
+  }
 
+  private void setContentDispositionAttachmentHeader(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) {
+    // Construct disposition header
+    StringBuilder dispositionHeader = new StringBuilder("attachment;");
+    String suffix = request.getRequestPathInfo().getSuffix();
+    suffix = StringUtils.stripStart(suffix, "/");
+    if (StringUtils.isNotEmpty(suffix)) {
+      dispositionHeader.append("filename=\"").append(suffix).append('\"');
+    }
+    response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader.toString());
   }
 
 }

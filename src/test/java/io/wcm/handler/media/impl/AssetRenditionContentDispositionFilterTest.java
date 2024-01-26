@@ -19,9 +19,9 @@
  */
 package io.wcm.handler.media.impl;
 
-import static io.wcm.handler.media.impl.AbstractMediaFileServlet.HEADER_CONTENT_DISPOSITION;
 import static io.wcm.handler.media.impl.AssetRenditionContentDispositionFilter.ALLOW_EMPTY_MIME;
 import static io.wcm.handler.media.impl.AssetRenditionContentDispositionFilter.BLACK_LIST_MIME_TYPE_CONFIG;
+import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_DISPOSITION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -37,6 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.Rendition;
 
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -45,7 +46,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ExtendWith(MockitoExtension.class)
 class AssetRenditionContentDispositionFilterTest {
 
-  private final AemContext context = new AemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   private Filter underTest;
 

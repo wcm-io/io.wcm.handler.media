@@ -37,27 +37,30 @@ import io.wcm.handler.media.spi.ImageMapLinkResolver;
 
 /**
  * Creates {@link ImageMapArea} from strings.
- * @param <T> Link result type
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
 }, adapters = ImageMapParser.class)
-public class ImageMapParserImpl<T> implements ImageMapParser<T> {
+public class ImageMapParserImpl implements ImageMapParser {
 
   @SlingObject
   private Resource resource;
 
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
+  @SuppressWarnings("java:S3740") // don't use generic here
   private ImageMapLinkResolver linkResolver;
 
   @Override
-  @SuppressWarnings({ "null", "unchecked" })
-  public @Nullable List<ImageMapArea<T>> parseMap(@Nullable String mapString) {
+  @SuppressWarnings({
+      "unchecked",
+      "java:S3776", "java:S135" // ignore complexity
+  })
+  public @Nullable List<ImageMapArea> parseMap(@Nullable String mapString) {
     if (StringUtils.isBlank(mapString)) {
       return null;
     }
 
-    List<ImageMapArea<T>> areas = new ArrayList<>();
+    List<ImageMapArea> areas = new ArrayList<>();
     // Parse the image map areas as defined at Image.PN_MAP
     String[] areaStrings = StringUtils.split(mapString, "][");
     for (String areaString : areaStrings) {
@@ -81,15 +84,11 @@ public class ImageMapParserImpl<T> implements ImageMapParser<T> {
         relativeCoordinates = StringUtils.substringBetween(relativeCoordinates, "(", ")");
 
         // resolve and validate via link handler
-        T link = null;
+        Object link = null;
         if (linkResolver != null) {
-          link = (T)linkResolver.resolveLink(linkUrl, linkWindowTarget, resource);
+          link = linkResolver.resolveLink(linkUrl, linkWindowTarget, resource);
           if (link != null) {
             linkUrl = linkResolver.getLinkUrl(link);
-          }
-          else {
-            // fallback to old signature
-            linkUrl = linkResolver.resolve(linkUrl, resource);
           }
         }
 
@@ -97,7 +96,7 @@ public class ImageMapParserImpl<T> implements ImageMapParser<T> {
           continue;
         }
 
-        ImageMapArea<T> area = new ImageMapAreaImpl<>(shape, coordinates,
+        ImageMapArea area = new ImageMapAreaImpl(shape, coordinates,
             StringUtils.trimToNull(relativeCoordinates),
             link, linkUrl,
             StringUtils.trimToNull(linkWindowTarget), StringUtils.trimToNull(altText));

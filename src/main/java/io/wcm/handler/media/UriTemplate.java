@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media;
 
+import org.jetbrains.annotations.NotNull;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -30,20 +31,22 @@ public interface UriTemplate {
   /**
    * @return URI template string containing placeholders like <code>{width}</code> or <code>{height}</code>.
    */
+  @NotNull
   String getUriTemplate();
 
   /**
    * @return URI template type
    */
+  @NotNull
   UriTemplateType getType();
 
   /**
-   * @return Maximum width that can be requested for the given asset
+   * @return Maximum width that can be requested for the given asset. Returns 0 if no maximum width is defined.
    */
   long getMaxWidth();
 
   /**
-   * @return Maximum height that can be requested for the given asset
+   * @return Maximum height that can be requested for the given asset. Returns 0 if no maximum height is defined.
    */
   long getMaxHeight();
 

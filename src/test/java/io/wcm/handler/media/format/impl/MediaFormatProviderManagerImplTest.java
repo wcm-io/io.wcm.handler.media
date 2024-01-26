@@ -28,7 +28,9 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +45,7 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatBuilder;
 import io.wcm.handler.media.format.MediaFormatProviderManager;
 import io.wcm.handler.media.spi.MediaFormatProvider;
-import io.wcm.sling.commons.caservice.impl.ContextAwareServiceResolverImpl;
+import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
@@ -60,7 +62,7 @@ class MediaFormatProviderManagerImplTest {
   private static final MediaFormat MF21 = MediaFormatBuilder.create("mf21").description("desc-from-2").build();
   private static final SortedSet<MediaFormat> MEDIAFORMATS_2 = new TreeSet<>(Set.of(MF11_FROM2, MF21));
 
-  private final AemContext context = new AemContext();
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Mock
   private MediaFormatProvider provider1;
@@ -74,8 +76,6 @@ class MediaFormatProviderManagerImplTest {
   void setUp() {
     resource = context.create().resource("/content/test");
 
-    context.registerInjectActivateService(new ContextAwareServiceResolverImpl());
-
     when(provider1.getMediaFormats()).thenReturn(MEDIAFORMATS_1);
     when(provider2.getMediaFormats()).thenReturn(MEDIAFORMATS_2);
 
@@ -84,17 +84,17 @@ class MediaFormatProviderManagerImplTest {
     context.registerService(MediaFormatProvider.class, provider2,
         Constants.SERVICE_RANKING, 100);
 
-    underTest = context.registerInjectActivateService(new MediaFormatProviderManagerImpl());
+    underTest = context.registerInjectActivateService(MediaFormatProviderManagerImpl.class);
   }
 
   @Test
   void testWithResource() {
-    SortedSet<MediaFormat> result = underTest.getMediaFormats(resource);
+    SortedSet<MediaFormat> result = filterMediaFormats(underTest.getMediaFormats(resource));
     assertEquals(new TreeSet<>(Set.of(MF11, MF12, MF21)), result);
 
     MediaFormat first = result.iterator().next();
     assertEquals("mf11", first.getName());
-    // make sure when multiplie providers define formats with the same name the one with the highest ranking wins
+    // make sure when multiple providers define formats with the same name the one with the highest ranking wins
     assertEquals("desc-from-1", first.getDescription());
   }
 
@@ -113,7 +113,16 @@ class MediaFormatProviderManagerImplTest {
     assertEquals("mock-bundle", entry.getKey());
 
     SortedSet<MediaFormat> mediaFormats = entry.getValue();
-    assertEquals(new TreeSet<>(Set.of(MF11, MF12, MF21)), mediaFormats);
+    assertEquals(new TreeSet<>(Set.of(MF11, MF12, MF21)), filterMediaFormats(mediaFormats));
+  }
+
+  /**
+   * Filter out media formats not registered by this test class.
+   */
+  private SortedSet<MediaFormat> filterMediaFormats(SortedSet<MediaFormat> mediaFormats) {
+    return mediaFormats.stream()
+        .filter(mf -> StringUtils.startsWith(mf.getName(), "mf"))
+        .collect(Collectors.toCollection(TreeSet::new));
   }
 
 }

@@ -54,6 +54,7 @@ public final class DummyImageServlet extends AbstractImageServlet {
   /**
    * Dummy image content path
    */
+  @SuppressWarnings("java:S1075") // no file path
   public static final @NotNull String PATH = "/apps/wcm-io/handler/media/content/dummyImage";
 
   /**

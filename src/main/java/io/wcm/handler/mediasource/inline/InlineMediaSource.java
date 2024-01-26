@@ -119,15 +119,13 @@ public final class InlineMediaSource extends MediaSource {
     }
 
     // skip further processing if nor binary resource found
-    if (ntResourceResource == null) {
+    if (referencedResource == null || ntResourceResource == null) {
       media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
       return media;
     }
 
     // Update media args settings from resource (e.g. alt. text setings)
-    if (referencedResource != null) {
-      updateMediaArgsFromResource(mediaArgs, referencedResource, mediaHandlerConfig);
-    }
+    updateMediaArgsFromResource(mediaArgs, referencedResource, mediaHandlerConfig);
 
     // Check for transformations
     media.setCropDimension(getMediaCropDimension(media.getMediaRequest(), mediaHandlerConfig));
@@ -176,8 +174,8 @@ public final class InlineMediaSource extends MediaSource {
    * @param ntResourceResource nt:resource resource
    * @return Detected or virtual filename. Never null.
    */
-  private String detectFileName(Resource referencedResource, Resource ntFileResource,
-      Resource ntResourceResource) {
+  private String detectFileName(@NotNull Resource referencedResource, @Nullable Resource ntFileResource,
+      @Nullable Resource ntResourceResource) {
     // detect file name
     String fileName = null;
     // if referenced resource is not the nt:file node check for <nodename>Name property
@@ -185,7 +183,7 @@ public final class InlineMediaSource extends MediaSource {
       fileName = referencedResource.getValueMap().get(ntFileResource.getName() + "Name", String.class);
     }
     // if not nt:file node exists and the referenced resource is not the nt:resource node check for <nodename>Name property
-    else if (ntFileResource == null && !referencedResource.equals(ntResourceResource)) {
+    else if (ntFileResource == null && ntResourceResource != null && !referencedResource.equals(ntResourceResource)) {
       fileName = referencedResource.getValueMap().get(ntResourceResource.getName() + "Name", String.class);
     }
     // otherwise use node name of nt:file resource if it exists

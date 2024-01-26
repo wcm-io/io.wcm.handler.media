@@ -31,6 +31,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
+import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryService;
 import io.wcm.sling.commons.adapter.AdaptTo;
 
 @SuppressWarnings("null")
@@ -44,8 +45,9 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
 
     MediaHandlerConfig mediaHandlerConfig = AdaptTo.notNull(context.request(), MediaHandlerConfig.class);
     DynamicMediaSupportService dynamicMediaSupportService = context.getService(DynamicMediaSupportService.class);
+    WebOptimizedImageDeliveryService webOptimizedImageDeliveryService = context.getService(WebOptimizedImageDeliveryService.class);
     DamContext damContext = new DamContext(asset, null, mediaHandlerConfig,
-        dynamicMediaSupportService, context.request());
+        dynamicMediaSupportService, webOptimizedImageDeliveryService, context.request());
 
     underTest = new DefaultRenditionHandler(damContext);
   }

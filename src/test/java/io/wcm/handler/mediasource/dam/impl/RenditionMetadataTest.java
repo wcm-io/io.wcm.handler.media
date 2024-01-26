@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.dam.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -72,7 +73,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareOriginalRenditionToItself() {
-    assertTrue(originalRendition.compareTo(originalRendition) == 0, "original rendition is not equal to itself");
+    assertEquals(0, originalRendition.compareTo(originalRendition), "original rendition is not equal to itself");
   }
 
   /**
@@ -80,7 +81,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareSmallToBigRendition() {
-    assertTrue(smallestRendition.compareTo(biggestRendition) == -1, "smaller rendition is not smaller");
+    assertEquals(-1, smallestRendition.compareTo(biggestRendition), "smaller rendition is not smaller");
   }
 
   /**
@@ -88,7 +89,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareBigToSmallRendition() {
-    assertTrue(biggestRendition.compareTo(smallestRendition) == 1, "bigger rendition is not bigger");
+    assertEquals(1, biggestRendition.compareTo(smallestRendition), "bigger rendition is not bigger");
   }
 
   /**
@@ -96,7 +97,7 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareTwoEqualRenditions() {
-    assertTrue(biggestRendition.compareTo(biggestRendition) == 0, "two equal renditions are not equal");
+    assertEquals(0, biggestRendition.compareTo(biggestRendition), "two equal renditions are not equal");
   }
 
   /**
@@ -104,8 +105,8 @@ class RenditionMetadataTest extends AbstractDamTest {
    */
   @Test
   void testCompareOriginalRenditionToEqualRendition() {
-    assertTrue(originalRendition.compareTo(originalRenditionCopy) == -1, "original rendition is not preferred over the equal rendition");
-    assertTrue(originalRenditionCopy.compareTo(originalRendition) == 1, "original rendition is not preferred over the equal rendition");
+    assertEquals(-1, originalRendition.compareTo(originalRenditionCopy), "original rendition is not preferred over the equal rendition");
+    assertEquals(1, originalRenditionCopy.compareTo(originalRendition), "original rendition is not preferred over the equal rendition");
   }
 
   @Test
@@ -179,8 +180,8 @@ class RenditionMetadataTest extends AbstractDamTest {
 
   @Test
   void testEquals() {
-    assertTrue(smallestRendition.equals(smallestRendition));
-    assertFalse(smallestRendition.equals(biggestRendition));
+    assertEquals(smallestRendition,smallestRendition);
+    assertNotEquals(smallestRendition, biggestRendition);
   }
 
   private void loadImageBinary_originalRenditionCopy() throws PersistenceException {
