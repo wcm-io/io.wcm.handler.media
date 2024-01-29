@@ -29,6 +29,7 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.jetbrains.annotations.NotNull;
+import org.osgi.annotation.versioning.ProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,8 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService;
  * Prepares Next Generation Dynamic Media configuration for GraniteUI components (fileupload, pathfield).
  */
 @Model(adaptables = SlingHttpServletRequest.class)
-public class NextGenDynamicMediaConfigModel {
+@ProviderType
+public final class NextGenDynamicMediaConfigModel {
 
   private static final JsonMapper MAPPER = JsonMapper.builder().build();
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigModel.class);

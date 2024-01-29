@@ -20,5 +20,5 @@
 /**
  * Media source implementation for Next Generation Dynamic Media.
  */
-@org.osgi.annotation.versioning.Version("1.0.0")
+@org.osgi.annotation.versioning.Version("1.1.0")
 package io.wcm.handler.mediasource.ngdm;
