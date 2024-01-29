@@ -29,6 +29,7 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,14 +90,14 @@ public final class NextGenDynamicMediaConfigModel {
   /**
    * @return Asset Selectors URL
    */
-  public String getAssetSelectorsJsUrl() {
+  public @Nullable String getAssetSelectorsJsUrl() {
     return this.assetSelectorsJsUrl;
   }
 
   /**
    * @return JSON string with configuration data required on the client-side.
    */
-  public String getConfigJson() {
+  public @Nullable String getConfigJson() {
     return this.configJson;
   }
 
