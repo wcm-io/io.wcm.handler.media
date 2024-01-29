@@ -51,4 +51,22 @@ public interface NextGenDynamicMediaConfigService {
    */
   String getRepositoryId();
 
+  /**
+   * Gets the API key for accessing the asset selectors UI
+   * @return the API key for accessing the asset selectors UI
+   */
+  String getApiKey();
+
+  /**
+   * Gets the environment string which should be 'PROD' or 'STAGE'
+   * @return the environment string
+   */
+  String getEnv();
+
+  /**
+   * Gets the IMS client identifier
+   * @return the IMS client identifier
+   */
+  String getImsClient();
+
 }

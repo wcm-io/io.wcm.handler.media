@@ -48,4 +48,19 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
     return this.nextGenDynamicMediaConfig.getRepositoryId();
   }
 
+  @Override
+  public String getApiKey() {
+    return this.nextGenDynamicMediaConfig.getApiKey();
+  }
+
+  @Override
+  public String getEnv() {
+    return this.nextGenDynamicMediaConfig.getEnv();
+  }
+
+  @Override
+  public String getImsClient() {
+    return this.nextGenDynamicMediaConfig.getImsClient();
+  }
+
 }
