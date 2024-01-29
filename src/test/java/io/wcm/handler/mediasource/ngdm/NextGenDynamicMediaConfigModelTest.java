@@ -17,55 +17,59 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.ngdm.impl;
+package io.wcm.handler.mediasource.ngdm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
+import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
-class NextGenDynamicMediaConfigServiceImplTest {
+class NextGenDynamicMediaConfigModelTest {
 
   private final AemContext context = AppAemContext.newAemContext();
-
-  private NextGenDynamicMediaConfigService underTest;
 
   @BeforeEach
   void setUp() {
     MockNextGenDynamicMediaConfig config = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     config.setEnabled(true);
     config.setAssetSelectorsJsUrl("/selector1");
-    config.setImageDeliveryBasePath("/imagepath1");
-    config.setVideoDeliveryPath("/videopath1");
-    config.setAssetOriginalBinaryDeliveryPath("/assetpath1");
-    config.setAssetMetadataPath("/metadatapath1");
     config.setRepositoryId("repo1");
     config.setApiKey("key1");
     config.setEnv("env1");
     config.setImsClient("client1");
-    underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
   }
 
   @Test
-  void testProperties() {
-    assertTrue(underTest.enabled());
+  void testWithConfigService() throws JSONException {
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+
+    NextGenDynamicMediaConfigModel underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaConfigModel.class);
+    assertTrue(underTest.isEnabled());
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
-    assertEquals("/imagepath1", underTest.getImageDeliveryBasePath());
-    assertEquals("/videopath1", underTest.getVideoDeliveryPath());
-    assertEquals("/assetpath1", underTest.getAssetOriginalBinaryDeliveryPath());
-    assertEquals("/metadatapath1", underTest.getAssetMetadataPath());
-    assertEquals("repo1", underTest.getRepositoryId());
-    assertEquals("key1", underTest.getApiKey());
-    assertEquals("env1", underTest.getEnv());
-    assertEquals("client1", underTest.getImsClient());
+    JSONAssert.assertEquals("{repositoryId:'repo1',apiKey:'key1',env:'env1',imsClient:'client1'}",
+        underTest.getConfigJson(), true);
+  }
+
+  @Test
+  void testWithoutConfigService() {
+    NextGenDynamicMediaConfigModel underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaConfigModel.class);
+    assertFalse(underTest.isEnabled());
+    assertNull(underTest.getAssetSelectorsJsUrl());
+    assertNull(underTest.getConfigJson());
   }
 
 }

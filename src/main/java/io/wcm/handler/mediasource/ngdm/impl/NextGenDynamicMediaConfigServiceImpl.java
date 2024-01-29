@@ -39,8 +39,28 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   }
 
   @Override
+  public String getAssetSelectorsJsUrl() {
+    return this.nextGenDynamicMediaConfig.getAssetSelectorsJsUrl();
+  }
+
+  @Override
   public String getImageDeliveryBasePath() {
     return this.nextGenDynamicMediaConfig.getImageDeliveryBasePath();
+  }
+
+  @Override
+  public String getVideoDeliveryPath() {
+    return this.nextGenDynamicMediaConfig.getVideoDeliveryPath();
+  }
+
+  @Override
+  public String getAssetOriginalBinaryDeliveryPath() {
+    return this.nextGenDynamicMediaConfig.getAssetOriginalBinaryDeliveryPath();
+  }
+
+  @Override
+  public String getAssetMetadataPath() {
+    return this.nextGenDynamicMediaConfig.getAssetMetadataPath();
   }
 
   @Override

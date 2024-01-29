@@ -31,6 +31,12 @@ public interface NextGenDynamicMediaConfigService {
   boolean enabled();
 
   /**
+   * Gets the absolute URL for the javascript which contains the microfrontend for the remote asset selector.
+   * @return the absolute URL for the javascript which contains the microfrontend for the remote asset selector
+   */
+  String getAssetSelectorsJsUrl();
+
+  /**
    * Gets the path expression for the image delivery path. The following placeholders with the below meaning are
    * contained within that path:
    * <ul>
@@ -44,6 +50,45 @@ public interface NextGenDynamicMediaConfigService {
    * @return the path expression for the image delivery path
    */
   String getImageDeliveryBasePath();
+
+  /**
+   * Gets the path expression for the adaptive video manifest/player path. The
+   * following placeholders with the below meaning are contained
+   * within that path:
+   * <ul>
+   * <li><code>{asset-id}</code> - the uuid of the asset in the format 'urn:aaid:aem:UUID'
+   * along with optional format
+   * e.g. urn:aaid:aem:1a034bee-ebda-4787-bad3-f924d0772b75 OR
+   * urn:aaid:aem:1a034bee-ebda-4787-bad3-f924d0772b75.mp4</li>
+   * </ul>
+   * @return the path expression for the video delivery path
+   */
+  String getVideoDeliveryPath();
+
+  /**
+   * Gets the path expression for the the Original Asset Delivery which delivers
+   * the bitstream as-is
+   * <ul>
+   * <li><code>{asset-id}</code> - the uuid of the asset in the format 'urn:aaid:aem:UUID',
+   * e.g. urn:aaid:aem:1a034bee-ebda-4787-bad3-f924d0772b75</li>
+   * <li><code>{seo-name}</code> - any url-encoded or alphanumeric, non-whitespace set of
+   * characters. may contain hyphens and dots</li>
+   * </ul>
+   * @return the path expression for the asset (bitstream) delivery path
+   */
+  String getAssetOriginalBinaryDeliveryPath();
+
+  /**
+   * Gets the path expression for getting the metadata of an asset. The following
+   * placeholders with the below meaning are contained within
+   * that path:
+   * <ul>
+   * <li><code>{asset-id}</code> - the uuid of the asset in the format 'urn:aaid:aem:UUID',
+   * e.g. urn:aaid:aem:1a034bee-ebda-4787-bad3-f924d0772b75</li>
+   * </ul>
+   * @return the path expression for the metadata path
+   */
+  String getAssetMetadataPath();
 
   /**
    * Gets the Next Generation Dynamic Media tenant (also known technically as the repository ID).
