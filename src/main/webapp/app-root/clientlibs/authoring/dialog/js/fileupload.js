@@ -30,6 +30,24 @@
     self._addClearTransformationButton();
     self._updatePickLink();
 
+
+    var buttonWrapper = document.createElement("span");
+    buttonWrapper.classList.add("coral-InputGroup-button");
+    var newButton = new Coral.Button().set({
+      icon: "popOut",
+      title: "Pick Remote",
+      type: "button"
+    });
+    newButton.setAttribute("aria-label", "Pick Remote");
+    buttonWrapper.appendChild(newButton);
+    var $newButton = $(newButton);
+    $newButton.on("click", function(e) {
+      alert('pick remote asset...');
+    });
+    var $existingButtonWrapper = self._$pathfield.find(".coral-InputGroup-button");
+    $(buttonWrapper).insertAfter($existingButtonWrapper);
+
+
     // enable asset validation
     self._validate = new ns.MediaFormatValidate({
       pathfield: self._pathfield
