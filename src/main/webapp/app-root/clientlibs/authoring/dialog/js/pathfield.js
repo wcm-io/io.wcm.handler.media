@@ -26,6 +26,11 @@
     self._$pathfield = $(config.pathfield);
     self._bindEvents();
 
+    // enable nextgen dynamic media
+    self._validate = new ns.NextGenDynamicMedia({
+      pathfield: self._pathfield
+    });
+
     // enable asset validation
     self._validate = new ns.MediaFormatValidate({
       pathfield: self._pathfield

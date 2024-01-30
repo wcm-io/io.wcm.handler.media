@@ -29,6 +29,7 @@
 <%@page import="com.adobe.granite.ui.components.ExpressionHelper"%>
 <%@page import="io.wcm.handler.media.MediaNameConstants"%>
 <%@page import="io.wcm.handler.media.MediaComponentPropertyResolver"%>
+<%@page import="io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaConfigModel"%>
 <%@page import="io.wcm.handler.media.spi.MediaHandlerConfig"%>
 <%@page import="io.wcm.wcm.ui.granite.resource.GraniteUiSyntheticResource"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
@@ -225,6 +226,12 @@ if (hasTransformation) {
 }
 if (!dataProps.isEmpty()) {
   GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
+}
+
+// NGDM config (if enabled)
+NextGenDynamicMediaConfigModel nextGenDynamicMediaConfig = slingRequest.adaptTo(NextGenDynamicMediaConfigModel.class);
+if (nextGenDynamicMediaConfig.isEnabled()) {
+  dataProps.put("wcmio-nextgendynamicmedia-config", nextGenDynamicMediaConfig.getConfigJson());
 }
 
 dispatcher = slingRequest.getRequestDispatcher(pathField);

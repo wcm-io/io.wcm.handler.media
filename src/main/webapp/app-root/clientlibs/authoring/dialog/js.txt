@@ -1,6 +1,7 @@
 #base=js
 namespace.js
 mediaFormatValidate.js
+nextGenDynamicMedia.js
 fileupload.js
 pathfield.js
 validation.js
