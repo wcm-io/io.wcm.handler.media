@@ -25,6 +25,21 @@ package io.wcm.handler.mediasource.ngdm.impl;
 public interface NextGenDynamicMediaConfigService {
 
   /**
+   * Placeholder for Asset ID used in delivery base paths.
+   */
+  String PLACEHOLDER_ASSET_ID = "{asset-id}";
+
+  /**
+   * Placeholder for SEO name used in delivery base paths.
+   */
+  String PLACEHOLDER_SEO_NAME = "{seo-name}";
+
+  /**
+   * Placeholder for format (image file extension) used in delivery base paths.
+   */
+  String PLACEHOLDER_FORMAT = "{format}";
+
+  /**
    * Checks if the configuration/feature is enabled.
    * @return true if enabled and false otherwise
    */

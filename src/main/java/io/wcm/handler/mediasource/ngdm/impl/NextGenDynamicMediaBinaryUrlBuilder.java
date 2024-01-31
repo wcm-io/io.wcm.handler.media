@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_ASSET_ID;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_SEO_NAME;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,9 +34,6 @@ import org.jetbrains.annotations.Nullable;
  * </p>
  */
 public final class NextGenDynamicMediaBinaryUrlBuilder {
-
-  static final String PLACEHOLDER_ASSET_ID = "{asset-id}";
-  static final String PLACEHOLDER_SEO_NAME = "{seo-name}";
 
   private final NextGenDynamicMediaContext context;
 
