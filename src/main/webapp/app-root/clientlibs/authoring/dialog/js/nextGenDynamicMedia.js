@@ -20,25 +20,27 @@
 ;(function ($, ns, channel, document, window, undefined) {
   "use strict";
 
-  let ngdmConfig;
-  let assetSelectorDialog;
-  let assetSelectorDialogContainer;
-
   var NextGenDynamicMedia = function (config) {
-    const self = this;
+    const self = this
+
     self._pathfield = config.pathfield;
     self._$pathfield = $(config.pathfield);
+    self._assetSelectedCallback = config.assetSelectedCallback;
+    self._filterImagesOnly = config.filterImagesOnly;
     
-    ngdmConfig = self._$pathfield.data("wcmio-nextgendynamicmedia-config");
-    if (!ngdmConfig) {
+    self._ngdmConfig = self._$pathfield.data("wcmio-nextgendynamicmedia-config");
+    if (!self._ngdmConfig) {
       // NGDM not enabled
       return;
     }
 
-    addPickRemoteButton(self._$pathfield, () => {
+    self._addPickRemoteButton(() => {
       self.pickRemoteAsset(assetReference => {
         if (assetReference != self._$pathfield.val()) {
           self._$pathfield.val(assetReference);
+          if (self._assetSelectedCallback) {
+            self._assetSelectedCallback(assetReference);
+          }
         }
       });
     });
@@ -49,15 +51,23 @@
    * @param assetReferenceCallback called when asset is picked with the asset reference as parameter
    */
   NextGenDynamicMedia.prototype.pickRemoteAsset = function(assetReferenceCallback) {
-    showAssetSelectorDialog(assetReferenceCallback);
+    const self = this
+
+    self._prepareAssetSelectorDialog();
+    const assetSelectorProps = self._prepareAssetSelectorProps(assetReferenceCallback);
+    PureJSSelectors.renderAssetSelectorWithAuthFlow(
+      self._assetSelectorDialogContainer.get(0),
+      assetSelectorProps,
+      () => self._assetSelectorDialog.show()
+    );
   }
 
   /**
    * Add additional button to pathfield to pick remote assets.
    * @param onclickHandler Method that is called when button is clicked
    */
-  function addPickRemoteButton($pathfield, onclickHandler) {
-    const self = this;
+  NextGenDynamicMedia.prototype._addPickRemoteButton = function(onclickHandler) {
+    const self = this
 
     const label = Granite.I18n.get("Remote");
     const pickRemoteButton = new Coral.Button().set({
@@ -73,22 +83,45 @@
     buttonWrapper.appendChild(pickRemoteButton);
 
     // add new button (wrapper) after existing one to pick local assets
-    $(buttonWrapper).insertAfter($pathfield.find(".coral-InputGroup-button"));
+    $(buttonWrapper).insertAfter(self._$pathfield.find(".coral-InputGroup-button"));
   }
 
   /**
-   * Show asset selector dialog wrapped in Coral dialog.
+   * Prepares a Coral Dialog in DOM to render the asset selector.
+   * If the markup already exists, it is reused.
+   * Sets variables self._assetSelectorDialog and self._assetSelectorDialogContainer as a result.
+   */
+  NextGenDynamicMedia.prototype._prepareAssetSelectorDialog = function() {
+    const self = this
+
+    self._assetSelectorDialog = $("#wcmio-handler-media-ngdm-assetselector");
+    if (self._assetSelectorDialog.length === 0) {
+      self._assetSelectorDialog = new Coral.Dialog().set({
+        id: "wcmio-handler-media-ngdm-assetselector",
+        content: {
+          innerHTML: '<div class="wcmio-handler-media-ngdm-assetselector-dialogbody"></div>'
+        },
+        fullscreen: false
+      });
+      document.body.appendChild(self._assetSelectorDialog);
+    }
+    self._assetSelectorDialogContainer = $(self._assetSelectorDialog).find(".wcmio-handler-media-ngdm-assetselector-dialogbody");
+  }
+
+  /**
+   * Prepare configuration for asset selector.
    * @param assetReferenceCallback called when asset is picked with the asset reference as parameter
    */
-  function showAssetSelectorDialog(assetReferenceCallback) {
-    prepareAssetSelectorDialog();
+  NextGenDynamicMedia.prototype._prepareAssetSelectorProps = function(assetReferenceCallback) {
+    const self = this
+
     const assetSelectorProps = {
-      repositoryId: ngdmConfig.repositoryId,
-      apiKey: ngdmConfig.apiKey,
-      env: ngdmConfig.env,
+      repositoryId: self._ngdmConfig.repositoryId,
+      apiKey: self._ngdmConfig.apiKey,
+      env: self._ngdmConfig.env,
       handleSelection: (selection) => {
         const selectedAsset = selection[0];
-        const assetReference = toAssetReference(selectedAsset);
+        const assetReference = self._toAssetReference(selectedAsset);
         if (assetReference) {
           assetReferenceCallback(assetReference);
         }
@@ -96,13 +129,16 @@
       onClose: () => {
         const $underlay = $("._coral-Underlay");
         $underlay.removeClass("is-open");
-        assetSelectorDialog.remove();
+        self._assetSelectorDialog.remove();
       },
       hideTreeNav: true,
       acvConfig: {
         selectionType: "single",
-      },
-      filterSchema: [
+      }
+    };
+
+    if (self._filterImagesOnly) {
+      assetSelectorProps.filterSchema = [
         {
           header: "File Type",
           groupKey: "TopGroup",
@@ -154,40 +190,16 @@
           header: "Mime Types",
           groupKey: "MimeTypeGroup"
         }
-      ]
-    };
-
-    PureJSSelectors.renderAssetSelectorWithAuthFlow(
-      assetSelectorDialogContainer.get(0),
-      assetSelectorProps,
-      () => assetSelectorDialog.show()
-    );
-  }
-
-  /**
-   * Prepares a Coral Dialog in DOM to render the asset selector.
-   * If the markup already exists, it is reused.
-   * Sets variables assetSelectorDialog and assetSelectorDialogContainer as a result.
-   */
-  function prepareAssetSelectorDialog() {
-    assetSelectorDialog = $("#wcmio-handler-media-ngdm-assetselector");
-    if (assetSelectorDialog.length === 0) {
-      assetSelectorDialog = new Coral.Dialog().set({
-        id: "wcmio-handler-media-ngdm-assetselector",
-        content: {
-          innerHTML: '<div class="wcmio-handler-media-ngdm-assetselector-dialogbody"></div>'
-        },
-        fullscreen: false
-      });
-      document.body.appendChild(assetSelectorDialog);
+      ];
     }
-    assetSelectorDialogContainer = $(assetSelectorDialog).find(".wcmio-handler-media-ngdm-assetselector-dialogbody");
+
+    return assetSelectorProps;
   }
 
   /**
    * Converts select asset object to asset reference string.
    */
-  function toAssetReference(selectedAsset) {
+  NextGenDynamicMedia.prototype._toAssetReference = function(selectedAsset) {
     const { name, "repo:assetId": assetId } = selectedAsset;
     if (name && assetId) {
       return `/${assetId}/${name}`;
