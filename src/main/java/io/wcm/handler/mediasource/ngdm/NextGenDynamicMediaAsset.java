@@ -110,9 +110,6 @@ final class NextGenDynamicMediaAsset implements Asset {
 
   @Override
   public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
-    if (type == UriTemplateType.SCALE_HEIGHT) {
-      throw new IllegalArgumentException("URI template type not supported: " + type);
-    }
     return new NextGenDynamicMediaUriTemplate(context, type);
   }
 

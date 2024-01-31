@@ -30,6 +30,14 @@
     self._addClearTransformationButton();
     self._updatePickLink();
 
+    // enable nextgen dynamic media
+    self._validate = new ns.NextGenDynamicMedia({
+      pathfield: self._pathfield,
+      assetSelectedCallback: (assetReference) => {
+        self._triggerAssetSelected(assetReference);
+      }
+    });
+
     // enable asset validation
     self._validate = new ns.MediaFormatValidate({
       pathfield: self._pathfield

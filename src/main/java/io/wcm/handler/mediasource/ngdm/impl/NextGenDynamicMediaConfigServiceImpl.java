@@ -19,8 +19,13 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 
@@ -30,12 +35,25 @@ import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 @Component(service = NextGenDynamicMediaConfigService.class, immediate = true)
 public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMediaConfigService {
 
-  @Reference
+  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigServiceImpl.class);
+
+  @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
+
+  @Activate
+  private void activate() {
+    log.debug("NGDM config: enabled={}, repositoryId={}, apiKey={}, env={}, imsClient={}",
+        enabled(), getRepositoryId(), getApiKey(), getEnv(), getImsClient());
+  }
 
   @Override
   public boolean enabled() {
     return this.nextGenDynamicMediaConfig.enabled();
+  }
+
+  @Override
+  public String getAssetSelectorsJsUrl() {
+    return this.nextGenDynamicMediaConfig.getAssetSelectorsJsUrl();
   }
 
   @Override
@@ -44,8 +62,38 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   }
 
   @Override
+  public String getVideoDeliveryPath() {
+    return this.nextGenDynamicMediaConfig.getVideoDeliveryPath();
+  }
+
+  @Override
+  public String getAssetOriginalBinaryDeliveryPath() {
+    return this.nextGenDynamicMediaConfig.getAssetOriginalBinaryDeliveryPath();
+  }
+
+  @Override
+  public String getAssetMetadataPath() {
+    return this.nextGenDynamicMediaConfig.getAssetMetadataPath();
+  }
+
+  @Override
   public String getRepositoryId() {
     return this.nextGenDynamicMediaConfig.getRepositoryId();
+  }
+
+  @Override
+  public String getApiKey() {
+    return this.nextGenDynamicMediaConfig.getApiKey();
+  }
+
+  @Override
+  public String getEnv() {
+    return this.nextGenDynamicMediaConfig.getEnv();
+  }
+
+  @Override
+  public String getImsClient() {
+    return this.nextGenDynamicMediaConfig.getImsClient();
   }
 
 }

@@ -31,6 +31,8 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.ComponentContext;
@@ -77,6 +79,8 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private ComponentContext componentContext;
 
+  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaMediaSource.class);
+
   @Override
   public @NotNull String getId() {
     return ID;
@@ -88,7 +92,11 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   }
 
   private boolean isNextGenDynamicMediaEnabled() {
-    return nextGenDynamicMediaConfig != null && nextGenDynamicMediaConfig.enabled();
+    if (nextGenDynamicMediaConfig == null) {
+      log.debug("NGDM media source is disabled: com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig is not available.");
+      return false;
+    }
+    return nextGenDynamicMediaConfig.enabled();
   }
 
   @Override

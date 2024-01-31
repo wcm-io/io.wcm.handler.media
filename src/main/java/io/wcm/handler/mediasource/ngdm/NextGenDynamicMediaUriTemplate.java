@@ -29,7 +29,7 @@ import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
 import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
-import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaUrlBuilder;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageUrlBuilder;
 
 /**
  * {@link UriTemplate} implementation for Next Gen. Dynamic Media remote assets.
@@ -43,6 +43,10 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
       @NotNull UriTemplateType type) {
     this.type = type;
 
+    if (type == UriTemplateType.SCALE_HEIGHT) {
+      throw new IllegalArgumentException("URI template type not supported: " + type);
+    }
+
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .widthPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH)
         .rotation(context.getMedia().getRotation())
@@ -53,7 +57,7 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
       params.cropSmartRatio(ratio);
     }
 
-    this.uriTemplate = new NextGenDynamicMediaUrlBuilder(context).build(params);
+    this.uriTemplate = new NextGenDynamicMediaImageUrlBuilder(context).build(params);
   }
 
   @Override
