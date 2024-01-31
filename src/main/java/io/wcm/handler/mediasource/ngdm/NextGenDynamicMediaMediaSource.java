@@ -93,7 +93,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
 
   private boolean isNextGenDynamicMediaEnabled() {
     if (nextGenDynamicMediaConfig == null) {
-      log.debug("NextGenDynamicMediaConfigService not available, NGDM media source is disabled.");
+      log.debug("NGDM media source is disabled: com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig is not available.");
       return false;
     }
     return nextGenDynamicMediaConfig.enabled();
