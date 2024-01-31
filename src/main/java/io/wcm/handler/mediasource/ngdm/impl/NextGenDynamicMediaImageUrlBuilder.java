@@ -19,6 +19,10 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_ASSET_ID;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_FORMAT;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_SEO_NAME;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
@@ -42,10 +46,6 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * </p>
  */
 public final class NextGenDynamicMediaImageUrlBuilder {
-
-  static final String PLACEHOLDER_ASSET_ID = "{asset-id}";
-  static final String PLACEHOLDER_SEO_NAME = "{seo-name}";
-  static final String PLACEHOLDER_FORMAT = "{format}";
 
   static final String PARAM_PREFER_WEBP = "preferwebp";
   static final String PARAM_WIDTH = "width";

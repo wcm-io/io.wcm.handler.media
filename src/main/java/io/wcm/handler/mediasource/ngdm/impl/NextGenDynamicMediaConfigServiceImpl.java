@@ -24,6 +24,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +36,21 @@ import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
  * Wraps access to NextGenDynamicMediaConfig - which is deployed but not accessible on AEM 6.5.
  */
 @Component(service = NextGenDynamicMediaConfigService.class, immediate = true)
+@Designate(ocd = NextGenDynamicMediaConfigServiceImpl.Config.class)
 public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMediaConfigService {
+
+  @ObjectClassDefinition(
+      name = "wcm.io Next Generation Dynamic Media Support",
+      description = "Support for Next Generation Dynamic Media.")
+  @interface Config {
+
+    @AttributeDefinition(
+        name = "Enabled",
+        description = "Enable support for Web-Optimized Image Delivery (if available).")
+    boolean enabled() default true;
+
+  }
+
 
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigServiceImpl.class);
 
