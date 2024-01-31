@@ -82,7 +82,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       return null;
     }
 
-    // replace placeholders in image delivery path
+    // replace placeholders in delivery path
     String seoName = FilenameUtils.getBaseName(context.getReference().getFileName());
     String format = context.getDefaultMediaArgs().getEnforceOutputFileExtension();
     if (StringUtils.isEmpty(format)) {

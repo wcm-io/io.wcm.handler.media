@@ -57,7 +57,7 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
       return null;
     }
 
-    // replace placeholders in image delivery path
+    // replace placeholders in delivery path
     String seoName = context.getReference().getFileName();
     binaryDeliveryPath = StringUtils.replace(binaryDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
     binaryDeliveryPath = StringUtils.replace(binaryDeliveryPath, PLACEHOLDER_SEO_NAME, seoName);
