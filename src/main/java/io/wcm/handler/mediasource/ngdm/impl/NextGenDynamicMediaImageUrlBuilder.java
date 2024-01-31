@@ -41,7 +41,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * https://host/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg?preferwebp=true&quality=85&width=300&crop=16:9,smart
  * </p>
  */
-public final class NextGenDynamicMediaUrlBuilder {
+public final class NextGenDynamicMediaImageUrlBuilder {
 
   static final String PLACEHOLDER_ASSET_ID = "{asset-id}";
   static final String PLACEHOLDER_SEO_NAME = "{seo-name}";
@@ -64,7 +64,7 @@ public final class NextGenDynamicMediaUrlBuilder {
   /**
    * @param context Context
    */
-  public NextGenDynamicMediaUrlBuilder(@NotNull NextGenDynamicMediaContext context) {
+  public NextGenDynamicMediaImageUrlBuilder(@NotNull NextGenDynamicMediaContext context) {
     this.context = context;
   }
 

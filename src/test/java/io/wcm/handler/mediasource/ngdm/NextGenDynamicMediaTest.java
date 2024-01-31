@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm;
 
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -195,6 +196,22 @@ class NextGenDynamicMediaTest {
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
     assertUrl(rendition, "preferwebp=true&quality=85", "jpg");
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testPDFDownload() {
+    Resource downloadResource = context.create().resource(context.currentPage(), "download",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.pdf");
+
+    Media media = mediaHandler.get(downloadResource)
+        .args(new MediaArgs().download(true))
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals("https://repo1/adobe/assets/deliver/" + SAMPLE_ASSET_ID + "/myfile.pdf", rendition.getUrl());
   }
 
   private static void assertUrl(Media media, String urlParams, String extension) {

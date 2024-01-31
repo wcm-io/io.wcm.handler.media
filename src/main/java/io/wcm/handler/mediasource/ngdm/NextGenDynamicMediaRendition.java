@@ -37,10 +37,11 @@ import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
 import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaBinaryUrlBuilder;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageUrlBuilder;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
-import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaUrlBuilder;
 
 /**
  * {@link Rendition} implementation for Next Gen. Dynamic Media remote assets.
@@ -71,6 +72,20 @@ final class NextGenDynamicMediaRendition implements Rendition {
       }
     }
 
+    if (isVectorImage() || !isImage()) {
+      // deliver as binary
+      this.url = buildBinaryUrl();
+    }
+    else {
+      // deliver scaled image rendition
+      this.url = buildImageRenditionUrl();
+    }
+  }
+
+  /**
+   * Build image rendition URL which is dynamically scaled and/or cropped.
+   */
+  private String buildImageRenditionUrl() {
     // calculate height
     if (this.width > 0) {
       double ratio = MediaArgsDimension.getRequestedRatio(mediaArgs);
@@ -90,7 +105,14 @@ final class NextGenDynamicMediaRendition implements Rendition {
       params.cropSmartRatio(ratioDimension);
     }
 
-    this.url = new NextGenDynamicMediaUrlBuilder(context).build(params);
+    return new NextGenDynamicMediaImageUrlBuilder(context).build(params);
+  }
+
+  /**
+   * Build URL which points directly to the binary file.
+   */
+  private String buildBinaryUrl() {
+    return new NextGenDynamicMediaBinaryUrlBuilder(context).build();
   }
 
   @Override
@@ -183,6 +205,9 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
+    if (!isImage() || isVectorImage()) {
+      throw new UnsupportedOperationException("Unable to build URI template for " + reference.toReference());
+    }
     return new NextGenDynamicMediaUriTemplate(context, type);
   }
 

@@ -37,7 +37,7 @@ import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
-class NextGenDynamicMediaUrlBuilderTest {
+class NextGenDynamicMediaImageUrlBuilderTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
@@ -57,7 +57,7 @@ class NextGenDynamicMediaUrlBuilderTest {
 
   @Test
   void testDefaultParams() {
-    NextGenDynamicMediaUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
     assertEquals("https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg"
@@ -67,7 +67,7 @@ class NextGenDynamicMediaUrlBuilderTest {
 
   @Test
   void testForceOutputExtension() {
-    NextGenDynamicMediaUrlBuilder underTest = getBuilder(new MediaArgs().enforceOutputFileExtension("png"));
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs().enforceOutputFileExtension("png"));
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
     assertEquals("https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.png"
@@ -77,7 +77,7 @@ class NextGenDynamicMediaUrlBuilderTest {
 
   @Test
   void testAllParams() {
-    NextGenDynamicMediaUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
         .cropSmartRatio(new Dimension(16, 9))
@@ -91,7 +91,7 @@ class NextGenDynamicMediaUrlBuilderTest {
 
   @Test
   void testWidthPlaceholder() {
-    NextGenDynamicMediaUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .widthPlaceholder("{w}")
         .quality(60);
@@ -101,12 +101,12 @@ class NextGenDynamicMediaUrlBuilderTest {
         underTest.build(params));
   }
 
-  private NextGenDynamicMediaUrlBuilder getBuilder() {
+  private NextGenDynamicMediaImageUrlBuilder getBuilder() {
     return getBuilder(new MediaArgs());
   }
 
   @SuppressWarnings("null")
-  private NextGenDynamicMediaUrlBuilder getBuilder(MediaArgs mediaArgs) {
+  private NextGenDynamicMediaImageUrlBuilder getBuilder(MediaArgs mediaArgs) {
     NextGenDynamicMediaContext ctx = new NextGenDynamicMediaContext(
         NextGenDynamicMediaReference.fromReference(SAMPLE_REFERENCE),
         null,
@@ -114,7 +114,7 @@ class NextGenDynamicMediaUrlBuilderTest {
         nextGenDynamicMediaConfig,
         mediaHandlerConfig,
         mimeTypeService);
-    return new NextGenDynamicMediaUrlBuilder(ctx);
+    return new NextGenDynamicMediaImageUrlBuilder(ctx);
   }
 
 }

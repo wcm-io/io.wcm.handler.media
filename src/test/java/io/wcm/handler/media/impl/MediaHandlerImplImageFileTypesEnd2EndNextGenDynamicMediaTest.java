@@ -63,6 +63,15 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
 
   @Override
   @Test
+  void testAsset_JPEG_Original_ContentDisposition() {
+    Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.jpg");
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "https://repo1/adobe/dynamicmedia/deliver/" + SAMPLE_ASSET_ID + "/sample.jpg?preferwebp=true&quality=85",
+        ContentType.JPEG);
+  }
+
+  @Override
+  @Test
   void testAsset_JPEG_Rescale() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.jpg");
     buildAssertMedia_Rescale(asset, 80, 40,
@@ -153,6 +162,15 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
 
   @Override
   @Test
+  void testAsset_TIFF_Original_ContentDisposition() {
+    Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.tif");
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "https://repo1/adobe/dynamicmedia/deliver/" + SAMPLE_ASSET_ID + "/sample.jpg?preferwebp=true&quality=85",
+        ContentType.TIFF);
+  }
+
+  @Override
+  @Test
   void testAsset_TIFF_Rescale() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.tif");
     buildAssertMedia_Rescale(asset, 80, 40,
@@ -166,6 +184,42 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.tif");
     buildAssertMedia_AutoCrop(asset, 50, 50,
         "https://repo1/adobe/dynamicmedia/deliver/" + SAMPLE_ASSET_ID + "/sample.jpg?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        ContentType.JPEG);
+  }
+
+  @Override
+  @Test
+  void testAsset_SVG_Original() {
+    Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
+    buildAssertMedia(asset, 0, 0,
+        "https://repo1/adobe/assets/deliver/" + SAMPLE_ASSET_ID + "/sample.svg",
+        ContentType.SVG);
+  }
+
+  @Override
+  @Test
+  void testAsset_SVG_Original_ContentDisposition() {
+    Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
+    buildAssertMedia_ContentDisposition(asset, 0, 0,
+        "https://repo1/adobe/assets/deliver/" + SAMPLE_ASSET_ID + "/sample.svg",
+        ContentType.SVG);
+  }
+
+  @Override
+  @Test
+  void testAsset_SVG_Rescale() {
+    Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
+    buildAssertMedia_Rescale(asset, 0, 0,
+        "https://repo1/adobe/assets/deliver/" + SAMPLE_ASSET_ID + "/sample.svg",
+        ContentType.SVG);
+  }
+
+  @Override
+  @Test
+  void testAsset_SVG_AutoCrop() {
+    Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
+    buildAssertMedia_AutoCrop(asset, 0, 0,
+        "https://repo1/adobe/assets/deliver/" + SAMPLE_ASSET_ID + "/sample.svg",
         ContentType.JPEG);
   }
 
