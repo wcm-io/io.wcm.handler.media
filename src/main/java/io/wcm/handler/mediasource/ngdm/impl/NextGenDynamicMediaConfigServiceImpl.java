@@ -19,8 +19,11 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 
@@ -30,8 +33,16 @@ import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 @Component(service = NextGenDynamicMediaConfigService.class, immediate = true)
 public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMediaConfigService {
 
+  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigServiceImpl.class);
+
   @Reference
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
+
+  @Activate
+  private void activate() {
+    log.debug("NGDM config: enabled={}, repositoryId={}, apiKey={}, env={}, imsClient={}",
+        enabled(), getRepositoryId(), getApiKey(), getEnv(), getImsClient());
+  }
 
   @Override
   public boolean enabled() {
