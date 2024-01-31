@@ -60,7 +60,7 @@ class NextGenDynamicMediaConfigModelTest {
     NextGenDynamicMediaConfigModel underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaConfigModel.class);
     assertTrue(underTest.isEnabled());
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
-    JSONAssert.assertEquals("{repositoryId:'repo1',apiKey:'key1',env:'env1',imsClient:'client1'}",
+    JSONAssert.assertEquals("{repositoryId:'repo1',apiKey:'key1',env:'env1'}",
         underTest.getConfigJson(), true);
   }
 

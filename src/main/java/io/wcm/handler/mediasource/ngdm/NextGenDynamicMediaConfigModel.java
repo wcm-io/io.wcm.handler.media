@@ -70,7 +70,6 @@ public final class NextGenDynamicMediaConfigModel {
     map.put("repositoryId", config.getRepositoryId());
     map.put("apiKey", config.getApiKey());
     map.put("env", config.getEnv());
-    map.put("imsClient", config.getImsClient());
     try {
       return MAPPER.writeValueAsString(map);
     }
