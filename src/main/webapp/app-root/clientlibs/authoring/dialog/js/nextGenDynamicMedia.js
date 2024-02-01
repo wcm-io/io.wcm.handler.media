@@ -122,7 +122,8 @@
     const self = this;
 
     const assetSelectorProps = {
-      repositoryId: self._ngdmConfig.repositoryId,
+      //repositoryId: self._ngdmConfig.repositoryId,
+      aemTierType: ['delivery'],
       apiKey: self._ngdmConfig.apiKey,
       env: self._ngdmConfig.env,
       handleSelection: (selection) => {
