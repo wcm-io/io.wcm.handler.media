@@ -22,6 +22,8 @@ package io.wcm.handler.mediasource.ngdm.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +38,6 @@ class NextGenDynamicMediaConfigServiceImplTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  private NextGenDynamicMediaConfigService underTest;
-
   @BeforeEach
   void setUp() {
     MockNextGenDynamicMediaConfig config = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
@@ -51,17 +51,38 @@ class NextGenDynamicMediaConfigServiceImplTest {
     config.setApiKey("key1");
     config.setEnv("env1");
     config.setImsClient("client1");
-    underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
   }
 
   @Test
-  void testProperties() {
+  void testPropertiesDefaultConfig() {
+    NextGenDynamicMediaConfigService underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    assertTrue(underTest.enabled());
+    assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
+    assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}?accept-experimental=1", underTest.getImageDeliveryBasePath());
+    assertEquals("/videopath1", underTest.getVideoDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}?accept-experimental=1", underTest.getAssetOriginalBinaryDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/metadata", underTest.getAssetMetadataPath());
+    assertEquals(Map.of("X-Adobe-Accept-Experimental", "1"), underTest.getAssetMetadataHeaders());
+    assertEquals("repo1", underTest.getRepositoryId());
+    assertEquals("key1", underTest.getApiKey());
+    assertEquals("env1", underTest.getEnv());
+    assertEquals("client1", underTest.getImsClient());
+  }
+
+  @Test
+  void testPropertiesEmptyConfig() {
+    NextGenDynamicMediaConfigService underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "imageDeliveryBasePath", "",
+        "assetOriginalBinaryDeliveryPath", "",
+        "assetMetadataPath", "",
+        "assetMetadataHeaders", new String[0]);
     assertTrue(underTest.enabled());
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
     assertEquals("/imagepath1", underTest.getImageDeliveryBasePath());
     assertEquals("/videopath1", underTest.getVideoDeliveryPath());
     assertEquals("/assetpath1", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/metadatapath1", underTest.getAssetMetadataPath());
+    assertEquals(Map.of(), underTest.getAssetMetadataHeaders());
     assertEquals("repo1", underTest.getRepositoryId());
     assertEquals("key1", underTest.getApiKey());
     assertEquals("env1", underTest.getEnv());
