@@ -85,6 +85,13 @@ public interface NextGenDynamicMediaConfigService {
   String getVideoDeliveryPath();
 
   /**
+   * When enabled, metadata is fetched for each resolved asset. This checks for validity/existence of the asset and for
+   * the maximum supported resolution of the original image.
+   * @return true if enabled
+   */
+  boolean isAssetMetadataFetch();
+
+  /**
    * Gets the path expression for the the Original Asset Delivery which delivers
    * the bitstream as-is
    * <ul>

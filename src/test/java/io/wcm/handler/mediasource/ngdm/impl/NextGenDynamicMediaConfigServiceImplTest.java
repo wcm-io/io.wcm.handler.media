@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.ngdm.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
@@ -61,6 +62,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}?accept-experimental=1", underTest.getImageDeliveryBasePath());
     assertEquals("/videopath1", underTest.getVideoDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}?accept-experimental=1", underTest.getAssetOriginalBinaryDeliveryPath());
+    assertTrue(underTest.isAssetMetadataFetch());
     assertEquals("/adobe/assets/{asset-id}/metadata", underTest.getAssetMetadataPath());
     assertEquals(Map.of("X-Adobe-Accept-Experimental", "1"), underTest.getAssetMetadataHeaders());
     assertEquals("repo1", underTest.getRepositoryId());
@@ -74,6 +76,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
     NextGenDynamicMediaConfigService underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
         "imageDeliveryBasePath", "",
         "assetOriginalBinaryDeliveryPath", "",
+        "assetMetadataFetch", false,
         "assetMetadataPath", "",
         "assetMetadataHeaders", new String[0]);
     assertTrue(underTest.enabled());
@@ -81,6 +84,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertEquals("/imagepath1", underTest.getImageDeliveryBasePath());
     assertEquals("/videopath1", underTest.getVideoDeliveryPath());
     assertEquals("/assetpath1", underTest.getAssetOriginalBinaryDeliveryPath());
+    assertFalse(underTest.isAssetMetadataFetch());
     assertEquals("/metadatapath1", underTest.getAssetMetadataPath());
     assertEquals(Map.of(), underTest.getAssetMetadataHeaders());
     assertEquals("repo1", underTest.getRepositoryId());

@@ -67,6 +67,12 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
         + PLACEHOLDER_SEO_NAME + "?accept-experimental=1";
 
     @AttributeDefinition(
+        name = "Fetch Asset Metadata",
+        description = "When enabled, metadata is fetched for each resolved asset. This checks for validity/existence of "
+            + "the asset and for the maximum supported resolution of the original image.")
+    boolean assetMetadataFetch() default true;
+
+    @AttributeDefinition(
         name = "Asset Metadata Path",
         description = "Base path to get asset metadata. "
             + "Placeholder: " + PLACEHOLDER_ASSET_ID + ". "
@@ -86,6 +92,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
   private String imageDeliveryBasePath;
   private String assetOriginalBinaryDeliveryPath;
+  private boolean assetMetadataFetch;
   private String assetMetadataPath;
   private Map<String, String> assetMetadataHeaders;
 
@@ -101,6 +108,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
         this.nextGenDynamicMediaConfig.getImageDeliveryBasePath());
     this.assetOriginalBinaryDeliveryPath = StringUtils.defaultIfBlank(config.assetOriginalBinaryDeliveryPath(),
         this.nextGenDynamicMediaConfig.getAssetOriginalBinaryDeliveryPath());
+    this.assetMetadataFetch = config.assetMetadataFetch();
     this.assetMetadataPath = StringUtils.defaultIfBlank(config.assetMetadataPath(),
         this.nextGenDynamicMediaConfig.getAssetMetadataPath());
     this.assetMetadataHeaders = headersToMap(config.assetMetadataHeaders());
@@ -141,6 +149,11 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   @Override
   public String getAssetOriginalBinaryDeliveryPath() {
     return assetOriginalBinaryDeliveryPath;
+  }
+
+  @Override
+  public boolean isAssetMetadataFetch() {
+    return assetMetadataFetch;
   }
 
   @Override
