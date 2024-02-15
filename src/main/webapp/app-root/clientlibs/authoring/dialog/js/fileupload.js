@@ -32,6 +32,7 @@
 
     // enable nextgen dynamic media
     self._validate = new ns.NextGenDynamicMedia({
+      fileupload: self._element,
       pathfield: self._pathfield,
       assetSelectedCallback: (assetReference) => {
         self._triggerAssetSelected(assetReference);

@@ -20,21 +20,25 @@
 ;(function ($, ns, channel, document, window, undefined) {
   "use strict";
 
-  var NextGenDynamicMedia = function (config) {
-    const self = this
+  const NextGenDynamicMedia = function (config) {
+    const self = this;
 
+    if (config.fileupload) {
+      self._fileupload = config.fileupload;
+      self._$fileupload = $(config.fileupload);
+    }
     self._pathfield = config.pathfield;
     self._$pathfield = $(config.pathfield);
     self._assetSelectedCallback = config.assetSelectedCallback;
     self._filterImagesOnly = config.filterImagesOnly;
-    
+
     self._ngdmConfig = self._$pathfield.data("wcmio-nextgendynamicmedia-config");
     if (!self._ngdmConfig) {
       // NGDM not enabled
       return;
     }
 
-    self._addPickRemoteButton(() => {
+    const pickRemoteButtonOnClick = () => {
       self.pickRemoteAsset(assetReference => {
         if (assetReference != self._$pathfield.val()) {
           self._$pathfield.val(assetReference);
@@ -43,7 +47,9 @@
           }
         }
       });
-    });
+    };
+    self._addPickRemoteButton(pickRemoteButtonOnClick);
+    self._updateRemotePickLink(pickRemoteButtonOnClick);
   };
 
   /**
@@ -51,7 +57,7 @@
    * @param assetReferenceCallback called when asset is picked with the asset reference as parameter
    */
   NextGenDynamicMedia.prototype.pickRemoteAsset = function(assetReferenceCallback) {
-    const self = this
+    const self = this;
 
     self._prepareAssetSelectorDialog();
     const assetSelectorProps = self._prepareAssetSelectorProps(assetReferenceCallback);
@@ -67,7 +73,7 @@
    * @param onclickHandler Method that is called when button is clicked
    */
   NextGenDynamicMedia.prototype._addPickRemoteButton = function(onclickHandler) {
-    const self = this
+    const self = this;
 
     const label = Granite.I18n.get("Remote");
     const pickRemoteButton = new Coral.Button().set({
@@ -92,7 +98,7 @@
    * Sets variables self._assetSelectorDialog and self._assetSelectorDialogContainer as a result.
    */
   NextGenDynamicMedia.prototype._prepareAssetSelectorDialog = function() {
-    const self = this
+    const self = this;
 
     self._assetSelectorDialog = $("#wcmio-handler-media-ngdm-assetselector");
     if (self._assetSelectorDialog.length === 0) {
@@ -113,7 +119,7 @@
    * @param assetReferenceCallback called when asset is picked with the asset reference as parameter
    */
   NextGenDynamicMedia.prototype._prepareAssetSelectorProps = function(assetReferenceCallback) {
-    const self = this
+    const self = this;
 
     const assetSelectorProps = {
       repositoryId: self._ngdmConfig.repositoryId,
@@ -206,6 +212,20 @@
     }
     return undefined;
   }
+
+  /**
+   * Replace click handler for "Pick/Remote" link - apply same feature as the browse remote button in the path field.
+   * @param onclickHandler Method that is called when button is clicked
+   */
+  NextGenDynamicMedia.prototype._updateRemotePickLink = function (onclickHandler) {
+    const self = this;
+    if (self._$fileupload) {
+      // it would be more correct to look for the .cq-FileUpload-picker-polaris in scope of self._$fileupload,
+      // but the click tricker is registered this way in /libs/cq/gui/components/authoring/dialog/fileupload/clientlibs/fileupload/js/fileupload-polaris.js
+      // so we have to do it the same way.
+      $(document).off("click", ".cq-FileUpload-picker-polaris").on("click", ".cq-FileUpload-picker-polaris", onclickHandler);
+    }
+  };
 
   ns.NextGenDynamicMedia = NextGenDynamicMedia;
 
