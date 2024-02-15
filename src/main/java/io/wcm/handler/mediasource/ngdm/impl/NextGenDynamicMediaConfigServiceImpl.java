@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -149,7 +150,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
   @Override
   public @NotNull Map<String, String> getAssetMetadataHeaders() {
-    return assetMetadataHeaders;
+    return Collections.unmodifiableMap(assetMetadataHeaders);
   }
 
   @Override
