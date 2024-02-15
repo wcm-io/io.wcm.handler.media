@@ -129,7 +129,13 @@ public final class NextGenDynamicMediaImageUrlBuilder {
         .map(entry -> toUrlParam(entry.getKey(), entry.getValue()))
         .collect(Collectors.joining("&"));
     if (StringUtils.isNotEmpty(urlParams)) {
-      url.append("?").append(urlParams);
+      if (url.indexOf("?") < 0) {
+        url.append("?");
+      }
+      else {
+        url.append("&");
+      }
+      url.append(urlParams);
     }
     return url.toString();
   }

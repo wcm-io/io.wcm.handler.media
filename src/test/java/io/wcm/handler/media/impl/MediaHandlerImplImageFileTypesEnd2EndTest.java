@@ -474,7 +474,8 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
 
     if (!StringUtils.contains(mediaUrl, ".download_attachment.")
         && !StringUtils.contains(mediaUrl, "/is/image/")
-        && !StringUtils.contains(mediaUrl, "/adobe/dynamicmedia/deliver/")) {
+        && !StringUtils.contains(mediaUrl, "/adobe/dynamicmedia/deliver/")
+        && !StringUtils.contains(mediaUrl, "/adobe/assets/")) {
       String strippedMediaUrl = StringUtils.removeEnd(mediaUrl, DynamicMediaPath.DOWNLOAD_SUFFIX);
       assertEquals(FilenameUtils.getName(strippedMediaUrl), rendition.getFileName());
       assertEquals(FilenameUtils.getExtension(strippedMediaUrl), rendition.getFileExtension());
