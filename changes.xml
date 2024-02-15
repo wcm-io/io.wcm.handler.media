@@ -30,6 +30,9 @@
       <action type="update" dev="sseifert" issue="45">
         Next Generation Dynamic Media: Use latest NextGen Dynamic Media Asset URLs and make them configurable via OSGi config.
       </action>
+      <action type="update" dev="sseifert" issue="47">
+        Next Generation Dynamic Media: Replace fileupload default pick/remote trigger with customized one to display the customized asset selector dialog.
+      </action>
     </release>
 
     <release version="2.0.0" date="2024-01-26">
