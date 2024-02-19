@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -27,6 +28,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,6 +69,9 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
         .build();
     httpClient = HttpClientBuilder.create()
         .setDefaultRequestConfig(config)
+        .setDefaultHeaders(nextGenDynamicMediaConfig.getAssetMetadataHeaders().entrySet().stream()
+            .map(header -> new BasicHeader(header.getKey(), header.getValue()))
+            .collect(Collectors.toList()))
         .build();
   }
 
@@ -86,8 +91,6 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
 
     if (metadataUrl != null) {
       HttpGet httpGet = new HttpGet(metadataUrl);
-      nextGenDynamicMediaConfig.getAssetMetadataHeaders().entrySet()
-          .forEach(header -> httpGet.addHeader(header.getKey(), header.getValue()));
       try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
         return processResponse(response, metadataUrl);
       }
