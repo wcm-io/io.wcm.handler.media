@@ -30,6 +30,11 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
 public interface NextGenDynamicMediaMetadataService {
 
   /**
+   * @return true if metadata fetching is enabled.
+   */
+  boolean isEnabled();
+
+  /**
    * Fetch asset metadata.
    * @param reference Asset reference
    * @return Asset metadata or null if not available

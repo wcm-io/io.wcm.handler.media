@@ -20,8 +20,13 @@
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -38,6 +43,9 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,36 +56,105 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
  * Fetches metadata for Next Gen Dynamic Media assets via the HTTP API.
  */
 @Component(service = NextGenDynamicMediaMetadataService.class, immediate = true)
+@Designate(ocd = NextGenDynamicMediaMetadataServiceImpl.Config.class)
 public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMediaMetadataService {
+
+  @ObjectClassDefinition(
+      name = "wcm.io Next Generation Dynamic Media Metadata Service",
+      description = "Fetches metadata for Next Generation Dynamic Media assets.")
+  @interface Config {
+
+    @AttributeDefinition(
+        name = "Enabled",
+        description = "When enabled, metadata is fetched for each resolved asset. This checks for validity/existence of "
+            + "the asset and for the maximum supported resolution of the original image.")
+    boolean enabled() default false;
+
+    @AttributeDefinition(
+        name = "HTTP Headers",
+        description = "HTTP headers to be send with the asset metadata request. "
+            + "Format: 'header1:value1'.")
+    String[] httpHeaders() default { "X-Adobe-Accept-Experimental:1" };
+
+    @AttributeDefinition(
+        name = "Connect Timeout",
+        description = "HTTP Connect timeout in milliseconds.")
+    int connectTimeout() default 5000;
+
+    @AttributeDefinition(
+        name = "Connection Request Timeout",
+        description = "HTTP connection request timeout in milliseconds.")
+    int connectionRequestTimeout() default 5000;
+
+    @AttributeDefinition(
+        name = "Socket Timeout",
+        description = "HTTP socket timeout in milliseconds.")
+    int socketTimeout() default 5000;
+
+    @AttributeDefinition(
+        name = "Proxy host",
+        description = "Proxy host name")
+    String proxyHost();
+
+    @AttributeDefinition(
+        name = "Proxy port",
+        description = "Proxy port")
+    int proxyPort();
+
+  }
 
   @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
   private NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
 
+  private boolean enabled;
   private CloseableHttpClient httpClient;
-
-  private static final int HTTP_TIMEOUT_SEC = 5;
 
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaMetadataServiceImpl.class);
 
-
   @Activate
-  private void activate() {
-    RequestConfig config = RequestConfig.custom()
-        .setConnectTimeout(HTTP_TIMEOUT_SEC * 1000)
-        .setConnectionRequestTimeout(HTTP_TIMEOUT_SEC * 1000)
-        .setSocketTimeout(HTTP_TIMEOUT_SEC * 1000)
+  private void activate(Config config) {
+    this.enabled = config.enabled();
+    if (enabled) {
+      httpClient = createHttpClient(config);
+    }
+  }
+
+  private static CloseableHttpClient createHttpClient(Config config) {
+    RequestConfig requestConfig = RequestConfig.custom()
+        .setConnectTimeout(config.connectTimeout())
+        .setConnectionRequestTimeout(config.connectionRequestTimeout())
+        .setSocketTimeout(config.socketTimeout())
         .build();
-    httpClient = HttpClientBuilder.create()
-        .setDefaultRequestConfig(config)
-        .setDefaultHeaders(nextGenDynamicMediaConfig.getAssetMetadataHeaders().entrySet().stream()
-            .map(header -> new BasicHeader(header.getKey(), header.getValue()))
-            .collect(Collectors.toList()))
-        .build();
+    HttpClientBuilder builder = HttpClientBuilder.create()
+        .setDefaultRequestConfig(requestConfig)
+        .setDefaultHeaders(convertHeaders(config.httpHeaders()));
+    if (StringUtils.isNotBlank(config.proxyHost()) && config.proxyPort() > 0) {
+      builder.setProxy(new HttpHost(config.proxyHost(), config.proxyPort()));
+    }
+    return builder.build();
+  }
+
+  private static Collection<Header> convertHeaders(String[] headers) {
+    List<Header> result = new ArrayList<>();
+    for (String header : headers) {
+      String[] parts = header.split(":", 2);
+      if (parts.length == 2) {
+        result.add(new BasicHeader(parts[0], parts[1]));
+      }
+    }
+    return result;
   }
 
   @Deactivate
   private void deactivate() throws IOException {
-    httpClient.close();
+    if (httpClient != null) {
+      httpClient.close();
+    }
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return enabled;
   }
 
   /**
@@ -87,20 +164,22 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
    */
   @Override
   public @Nullable NextGenDynamicMediaMetadata fetchMetadata(@NotNull NextGenDynamicMediaReference reference) {
+    if (!enabled) {
+      return null;
+    }
     String metadataUrl = new NextGenDynamicMediaMetadataUrlBuilder(nextGenDynamicMediaConfig).build(reference);
-
-    if (metadataUrl != null) {
-      HttpGet httpGet = new HttpGet(metadataUrl);
-      try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-        return processResponse(response, metadataUrl);
-      }
-      catch (IOException ex) {
-        log.warn("Unable to fetch NGDM asset metadata from URL {}", metadataUrl, ex);
-      }
+    if (metadataUrl == null) {
+      return null;
     }
 
-    // fetch metadata failed
-    return null;
+    HttpGet httpGet = new HttpGet(metadataUrl);
+    try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
+      return processResponse(response, metadataUrl);
+    }
+    catch (IOException ex) {
+      log.warn("Unable to fetch NGDM asset metadata from URL {}", metadataUrl, ex);
+      return null;
+    }
   }
 
   private @Nullable NextGenDynamicMediaMetadata processResponse(@NotNull CloseableHttpResponse response,

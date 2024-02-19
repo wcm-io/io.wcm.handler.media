@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
@@ -52,25 +53,29 @@ class NextGenDynamicMediaMetadataServiceImplTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  private NextGenDynamicMediaMetadataService underTest;
-
   @BeforeEach
   void setUp(WireMockRuntimeInfo wmRuntimeInfo) throws Exception {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
         .setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
     context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
-    underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class);
   }
 
   @Test
   void testNotFound() {
+    NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
+        "enabled", true);
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNull(metadata);
   }
 
   @Test
   void testValidResponse() {
+    NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
+        "enabled", true,
+        "httpHeaders", new String[] { "header1:1", "header2:2" });
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .withHeader("header1", equalTo("1"))
+        .withHeader("header2", equalTo("2"))
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_OK)
             .withHeader("Content-Type", ContentType.JSON)
@@ -84,7 +89,23 @@ class NextGenDynamicMediaMetadataServiceImplTest {
   }
 
   @Test
+  void testValidResponse_Disabled() {
+    NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
+        "enabled", false);
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(NextGenDynamicMediaMetadataTest.SAMPLE_JSON)));
+
+    NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
+    assertNull(metadata);
+  }
+
+  @Test
   void testEmptyJson() {
+    NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
+        "enabled", true);
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_OK)
@@ -97,6 +118,8 @@ class NextGenDynamicMediaMetadataServiceImplTest {
 
   @Test
   void testInvalidResponse() {
+    NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
+        "enabled", true);
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_OK)
@@ -109,6 +132,8 @@ class NextGenDynamicMediaMetadataServiceImplTest {
 
   @Test
   void testUnexpectdReturnCode() {
+    NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
+        "enabled", true);
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_FORBIDDEN)));

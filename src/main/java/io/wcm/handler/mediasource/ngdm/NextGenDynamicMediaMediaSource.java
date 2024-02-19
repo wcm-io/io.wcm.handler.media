@@ -127,7 +127,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
 
     // If enabled: Fetch asset metadata to validate existence and get original dimensions
     NextGenDynamicMediaMetadata metadata = null;
-    if (nextGenDynamicMediaConfig.isAssetMetadataFetch() && metadataService != null) {
+    if (metadataService != null && metadataService.isEnabled()) {
       metadata = metadataService.fetchMetadata(reference);
       if (metadata == null) {
         media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);

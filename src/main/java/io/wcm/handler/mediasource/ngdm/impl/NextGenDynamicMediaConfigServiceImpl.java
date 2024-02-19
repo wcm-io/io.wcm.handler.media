@@ -19,12 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -67,23 +62,11 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
         + PLACEHOLDER_SEO_NAME + "?accept-experimental=1";
 
     @AttributeDefinition(
-        name = "Fetch Asset Metadata",
-        description = "When enabled, metadata is fetched for each resolved asset. This checks for validity/existence of "
-            + "the asset and for the maximum supported resolution of the original image.")
-    boolean assetMetadataFetch() default true;
-
-    @AttributeDefinition(
         name = "Asset Metadata Path",
         description = "Base path to get asset metadata. "
             + "Placeholder: " + PLACEHOLDER_ASSET_ID + ". "
             + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
     String assetMetadataPath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/metadata";
-
-    @AttributeDefinition(
-        name = "Asset Metadata Headers",
-        description = "HTTP headers to be send with the asset metadata request. "
-            + "Format: 'header1:value1'.")
-    String[] assetMetadataHeaders() default { "X-Adobe-Accept-Experimental:1" };
 
   }
 
@@ -92,9 +75,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
   private String imageDeliveryBasePath;
   private String assetOriginalBinaryDeliveryPath;
-  private boolean assetMetadataFetch;
   private String assetMetadataPath;
-  private Map<String, String> assetMetadataHeaders;
 
   @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
@@ -108,22 +89,9 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
         this.nextGenDynamicMediaConfig.getImageDeliveryBasePath());
     this.assetOriginalBinaryDeliveryPath = StringUtils.defaultIfBlank(config.assetOriginalBinaryDeliveryPath(),
         this.nextGenDynamicMediaConfig.getAssetOriginalBinaryDeliveryPath());
-    this.assetMetadataFetch = config.assetMetadataFetch();
     this.assetMetadataPath = StringUtils.defaultIfBlank(config.assetMetadataPath(),
         this.nextGenDynamicMediaConfig.getAssetMetadataPath());
-    this.assetMetadataHeaders = headersToMap(config.assetMetadataHeaders());
 
-  }
-
-  private static Map<String, String> headersToMap(String[] headers) {
-    Map<String, String> map = new LinkedHashMap<>();
-    for (String header : headers) {
-      String[] parts = header.split(":", 2);
-      if (parts.length == 2) {
-        map.put(parts[0], parts[1]);
-      }
-    }
-    return map;
   }
 
   @Override
@@ -152,18 +120,8 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   }
 
   @Override
-  public boolean isAssetMetadataFetch() {
-    return assetMetadataFetch;
-  }
-
-  @Override
   public String getAssetMetadataPath() {
     return assetMetadataPath;
-  }
-
-  @Override
-  public @NotNull Map<String, String> getAssetMetadataHeaders() {
-    return Collections.unmodifiableMap(assetMetadataHeaders);
   }
 
   @Override
