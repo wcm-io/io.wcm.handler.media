@@ -64,7 +64,14 @@ final class NextGenDynamicMediaMetadataUrlBuilder {
 
     // build URL
     StringBuilder url = new StringBuilder();
-    url.append("https://")
+    if (StringUtils.startsWith(repositoryId, "localhost:")) {
+      // switch to HTTP for unit tests/local testing
+      url.append("http");
+    }
+    else {
+      url.append("https");
+    }
+    url.append("://")
         .append(repositoryId)
         .append(metadataPath);
     return url.toString();

@@ -213,6 +213,12 @@
       <version>2.8.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.wiremock</groupId>
+      <artifactId>wiremock</artifactId>
+      <version>3.4.0</version>
+      <scope>test</scope>
+    </dependency>    
 
     <!-- Java ImageIO Support for TIFF -->
     <dependency>

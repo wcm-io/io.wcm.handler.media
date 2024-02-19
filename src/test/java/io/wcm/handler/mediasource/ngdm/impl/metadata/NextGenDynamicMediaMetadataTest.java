@@ -31,7 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 class NextGenDynamicMediaMetadataTest {
 
-  private static final String SAMPLE_JSON = "{"
+  static final String SAMPLE_JSON = "{"
       + "  \"assetId\": \"urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678\","
       + "  \"repositoryMetadata\": {"
       + "    \"repo:name\": \"test.jpg\","
