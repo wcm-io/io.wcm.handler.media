@@ -92,12 +92,12 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
     int socketTimeout() default 5000;
 
     @AttributeDefinition(
-        name = "Proxy host",
+        name = "Proxy Host",
         description = "Proxy host name")
     String proxyHost();
 
     @AttributeDefinition(
-        name = "Proxy port",
+        name = "Proxy Port",
         description = "Proxy port")
     int proxyPort();
 
