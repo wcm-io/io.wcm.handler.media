@@ -42,7 +42,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * Builds URL to render image rendition via NextGen Dynamic Media.
  * <p>
  * Example URL that might be build:
- * https://host/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg?preferwebp=true&quality=85&width=300&crop=16:9,smart
+ * https://host/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg?preferwebp=true&quality=85&width=300&crop=16:9,smart
  * </p>
  */
 public final class NextGenDynamicMediaImageUrlBuilder {

@@ -49,6 +49,8 @@ import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadataService;
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
@@ -71,6 +73,8 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   private MediaHandlerConfig mediaHandlerConfig;
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
+  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private NextGenDynamicMediaMetadataService metadataService;
   @OSGiService
   private MimeTypeService mimeTypeService;
 
@@ -119,6 +123,16 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
         media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
       }
       return media;
+    }
+
+    // If enabled: Fetch asset metadata to validate existence and get original dimensions
+    NextGenDynamicMediaMetadata metadata = null;
+    if (nextGenDynamicMediaConfig.isAssetMetadataFetch() && metadataService != null) {
+      metadata = metadataService.fetchMetadata(reference);
+      if (metadata == null) {
+        media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
+        return media;
+      }
     }
 
     // Update media args settings from resource (e.g. alt. text setings)
