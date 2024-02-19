@@ -86,9 +86,8 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
 
     if (metadataUrl != null) {
       HttpGet httpGet = new HttpGet(metadataUrl);
-      nextGenDynamicMediaConfig.getAssetMetadataHeaders().entrySet().forEach(header -> {
-        httpGet.addHeader(header.getKey(), header.getValue());
-      });
+      nextGenDynamicMediaConfig.getAssetMetadataHeaders().entrySet()
+          .forEach(header -> httpGet.addHeader(header.getKey(), header.getValue()));
       try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
         return processResponse(response, metadataUrl);
       }
