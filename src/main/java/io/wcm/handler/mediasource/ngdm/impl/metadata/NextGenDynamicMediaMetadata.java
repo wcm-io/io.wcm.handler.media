@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +30,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Metadata for Next Gen Dynamic Media asset fetched from the HTTP API.
@@ -52,8 +55,8 @@ public final class NextGenDynamicMediaMetadata {
   /**
    * @return Mime type
    */
-  public @Nullable String getMimeType() {
-    return mimeType;
+  public @NotNull String getMimeType() {
+    return Objects.toString(mimeType, ContentType.OCTET_STREAM);
   }
 
   /**

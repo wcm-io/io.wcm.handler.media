@@ -91,8 +91,18 @@ class NextGenDynamicMediaTest {
 
     assertUrl(asset.getDefaultRendition(), "preferwebp=true&quality=85", "jpg");
 
+    // default rendition
+    Rendition defaultRendition = asset.getDefaultRendition();
+    assertNotNull(defaultRendition);
+    assertEquals(ContentType.JPEG, defaultRendition.getMimeType());
+    assertEquals(0, defaultRendition.getWidth());
+    assertEquals(0, defaultRendition.getHeight());
+    assertUrl(defaultRendition, "preferwebp=true&quality=85", "jpg");
+
+    // fixed rendition
     Rendition fixedRendition = asset.getRendition(new MediaArgs().fixedDimension(100, 50));
     assertNotNull(fixedRendition);
+    assertEquals(ContentType.JPEG, fixedRendition.getMimeType());
     assertUrl(fixedRendition, "crop=100%3A50%2Csmart&preferwebp=true&quality=85&width=100", "jpg");
 
     assertNotNull(asset.getImageRendition(new MediaArgs()));
@@ -106,12 +116,13 @@ class NextGenDynamicMediaTest {
   void testRendition_16_10() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.RATIO_16_10)
+        .fixedWidth(2048)
         .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
-    assertUrl(rendition, "crop=16%3A10%2Csmart&preferwebp=true&quality=85", "jpg");
+    assertUrl(rendition, "crop=16%3A10%2Csmart&preferwebp=true&quality=85&width=2048", "jpg");
 
     assertNull(rendition.getPath());
     assertEquals(SAMPLE_FILENAME, rendition.getFileName());
@@ -124,8 +135,8 @@ class NextGenDynamicMediaTest {
     assertTrue(rendition.isBrowserImage());
     assertFalse(rendition.isVectorImage());
     assertFalse(rendition.isDownload());
-    assertEquals(0, rendition.getWidth());
-    assertEquals(0, rendition.getHeight());
+    assertEquals(2048, rendition.getWidth());
+    assertEquals(1280, rendition.getHeight());
     assertNull(rendition.getModificationDate());
     assertFalse(rendition.isFallback());
     assertNull(rendition.adaptTo(Resource.class));
@@ -211,6 +222,7 @@ class NextGenDynamicMediaTest {
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
+    assertEquals(ContentType.PDF, rendition.getMimeType());
     assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf?accept-experimental=1", rendition.getUrl());
   }
 

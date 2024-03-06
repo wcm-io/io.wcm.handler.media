@@ -25,6 +25,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
+import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -80,7 +81,7 @@ class NextGenDynamicMediaMetadataServiceImplTest {
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_OK)
             .withHeader("Content-Type", ContentType.JSON)
-            .withBody(NextGenDynamicMediaMetadataTest.SAMPLE_JSON_IMAGE)));
+            .withBody(METADATA_JSON_IMAGE)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNotNull(metadata);
@@ -99,7 +100,7 @@ class NextGenDynamicMediaMetadataServiceImplTest {
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_OK)
             .withHeader("Content-Type", ContentType.JSON)
-            .withBody(NextGenDynamicMediaMetadataTest.SAMPLE_JSON_IMAGE)));
+            .withBody(METADATA_JSON_IMAGE)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNull(metadata);

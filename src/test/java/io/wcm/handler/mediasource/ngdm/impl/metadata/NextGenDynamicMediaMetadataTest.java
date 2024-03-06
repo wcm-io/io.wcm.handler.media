@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
+import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
+import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_PDF;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,41 +33,14 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 class NextGenDynamicMediaMetadataTest {
-
-  static final String SAMPLE_JSON_IMAGE = "{"
-      + "  \"assetId\": \"urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678\","
-      + "  \"repositoryMetadata\": {"
-      + "    \"repo:name\": \"test.jpg\","
-      + "    \"dc:format\": \"image/jpeg\""
-      + "  },"
-      + "  \"assetMetadata\": {"
-      + "    \"dam:assetStatus\": \"approved\","
-      + "    \"dc:description\": \"Test Description\","
-      + "    \"dc:title\": \"Test Image\","
-      + "    \"tiff:ImageLength\": 800,"
-      + "    \"tiff:ImageWidth\": 1200"
-      + "  }"
-      + "}";
-
-  static final String SAMPLE_JSON_PDF = "{"
-      + "  \"assetId\": \"urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678\","
-      + "  \"repositoryMetadata\": {"
-      + "    \"repo:name\": \"test.pdf\","
-      + "    \"dc:format\": \"application/pdf\""
-      + "  },"
-      + "  \"assetMetadata\": {"
-      + "    \"dam:assetStatus\": \"approved\","
-      + "    \"dc:description\": \"Test Description\","
-      + "    \"dc:title\": \"Test Document\""
-      + "  }"
-      + "}";
 
   @Test
   void testEmptyJson() throws JsonProcessingException {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson("{}");
-    assertNull(metadata.getMimeType());
+    assertEquals(ContentType.OCTET_STREAM, metadata.getMimeType());
     assertNull(metadata.getDimension());
     assertFalse(metadata.isValid());
     assertEquals("[dimension=<null>,mimeType=<null>]", metadata.toString());
@@ -73,7 +48,7 @@ class NextGenDynamicMediaMetadataTest {
 
   @Test
   void testSampleJson_Image() throws JsonProcessingException {
-    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(SAMPLE_JSON_IMAGE);
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
     assertEquals("image/jpeg", metadata.getMimeType());
     Dimension dimension = metadata.getDimension();
     assertNotNull(dimension);
@@ -85,7 +60,7 @@ class NextGenDynamicMediaMetadataTest {
 
   @Test
   void testSampleJson_PDF() throws JsonProcessingException {
-    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(SAMPLE_JSON_PDF);
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_PDF);
     assertEquals("application/pdf", metadata.getMimeType());
     assertNull(metadata.getDimension());
     assertTrue(metadata.isValid());

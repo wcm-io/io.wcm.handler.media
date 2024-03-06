@@ -141,7 +141,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
       updateMediaArgsFromResource(mediaArgs, referencedResource, mediaHandlerConfig);
     }
 
-    NextGenDynamicMediaContext context = new NextGenDynamicMediaContext(reference, media, mediaArgs,
+    NextGenDynamicMediaContext context = new NextGenDynamicMediaContext(reference, metadata, media, mediaArgs,
         nextGenDynamicMediaConfig, mediaHandlerConfig, mimeTypeService);
     NextGenDynamicMediaAsset asset = new NextGenDynamicMediaAsset(context);
     media.setAsset(asset);
