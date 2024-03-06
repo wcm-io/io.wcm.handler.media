@@ -27,35 +27,26 @@ import org.jetbrains.annotations.Nullable;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
+import io.wcm.handler.media.Dimension;
+
 /**
  * Metadata for Next Gen Dynamic Media asset fetched from the HTTP API.
  */
 public final class NextGenDynamicMediaMetadata {
 
-  private final long width;
-  private final long height;
   private final String mimeType;
+  private final Dimension dimension;
 
   private static final JsonMapper OBJECT_MAPPER = new JsonMapper();
 
-  NextGenDynamicMediaMetadata(long width, long height, @Nullable String mimeType) {
-    this.width = width;
-    this.height = height;
+  NextGenDynamicMediaMetadata(@Nullable String mimeType, long width, long height) {
     this.mimeType = mimeType;
-  }
-
-  /**
-   * @return Width
-   */
-  public long getWidth() {
-    return width;
-  }
-
-  /**
-   * @return Height
-   */
-  public long getHeight() {
-    return height;
+    if (width > 0 && height > 0) {
+      this.dimension = new Dimension(width, height);
+    }
+    else {
+      this.dimension = null;
+    }
   }
 
   /**
@@ -63,6 +54,13 @@ public final class NextGenDynamicMediaMetadata {
    */
   public @Nullable String getMimeType() {
     return mimeType;
+  }
+
+  /**
+   * @return Image Dimension or null if no image or dimension not available
+   */
+  public @Nullable Dimension getDimension() {
+    return dimension;
   }
 
   boolean isValid() {
@@ -84,6 +82,11 @@ public final class NextGenDynamicMediaMetadata {
   public static @NotNull NextGenDynamicMediaMetadata fromJson(@NotNull String jsonResponse) throws JsonProcessingException {
     MetadataResponse response = OBJECT_MAPPER.readValue(jsonResponse, MetadataResponse.class);
 
+    String mimeType = null;
+    if (response.repositoryMetadata != null) {
+      mimeType = response.repositoryMetadata.dcFormat;
+    }
+
     long width = 0;
     long height = 0;
     if (response.assetMetadata != null) {
@@ -91,12 +94,7 @@ public final class NextGenDynamicMediaMetadata {
       height = response.assetMetadata.tiffImageLength;
     }
 
-    String mimeType = null;
-    if (response.repositoryMetadata != null) {
-      mimeType = response.repositoryMetadata.dcFormat;
-    }
-
-    return new NextGenDynamicMediaMetadata(width, height, mimeType);
+    return new NextGenDynamicMediaMetadata(mimeType, width, height);
   }
 
 }

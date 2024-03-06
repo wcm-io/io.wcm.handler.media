@@ -37,6 +37,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
+import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
@@ -83,8 +84,10 @@ class NextGenDynamicMediaMetadataServiceImplTest {
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNotNull(metadata);
-    assertEquals(1200, metadata.getWidth());
-    assertEquals(800, metadata.getHeight());
+    Dimension dimension = metadata.getDimension();
+    assertNotNull(dimension);
+    assertEquals(1200, dimension.getWidth());
+    assertEquals(800, dimension.getHeight());
     assertEquals("image/jpeg", metadata.getMimeType());
   }
 

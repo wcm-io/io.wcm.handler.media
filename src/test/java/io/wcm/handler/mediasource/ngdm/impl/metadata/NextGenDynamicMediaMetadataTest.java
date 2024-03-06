@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,6 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import io.wcm.handler.media.Dimension;
 
 class NextGenDynamicMediaMetadataTest {
 
@@ -55,38 +58,38 @@ class NextGenDynamicMediaMetadataTest {
       + "  \"assetMetadata\": {"
       + "    \"dam:assetStatus\": \"approved\","
       + "    \"dc:description\": \"Test Description\","
-      + "    \"dc:title\": \"Test Image\""
+      + "    \"dc:title\": \"Test Document\""
       + "  }"
       + "}";
 
   @Test
   void testEmptyJson() throws JsonProcessingException {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson("{}");
-    assertEquals(0, metadata.getWidth());
-    assertEquals(0, metadata.getHeight());
     assertNull(metadata.getMimeType());
+    assertNull(metadata.getDimension());
     assertFalse(metadata.isValid());
-    assertEquals("[height=0,mimeType=<null>,width=0]", metadata.toString());
+    assertEquals("[dimension=<null>,mimeType=<null>]", metadata.toString());
   }
 
   @Test
   void testSampleJson_Image() throws JsonProcessingException {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(SAMPLE_JSON_IMAGE);
-    assertEquals(1200, metadata.getWidth());
-    assertEquals(800, metadata.getHeight());
     assertEquals("image/jpeg", metadata.getMimeType());
+    Dimension dimension = metadata.getDimension();
+    assertNotNull(dimension);
+    assertEquals(1200, dimension.getWidth());
+    assertEquals(800, dimension.getHeight());
     assertTrue(metadata.isValid());
-    assertEquals("[height=800,mimeType=image/jpeg,width=1200]", metadata.toString());
+    assertEquals("[dimension=[width=1200,height=800],mimeType=image/jpeg]", metadata.toString());
   }
 
   @Test
   void testSampleJson_PDF() throws JsonProcessingException {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(SAMPLE_JSON_PDF);
-    assertEquals(0, metadata.getWidth());
-    assertEquals(0, metadata.getHeight());
     assertEquals("application/pdf", metadata.getMimeType());
+    assertNull(metadata.getDimension());
     assertTrue(metadata.isValid());
-    assertEquals("[height=0,mimeType=application/pdf,width=0]", metadata.toString());
+    assertEquals("[dimension=<null>,mimeType=application/pdf]", metadata.toString());
   }
 
   @Test
