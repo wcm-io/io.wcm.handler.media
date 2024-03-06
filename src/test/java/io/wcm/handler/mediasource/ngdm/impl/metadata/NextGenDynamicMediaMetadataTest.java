@@ -31,7 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 class NextGenDynamicMediaMetadataTest {
 
-  static final String SAMPLE_JSON = "{"
+  static final String SAMPLE_JSON_IMAGE = "{"
       + "  \"assetId\": \"urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678\","
       + "  \"repositoryMetadata\": {"
       + "    \"repo:name\": \"test.jpg\","
@@ -46,6 +46,19 @@ class NextGenDynamicMediaMetadataTest {
       + "  }"
       + "}";
 
+  static final String SAMPLE_JSON_PDF = "{"
+      + "  \"assetId\": \"urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678\","
+      + "  \"repositoryMetadata\": {"
+      + "    \"repo:name\": \"test.pdf\","
+      + "    \"dc:format\": \"application/pdf\""
+      + "  },"
+      + "  \"assetMetadata\": {"
+      + "    \"dam:assetStatus\": \"approved\","
+      + "    \"dc:description\": \"Test Description\","
+      + "    \"dc:title\": \"Test Image\""
+      + "  }"
+      + "}";
+
   @Test
   void testEmptyJson() throws JsonProcessingException {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson("{}");
@@ -57,13 +70,23 @@ class NextGenDynamicMediaMetadataTest {
   }
 
   @Test
-  void testSampleJson() throws JsonProcessingException {
-    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(SAMPLE_JSON);
+  void testSampleJson_Image() throws JsonProcessingException {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(SAMPLE_JSON_IMAGE);
     assertEquals(1200, metadata.getWidth());
     assertEquals(800, metadata.getHeight());
     assertEquals("image/jpeg", metadata.getMimeType());
     assertTrue(metadata.isValid());
     assertEquals("[height=800,mimeType=image/jpeg,width=1200]", metadata.toString());
+  }
+
+  @Test
+  void testSampleJson_PDF() throws JsonProcessingException {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(SAMPLE_JSON_PDF);
+    assertEquals(0, metadata.getWidth());
+    assertEquals(0, metadata.getHeight());
+    assertEquals("application/pdf", metadata.getMimeType());
+    assertTrue(metadata.isValid());
+    assertEquals("[height=0,mimeType=application/pdf,width=0]", metadata.toString());
   }
 
   @Test

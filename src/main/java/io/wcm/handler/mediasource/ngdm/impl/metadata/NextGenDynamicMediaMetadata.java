@@ -66,7 +66,7 @@ public final class NextGenDynamicMediaMetadata {
   }
 
   boolean isValid() {
-    return width > 0 && height > 0 && mimeType != null;
+    return mimeType != null;
   }
 
   @Override

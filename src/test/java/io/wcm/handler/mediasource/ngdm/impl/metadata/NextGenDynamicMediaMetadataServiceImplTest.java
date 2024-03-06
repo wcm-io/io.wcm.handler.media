@@ -79,7 +79,7 @@ class NextGenDynamicMediaMetadataServiceImplTest {
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_OK)
             .withHeader("Content-Type", ContentType.JSON)
-            .withBody(NextGenDynamicMediaMetadataTest.SAMPLE_JSON)));
+            .withBody(NextGenDynamicMediaMetadataTest.SAMPLE_JSON_IMAGE)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNotNull(metadata);
@@ -96,7 +96,7 @@ class NextGenDynamicMediaMetadataServiceImplTest {
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_OK)
             .withHeader("Content-Type", ContentType.JSON)
-            .withBody(NextGenDynamicMediaMetadataTest.SAMPLE_JSON)));
+            .withBody(NextGenDynamicMediaMetadataTest.SAMPLE_JSON_IMAGE)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNull(metadata);
