@@ -19,10 +19,6 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
-import java.util.Map;
-
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Service to access Next Generation Dynamic Media configuration.
  */
@@ -108,13 +104,6 @@ public interface NextGenDynamicMediaConfigService {
    * @return the path expression for the metadata path
    */
   String getAssetMetadataPath();
-
-  /**
-   * HTTP headers to be send with the asset metadata request.
-   * @return Asset Metadata Headers
-   */
-  @NotNull
-  Map<String, String> getAssetMetadataHeaders();
 
   /**
    * Gets the Next Generation Dynamic Media tenant (also known technically as the repository ID).

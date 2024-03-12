@@ -19,12 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -73,12 +68,6 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
             + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
     String assetMetadataPath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/metadata";
 
-    @AttributeDefinition(
-        name = "Asset Metadata Headers",
-        description = "HTTP headers to be send with the asset metadata request. "
-            + "Format: 'header1:value1'.")
-    String[] assetMetadataHeaders() default { "X-Adobe-Accept-Experimental:1" };
-
   }
 
   private static final String ADOBE_ASSETS_PREFIX = "/adobe/assets/";
@@ -87,7 +76,6 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   private String imageDeliveryBasePath;
   private String assetOriginalBinaryDeliveryPath;
   private String assetMetadataPath;
-  private Map<String, String> assetMetadataHeaders;
 
   @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
@@ -103,19 +91,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
         this.nextGenDynamicMediaConfig.getAssetOriginalBinaryDeliveryPath());
     this.assetMetadataPath = StringUtils.defaultIfBlank(config.assetMetadataPath(),
         this.nextGenDynamicMediaConfig.getAssetMetadataPath());
-    this.assetMetadataHeaders = headersToMap(config.assetMetadataHeaders());
 
-  }
-
-  private static Map<String, String> headersToMap(String[] headers) {
-    Map<String, String> map = new LinkedHashMap<>();
-    for (String header : headers) {
-      String[] parts = header.split(":", 2);
-      if (parts.length == 2) {
-        map.put(parts[0], parts[1]);
-      }
-    }
-    return map;
   }
 
   @Override
@@ -146,11 +122,6 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   @Override
   public String getAssetMetadataPath() {
     return assetMetadataPath;
-  }
-
-  @Override
-  public @NotNull Map<String, String> getAssetMetadataHeaders() {
-    return Collections.unmodifiableMap(assetMetadataHeaders);
   }
 
   @Override

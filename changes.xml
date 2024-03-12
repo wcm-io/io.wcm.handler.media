@@ -33,6 +33,9 @@
       <action type="update" dev="sseifert" issue="47">
         Next Generation Dynamic Media: Replace fileupload default pick/remote trigger with customized one to display the customized asset selector dialog.
       </action>
+      <action type="update" dev="sseifert" issue="48">
+        Next Generation Dynamic Media: Optionally fetch metadata of NGDM asset reference to check for validity and maximum possible resolution.
+      </action>
     </release>
 
     <release version="2.0.0" date="2024-01-26">

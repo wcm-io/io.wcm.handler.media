@@ -27,6 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
@@ -42,6 +44,7 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageUrlBuilder;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
 
 /**
  * {@link Rendition} implementation for Next Gen. Dynamic Media remote assets.
@@ -49,6 +52,8 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
 final class NextGenDynamicMediaRendition implements Rendition {
 
   private final NextGenDynamicMediaContext context;
+  private final NextGenDynamicMediaMetadata metadata;
+  private final Dimension originalDimension;
   private final NextGenDynamicMediaReference reference;
   private final MediaArgs mediaArgs;
   private final String url;
@@ -56,8 +61,17 @@ final class NextGenDynamicMediaRendition implements Rendition {
   private long width;
   private long height;
 
+  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaRendition.class);
+
   NextGenDynamicMediaRendition(@NotNull NextGenDynamicMediaContext context, @NotNull MediaArgs mediaArgs) {
     this.context = context;
+    this.metadata = context.getMetadata();
+    if (this.metadata != null) {
+      this.originalDimension = metadata.getDimension();
+    }
+    else {
+      this.originalDimension = null;
+    }
     this.reference = context.getReference();
     this.mediaArgs = mediaArgs;
     this.width = mediaArgs.getFixedWidth();
@@ -69,12 +83,17 @@ final class NextGenDynamicMediaRendition implements Rendition {
       this.resolvedMediaFormat = firstMediaFormat;
       if (this.width == 0) {
         this.width = firstMediaFormat.getEffectiveMinWidth();
+        this.height = firstMediaFormat.getEffectiveMinHeight();
       }
     }
 
     if (isVectorImage() || !isImage()) {
       // deliver as binary
       this.url = buildBinaryUrl();
+    }
+    else if (isRequestedDimensionLargerThanOriginal()) {
+      // image upscaling is not supported
+      this.url = null;
     }
     else {
       // deliver scaled image rendition
@@ -106,6 +125,23 @@ final class NextGenDynamicMediaRendition implements Rendition {
     }
 
     return new NextGenDynamicMediaImageUrlBuilder(context).build(params);
+  }
+
+  /**
+   * Checks if the original dimension is available in remote asset metadata, and if that dimension
+   * is smaller than the requested width/height. Upscaling should be avoided.
+   * @return true if requested dimension is larger than original dimension
+   */
+  private boolean isRequestedDimensionLargerThanOriginal() {
+    if (originalDimension != null
+        && (this.width > originalDimension.getWidth() || this.height > originalDimension.getHeight())) {
+      if (log.isTraceEnabled()) {
+        log.trace("Requested dimension {} is larger than original image dimension {} of {}",
+            new Dimension(this.width, this.height), originalDimension, context.getReference());
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -148,7 +184,12 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @Nullable String getMimeType() {
-    return context.getMimeTypeService().getMimeType(getFileExtension());
+    if (this.metadata != null) {
+      return this.metadata.getMimeType();
+    }
+    else {
+      return context.getMimeTypeService().getMimeType(getFileExtension());
+    }
   }
 
   @Override
@@ -183,11 +224,17 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public long getWidth() {
+    if (width == 0 && originalDimension != null) {
+      return originalDimension.getWidth();
+    }
     return width;
   }
 
   @Override
   public long getHeight() {
+    if (height == 0 && originalDimension != null) {
+      return originalDimension.getHeight();
+    }
     return height;
   }
 

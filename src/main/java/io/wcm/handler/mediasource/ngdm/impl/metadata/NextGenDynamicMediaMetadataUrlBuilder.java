@@ -17,56 +17,63 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.ngdm.impl;
+package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_ASSET_ID;
-import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_SEO_NAME;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
+
 /**
- * Builds URL to reference a binary file via NextGen Dynamic Media.
+ * Builds URL to reference a asset metadata via NextGen Dynamic Media.
  * <p>
  * Example URL that might be build:
- * https://host/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/my-file.pdf
+ * https://host/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/metadata
  * </p>
  */
-public final class NextGenDynamicMediaBinaryUrlBuilder {
+final class NextGenDynamicMediaMetadataUrlBuilder {
 
-  private final NextGenDynamicMediaContext context;
+  private final NextGenDynamicMediaConfigService config;
 
   /**
-   * @param context Context
+   * @param config Config
    */
-  public NextGenDynamicMediaBinaryUrlBuilder(@NotNull NextGenDynamicMediaContext context) {
-    this.context = context;
+  NextGenDynamicMediaMetadataUrlBuilder(@NotNull NextGenDynamicMediaConfigService config) {
+    this.config = config;
   }
 
   /**
-   * Builds the URL for a binary.
+   * Builds the URL for metadata.
    * @return URL or null if invalid/not possible
    */
-  public @Nullable String build() {
+  public @Nullable String build(@NotNull NextGenDynamicMediaReference reference) {
 
     // get parameters from nextgen dynamic media config for URL parameters
-    String repositoryId = context.getNextGenDynamicMediaConfig().getRepositoryId();
-    String binaryDeliveryPath = context.getNextGenDynamicMediaConfig().getAssetOriginalBinaryDeliveryPath();
-    if (StringUtils.isAnyEmpty(repositoryId, binaryDeliveryPath)) {
+    String repositoryId = config.getRepositoryId();
+    String metadataPath = config.getAssetMetadataPath();
+    if (StringUtils.isAnyEmpty(repositoryId, metadataPath)) {
       return null;
     }
 
     // replace placeholders in delivery path
-    String seoName = context.getReference().getFileName();
-    binaryDeliveryPath = StringUtils.replace(binaryDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
-    binaryDeliveryPath = StringUtils.replace(binaryDeliveryPath, PLACEHOLDER_SEO_NAME, seoName);
+    metadataPath = StringUtils.replace(metadataPath, PLACEHOLDER_ASSET_ID, reference.getAssetId());
 
     // build URL
     StringBuilder url = new StringBuilder();
-    url.append("https://")
+    if (StringUtils.startsWith(repositoryId, "localhost:")) {
+      // switch to HTTP for unit tests/local testing
+      url.append("http");
+    }
+    else {
+      url.append("https");
+    }
+    url.append("://")
         .append(repositoryId)
-        .append(binaryDeliveryPath);
+        .append(metadataPath);
     return url.toString();
   }
 

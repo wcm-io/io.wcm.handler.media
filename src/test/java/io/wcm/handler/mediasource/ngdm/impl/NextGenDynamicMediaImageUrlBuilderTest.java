@@ -129,6 +129,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaContext ctx = new NextGenDynamicMediaContext(
         NextGenDynamicMediaReference.fromReference(SAMPLE_REFERENCE),
         null,
+        null,
         mediaArgs,
         nextGenDynamicMediaConfig,
         mediaHandlerConfig,

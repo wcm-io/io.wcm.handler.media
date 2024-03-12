@@ -17,62 +17,44 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.ngdm.impl;
+package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
-import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.apache.sling.commons.mime.MimeTypeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
-class NextGenDynamicMediaBinaryUrlBuilderTest {
+class NextGenDynamicMediaMetadataUrlBuilderTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
   private NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
-  private MediaHandlerConfig mediaHandlerConfig;
-  private MimeTypeService mimeTypeService;
 
   @BeforeEach
   void setUp() throws Exception {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
         .setRepositoryId("repo1");
     nextGenDynamicMediaConfig = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
-
-    mediaHandlerConfig = AdaptTo.notNull(context.request(), MediaHandlerConfig.class);
-    mimeTypeService = context.getService(MimeTypeService.class);
   }
 
   @Test
   void testBuild() {
-    NextGenDynamicMediaBinaryUrlBuilder underTest = getBuilder(new MediaArgs());
+    NextGenDynamicMediaMetadataUrlBuilder underTest = new NextGenDynamicMediaMetadataUrlBuilder(nextGenDynamicMediaConfig);
 
-    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/my-image.jpg?accept-experimental=1",
-        underTest.build());
-  }
-
-  @SuppressWarnings("null")
-  private NextGenDynamicMediaBinaryUrlBuilder getBuilder(MediaArgs mediaArgs) {
-    NextGenDynamicMediaContext ctx = new NextGenDynamicMediaContext(
-        NextGenDynamicMediaReference.fromReference(SAMPLE_REFERENCE),
-        null,
-        null,
-        mediaArgs,
-        nextGenDynamicMediaConfig,
-        mediaHandlerConfig,
-        mimeTypeService);
-    return new NextGenDynamicMediaBinaryUrlBuilder(ctx);
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/metadata",
+        underTest.build(new NextGenDynamicMediaReference(SAMPLE_ASSET_ID, SAMPLE_FILENAME)));
   }
 
 }
