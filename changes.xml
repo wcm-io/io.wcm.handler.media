@@ -47,7 +47,7 @@
         <b>This feature is active by default on AEMaaCS cloud instances, can be disabled via OSGi configuration</b>.
       ]]></action>
       <action type="add" dev="sseifert" issue="38">
-        Add support for Next Generation Dynamic Media remote assets. This is a first experimental support and will be improved in subsequent releases.
+        Add support for Next Generation Dynamic Media remote assets. This is a first experimental support and will be finalized in release 2.0.2.
       </action>
       <action type="add" dev="sseifert" issue="33">
         Allow to set image quality per media request.

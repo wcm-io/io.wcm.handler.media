@@ -8,14 +8,14 @@ wcm.io Media Handler optionally supports the [Dynamic Media][aem-dynamic-media] 
 
 Only the "Scene7" mode is supported (see [Setting Up Dynamic Media][aem-dynamic-media-administration]). The old and deprecated "hybrid" mode is not supported.
 
-The dynamic media support automatically gets active when the instance was set up with the additional `dynamicmedia_scene7` run mode, and the assets are replicated to the Dynamic Media servers.
+The Dynamic Media support automatically gets active when the instance was set up with the additional `dynamicmedia_scene7` run mode, and the assets are replicated to the Dynamic Media servers.
 
 
 ### Dynamic Media concept
 
-The integration with dynamic media builds on the [general concepts][general-concepts] of the Media Handler using media formats and a unified media handling API to resolve the renditions for each use case.
+The integration with Dynamic Media builds on the [general concepts][general-concepts] of the Media Handler using media formats and a unified media handling API to resolve the renditions for each use case.
 
-If dynamic media is active, the media handler returns rendition URLs pointing to the Dynamic Media delivery servers instead of the Servlet the renders the renditions inside the publish instance without dynamic media. From the [supported file formats][file-format-support] dynamic media is used for JPEG, PNG and TIFF images. It is not used for GIF images (potentially animated) or SVG images (which can be scaled by the browser itself).
+If Dynamic Media is active, the media handler returns rendition URLs pointing to the Dynamic Media delivery servers instead of the Servlet the renders the renditions inside the publish instance without Dynamic Media. From the [supported file formats][file-format-support] Dynamic Media supports dynamic renditions for JPEG, PNG and TIFF images. All other file formats including GIF and SVG images are delivered as original binary via the Dynamic Media CDN.
 
 It is not required to create image profiles or image presets in AEM for the basic functionality. It's also not required to configure anything in the component instance edit dialogs or content policies.
 
@@ -31,16 +31,16 @@ See also [this video][aem-smart-crop-video] for general information about smart 
 
 ### System configuration
 
-Make sure to configure the service user mapping for dynamic media as described in the [system configuration][configuration].
+Make sure to configure the service user mapping for Dynamic Media as described in the [system configuration][configuration].
 
 The "wcm.io Media Handler Dynamic Media Support" OSGi configuration supports additional options:
 
-* Enabled: Dynamic media support is enabled by default, if dynamic media is configured for the AEM instance. With this flag it is possible to disable it in the media handler.
-* Author Preview Mode: If activated, dynamic media requests are routed through the AEM instance. Ths is useful when the "Publish Assets" configuration is not set to "Immediately", and thus images that are not yet accessible live via dynamic media can be previewed on author instances. Must not be activated on publish instances.
+* Enabled: Dynamic media support is enabled by default, if Dynamic Media is configured for the AEM instance. With this flag it is possible to disable it in the media handler.
+* Author Preview Mode: If activated, Dynamic Media requests are routed through the AEM instance. Ths is useful when the "Publish Assets" configuration is not set to "Immediately", and thus images that are not yet accessible live via Dynamic Media can be previewed on author instances. Must not be activated on publish instances.
 * Disable AEM Fallback: Disable the automatic fallback to AEM-based rendering of renditions (via Media Handler) if Dynamic Media is enabled, but the asset has not the appropriate Dynamic Media metadata. The asset is then handled as invalid.
-* Image width/height limit: Has to be configured to the same values as the image server "Reply Image Size Limit" in dynamic media.
+* Image width/height limit: Has to be configured to the same values as the image server "Reply Image Size Limit" in Dynamic Media.
 
-To support serving static content for "download" (with `Content-Disposition: attachment` header) please activate this ruleset in dynamic media for the image servers:
+To support serving static content for "download" (with `Content-Disposition: attachment` header) please activate this ruleset in Dynamic Media for the image servers:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
