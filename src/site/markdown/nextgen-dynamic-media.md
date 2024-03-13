@@ -45,7 +45,7 @@ If Next Generation Dynamic Media is enabled for a AEMaaCS instance, it will work
 
 The "wcm.io Next Generation Dynamic Media Support" OSGi configuration allows to reconfigure the actual URLs used for the [Assets Delivery API (DM API)][aem-dm-api]. Usually you can stick with the default values which reflect the latest version of the DM API.
 
-The "wcm.io Next Generation Dynamic Media Metadata Service" allows to enable the Asset Metadata support (see above). When this is enabled, for each resolved remote asset, a HTTP request is send from the server to the DM API, so make sure this is allowed in the network infrastructure. Optionally, you can configure an proxy server and timeouts.
+The "wcm.io Next Generation Dynamic Media Metadata Service" allows to enable the Asset Metadata support (see above). When this is enabled, for each resolved remote asset, a HTTP request is send from the server to the DM API, so make sure this is allowed in the network infrastructure (should work by default in AEMaaCS instances). Optionally, you can configure an proxy server and timeouts.
 
 
 ### Known Limitations (as of March 2024)
