@@ -19,6 +19,10 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_ASSET_ID;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_FORMAT;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_SEO_NAME;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
@@ -38,14 +42,10 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  * Builds URL to render image rendition via NextGen Dynamic Media.
  * <p>
  * Example URL that might be build:
- * https://host/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg?preferwebp=true&quality=85&width=300&crop=16:9,smart
+ * https://host/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg?preferwebp=true&quality=85&width=300&crop=16:9,smart
  * </p>
  */
-public final class NextGenDynamicMediaUrlBuilder {
-
-  static final String PLACEHOLDER_ASSET_ID = "{asset-id}";
-  static final String PLACEHOLDER_SEO_NAME = "{seo-name}";
-  static final String PLACEHOLDER_FORMAT = "{format}";
+public final class NextGenDynamicMediaImageUrlBuilder {
 
   static final String PARAM_PREFER_WEBP = "preferwebp";
   static final String PARAM_WIDTH = "width";
@@ -64,7 +64,7 @@ public final class NextGenDynamicMediaUrlBuilder {
   /**
    * @param context Context
    */
-  public NextGenDynamicMediaUrlBuilder(@NotNull NextGenDynamicMediaContext context) {
+  public NextGenDynamicMediaImageUrlBuilder(@NotNull NextGenDynamicMediaContext context) {
     this.context = context;
   }
 
@@ -82,7 +82,7 @@ public final class NextGenDynamicMediaUrlBuilder {
       return null;
     }
 
-    // replace placeholders in image delivery path
+    // replace placeholders in delivery path
     String seoName = FilenameUtils.getBaseName(context.getReference().getFileName());
     String format = context.getDefaultMediaArgs().getEnforceOutputFileExtension();
     if (StringUtils.isEmpty(format)) {
@@ -129,7 +129,13 @@ public final class NextGenDynamicMediaUrlBuilder {
         .map(entry -> toUrlParam(entry.getKey(), entry.getValue()))
         .collect(Collectors.joining("&"));
     if (StringUtils.isNotEmpty(urlParams)) {
-      url.append("?").append(urlParams);
+      if (url.indexOf("?") < 0) {
+        url.append("?");
+      }
+      else {
+        url.append("&");
+      }
+      url.append(urlParams);
     }
     return url.toString();
   }

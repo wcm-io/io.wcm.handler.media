@@ -31,6 +31,8 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.ComponentContext;
@@ -47,6 +49,8 @@ import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadataService;
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
@@ -69,6 +73,8 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   private MediaHandlerConfig mediaHandlerConfig;
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
+  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
+  private NextGenDynamicMediaMetadataService metadataService;
   @OSGiService
   private MimeTypeService mimeTypeService;
 
@@ -76,6 +82,8 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   private WCMMode wcmMode;
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private ComponentContext componentContext;
+
+  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaMediaSource.class);
 
   @Override
   public @NotNull String getId() {
@@ -88,7 +96,11 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   }
 
   private boolean isNextGenDynamicMediaEnabled() {
-    return nextGenDynamicMediaConfig != null && nextGenDynamicMediaConfig.enabled();
+    if (nextGenDynamicMediaConfig == null) {
+      log.debug("NGDM media source is disabled: com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig is not available.");
+      return false;
+    }
+    return nextGenDynamicMediaConfig.enabled();
   }
 
   @Override
@@ -113,13 +125,23 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
       return media;
     }
 
+    // If enabled: Fetch asset metadata to validate existence and get original dimensions
+    NextGenDynamicMediaMetadata metadata = null;
+    if (metadataService != null && metadataService.isEnabled()) {
+      metadata = metadataService.fetchMetadata(reference);
+      if (metadata == null) {
+        media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
+        return media;
+      }
+    }
+
     // Update media args settings from resource (e.g. alt. text setings)
     Resource referencedResource = media.getMediaRequest().getResource();
     if (referencedResource != null) {
       updateMediaArgsFromResource(mediaArgs, referencedResource, mediaHandlerConfig);
     }
 
-    NextGenDynamicMediaContext context = new NextGenDynamicMediaContext(reference, media, mediaArgs,
+    NextGenDynamicMediaContext context = new NextGenDynamicMediaContext(reference, metadata, media, mediaArgs,
         nextGenDynamicMediaConfig, mediaHandlerConfig, mimeTypeService);
     NextGenDynamicMediaAsset asset = new NextGenDynamicMediaAsset(context);
     media.setAsset(asset);

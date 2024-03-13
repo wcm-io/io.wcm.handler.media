@@ -37,7 +37,7 @@ import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
-class NextGenDynamicMediaUrlBuilderTest {
+class NextGenDynamicMediaImageUrlBuilderTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
@@ -57,27 +57,46 @@ class NextGenDynamicMediaUrlBuilderTest {
 
   @Test
   void testDefaultParams() {
-    NextGenDynamicMediaUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
-    assertEquals("https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg"
-        + "?preferwebp=true",
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?accept-experimental=1&preferwebp=true",
         underTest.build(params));
   }
 
   @Test
   void testForceOutputExtension() {
-    NextGenDynamicMediaUrlBuilder underTest = getBuilder(new MediaArgs().enforceOutputFileExtension("png"));
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs().enforceOutputFileExtension("png"));
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
-    assertEquals("https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.png"
-        + "?preferwebp=true",
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.png"
+        + "?accept-experimental=1&preferwebp=true",
         underTest.build(params));
   }
 
   @Test
   void testAllParams() {
-    NextGenDynamicMediaUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .width(100L)
+        .cropSmartRatio(new Dimension(16, 9))
+        .rotation(90)
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?accept-experimental=1&crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
+        underTest.build(params));
+  }
+
+  @Test
+  void testAllParams_EmptyOsgiConfig() {
+    nextGenDynamicMediaConfig = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "imageDeliveryBasePath", "",
+        "assetOriginalBinaryDeliveryPath", "",
+        "assetMetadataPath", "",
+        "assetMetadataHeaders", new String[0]);
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
         .cropSmartRatio(new Dimension(16, 9))
@@ -91,30 +110,31 @@ class NextGenDynamicMediaUrlBuilderTest {
 
   @Test
   void testWidthPlaceholder() {
-    NextGenDynamicMediaUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .widthPlaceholder("{w}")
         .quality(60);
 
-    assertEquals("https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg"
-        + "?preferwebp=true&quality=60&width={w}",
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?accept-experimental=1&preferwebp=true&quality=60&width={w}",
         underTest.build(params));
   }
 
-  private NextGenDynamicMediaUrlBuilder getBuilder() {
+  private NextGenDynamicMediaImageUrlBuilder getBuilder() {
     return getBuilder(new MediaArgs());
   }
 
   @SuppressWarnings("null")
-  private NextGenDynamicMediaUrlBuilder getBuilder(MediaArgs mediaArgs) {
+  private NextGenDynamicMediaImageUrlBuilder getBuilder(MediaArgs mediaArgs) {
     NextGenDynamicMediaContext ctx = new NextGenDynamicMediaContext(
         NextGenDynamicMediaReference.fromReference(SAMPLE_REFERENCE),
+        null,
         null,
         mediaArgs,
         nextGenDynamicMediaConfig,
         mediaHandlerConfig,
         mimeTypeService);
-    return new NextGenDynamicMediaUrlBuilder(ctx);
+    return new NextGenDynamicMediaImageUrlBuilder(ctx);
   }
 
 }

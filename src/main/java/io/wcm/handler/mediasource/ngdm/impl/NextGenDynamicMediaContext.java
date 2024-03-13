@@ -21,10 +21,12 @@ package io.wcm.handler.mediasource.ngdm.impl;
 
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
 
 /**
  * Relevant context objects for media resolution.
@@ -32,6 +34,7 @@ import io.wcm.handler.media.spi.MediaHandlerConfig;
 public final class NextGenDynamicMediaContext {
 
   private final NextGenDynamicMediaReference reference;
+  private final NextGenDynamicMediaMetadata metadata;
   private final Media media;
   private final MediaArgs defaultMediaArgs;
   private final NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
@@ -40,18 +43,21 @@ public final class NextGenDynamicMediaContext {
 
   /**
    * @param reference NextGen Dynamic Media reference
+   * @param metadata NextGen Dynamic Media metadata (if enabled)
    * @param defaultMediaArgs Default media args
    * @param nextGenDynamicMediaConfig NextGen Dynamic Media config
    * @param mediaHandlerConfig Media handler config
    * @param mimeTypeService Mime type service
    */
   public NextGenDynamicMediaContext(@NotNull NextGenDynamicMediaReference reference,
+      @Nullable NextGenDynamicMediaMetadata metadata,
       @NotNull Media media,
       @NotNull MediaArgs defaultMediaArgs,
       @NotNull NextGenDynamicMediaConfigService nextGenDynamicMediaConfig,
       @NotNull MediaHandlerConfig mediaHandlerConfig,
       @NotNull MimeTypeService mimeTypeService) {
     this.reference = reference;
+    this.metadata = metadata;
     this.media = media;
     this.defaultMediaArgs = defaultMediaArgs;
     this.nextGenDynamicMediaConfig = nextGenDynamicMediaConfig;
@@ -61,6 +67,10 @@ public final class NextGenDynamicMediaContext {
 
   public @NotNull NextGenDynamicMediaReference getReference() {
     return this.reference;
+  }
+
+  public @Nullable NextGenDynamicMediaMetadata getMetadata() {
+    return this.metadata;
   }
 
   public @NotNull Media getMedia() {
