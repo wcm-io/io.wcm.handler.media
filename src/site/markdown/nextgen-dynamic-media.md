@@ -41,7 +41,7 @@ See system configuration how to enable the metadata service.
 
 ### System configuration
 
-If Next Generation Dynamic Media is enabled for a AEMaaCS instance, it will work out-of-the-box with the Media Handler.
+If Next Generation Dynamic Media is enabled for a AEMaaCS instance, it will work out-of-the-box with the Media Handler. In your project-specific implementation of `io.wcm.handler.media.spi.MediaHandlerConfig` you have to add the media sources implementation `io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaMediaSource` to the list returned by the `getSources()` method (overwrite it from the superclass if required).
 
 The "wcm.io Next Generation Dynamic Media Support" OSGi configuration allows to reconfigure the actual URLs used for the [Assets Delivery API (DM API)][aem-dm-api]. Usually you can stick with the default values which reflect the latest version of the DM API.
 
