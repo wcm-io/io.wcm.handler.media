@@ -289,7 +289,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     return null;
   }
 
-  private boolean enforceVirtualRendition(RenditionMetadata rendition, MediaArgs mediaArgs) {
+  protected boolean enforceVirtualRendition(RenditionMetadata rendition, MediaArgs mediaArgs) {
     if (rendition.isImage() && !rendition.isVectorImage()) {
       if (damContext.getMediaHandlerConfig().enforceVirtualRenditions()) {
         return true;

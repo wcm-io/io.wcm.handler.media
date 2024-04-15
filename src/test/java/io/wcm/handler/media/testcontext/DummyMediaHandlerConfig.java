@@ -39,6 +39,8 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
       InlineMediaSource.class,
       NextGenDynamicMediaMediaSource.class);
 
+  private boolean enforceVirtualRenditions;
+
   @Override
   public @NotNull List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
@@ -48,6 +50,15 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
   public boolean includeAssetWebRenditionsByDefault() {
     // unit tests rely on old behavior
     return true;
+  }
+
+  @Override
+  public boolean enforceVirtualRenditions() {
+    return enforceVirtualRenditions;
+  }
+
+  public void setEnforceVirtualRenditions(boolean enforceVirtualRenditions) {
+    this.enforceVirtualRenditions = enforceVirtualRenditions;
   }
 
 }
