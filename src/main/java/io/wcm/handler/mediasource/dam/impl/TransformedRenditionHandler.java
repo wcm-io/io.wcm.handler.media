@@ -107,4 +107,10 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
         mediaArgs.getEnforceOutputFileExtension(), cropDimension, rotation, mediaArgs.getImageQualityPercentage());
   }
 
+  @Override
+  protected boolean enforceVirtualRendition(RenditionMetadata rendition, MediaArgs mediaArgs) {
+    // ignore this setting when already using transformed rendition handler
+    return false;
+  }
+
 }
