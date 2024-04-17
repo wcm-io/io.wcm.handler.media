@@ -49,14 +49,14 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @ExtendWith(AemContextExtension.class)
 class AutoCroppingMediaHandlerTest {
 
-  private final AemContext context = AppAemContext.newAemContext();
+  protected final AemContext context = AppAemContext.newAemContext();
 
   private MediaHandler mediaHandler;
   private Asset asset;
   private Resource resource;
 
   @BeforeEach
-  void setUp() {
+  protected void setUp() {
     // register RenditionMetadataListenerService to generate rendition metadata
     context.registerInjectActivateService(new AssetSynchonizationService());
     context.registerInjectActivateService(new RenditionMetadataListenerService(),
