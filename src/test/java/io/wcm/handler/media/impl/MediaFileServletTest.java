@@ -20,6 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_DISPOSITION;
+import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_SECURITY_POLICY;
 import static io.wcm.handler.media.impl.MediaFileServletConstants.SELECTOR_DOWNLOAD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -73,8 +74,8 @@ class MediaFileServletTest {
     assertEquals(ContentType.SVG, context.response().getContentType());
     assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getOutput().length);
     assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getContentLength());
-    // forced content disposition header for SVG to prevent stored XSS
-    assertEquals("attachment;", context.response().getHeader(HEADER_CONTENT_DISPOSITION));
+    // forced content security policy for SVG to prevent stored XSS
+    assertEquals("sandbox", context.response().getHeader(HEADER_CONTENT_SECURITY_POLICY));
   }
 
   @Test
