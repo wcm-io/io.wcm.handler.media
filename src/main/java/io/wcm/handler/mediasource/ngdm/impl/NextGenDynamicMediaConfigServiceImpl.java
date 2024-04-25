@@ -41,7 +41,7 @@ import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMediaConfigService {
 
   @ObjectClassDefinition(
-      name = "wcm.io Next Generation Dynamic Media Support",
+      name = "wcm.io Media Handler Next Generation Dynamic Media Support",
       description = "Support for Next Generation Dynamic Media.")
   @interface Config {
 

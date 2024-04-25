@@ -60,7 +60,7 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
 public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMediaMetadataService {
 
   @ObjectClassDefinition(
-      name = "wcm.io Next Generation Dynamic Media Metadata Service",
+      name = "wcm.io Media Handler Next Generation Dynamic Media Metadata Service",
       description = "Fetches metadata for Next Generation Dynamic Media assets.")
   @interface Config {
 
