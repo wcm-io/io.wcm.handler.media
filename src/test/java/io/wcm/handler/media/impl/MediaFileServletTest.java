@@ -20,6 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_DISPOSITION;
+import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_SECURITY_POLICY;
 import static io.wcm.handler.media.impl.MediaFileServletConstants.SELECTOR_DOWNLOAD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -48,7 +49,7 @@ class MediaFileServletTest {
 
   @BeforeEach
   void setUp() {
-    underTest = new MediaFileServlet();
+    underTest = context.registerInjectActivateService(MediaFileServlet.class);
     context.currentResource(context.load().binaryFile("/sample_image_215x102.jpg", "/content/sample_image.jpg"));
   }
 
@@ -73,8 +74,26 @@ class MediaFileServletTest {
     assertEquals(ContentType.SVG, context.response().getContentType());
     assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getOutput().length);
     assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getContentLength());
-    // forced content disposition header for SVG to prevent stored XSS
-    assertEquals("attachment;", context.response().getHeader(HEADER_CONTENT_DISPOSITION));
+    // forced content security policy for SVG to prevent stored XSS
+    assertEquals("sandbox", context.response().getHeader(HEADER_CONTENT_SECURITY_POLICY));
+  }
+
+  @Test
+  void testGet_SVG_DisableContentSecurityPolicy() throws Exception {
+    // disable content security policy for SVG files
+    underTest = context.registerInjectActivateService(MediaFileServlet.class,
+        "svgContentSecurityPolicy", false);
+
+    context.currentResource(context.load().binaryFile("/filetype/sample.svg", "/content/sample.svg"));
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
+    assertEquals(ContentType.SVG, context.response().getContentType());
+    assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getOutput().length);
+    assertEquals(EXPECTED_CONTENT_LENGTH_SVG, context.response().getContentLength());
+    // no CSP
+    assertNull(context.response().getHeader(HEADER_CONTENT_SECURITY_POLICY));
   }
 
   @Test

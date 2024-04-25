@@ -20,6 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_DISPOSITION;
+import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT_SECURITY_POLICY;
 import static io.wcm.handler.media.impl.MediaFileServletConstants.SELECTOR_DOWNLOAD;
 
 import java.io.IOException;
@@ -159,9 +160,9 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
     }
 
     // special handling for SVG images which are not treated as download:
-    // force content disposition header to prevent stored XSS attack with malicious JavaScript in SVG file
-    else if (StringUtils.equals(contentType, ContentType.SVG)) {
-      setContentDispositionAttachmentHeader(request, response);
+    // set content security policy to prevent stored XSS attack with malicious JavaScript in SVG file
+    if (StringUtils.equals(contentType, ContentType.SVG)) {
+      setSVGContentSecurityPolicy(response);
     }
 
     // write binary data
@@ -179,6 +180,10 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
       dispositionHeader.append("filename=\"").append(suffix).append('\"');
     }
     response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader.toString());
+  }
+
+  protected void setSVGContentSecurityPolicy(@NotNull SlingHttpServletResponse response) {
+    response.setHeader(HEADER_CONTENT_SECURITY_POLICY, "sandbox");
   }
 
 }
