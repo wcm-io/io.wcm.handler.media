@@ -21,8 +21,14 @@ package io.wcm.handler.media.impl;
 
 import javax.servlet.Servlet;
 
+import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.HttpConstants;
+import org.jetbrains.annotations.NotNull;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import com.day.cq.commons.jcr.JcrConstants;
 
@@ -37,9 +43,34 @@ import com.day.cq.commons.jcr.JcrConstants;
     "sling.servlet.resourceTypes=" + JcrConstants.NT_RESOURCE,
     "sling.servlet.methods=" + HttpConstants.METHOD_GET
 })
+@Designate(ocd = MediaFileServlet.Config.class)
 public final class MediaFileServlet extends AbstractMediaFileServlet {
   private static final long serialVersionUID = 1L;
 
-  // inherits all functionality
+  private boolean svgContentSecurityPolicy;
+
+  @ObjectClassDefinition(
+      name = "wcm.io Media Handler Media File Servlet",
+      description = "Configures delivery of media file binaries.")
+  @interface Config {
+
+    @AttributeDefinition(
+        name = "SVG Content Security Policy",
+        description = "Apply XSS protection when serving SVG files by setting Content-Security-Policy to 'sandbox'.")
+    boolean svgContentSecurityPolicy() default true;
+
+  }
+
+  @Activate
+  private void activate(Config config) {
+    this.svgContentSecurityPolicy = config.svgContentSecurityPolicy();
+  }
+
+  @Override
+  protected void setSVGContentSecurityPolicy(@NotNull SlingHttpServletResponse response) {
+    if (this.svgContentSecurityPolicy) {
+      super.setSVGContentSecurityPolicy(response);
+    }
+  }
 
 }

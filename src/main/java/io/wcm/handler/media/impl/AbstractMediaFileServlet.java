@@ -161,7 +161,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
 
     // special handling for SVG images which are not treated as download:
     // set content security policy to prevent stored XSS attack with malicious JavaScript in SVG file
-    else if (StringUtils.equals(contentType, ContentType.SVG)) {
+    if (StringUtils.equals(contentType, ContentType.SVG)) {
       setSVGContentSecurityPolicy(response);
     }
 
@@ -182,7 +182,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
     response.setHeader(HEADER_CONTENT_DISPOSITION, dispositionHeader.toString());
   }
 
-  private void setSVGContentSecurityPolicy(@NotNull SlingHttpServletResponse response) {
+  protected void setSVGContentSecurityPolicy(@NotNull SlingHttpServletResponse response) {
     response.setHeader(HEADER_CONTENT_SECURITY_POLICY, "sandbox");
   }
 
