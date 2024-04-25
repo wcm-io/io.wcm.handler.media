@@ -35,6 +35,11 @@ public final class MediaFileServletConstants {
   public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
 
   /**
+   * Content disposition header
+   */
+  public static final String HEADER_CONTENT_SECURITY_POLICY = "Content-Security-Policy";
+
+  /**
    * Selector
    */
   public static final String SELECTOR = "media_file";
