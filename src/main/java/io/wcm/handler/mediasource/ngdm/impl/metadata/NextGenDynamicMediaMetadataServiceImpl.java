@@ -66,7 +66,7 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
 
     @AttributeDefinition(
         name = "Enabled",
-        description = "When enabled, metadata is fetched for each resolved asset. This checks for validity/existence of "
+        description = "When enabled, metadata is fetched for each resolved remote asset. This checks for validity/existence of "
             + "the asset and for the maximum supported resolution of the original image.")
     boolean enabled() default false;
 

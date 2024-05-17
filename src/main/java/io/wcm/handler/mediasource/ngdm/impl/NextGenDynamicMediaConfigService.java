@@ -46,6 +46,12 @@ public interface NextGenDynamicMediaConfigService {
   boolean enabled();
 
   /**
+   * Enable Next Generation Dynamic Media for assets in this AEMaaCS instance.
+   * @return true if enabled for local assets.
+   */
+  boolean localAsset();
+
+  /**
    * Gets the absolute URL for the javascript which contains the microfrontend for the remote asset selector.
    * @return the absolute URL for the javascript which contains the microfrontend for the remote asset selector
    */

@@ -46,6 +46,11 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   @interface Config {
 
     @AttributeDefinition(
+        name = "Enable Local Assets",
+        description = "Enable Next Generation Dynamic Media for assets in this AEMaaCS instance.")
+    boolean localAssets() default false;
+
+    @AttributeDefinition(
         name = "Image Delivery Base Path",
         description = "Base path with placeholders to deliver image renditions. "
             + "Placeholders: " + PLACEHOLDER_ASSET_ID + ", " + PLACEHOLDER_SEO_NAME + ", " + PLACEHOLDER_FORMAT + ". "
@@ -73,6 +78,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   private static final String ADOBE_ASSETS_PREFIX = "/adobe/assets/";
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigServiceImpl.class);
 
+  private boolean localAssets;
   private String imageDeliveryBasePath;
   private String assetOriginalBinaryDeliveryPath;
   private String assetMetadataPath;
@@ -85,6 +91,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
     log.debug("NGDM config: enabled={}, repositoryId={}, apiKey={}, env={}, imsClient={}",
         enabled(), getRepositoryId(), getApiKey(), getEnv(), getImsClient());
 
+    this.localAssets = config.localAssets();
     this.imageDeliveryBasePath = StringUtils.defaultIfBlank(config.imageDeliveryBasePath(),
         this.nextGenDynamicMediaConfig.getImageDeliveryBasePath());
     this.assetOriginalBinaryDeliveryPath = StringUtils.defaultIfBlank(config.assetOriginalBinaryDeliveryPath(),
@@ -97,6 +104,11 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   @Override
   public boolean enabled() {
     return this.nextGenDynamicMediaConfig.enabled();
+  }
+
+  @Override
+  public boolean localAsset() {
+    return localAssets;
   }
 
   @Override
