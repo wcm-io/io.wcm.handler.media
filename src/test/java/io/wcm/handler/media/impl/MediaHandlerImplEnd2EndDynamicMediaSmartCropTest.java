@@ -65,6 +65,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
+  private Resource assetFolder;
   private Asset asset;
   private MediaHandler mediaHandler;
 
@@ -74,7 +75,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
         PN_CROP_TYPE, CROP_TYPE_SMART,
         PN_BANNER, "16-10,16,10|4-3,40,30");
 
-    Resource assetFolder = context.create().resource("/content/dam/folder1");
+    assetFolder = context.create().resource("/content/dam/folder1");
     context.create().resource(assetFolder, JCR_CONTENT, DamConstants.IMAGE_PROFILE, profile1.getPath());
 
     asset = context.create().asset(assetFolder.getPath() + "/test.jpg", 160, 100, ContentType.JPEG,
@@ -155,6 +156,21 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
     assertEquals(1, renditions.size());
     assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A16-10?wid=120&hei=75&fit=stretch", renditions.get(0).getUrl());
   }
+
+  @Test
+  void testValidSmartCroppedRendition_OnlyRatio_PNG() {
+    // create PNG asset instead of JPEG, skip the extra renditions
+    asset = context.create().asset(assetFolder.getPath() + "/test.png", 160, 100, ContentType.PNG,
+        Scene7Constants.PN_S7_FILE, "DummyFolder/test");
+
+    Media media = getMediaWithRatio(RATIO_4_3);
+    assertTrue(media.isValid());
+
+    List<Rendition> renditions = List.copyOf(media.getRenditions());
+    assertEquals(1, renditions.size());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=133&hei=100&fit=stretch&fmt=png-alpha", renditions.get(0).getUrl());
+  }
+
 
   private Media getMediaWithWidths(MediaFormat mediaFormat, long... widths) {
     return mediaHandler.get(asset.getPath())
