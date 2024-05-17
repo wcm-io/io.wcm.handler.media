@@ -24,8 +24,8 @@
   <body>
 
     <release version="2.0.8" date="not released">
-      <action type="update" dev="sseifert">
-        Dynamic Media Support: Append fmt=png-alpha for PNG assets to ensure that the alpha channel is preserved in the Dynamic Meida rendition.
+      <action type="update" dev="sseifert" issue="51">
+        Dynamic Media Support: Append fmt=png-alpha for PNG assets to ensure that the alpha channel is preserved in the Dynamic Media rendition.
       </action>
     </release>
 
