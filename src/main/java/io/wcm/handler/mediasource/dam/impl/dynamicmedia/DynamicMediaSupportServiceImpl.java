@@ -91,7 +91,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     boolean disableAemFallback() default false;
 
     @AttributeDefinition(
-        name = "Validte Smart Crop Rendition Sizes",
+        name = "Validate Smart Crop Rendition Sizes",
         description = "Validates that the renditions defined via smart cropping fulfill the requested image width/height to avoid upscaling or white borders.")
     boolean validateSmartCropRenditionSizes() default true;
 

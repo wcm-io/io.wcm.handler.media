@@ -32,6 +32,7 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.mediasource.dam.impl.DamContext;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Build part of dynamic media/scene7 URL to render renditions.
@@ -130,6 +131,10 @@ public final class DynamicMediaPath {
             .append("hei=").append(dimension.getHeight()).append("&")
             // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
             .append("fit=stretch");
+        if (isPNG(damContext)) {
+          // if original image is PNG image, make sure alpha channel is preserved
+          result.append("&fmt=png-alpha");
+        }
         logResult(damContext, result);
         return result.toString();
       }
@@ -146,6 +151,10 @@ public final class DynamicMediaPath {
         .append("hei=").append(dimension.getHeight()).append("&")
         // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
         .append("fit=stretch");
+    if (isPNG(damContext)) {
+      // if original image is PNG image, make sure alpha channel is preserved
+      result.append("&fmt=png-alpha");
+    }
     logResult(damContext, result);
     return result.toString();
   }
@@ -193,6 +202,10 @@ public final class DynamicMediaPath {
       pathParts[i] = StringUtils.replace(pathParts[i], "+", "%20");
     }
     return StringUtils.join(pathParts, "/");
+  }
+
+  private static boolean isPNG(@NotNull DamContext damContext) {
+    return StringUtils.equals(damContext.getAsset().getMimeType(), ContentType.PNG);
   }
 
 }
