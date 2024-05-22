@@ -174,4 +174,15 @@ class DynamicMediaPathTest {
     assertEquals("/is/content/DummyFolder/test%20with%20spaces%20%C3%A4%C3%B6%C3%BC%C3%9F%E2%82%AC", result);
   }
 
+  @Test
+  void testCrop_PNG() {
+    asset = context.create().asset(assetFolder.getPath() + "/test.png", 50, 30, ContentType.PNG,
+        Scene7Constants.PN_S7_FILE, "DummyFolder/test");
+    damContext = new DamContext(asset, new MediaArgs(), mediaHandlerConfig,
+        dynamicMediaSupportService, webOptimizedImageDeliveryService, context.request());
+
+    String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8), null);
+    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&wid=30&hei=20&fit=stretch&fmt=png-alpha", result);
+  }
+
 }

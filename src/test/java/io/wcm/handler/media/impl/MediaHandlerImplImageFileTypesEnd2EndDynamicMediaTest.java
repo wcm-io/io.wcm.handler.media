@@ -187,7 +187,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_PNG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia(asset, 100, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.png?wid=100&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.png?wid=100&hei=50&fit=stretch&fmt=png-alpha",
         ContentType.PNG);
   }
 
@@ -196,7 +196,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_PNG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.png?wid=80&hei=40&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.png?wid=80&hei=40&fit=stretch&fmt=png-alpha",
         ContentType.PNG);
   }
 
@@ -205,7 +205,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_PNG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.png?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.png?crop=25,0,50,50&wid=50&hei=50&fit=stretch&fmt=png-alpha",
         ContentType.PNG);
   }
 
