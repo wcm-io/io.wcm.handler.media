@@ -21,6 +21,7 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.testing.mock.aem.dam.ngdm.MockAssetDelivery.getAssetId;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -38,6 +39,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @SuppressWarnings("java:S2699") // all tests have assertions
 class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
 
+  @BeforeEach
   @Override
   void setUp() {
     context.registerInjectActivateService(MockAssetDelivery.class);
