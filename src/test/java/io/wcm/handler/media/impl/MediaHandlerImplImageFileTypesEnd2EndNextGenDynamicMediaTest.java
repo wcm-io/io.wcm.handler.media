@@ -23,6 +23,7 @@ import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceS
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -43,6 +44,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @SuppressWarnings("java:S2699") // all tests have assertions
 class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
 
+  @BeforeEach
   @Override
   void setUp() {
     MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);

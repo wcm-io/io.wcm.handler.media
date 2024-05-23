@@ -8,7 +8,7 @@
 
 This is a customized File Upload component that allows to reference AEM assets or upload binary files as inline assets with enhanced support for the wcm.io Media Handler.
 
-```json
+```json-jcr
 "fileReference": {
   "sling:resourceType": "wcm-io/handler/media/components/granite/form/fileupload",
   "fieldLabel": "Asset reference"
@@ -32,7 +32,7 @@ Enhancements over AEM version:
 
 This is a customized Path Field component that allows to reference AEM assets with enhanced support for the wcm.io Media Handler.
 
-```json
+```json-jcr
 "fileReference": {
   "sling:resourceType": "wcm-io/handler/media/components/granite/form/pathfield",
   "fieldLabel": "Asset reference"
@@ -54,7 +54,7 @@ This component extends the [wcm.io Granite UI components Path Field][wcmio-wcm-u
 
 Multi-select field that allows to select one or multiple media formats.
 
-```json
+```json-jcr
 "mediaFormats": {
   "sling:resourceType": "wcm-io/handler/media/components/granite/form/mediaformatselect",
   "name": "./mediaFormats",
