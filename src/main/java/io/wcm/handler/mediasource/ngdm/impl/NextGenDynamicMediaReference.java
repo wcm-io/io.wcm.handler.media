@@ -23,8 +23,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.day.cq.dam.api.Asset;
 
 /**
  * Parses and validates Next Generation Dynamic Media references.
@@ -88,6 +92,32 @@ public final class NextGenDynamicMediaReference {
     }
     String assetId = matcher.group(1);
     String fileName = matcher.group(2);
+    return new NextGenDynamicMediaReference(assetId, fileName);
+  }
+
+  /**
+   * Parses a next generation dynamic media reference.
+   * @param reference Reference
+   * @return Parsed reference or null if reference is invalid
+   */
+  public static @Nullable NextGenDynamicMediaReference fromDamAssetReference(@Nullable String reference, @NotNull ResourceResolver resourceResolver) {
+    if (reference == null) {
+      return null;
+    }
+    Resource resource = resourceResolver.getResource(reference);
+    if (resource == null) {
+      return null;
+    }
+    Asset asset = resource.adaptTo(Asset.class);
+    if (asset == null) {
+      return null;
+    }
+    String uuid = asset.getID();
+    if (StringUtils.isBlank(uuid)) {
+      return null;
+    }
+    String assetId = "urn:aaid:aem:" + uuid;
+    String fileName = asset.getName();
     return new NextGenDynamicMediaReference(assetId, fileName);
   }
 

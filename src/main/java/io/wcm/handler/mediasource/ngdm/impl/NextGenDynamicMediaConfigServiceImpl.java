@@ -48,7 +48,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
     @AttributeDefinition(
         name = "Enable Local Assets",
         description = "Enable Next Generation Dynamic Media for assets in this AEMaaCS instance.")
-    boolean localAssets() default false;
+    boolean localAssets() default true;
 
     @AttributeDefinition(
         name = "Image Delivery Base Path",
@@ -107,7 +107,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   }
 
   @Override
-  public boolean localAsset() {
+  public boolean localAssets() {
     return localAssets;
   }
 

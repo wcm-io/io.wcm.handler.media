@@ -23,11 +23,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
@@ -71,6 +73,8 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   private Adaptable adaptable;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
+  @SlingObject
+  private ResourceResolver resourceResolver;
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -92,7 +96,8 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
 
   @Override
   public boolean accepts(@Nullable String mediaRef) {
-    return isNextGenDynamicMediaEnabled() && NextGenDynamicMediaReference.isReference(mediaRef);
+    return (isNextGenDynamicMediaEnabled() && NextGenDynamicMediaReference.isReference(mediaRef))
+        || (isNextGenDynamicMediaEnabledForLocalAssets() && isDamAssetReference(mediaRef));
   }
 
   private boolean isNextGenDynamicMediaEnabled() {
@@ -101,6 +106,14 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
       return false;
     }
     return nextGenDynamicMediaConfig.enabled();
+  }
+
+  private boolean isNextGenDynamicMediaEnabledForLocalAssets() {
+    return nextGenDynamicMediaConfig != null && nextGenDynamicMediaConfig.enabled() && nextGenDynamicMediaConfig.localAssets();
+  }
+
+  private boolean isDamAssetReference(@Nullable String mediaRef) {
+    return StringUtils.startsWith(mediaRef, "/content/dam/");
   }
 
   @Override
@@ -114,7 +127,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // check reference and enabled status
-    NextGenDynamicMediaReference reference = NextGenDynamicMediaReference.fromReference(mediaRef);
+    NextGenDynamicMediaReference reference = toNextGenDynamicMediaReference(mediaRef);
     if (reference == null || !isNextGenDynamicMediaEnabled()) {
       if (StringUtils.isEmpty(mediaRef)) {
         media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_MISSING);
@@ -160,6 +173,16 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
     }
 
     return media;
+  }
+
+  private @Nullable NextGenDynamicMediaReference toNextGenDynamicMediaReference(@Nullable String mediaRef) {
+    if (NextGenDynamicMediaReference.isReference(mediaRef)) {
+      return NextGenDynamicMediaReference.fromReference(mediaRef);
+    }
+    else if (isNextGenDynamicMediaEnabledForLocalAssets() && isDamAssetReference(mediaRef)) {
+      return NextGenDynamicMediaReference.fromDamAssetReference(mediaRef, resourceResolver);
+    }
+    return null;
   }
 
   @Override
