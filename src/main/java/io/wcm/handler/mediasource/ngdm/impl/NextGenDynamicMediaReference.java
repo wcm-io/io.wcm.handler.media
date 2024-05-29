@@ -43,17 +43,27 @@ public final class NextGenDynamicMediaReference {
 
   private final String assetId;
   private final String fileName;
+  private final Asset asset;
 
   /**
    * @param assetId Asset ID (has to start with "urn:")
    * @param fileName File name
    */
   public NextGenDynamicMediaReference(@NotNull String assetId, @NotNull String fileName) {
+    this(assetId, fileName, null);
+  }
+
+  /**
+   * @param assetId Asset ID (has to start with "urn:")
+   * @param fileName File name
+   */
+  public NextGenDynamicMediaReference(@NotNull String assetId, @NotNull String fileName, @Nullable Asset asset) {
     if (!StringUtils.startsWith(assetId, ASSET_ID_PREFIX)) {
       throw new IllegalArgumentException("Asset ID must start with '" + ASSET_ID_PREFIX + "'");
     }
     this.assetId = assetId;
     this.fileName = fileName;
+    this.asset = asset;
   }
 
   /**
@@ -68,6 +78,13 @@ public final class NextGenDynamicMediaReference {
    */
   public @NotNull String getFileName() {
     return fileName;
+  }
+
+  /**
+   * @return Asset (if reference points to local asset)
+   */
+  public @Nullable Asset getAsset() {
+    return asset;
   }
 
   /**
@@ -118,7 +135,7 @@ public final class NextGenDynamicMediaReference {
     }
     String assetId = "urn:aaid:aem:" + uuid;
     String fileName = asset.getName();
-    return new NextGenDynamicMediaReference(assetId, fileName);
+    return new NextGenDynamicMediaReference(assetId, fileName, asset);
   }
 
   /**

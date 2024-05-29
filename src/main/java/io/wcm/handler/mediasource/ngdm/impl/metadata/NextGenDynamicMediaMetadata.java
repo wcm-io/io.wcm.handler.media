@@ -26,10 +26,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.day.cq.dam.api.Asset;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
@@ -66,7 +68,10 @@ public final class NextGenDynamicMediaMetadata {
     return dimension;
   }
 
-  boolean isValid() {
+  /**
+   * @return true if metadata is valid (has mime type)
+   */
+  public boolean isValid() {
     return mimeType != null;
   }
 
@@ -95,6 +100,25 @@ public final class NextGenDynamicMediaMetadata {
     if (response.assetMetadata != null) {
       width = response.assetMetadata.tiffImageWidth;
       height = response.assetMetadata.tiffImageLength;
+    }
+
+    return new NextGenDynamicMediaMetadata(mimeType, width, height);
+  }
+
+  /**
+   * Gets metadata from DAM asset.
+   * @param asset Asset
+   * @return Metadata object
+   */
+  public static @NotNull NextGenDynamicMediaMetadata fromAsset(@NotNull Asset asset) {
+    String mimeType = asset.getMimeType();
+
+    long width = 0;
+    long height = 0;
+    Dimension dimension = AssetRendition.getDimension(asset.getOriginal());
+    if (dimension != null) {
+      width = dimension.getWidth();
+      height = dimension.getHeight();
     }
 
     return new NextGenDynamicMediaMetadata(mimeType, width, height);

@@ -20,6 +20,7 @@
 package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +43,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 import com.day.image.Layer;
@@ -404,6 +407,8 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     }
     Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType, metadata);
     context.create().assetRendition(asset, "cq5dam.web.sample." + fileExtension, classpathResource, contentType);
+    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
     return asset;
   }
 

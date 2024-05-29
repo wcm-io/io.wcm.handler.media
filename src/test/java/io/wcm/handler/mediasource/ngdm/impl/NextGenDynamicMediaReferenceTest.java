@@ -55,6 +55,7 @@ class NextGenDynamicMediaReferenceTest {
     assertEquals(SAMPLE_ASSET_ID, underTest.getAssetId());
     assertEquals(SAMPLE_FILENAME, underTest.getFileName());
     assertEquals(SAMPLE_REFERENCE, underTest.toReference());
+    assertNull(underTest.getAsset());
     assertEquals(SAMPLE_REFERENCE, underTest.toString());
   }
 
@@ -107,6 +108,7 @@ class NextGenDynamicMediaReferenceTest {
     assertEquals(SAMPLE_ASSET_ID, underTest.getAssetId());
     assertEquals(SAMPLE_FILENAME, underTest.getFileName());
     assertEquals(SAMPLE_REFERENCE, underTest.toReference());
+    assertEquals(asset, underTest.getAsset());
     assertEquals(SAMPLE_REFERENCE, underTest.toString());
   }
 

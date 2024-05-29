@@ -61,6 +61,7 @@ class NextGenDynamicMediaMediaSourceTest {
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
 
     assertFalse(underTest.accepts(SAMPLE_REFERENCE));
+    assertFalse(underTest.accepts("/content/dam/sample.jpg"));
     assertFalse(underTest.accepts("invalid"));
     assertFalse(underTest.accepts(""));
     assertFalse(underTest.accepts((String)null));
@@ -68,10 +69,11 @@ class NextGenDynamicMediaMediaSourceTest {
 
   @Test
   void testAccepts_withNextGenDynamicMediaConfigDisabled() {
-    registerMockNextGenDynamicMediaConfig(false);
+    registerMockNextGenDynamicMediaConfig(false, true);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
 
     assertFalse(underTest.accepts(SAMPLE_REFERENCE));
+    assertFalse(underTest.accepts("/content/dam/sample.jpg"));
     assertFalse(underTest.accepts("invalid"));
     assertFalse(underTest.accepts(""));
     assertFalse(underTest.accepts((String)null));
@@ -79,10 +81,23 @@ class NextGenDynamicMediaMediaSourceTest {
 
   @Test
   void testAccepts_withNextGenDynamicMediaConfigEnabled() {
-    registerMockNextGenDynamicMediaConfig(true);
+    registerMockNextGenDynamicMediaConfig(true, true);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
 
     assertTrue(underTest.accepts(SAMPLE_REFERENCE));
+    assertTrue(underTest.accepts("/content/dam/sample.jpg"));
+    assertFalse(underTest.accepts("invalid"));
+    assertFalse(underTest.accepts(""));
+    assertFalse(underTest.accepts((String)null));
+  }
+
+  @Test
+  void testAccepts_withNextGenDynamicMediaConfigEnabled_NoLocalAssets() {
+    registerMockNextGenDynamicMediaConfig(true, false);
+    NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
+
+    assertTrue(underTest.accepts(SAMPLE_REFERENCE));
+    assertFalse(underTest.accepts("/content/dam/sample.jpg"));
     assertFalse(underTest.accepts("invalid"));
     assertFalse(underTest.accepts(""));
     assertFalse(underTest.accepts((String)null));
@@ -118,10 +133,11 @@ class NextGenDynamicMediaMediaSourceTest {
     assertEquals("cq-dd-image", img.getCssClass());
   }
 
-  void registerMockNextGenDynamicMediaConfig(boolean enabled) {
+  void registerMockNextGenDynamicMediaConfig(boolean enabled, boolean localAssets) {
     MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     nextGenDynamicMediaConfig.setEnabled(enabled);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "localAssets", localAssets);
   }
 }
