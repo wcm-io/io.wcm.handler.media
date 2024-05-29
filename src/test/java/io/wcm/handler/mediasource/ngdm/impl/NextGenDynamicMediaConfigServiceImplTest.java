@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.ngdm.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +56,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
   void testPropertiesDefaultConfig() {
     NextGenDynamicMediaConfigService underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
     assertTrue(underTest.enabled());
+    assertTrue(underTest.localAssets());
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
     assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}?accept-experimental=1", underTest.getImageDeliveryBasePath());
     assertEquals("/videopath1", underTest.getVideoDeliveryPath());
@@ -69,10 +71,12 @@ class NextGenDynamicMediaConfigServiceImplTest {
   @Test
   void testPropertiesEmptyConfig() {
     NextGenDynamicMediaConfigService underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "localAssets", false,
         "imageDeliveryBasePath", "",
         "assetOriginalBinaryDeliveryPath", "",
         "assetMetadataPath", "");
     assertTrue(underTest.enabled());
+    assertFalse(underTest.localAssets());
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
     assertEquals("/imagepath1", underTest.getImageDeliveryBasePath());
     assertEquals("/videopath1", underTest.getVideoDeliveryPath());
