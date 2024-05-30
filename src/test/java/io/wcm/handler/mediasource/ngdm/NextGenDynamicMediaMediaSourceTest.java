@@ -58,18 +58,6 @@ class NextGenDynamicMediaMediaSourceTest {
   }
 
   @Test
-  void testAccepts_withoutNextGenDynamicMediaConfig() {
-    registerMockNextGenDynamicMediaConfig(false, false);
-    NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
-
-    assertFalse(underTest.accepts(SAMPLE_REFERENCE));
-    assertFalse(underTest.accepts("/content/dam/sample.jpg"));
-    assertFalse(underTest.accepts("invalid"));
-    assertFalse(underTest.accepts(""));
-    assertFalse(underTest.accepts((String)null));
-  }
-
-  @Test
   void testAccepts_withNextGenDynamicMediaConfigDisabled() {
     registerMockNextGenDynamicMediaConfig(false, false);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
