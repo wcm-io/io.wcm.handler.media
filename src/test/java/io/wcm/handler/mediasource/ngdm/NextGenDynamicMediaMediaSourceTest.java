@@ -52,12 +52,14 @@ class NextGenDynamicMediaMediaSourceTest {
 
   @Test
   void testGetId() {
+    registerMockNextGenDynamicMediaConfig(false, false);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
     assertEquals(NextGenDynamicMediaMediaSource.ID, underTest.getId());
   }
 
   @Test
   void testAccepts_withoutNextGenDynamicMediaConfig() {
+    registerMockNextGenDynamicMediaConfig(false, false);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
 
     assertFalse(underTest.accepts(SAMPLE_REFERENCE));
@@ -69,7 +71,7 @@ class NextGenDynamicMediaMediaSourceTest {
 
   @Test
   void testAccepts_withNextGenDynamicMediaConfigDisabled() {
-    registerMockNextGenDynamicMediaConfig(false, true);
+    registerMockNextGenDynamicMediaConfig(false, false);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
 
     assertFalse(underTest.accepts(SAMPLE_REFERENCE));
@@ -106,6 +108,7 @@ class NextGenDynamicMediaMediaSourceTest {
   @Test
   @SuppressWarnings("null")
   void testEnableMediaDrop() {
+    registerMockNextGenDynamicMediaConfig(false, false);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
     MediaRequest mediaRequest = new MediaRequest(context.currentResource(), new MediaArgs());
 
@@ -117,6 +120,8 @@ class NextGenDynamicMediaMediaSourceTest {
   @Test
   @SuppressWarnings("null")
   void testEnableMediaDrop_Authoring() {
+    registerMockNextGenDynamicMediaConfig(false, false);
+
     // simulate component context
     ComponentContext wcmComponentContext = mock(ComponentContext.class);
     context.request().setAttribute(ComponentContext.CONTEXT_ATTR_NAME, wcmComponentContext);
@@ -133,11 +138,12 @@ class NextGenDynamicMediaMediaSourceTest {
     assertEquals("cq-dd-image", img.getCssClass());
   }
 
-  void registerMockNextGenDynamicMediaConfig(boolean enabled, boolean localAssets) {
+  void registerMockNextGenDynamicMediaConfig(boolean remoteAssets, boolean localAssets) {
     MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
-    nextGenDynamicMediaConfig.setEnabled(enabled);
+    nextGenDynamicMediaConfig.setEnabled(remoteAssets);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
     context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
-        "localAssets", localAssets);
+        "enabledLocalAssets", localAssets,
+        "localAssetsRepositoryId", "localrepo1");
   }
 }

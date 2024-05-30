@@ -51,7 +51,13 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
   public @Nullable String build() {
 
     // get parameters from nextgen dynamic media config for URL parameters
-    String repositoryId = context.getNextGenDynamicMediaConfig().getRepositoryId();
+    String repositoryId;
+    if (context.getReference().getAsset() != null) {
+      repositoryId = context.getNextGenDynamicMediaConfig().getLocalAssetsRepositoryId();
+    }
+    else {
+      repositoryId = context.getNextGenDynamicMediaConfig().getRemoteAssetsRepositoryId();
+    }
     String binaryDeliveryPath = context.getNextGenDynamicMediaConfig().getAssetOriginalBinaryDeliveryPath();
     if (StringUtils.isAnyEmpty(repositoryId, binaryDeliveryPath)) {
       return null;

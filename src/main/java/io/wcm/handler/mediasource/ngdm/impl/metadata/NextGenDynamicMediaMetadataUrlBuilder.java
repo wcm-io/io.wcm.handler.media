@@ -53,7 +53,7 @@ final class NextGenDynamicMediaMetadataUrlBuilder {
   public @Nullable String build(@NotNull NextGenDynamicMediaReference reference) {
 
     // get parameters from nextgen dynamic media config for URL parameters
-    String repositoryId = config.getRepositoryId();
+    String repositoryId = config.getRemoteAssetsRepositoryId();
     String metadataPath = config.getAssetMetadataPath();
     if (StringUtils.isAnyEmpty(repositoryId, metadataPath)) {
       return null;

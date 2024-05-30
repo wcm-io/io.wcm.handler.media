@@ -76,7 +76,13 @@ public final class NextGenDynamicMediaImageUrlBuilder {
   public @Nullable String build(@NotNull NextGenDynamicMediaImageDeliveryParams params) {
 
     // get parameters from nextgen dynamic media config for URL parameters
-    String repositoryId = context.getNextGenDynamicMediaConfig().getRepositoryId();
+    String repositoryId;
+    if (context.getReference().getAsset() != null) {
+      repositoryId = context.getNextGenDynamicMediaConfig().getLocalAssetsRepositoryId();
+    }
+    else {
+      repositoryId = context.getNextGenDynamicMediaConfig().getRemoteAssetsRepositoryId();
+    }
     String imageDeliveryPath = context.getNextGenDynamicMediaConfig().getImageDeliveryBasePath();
     if (StringUtils.isAnyEmpty(repositoryId, imageDeliveryPath)) {
       return null;

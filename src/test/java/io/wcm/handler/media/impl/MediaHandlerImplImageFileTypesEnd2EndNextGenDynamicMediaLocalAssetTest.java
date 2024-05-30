@@ -46,7 +46,8 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
     MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     nextGenDynamicMediaConfig.setEnabled(true);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "localAssetsRepositoryId", "localrepo1");
     super.setUp();
   }
 
@@ -55,7 +56,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_JPEG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -64,7 +65,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_JPEG_Original_ContentDisposition() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -73,7 +74,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_JPEG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
         ContentType.JPEG);
   }
 
@@ -82,7 +83,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_JPEG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -91,7 +92,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_JPEG_AutoCrop_ImageQuality() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=60",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=60",
         ContentType.JPEG, 0.6d);
   }
 
@@ -101,7 +102,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -110,7 +111,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_GIF_Original() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?accept-experimental=1&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?accept-experimental=1&preferwebp=true&quality=85",
         ContentType.GIF);
   }
 
@@ -119,7 +120,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_GIF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
         ContentType.JPEG);
   }
 
@@ -128,7 +129,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_GIF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -137,7 +138,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_PNG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?accept-experimental=1&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?accept-experimental=1&preferwebp=true&quality=85",
         ContentType.PNG);
   }
 
@@ -146,7 +147,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_PNG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
         ContentType.PNG);
   }
 
@@ -155,7 +156,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_PNG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.PNG);
   }
 
@@ -164,7 +165,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_TIFF_Original() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -173,7 +174,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_TIFF_Original_ContentDisposition() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
         ContentType.TIFF);
   }
 
@@ -182,7 +183,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_TIFF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
         ContentType.JPEG);
   }
 
@@ -191,7 +192,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_TIFF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -200,7 +201,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_SVG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/sample.svg?accept-experimental=1",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/sample.svg?accept-experimental=1",
         ContentType.SVG);
   }
 
@@ -209,7 +210,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_SVG_Original_ContentDisposition() {
     Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
     buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/sample.svg?accept-experimental=1",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/sample.svg?accept-experimental=1",
         ContentType.SVG);
   }
 
@@ -218,7 +219,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_SVG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/sample.svg?accept-experimental=1",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/sample.svg?accept-experimental=1",
         ContentType.SVG);
   }
 
