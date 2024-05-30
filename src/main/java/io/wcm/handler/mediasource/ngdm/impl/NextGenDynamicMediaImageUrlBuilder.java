@@ -84,7 +84,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       repositoryId = context.getNextGenDynamicMediaConfig().getRemoteAssetsRepositoryId();
     }
     String imageDeliveryPath = context.getNextGenDynamicMediaConfig().getImageDeliveryBasePath();
-    if (StringUtils.isAnyEmpty(repositoryId, imageDeliveryPath)) {
+    if (StringUtils.isAnyBlank(repositoryId, imageDeliveryPath)) {
       return null;
     }
 

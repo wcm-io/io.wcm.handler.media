@@ -59,7 +59,7 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
       repositoryId = context.getNextGenDynamicMediaConfig().getRemoteAssetsRepositoryId();
     }
     String binaryDeliveryPath = context.getNextGenDynamicMediaConfig().getAssetOriginalBinaryDeliveryPath();
-    if (StringUtils.isAnyEmpty(repositoryId, binaryDeliveryPath)) {
+    if (StringUtils.isAnyBlank(repositoryId, binaryDeliveryPath)) {
       return null;
     }
 

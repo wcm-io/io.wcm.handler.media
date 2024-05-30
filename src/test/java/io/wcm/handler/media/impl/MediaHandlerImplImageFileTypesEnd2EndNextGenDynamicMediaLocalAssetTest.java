@@ -47,6 +47,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
     nextGenDynamicMediaConfig.setEnabled(true);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
     context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledLocalAssets", "true",
         "localAssetsRepositoryId", "localrepo1");
     super.setUp();
   }

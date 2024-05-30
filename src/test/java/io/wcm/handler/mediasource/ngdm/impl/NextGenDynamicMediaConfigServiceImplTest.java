@@ -41,6 +41,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
   void testPropertiesDefaultConfig() {
     registerNextGenDynamicMediaConfig(context);
     NextGenDynamicMediaConfigService underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledLocalAssets", true,
         "localAssetsRepositoryId", "localrepo1");
     assertTrue(underTest.isEnabledRemoteAssets());
     assertTrue(underTest.isEnabledLocalAssets());
@@ -84,7 +85,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
   void testNoNextGenDynamicMediaConfig() {
     NextGenDynamicMediaConfigService underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
     assertFalse(underTest.isEnabledRemoteAssets());
-    assertTrue(underTest.isEnabledLocalAssets());
+    assertFalse(underTest.isEnabledLocalAssets());
     assertNull(underTest.getAssetSelectorsJsUrl());
     assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}?accept-experimental=1", underTest.getImageDeliveryBasePath());
     assertNull(underTest.getVideoDeliveryPath());

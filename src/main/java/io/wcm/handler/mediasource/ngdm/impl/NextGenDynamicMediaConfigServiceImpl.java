@@ -55,12 +55,12 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
     @AttributeDefinition(
         name = "Local Assets",
         description = "Enable Next Generation Dynamic Media for local assets in this AEMaaCS instance.")
-    boolean enabledLocalAssets() default true;
+    boolean enabledLocalAssets() default false;
 
     @AttributeDefinition(
         name = "Repository ID for Local Assets",
         description = "Next Generation Dynamic Media Delivery host name for local assets. Mandatory if local assets is enabled.")
-    String localAssetsRepositoryId() default "$[env:LOCAL_ASSET_DELIVERY_REPOSITORY_ID;default=]";
+    String localAssetsRepositoryId();
 
     @AttributeDefinition(
         name = "Image Delivery Base Path",
@@ -124,7 +124,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
     enabledLocalAssets = config.enabledLocalAssets();
     localAssetsRepositoryId = config.localAssetsRepositoryId();
-    if (enabledLocalAssets && StringUtils.isEmpty(localAssetsRepositoryId)) {
+    if (enabledLocalAssets && StringUtils.isBlank(localAssetsRepositoryId)) {
       log.debug("localAssetsRepositoryId is not configured, disable local assets.");
       enabledLocalAssets = false;
     }
