@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.ngdm;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -114,8 +115,17 @@ final class NextGenDynamicMediaAsset implements Asset {
   }
 
   @Override
-  public <AdapterType> @Nullable AdapterType adaptTo(@NotNull Class<AdapterType> arg0) {
-    // not adaption supported
+  @SuppressWarnings("unchecked")
+  public <AdapterType> @Nullable AdapterType adaptTo(@NotNull Class<AdapterType> type) {
+    com.day.cq.dam.api.Asset asset = context.getReference().getAsset();
+    if (asset != null) {
+      if (type == com.day.cq.dam.api.Asset.class) {
+        return (AdapterType)asset;
+      }
+      if (type == Resource.class) {
+        return (AdapterType)asset.adaptTo(Resource.class);
+      }
+    }
     return null;
   }
 
