@@ -93,13 +93,20 @@ class NextGenDynamicMediaReferenceTest {
   }
 
   @Test
-  void testFromDamAssetReference_AssetWithoutUUID() {
-    Asset asset = context.create().asset("/content/dam/asset1.jpg", 10, 10, ContentType.JPEG);
+  void testFromDamAssetReference_AssetWithoutUUID_Approved() {
+    Asset asset = context.create().asset("/content/dam/asset1.jpg", 10, 10, ContentType.JPEG,
+        ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
     assertNull(NextGenDynamicMediaReference.fromDamAssetReference(asset.getPath(), context.resourceResolver()));
   }
 
   @Test
-  void testFromDamAssetReference_AssetWithUUID() {
+  void testFromDamAssetReference_AssetWithUUID_NotApproved() {
+    Asset asset = context.create().asset("/content/dam/" + SAMPLE_FILENAME, 10, 10, ContentType.JPEG);
+    assertNull(NextGenDynamicMediaReference.fromDamAssetReference(asset.getPath(), context.resourceResolver()));
+  }
+
+  @Test
+  void testFromDamAssetReference_AssetWithUUID_Approved() {
     Asset asset = context.create().asset("/content/dam/" + SAMPLE_FILENAME, 10, 10, ContentType.JPEG,
         ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
     ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
