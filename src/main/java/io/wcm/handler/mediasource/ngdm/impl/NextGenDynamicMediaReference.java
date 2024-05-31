@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +30,8 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 
@@ -44,6 +49,8 @@ public final class NextGenDynamicMediaReference {
   private final String assetId;
   private final String fileName;
   private final Asset asset;
+
+  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaReference.class);
 
   /**
    * @param assetId Asset ID (has to start with "urn:")
@@ -131,6 +138,12 @@ public final class NextGenDynamicMediaReference {
     }
     String uuid = asset.getID();
     if (StringUtils.isBlank(uuid)) {
+      log.trace("Ignoring DAM asset without UUID: {}", asset.getPath());
+      return null;
+    }
+    String damStatus = asset.getMetadataValueFromJcr(ASSET_STATUS_PROPERTY);
+    if (!StringUtils.equals(damStatus, ASSET_STATUS_APPROVED)) {
+      log.trace("Ignoring DAM asset with {}='{}' (expected '{}')", ASSET_STATUS_PROPERTY, damStatus, ASSET_STATUS_APPROVED);
       return null;
     }
     String assetId = "urn:aaid:aem:" + uuid;

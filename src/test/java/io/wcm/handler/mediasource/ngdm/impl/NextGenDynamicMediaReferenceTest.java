@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
@@ -98,7 +100,8 @@ class NextGenDynamicMediaReferenceTest {
 
   @Test
   void testFromDamAssetReference_AssetWithUUID() {
-    Asset asset = context.create().asset("/content/dam/" + SAMPLE_FILENAME, 10, 10, ContentType.JPEG);
+    Asset asset = context.create().asset("/content/dam/" + SAMPLE_FILENAME, 10, 10, ContentType.JPEG,
+        ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
     ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
     props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
 

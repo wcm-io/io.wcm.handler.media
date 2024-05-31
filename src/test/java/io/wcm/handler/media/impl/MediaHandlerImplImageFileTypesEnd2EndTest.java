@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.media.impl;
 
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
 import static io.wcm.handler.media.MediaNameConstants.NN_MEDIA_INLINE;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -37,7 +39,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -398,12 +399,10 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
   Asset createSampleAsset(String classpathResource, String contentType) {
     String fileName = FilenameUtils.getName(classpathResource);
     String fileExtension = FilenameUtils.getExtension(classpathResource);
-    Map<String, Object> metadata;
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put(ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
     if (isCreateAssetWithDynamicMediaMetadata()) {
-      metadata = MapUtil.toMap(Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
-    }
-    else {
-      metadata = Collections.emptyMap();
+      metadata.put(Scene7Constants.PN_S7_FILE, "DummyFolder/" + fileName);
     }
     Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType, metadata);
     context.create().assetRendition(asset, "cq5dam.web.sample." + fileExtension, classpathResource, contentType);
