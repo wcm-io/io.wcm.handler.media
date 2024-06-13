@@ -567,9 +567,9 @@ public final class MediaFormat implements Comparable<MediaFormat> {
 
       // add extended display parts
       if (!extParts.isEmpty()) {
-        sb.append(" (");
-        sb.append(StringUtils.join(extParts, "; "));
-        sb.append(')');
+        sb.append(" (")
+            .append(StringUtils.join(extParts, "; "))
+            .append(')');
       }
 
       combinedTitle = sb.toString();

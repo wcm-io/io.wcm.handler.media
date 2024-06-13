@@ -223,7 +223,7 @@ public enum MediaFileType {
       return null;
     }
     String contentTypeLowerCase = StringUtils.toRootLowerCase(contentType);
-    return Stream.of(MediaFileType.values())
+    return Stream.of(values())
         .filter(type -> type.getContentTypes().contains(contentTypeLowerCase))
         .findFirst()
         .orElse(null);
@@ -240,7 +240,7 @@ public enum MediaFileType {
       return null;
     }
     String extensionLowerCase = StringUtils.toRootLowerCase(extension);
-    return Stream.of(MediaFileType.values())
+    return Stream.of(values())
         .filter(type -> type.getExtensions().contains(extensionLowerCase))
         .findFirst()
         .orElse(null);

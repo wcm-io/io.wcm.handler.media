@@ -179,22 +179,22 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    */
   public @NotNull String getMediaPath(boolean contentDispositionAttachment) {
     if (contentDispositionAttachment) {
-      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServletConstants.SELECTOR
+      return buildMediaPath(getRendition().getPath() + "." + MediaFileServletConstants.SELECTOR
           + "." + MediaFileServletConstants.SELECTOR_DOWNLOAD
           + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
     }
     else if (MediaFileType.isVectorImage(getFileExtension())) {
-      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + MediaFileServletConstants.SELECTOR
+      return buildMediaPath(getRendition().getPath() + "." + MediaFileServletConstants.SELECTOR
           + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
     }
     else if (MediaFileType.isBrowserImage(getFileExtension()) || !MediaFileType.isImage(getFileExtension())) {
       // use "deep URL" to reference rendition directly
       // do not use Asset URL for original rendition because it creates conflicts for dispatcher cache (filename vs. directory for asset resource name)
-      return RenditionMetadata.buildMediaPath(this.rendition.getPath() + ".", getFileName(contentDispositionAttachment));
+      return buildMediaPath(this.rendition.getPath() + ".", getFileName(contentDispositionAttachment));
     }
     else {
       // image rendition uses a file extension that cannot be displayed in browser directly - render via ImageFileServlet
-      return RenditionMetadata.buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
+      return buildMediaPath(getRendition().getPath() + "." + ImageFileServlet.SELECTOR
           + "." + getWidth() + "." + getHeight()
           + "." + MediaFileServletConstants.EXTENSION, getFileName(contentDispositionAttachment));
     }
