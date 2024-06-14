@@ -65,6 +65,13 @@ class AemObjectsReflectionToStringBuilderTest {
   }
 
   @Test
+  void testBuild_NullObjects() {
+    ClassWithFields obj = new ClassWithFields();
+
+    assertEquals("[page=<null>,prop1=<null>,props=<null>,resource=<null>]", obj.toString());
+  }
+
+  @Test
   void testFilteredValueMap() {
     Map<String, Object> filtered = AemObjectsReflectionToStringBuilder.filteredValueMap(VALUEMAP_SAMPLE);
 
