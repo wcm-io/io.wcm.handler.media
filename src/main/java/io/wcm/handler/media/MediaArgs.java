@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.impl.AemObjectsReflectionToStringBuilder;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.mediasource.dam.AemRenditionType;
@@ -843,7 +844,7 @@ public final class MediaArgs implements Cloneable {
       sb.append("webOptimizedImageDeliveryDisabled", webOptimizedImageDeliveryDisabled);
     }
     if (properties != null && !properties.isEmpty()) {
-      sb.append("properties", properties);
+      sb.append("properties", AemObjectsReflectionToStringBuilder.filteredValueMap(properties));
     }
     return sb.build();
   }

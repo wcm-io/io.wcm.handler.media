@@ -21,9 +21,8 @@ package io.wcm.handler.media.impl;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.sling.api.resource.Resource;
@@ -80,10 +79,10 @@ public class AemObjectsReflectionToStringBuilder extends ReflectionToStringBuild
    * @param props Value map
    * @return Filtered value map
    */
-  private Map<String, Object> filteredValueMap(ValueMap props) {
-    return MapUtils.predicatedMap(props,
-        key -> !key.startsWith("jcr:"),
-        Objects::nonNull);
+  public static Map<String, Object> filteredValueMap(ValueMap props) {
+    return props.entrySet().stream()
+        .filter(entry -> !entry.getKey().startsWith("jcr:") && entry.getValue() != null)
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
 }

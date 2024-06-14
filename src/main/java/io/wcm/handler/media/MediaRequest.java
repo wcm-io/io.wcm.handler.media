@@ -119,11 +119,11 @@ public final class MediaRequest {
 
   @Override
   public String toString() {
-    ToStringBuilder sb = new AemObjectsReflectionToStringBuilder(this,
+    ToStringBuilder sb = new ToStringBuilder(this,
         io.wcm.wcm.commons.util.ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
     if (resource != null) {
-      sb.append("resource", resource);
-      sb.append("resourceProperties", resource.getValueMap());
+      sb.append("resource", resource.getPath());
+      sb.append("resourceProperties", AemObjectsReflectionToStringBuilder.filteredValueMap(resource.getValueMap()));
     }
     if (mediaRef != null) {
       sb.append("mediaRef", mediaRef);
