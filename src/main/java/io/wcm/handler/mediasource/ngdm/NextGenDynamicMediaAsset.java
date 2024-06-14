@@ -132,10 +132,14 @@ final class NextGenDynamicMediaAsset implements Asset {
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this)
+    ToStringBuilder sb = new ToStringBuilder(this)
         .append("reference", context.getReference())
-        .append("metadata", context.getMetadata())
-        .toString();
+        .append("metadata", context.getMetadata());
+    com.day.cq.dam.api.Asset asset = context.getReference().getAsset();
+    if (asset != null) {
+      sb.append("asset", asset.getPath());
+    }
+    return sb.toString();
   }
 
 }
