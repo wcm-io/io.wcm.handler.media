@@ -46,11 +46,13 @@ class AemObjectsReflectionToStringBuilderTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
+  @SuppressWarnings("null")
   private static final ValueMap VALUEMAP_SAMPLE = ImmutableValueMap.of(
       "prop1", "value1",
       JCR_CREATED, new Date(),
       JCR_PRIMARYTYPE, NT_UNSTRUCTURED,
-      "prop2", 5);
+      "prop2", 5,
+      "prop3", null);
 
   @Test
   void testBuild() {
