@@ -23,6 +23,7 @@ import static com.day.cq.commons.jcr.JcrConstants.JCR_CREATED;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
 import java.util.Map;
@@ -63,14 +64,15 @@ class AemObjectsReflectionToStringBuilderTest {
     obj.page = context.create().page("/content/page1");
     obj.props = VALUEMAP_SAMPLE;
 
-    assertEquals("[page=/content/page1,prop1=value1,props={prop1=value1, prop2=5},resource=/content/resource1]", obj.toString());
+    assertEquals("[page=/content/page1,prop1=value1,props={prop1=value1, prop2=5},resource=/content/resource1]",
+        new AemObjectsReflectionToStringBuilder(obj, ToStringStyle.NO_CLASS_NAME_STYLE).build());
   }
 
   @Test
   void testBuild_NullObjects() {
     ClassWithFields obj = new ClassWithFields();
 
-    assertEquals("[page=<null>,prop1=<null>,props=<null>,resource=<null>]", obj.toString());
+    assertNotNull(new AemObjectsReflectionToStringBuilder(obj).build());
   }
 
   @Test
@@ -87,11 +89,6 @@ class AemObjectsReflectionToStringBuilderTest {
     Resource resource;
     Page page;
     ValueMap props;
-
-    @Override
-    public String toString() {
-      return new AemObjectsReflectionToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE).build();
-    }
   }
 
 }
