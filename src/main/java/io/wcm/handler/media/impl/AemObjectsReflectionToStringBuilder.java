@@ -21,6 +21,7 @@ package io.wcm.handler.media.impl;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -77,12 +78,12 @@ public class AemObjectsReflectionToStringBuilder extends ReflectionToStringBuild
   /**
    * Filter value map to exclude jcr:* properties and null values.
    * @param props Value map
-   * @return Filtered value map
+   * @return Filtered value map, sorted by key
    */
   public static Map<String, Object> filteredValueMap(ValueMap props) {
     return props.entrySet().stream()
         .filter(entry -> !entry.getKey().startsWith("jcr:") && entry.getValue() != null)
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o1, o2) -> o1, TreeMap::new));
   }
 
 }

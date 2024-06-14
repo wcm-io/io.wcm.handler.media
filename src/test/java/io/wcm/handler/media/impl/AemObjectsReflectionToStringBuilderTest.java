@@ -63,7 +63,7 @@ class AemObjectsReflectionToStringBuilderTest {
     obj.page = context.create().page("/content/page1");
     obj.props = VALUEMAP_SAMPLE;
 
-    assertEquals("[page=/content/page1,prop1=value1,props={prop2=5, prop1=value1},resource=/content/resource1]", obj.toString());
+    assertEquals("[page=/content/page1,prop1=value1,props={prop1=value1, prop2=5},resource=/content/resource1]", obj.toString());
   }
 
   @Test
