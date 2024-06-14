@@ -126,7 +126,7 @@ public final class AssetRenditionContentDispositionFilter implements Filter {
    */
   @SuppressWarnings("null")
   private boolean accepts(SlingHttpServletRequest request) {
-    return request.getMethod().equalsIgnoreCase(METHOD_GET)
+    return StringUtils.equalsIgnoreCase(request.getMethod(), METHOD_GET)
         && request.getResource() != null
         && StringUtils.equals(request.getResource().getValueMap().get(JCR_PRIMARYTYPE, String.class), NT_FILE);
   }

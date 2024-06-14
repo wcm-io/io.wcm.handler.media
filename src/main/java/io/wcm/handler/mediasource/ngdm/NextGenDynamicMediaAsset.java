@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -127,6 +128,14 @@ final class NextGenDynamicMediaAsset implements Asset {
       }
     }
     return null;
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this)
+        .append("reference", context.getReference())
+        .append("metadata", context.getMetadata())
+        .toString();
   }
 
 }

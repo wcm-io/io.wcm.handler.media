@@ -303,6 +303,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param media Media
    * @return Media format or null if none found
    */
+  @SuppressWarnings("null")
   protected final @Nullable MediaFormat getFirstMediaFormat(@NotNull Media media) {
     return media.getRenditions().stream()
         .map(Rendition::getMediaFormat)

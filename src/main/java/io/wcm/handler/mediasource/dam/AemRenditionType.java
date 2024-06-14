@@ -83,7 +83,7 @@ public enum AemRenditionType {
    */
   @SuppressWarnings("null")
   public static @Nullable AemRenditionType forRendition(@NotNull String renditionName) {
-    return Stream.of(AemRenditionType.values())
+    return Stream.of(values())
         .filter(type -> type.matches(renditionName))
         .findFirst()
         .orElse(null);

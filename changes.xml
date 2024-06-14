@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert" issue="52">
         Next Generation Dynamic Media: Support Next Generation Dynamic media not only for remote asset references, but also for local assets.
       </action>
+      <action type="update" dev="sseifert" issue="53">
+        Improve trace logging: Make log messages involving value maps and resource/page objects more compact and better readable.
+      </action>
     </release>
 
     <release version="2.0.8" date="2024-05-22">
