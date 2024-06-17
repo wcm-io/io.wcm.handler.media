@@ -90,13 +90,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
 
     // replace placeholders in delivery path
     String seoName = FilenameUtils.getBaseName(context.getReference().getFileName());
-    String format = context.getDefaultMediaArgs().getEnforceOutputFileExtension();
-    if (StringUtils.isEmpty(format)) {
-      format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(context.getReference().getFileName()));
-    }
-    if (!SUPPORTED_FORMATS.contains(format)) {
-      format = FileExtension.JPEG;
-    }
+    String format = getFileExtension();
     imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
     imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_SEO_NAME, seoName);
     imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_FORMAT, format);
@@ -157,6 +151,20 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       sb.append(value);
     }
     return sb.toString();
+  }
+
+  /**
+   * @return Get file extension used for rendering via DM API.
+   */
+  public @NotNull String getFileExtension() {
+    String format = context.getDefaultMediaArgs().getEnforceOutputFileExtension();
+    if (StringUtils.isEmpty(format)) {
+      format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(context.getReference().getFileName()));
+    }
+    if (format == null || !SUPPORTED_FORMATS.contains(format)) {
+      format = FileExtension.JPEG;
+    }
+    return format;
   }
 
 }

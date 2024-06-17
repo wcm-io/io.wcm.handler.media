@@ -60,6 +60,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
   private MediaFormat resolvedMediaFormat;
   private long width;
   private long height;
+  private String fileExtension;
 
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaRendition.class);
 
@@ -87,6 +88,11 @@ final class NextGenDynamicMediaRendition implements Rendition {
       }
     }
 
+    this.fileExtension = mediaArgs.getEnforceOutputFileExtension();
+    if (StringUtils.isEmpty(this.fileExtension)) {
+      this.fileExtension = FilenameUtils.getExtension(reference.getFileName());
+    }
+
     if (isVectorImage() || !isImage()) {
       // deliver as binary
       this.url = buildBinaryUrl();
@@ -98,6 +104,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
     else {
       // deliver scaled image rendition
       this.url = buildImageRenditionUrl();
+      this.fileExtension = new NextGenDynamicMediaImageUrlBuilder(context).getFileExtension();
     }
   }
 
@@ -169,11 +176,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @Nullable String getFileExtension() {
-    String extension = mediaArgs.getEnforceOutputFileExtension();
-    if (StringUtils.isEmpty(extension)) {
-      extension = FilenameUtils.getExtension(reference.getFileName());
-    }
-    return extension;
+    return this.fileExtension;
   }
 
   @Override
