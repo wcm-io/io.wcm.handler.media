@@ -23,9 +23,9 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="2.0.10" date="not released">
-      <action type="update" dev="sseifert" issue="52">
-        Dynamic Media with OpenAPI: Support Dynamic Media with OpenAPI not only for remote asset references, but also for local assets.
+    <release version="2.1.0" date="not released">
+      <action type="add" dev="sseifert" issue="52">
+        Dynamic Media with OpenAPI: Support Dynamic Media with OpenAPI also for local assets.
       </action>
       <action type="update" dev="sseifert" issue="53">
         Improve trace logging: Make log messages involving value maps and resource/page objects more compact and better readable.
