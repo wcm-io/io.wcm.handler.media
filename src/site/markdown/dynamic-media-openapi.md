@@ -59,7 +59,7 @@ See system configuration how to enable the metadata service.
 
 ### System configuration
 
-If Dynamic Media with OpenAPI is enabled for a AEMaaCS instance, it will work out-of-the-box with the Media Handler. In your project-specific implementation of `io.wcm.handler.media.spi.MediaHandlerConfig` you have to add the media sources implementation `io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaMediaSource` to the list returned by the `getSources()` method (overwrite it from the superclass if required). If you want to use local assets, make sure to put it on top of the list (above the `io.wcm.handler.mediasource.dam.DamMediaSource` media source).
+In your project-specific implementation of `io.wcm.handler.media.spi.MediaHandlerConfig` you have to add the media sources implementation `io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaMediaSource` to the list returned by the `getSources()` method (overwrite it from the superclass if required). If you want to use local assets, make sure to put it on top of the list (above the `io.wcm.handler.mediasource.dam.DamMediaSource` media source).
 
 Example:
 
@@ -80,7 +80,18 @@ public class MediaHandlerConfigImpl extends MediaHandlerConfig {
 }
 ```
 
-The "wcm.io Dynamic Media with OpenAPI Support" OSGi configuration allows to reconfigure the actual URLs used for the [Assets Delivery API (DM API)][aem-dm-api]. Usually you can stick with the default values which reflect the latest version of the DM API. Supporting local and/or remote assets is enabled by default, but can be disabled individually via this configuration as well.
+With this configuration, remote assets should work out-of-the-box, if a remote asset repository is configured for the AEMaaCS instance.
+
+The "wcm.io Dynamic Media with OpenAPI Support" OSGi configuration allows to reconfigure the actual URLs used for the [Assets Delivery API (DM API)][aem-dm-api]. Usually you can stick with the default values which reflect the latest version of the DM API. Remote assets are supported by default, but can be disabled via this configuration. Local assets are disabled by support, but can be enabled via this configuration. In this case, you also have to configure a repository ID for building the rendition URLs pointing to the AEMaaCS instance. Example:
+
+```json
+{
+  "enabledLocalAssets": true,
+  "localAssetsRepositoryId": "$[env:LOCAL_ASSET_DELIVERY_REPOSITORY_ID;default=]"
+}
+```
+
+With this, you can configure an environment variable `LOCAL_ASSET_DELIVERY_REPOSITORY_ID` pointing to the actual host name which usually has a syntax like `delivery-pXXXXX-eXXXXX.adobeaemcloud.com` with the corresponding program and environment numbers.
 
 The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the Asset Metadata support (see above). When this is enabled, for each resolved remote asset, a HTTP request is send from the server to the DM API, so make sure this is allowed in the network infrastructure (should work by default in AEMaaCS instances). Optionally, you can configure an proxy server and timeouts.
 

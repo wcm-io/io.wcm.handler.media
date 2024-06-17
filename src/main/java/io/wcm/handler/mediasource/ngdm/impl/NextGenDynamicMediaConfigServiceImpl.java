@@ -55,7 +55,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
     @AttributeDefinition(
         name = "Local Assets",
         description = "Enable Next Dynamic Media with OpenAPI for local assets in this AEMaaCS instance.")
-    boolean enabledLocalAssets() default true;
+    boolean enabledLocalAssets() default false;
 
     @AttributeDefinition(
         name = "Repository ID for Local Assets",
