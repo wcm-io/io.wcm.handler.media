@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Service to access Next Generation Dynamic Media configuration.
  */
@@ -40,15 +42,22 @@ public interface NextGenDynamicMediaConfigService {
   String PLACEHOLDER_FORMAT = "{format}";
 
   /**
-   * Checks if the configuration/feature is enabled.
-   * @return true if enabled and false otherwise
+   * Checks if enabled for remote assets, and the appropriate configuration is present.
+   * @return true if enabled for remote assets
    */
-  boolean enabled();
+  boolean isEnabledRemoteAssets();
+
+  /**
+   * Enable Next Generation Dynamic Media for local assets in this AEMaaCS instance.
+   * @return true if enabled for local assets.
+   */
+  boolean isEnabledLocalAssets();
 
   /**
    * Gets the absolute URL for the javascript which contains the microfrontend for the remote asset selector.
    * @return the absolute URL for the javascript which contains the microfrontend for the remote asset selector
    */
+  @Nullable
   String getAssetSelectorsJsUrl();
 
   /**
@@ -64,6 +73,7 @@ public interface NextGenDynamicMediaConfigService {
    * </ul>
    * @return the path expression for the image delivery path
    */
+  @Nullable
   String getImageDeliveryBasePath();
 
   /**
@@ -78,6 +88,7 @@ public interface NextGenDynamicMediaConfigService {
    * </ul>
    * @return the path expression for the video delivery path
    */
+  @Nullable
   String getVideoDeliveryPath();
 
   /**
@@ -91,6 +102,7 @@ public interface NextGenDynamicMediaConfigService {
    * </ul>
    * @return the path expression for the asset (bitstream) delivery path
    */
+  @Nullable
   String getAssetOriginalBinaryDeliveryPath();
 
   /**
@@ -103,30 +115,42 @@ public interface NextGenDynamicMediaConfigService {
    * </ul>
    * @return the path expression for the metadata path
    */
+  @Nullable
   String getAssetMetadataPath();
 
   /**
-   * Gets the Next Generation Dynamic Media tenant (also known technically as the repository ID).
+   * Gets the Next Generation Dynamic Media tenant (also known technically as the repository ID) for remote assets.
    * @return the repository ID
    */
-  String getRepositoryId();
+  @Nullable
+  String getRemoteAssetsRepositoryId();
+
+  /**
+   * Repository ID for serving local assets.
+   * @return the repository ID
+   */
+  @Nullable
+  String getLocalAssetsRepositoryId();
 
   /**
    * Gets the API key for accessing the asset selectors UI
    * @return the API key for accessing the asset selectors UI
    */
+  @Nullable
   String getApiKey();
 
   /**
    * Gets the environment string which should be 'PROD' or 'STAGE'
    * @return the environment string
    */
+  @Nullable
   String getEnv();
 
   /**
    * Gets the IMS client identifier
    * @return the IMS client identifier
    */
+  @Nullable
   String getImsClient();
 
 }

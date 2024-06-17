@@ -24,6 +24,7 @@ import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ALTTEXT;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_CROP;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_IS_DECORATIVE;
 import static io.wcm.handler.media.MediaNameConstants.PN_MEDIA_ROTATION;
+import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
@@ -39,7 +40,6 @@ import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTRO
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.SHOWROOM_FLYOUT_FEATURE;
-import static io.wcm.handler.media.testcontext.AppAemContext.ROOTPATH_CONTENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

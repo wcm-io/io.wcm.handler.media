@@ -24,7 +24,8 @@ package io.wcm.handler.mediasource.ngdm.impl;
  */
 public final class NextGenDynamicMediaReferenceSample {
 
-  public static final String SAMPLE_ASSET_ID = "urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678";
+  public static final String SAMPLE_UUID = "12345678-abcd-abcd-abcd-abcd12345678";
+  public static final String SAMPLE_ASSET_ID = "urn:aaid:aem:" + SAMPLE_UUID;
   public static final String SAMPLE_FILENAME = "my-image.jpg";
   public static final String SAMPLE_REFERENCE = "/" + SAMPLE_ASSET_ID + "/" + SAMPLE_FILENAME;
 

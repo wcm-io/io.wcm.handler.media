@@ -23,7 +23,10 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="2.0.10" date="not released">
+    <release version="2.1.0" date="not released">
+      <action type="add" dev="sseifert" issue="52">
+        Dynamic Media with OpenAPI: Support Dynamic Media with OpenAPI also for local assets.
+      </action>
       <action type="update" dev="sseifert" issue="53">
         Improve trace logging: Make log messages involving value maps and resource/page objects more compact and better readable.
       </action>
@@ -50,16 +53,16 @@
 
     <release version="2.0.2" date="2024-03-13">
       <action type="update" dev="sseifert" issue="44">
-        Next Generation Dynamic Media: Support non-image assets and SVG assets.
+        Dynamic Media with OpenAPI: Support non-image assets and SVG assets.
       </action>
       <action type="update" dev="sseifert" issue="45">
-        Next Generation Dynamic Media: Use latest NextGen Dynamic Media Asset URLs and make them configurable via OSGi config.
+        Dynamic Media with OpenAPI: Use latest NextGen Dynamic Media Asset URLs and make them configurable via OSGi config.
       </action>
       <action type="update" dev="sseifert" issue="47">
-        Next Generation Dynamic Media: Replace fileupload default pick/remote trigger with customized one to display the customized asset selector dialog.
+        Dynamic Media with OpenAPI: Replace fileupload default pick/remote trigger with customized one to display the customized asset selector dialog.
       </action>
       <action type="update" dev="sseifert" issue="48">
-        Next Generation Dynamic Media: Optionally fetch metadata of NGDM asset reference to check for validity and maximum possible resolution.
+        Dynamic Media with OpenAPI: Optionally fetch metadata of NGDM asset reference to check for validity and maximum possible resolution.
       </action>
     </release>
 
@@ -68,11 +71,11 @@
         Version 2.0.0 contains minor breaking API changes, see <a href=https://wcm-io.atlassian.net/wiki/x/AYBxsw">Migrate from wcm.io Handler 1.x to 2.x</a> for details.
       ]]></action>
       <action type="add" dev="sseifert" issue="30"><![CDATA[
-        Add support for Web-Optimized Image Delivery (part of Next Generation Dynamic Media) - rendering asset renditions from AEM Sites instance on the edge.<br/>
+        Add support for Web-Optimized Image Delivery (part of Dynamic Media with OpenAPI) - rendering asset renditions from AEM Sites instance on the edge.<br/>
         <b>This feature is active by default on AEMaaCS cloud instances, can be disabled via OSGi configuration</b>.
       ]]></action>
       <action type="add" dev="sseifert" issue="38">
-        Add support for Next Generation Dynamic Media remote assets. This is a first experimental support and will be finalized in release 2.0.2.
+        Add support for Dynamic Media with OpenAPI (also known as Next Generation Dynamic Media) remote assets. This is a first experimental support and will be finalized in release 2.0.2.
       </action>
       <action type="add" dev="sseifert" issue="33">
         Allow to set image quality per media request.

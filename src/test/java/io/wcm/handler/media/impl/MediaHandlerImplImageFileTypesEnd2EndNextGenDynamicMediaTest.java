@@ -24,6 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -97,6 +98,13 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
     buildAssertMedia_AutoCrop(asset, 50, 50,
         "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=60",
         ContentType.JPEG, 0.6d);
+  }
+
+  @Override
+  @Test
+  @Disabled("Not supported with NGDM")
+  void testAsset_JPEG_CropWithExplicitRendition() {
+    // disabled
   }
 
   @Override
