@@ -6,7 +6,7 @@ wcm.io Media Handler optionally supports the [Dynamic Media with OpenAPI][aem-ne
 * Delivery via Dynamic Media with OpenAPI CDN
 * AI-based Smart Cropping
 
-Dynamic Media with OpenAPI (formerly known as Dynamic Media with OpenAPI) has to be licensed separately and is not activated by default for AEMaaCS instances. It can be used for two use cases:
+Dynamic Media with OpenAPI (formerly known as Next Generation Dynamic Media) has to be licensed separately and is not activated by default for AEMaaCS instances. It can be used for two use cases:
 
 * Rendering remote assets referenced via the Remote Asset Picker from other assets instances
   * Those remote asset references typically start with `/urn:aaid:aem:...`.
@@ -59,20 +59,38 @@ See system configuration how to enable the metadata service.
 
 ### System configuration
 
-If Dynamic Media with OpenAPI is enabled for a AEMaaCS instance, it will work out-of-the-box with the Media Handler. In your project-specific implementation of `io.wcm.handler.media.spi.MediaHandlerConfig` you have to add the media sources implementation `io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaMediaSource` to the list returned by the `getSources()` method (overwrite it from the superclass if required).
+If Dynamic Media with OpenAPI is enabled for a AEMaaCS instance, it will work out-of-the-box with the Media Handler. In your project-specific implementation of `io.wcm.handler.media.spi.MediaHandlerConfig` you have to add the media sources implementation `io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaMediaSource` to the list returned by the `getSources()` method (overwrite it from the superclass if required). If you want to use local assets, make sure to put it on top of the list (above the `io.wcm.handler.mediasource.dam.DamMediaSource` media source).
 
-The "wcm.io Dynamic Media with OpenAPI Support" OSGi configuration allows to reconfigure the actual URLs used for the [Assets Delivery API (DM API)][aem-dm-api]. Usually you can stick with the default values which reflect the latest version of the DM API.
+Example:
+
+```java
+@Component(service = MediaHandlerConfig.class)
+public class MediaHandlerConfigImpl extends MediaHandlerConfig {
+
+  private static final List<Class<? extends MediaSource>> MEDIA_SOURCES = List.of(
+      NextGenDynamicMediaMediaSource.class,
+      DamMediaSource.class,
+      InlineMediaSource.class);
+
+  public @NotNull List<Class<? extends MediaSource>> getSources() {
+    return MEDIA_SOURCES;
+  }
+
+  // ...
+}
+```
+
+The "wcm.io Dynamic Media with OpenAPI Support" OSGi configuration allows to reconfigure the actual URLs used for the [Assets Delivery API (DM API)][aem-dm-api]. Usually you can stick with the default values which reflect the latest version of the DM API. Supporting local and/or remote assets is enabled by default, but can be disabled individually via this configuration as well.
 
 The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the Asset Metadata support (see above). When this is enabled, for each resolved remote asset, a HTTP request is send from the server to the DM API, so make sure this is allowed in the network infrastructure (should work by default in AEMaaCS instances). Optionally, you can configure an proxy server and timeouts.
 
 
-### Known Limitations (as of March 2024)
+### Known Limitations (as of June 2024)
 
-* The DM API URLs still have to contain an `accept-experimental` URL parameter, and the metadata services has to use an `X-Adobe-Accept-Experimental` HTTP header. Both will fade out once Dynamic Media with OpenAPI reaches full general availability (expected later in 2024).
 * Dynamic Media with OpenAPI is not supported in Media Handler for AEM 6.x, only for AEMaaCS
-* Same as the Adobe AEM WCM Core Components, currently only a single remote AEM Asset instance is supported, which is configured centrally as described in [Dynamic Media with OpenAPI][aem-nextgen-dm]. The media handler uses the same convention for referencing remote assets (using strings starting with `/urn:aaid:aem:...`). This convention also does not support multiple remote AEM Asset instances, as it does not include a pointer to the Repository ID.
+* Same as with the Adobe AEM WCM Core Components, currently only a single remote AEM Asset instance is supported, which is configured centrally as described in [Dynamic Media with OpenAPI][aem-nextgen-dm]. The media handler uses the same convention for referencing remote assets (using strings starting with `/urn:aaid:aem:...`). This convention also does not support multiple remote AEM Asset instances, as it does not include a pointer to the Repository ID.
 * If a component dialog is re-opened with a remote asset references and one of the Media Handler Granite UI widgets (e.g. pathfield), no thumbnail is displayed for the remote asset. But the reference is valid and works. The root cause is a bug/limitation in the underlying AEM pathfield component, which hopefully will be fixed soon by Adobe (SITES-19894).
-* The Dynamic Media with OpenAPI remote asset picker currently ignored any folder structures for assets on the remote AEM Asset instance.
+* The Dynamic Media with OpenAPI remote asset picker currently ignores any folder structures for assets on the remote AEM Asset instance.
 * The DM API currently does not support sending a "Content-Disposition: attachment" HTTP header for downloads. So, even if this is enforced by the Media Handler, it currently does not work for remote assets.
 
 
