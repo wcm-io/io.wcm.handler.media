@@ -43,23 +43,23 @@ import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMediaConfigService {
 
   @ObjectClassDefinition(
-      name = "wcm.io Media Handler Next Generation Dynamic Media Support",
+      name = "wcm.io Media Handler Dynamic Media with OpenAPI Support",
       description = "Support for Next Generation Dynamic Media.")
   @interface Config {
 
     @AttributeDefinition(
         name = "Remote Assets",
-        description = "Enable Next Generation Dynamic Media for references remote assets.")
+        description = "Enable Dynamic Media with OpenAPI for remote assets.")
     boolean enabledRemoteAssets() default true;
 
     @AttributeDefinition(
         name = "Local Assets",
-        description = "Enable Next Generation Dynamic Media for local assets in this AEMaaCS instance.")
-    boolean enabledLocalAssets() default false;
+        description = "Enable Next Dynamic Media with OpenAPI for local assets in this AEMaaCS instance.")
+    boolean enabledLocalAssets() default true;
 
     @AttributeDefinition(
         name = "Repository ID for Local Assets",
-        description = "Next Generation Dynamic Media Delivery host name for local assets. Mandatory if local assets is enabled.")
+        description = "Dynamic Media with OpenAPI Delivery host name for local assets. Mandatory if local assets is enabled.")
     String localAssetsRepositoryId();
 
     @AttributeDefinition(
