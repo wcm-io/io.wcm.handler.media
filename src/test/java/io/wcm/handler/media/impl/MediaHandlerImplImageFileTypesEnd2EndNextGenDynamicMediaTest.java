@@ -60,7 +60,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_JPEG_Original() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.jpg");
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -69,7 +69,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_JPEG_Original_ContentDisposition() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.jpg");
     buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -78,7 +78,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_JPEG_Rescale() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.jpg");
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
         ContentType.JPEG);
   }
 
@@ -87,7 +87,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_JPEG_AutoCrop() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.jpg");
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -96,7 +96,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_JPEG_AutoCrop_ImageQuality() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.jpg");
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=60",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?crop=1%3A1%2Csmart&preferwebp=true&quality=60",
         ContentType.JPEG, 0.6d);
   }
 
@@ -112,7 +112,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_GIF_Original() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.gif");
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.gif?accept-experimental=1&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.gif?preferwebp=true&quality=85",
         ContentType.GIF);
   }
 
@@ -121,7 +121,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_GIF_Rescale() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.gif");
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.gif?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.gif?crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
         ContentType.GIF);
   }
 
@@ -130,7 +130,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_GIF_AutoCrop() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.gif");
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.gif?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.gif?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.GIF);
   }
 
@@ -139,7 +139,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_PNG_Original() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.png");
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.png?accept-experimental=1&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.png?preferwebp=true&quality=85",
         ContentType.PNG);
   }
 
@@ -148,7 +148,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_PNG_Rescale() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.png");
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.png?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.png?crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
         ContentType.PNG);
   }
 
@@ -157,7 +157,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_PNG_AutoCrop() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.png");
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.png?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.png?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.PNG);
   }
 
@@ -166,7 +166,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_TIFF_Original() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.tif");
     buildAssertMedia(asset, 100, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -175,7 +175,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_TIFF_Original_ContentDisposition() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.tif");
     buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?preferwebp=true&quality=85",
         ContentType.TIFF);
   }
 
@@ -184,7 +184,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_TIFF_Rescale() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.tif");
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
         ContentType.JPEG);
   }
 
@@ -193,7 +193,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_TIFF_AutoCrop() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.tif");
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?accept-experimental=1&crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/sample.jpg?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -202,7 +202,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_SVG_Original() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
     buildAssertMedia(asset, 0, 0,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg?accept-experimental=1",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg",
         ContentType.SVG);
   }
 
@@ -211,7 +211,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_SVG_Original_ContentDisposition() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
     buildAssertMedia_ContentDisposition(asset, 0, 0,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg?accept-experimental=1",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg",
         ContentType.SVG);
   }
 
@@ -220,7 +220,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_SVG_Rescale() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
     buildAssertMedia_Rescale(asset, 0, 0,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg?accept-experimental=1",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg",
         ContentType.SVG);
   }
 
@@ -229,7 +229,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_SVG_AutoCrop() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
     buildAssertMedia_AutoCrop(asset, 0, 0,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg?accept-experimental=1",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg",
         ContentType.JPEG);
   }
 
