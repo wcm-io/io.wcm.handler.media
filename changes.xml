@@ -27,6 +27,9 @@
       <action type="add" dev="sseifert" issue="52">
         Dynamic Media with OpenAPI: Support Dynamic Media with OpenAPI also for local assets.
       </action>
+      <action type="update" dev="sseifert" issue="56">
+        Dynamic Media with OpenAPI: Download original binary when resolving media with download flag.
+      </action>
       <action type="update" dev="sseifert" issue="54">
         Dynamic Media with OpenAPI: Remove experimental URL parameters from default configuration.
       </action>

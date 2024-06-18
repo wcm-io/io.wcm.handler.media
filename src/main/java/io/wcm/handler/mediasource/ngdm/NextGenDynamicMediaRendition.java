@@ -93,7 +93,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
       this.fileExtension = FilenameUtils.getExtension(reference.getFileName());
     }
 
-    if (isVectorImage() || !isImage()) {
+    if (isVectorImage() || !isImage() || mediaArgs.isDownload()) {
       // deliver as binary
       this.url = buildBinaryUrl();
     }

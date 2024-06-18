@@ -226,6 +226,19 @@ class NextGenDynamicMediaTest {
     assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf", rendition.getUrl());
   }
 
+  @Test
+  void testImageDownload() {
+    Media media = mediaHandler.get(resource)
+        .args(new MediaArgs().download(true))
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(ContentType.JPEG, rendition.getMimeType());
+    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/my-image.jpg", rendition.getUrl());
+  }
+
   private static void assertUrl(Media media, String urlParams, String extension) {
     assertEquals(buildUrl(urlParams, extension), media.getUrl());
   }
