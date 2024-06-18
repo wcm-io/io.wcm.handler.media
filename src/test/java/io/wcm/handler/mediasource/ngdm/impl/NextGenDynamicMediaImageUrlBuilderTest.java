@@ -61,7 +61,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?accept-experimental=1&preferwebp=true",
+        + "?preferwebp=true",
         underTest.build(params));
   }
 
@@ -71,7 +71,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.png"
-        + "?accept-experimental=1&preferwebp=true",
+        + "?preferwebp=true",
         underTest.build(params));
   }
 
@@ -85,7 +85,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?accept-experimental=1&crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
+        + "?crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
         underTest.build(params));
   }
 
@@ -116,7 +116,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?accept-experimental=1&preferwebp=true&quality=60&width={w}",
+        + "?preferwebp=true&quality=60&width={w}",
         underTest.build(params));
   }
 

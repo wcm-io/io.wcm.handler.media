@@ -56,7 +56,7 @@ class NextGenDynamicMediaMetadataServiceImplTest {
   private final AemContext context = AppAemContext.newAemContext();
 
   @BeforeEach
-  void setUp(WireMockRuntimeInfo wmRuntimeInfo) throws Exception {
+  void setUp(WireMockRuntimeInfo wmRuntimeInfo) {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
         .setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
     context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);

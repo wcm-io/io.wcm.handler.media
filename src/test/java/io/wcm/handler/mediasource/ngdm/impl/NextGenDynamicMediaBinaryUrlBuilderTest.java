@@ -58,7 +58,7 @@ class NextGenDynamicMediaBinaryUrlBuilderTest {
   void testBuild() {
     NextGenDynamicMediaBinaryUrlBuilder underTest = getBuilder(new MediaArgs());
 
-    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/my-image.jpg?accept-experimental=1",
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/my-image.jpg",
         underTest.build());
   }
 

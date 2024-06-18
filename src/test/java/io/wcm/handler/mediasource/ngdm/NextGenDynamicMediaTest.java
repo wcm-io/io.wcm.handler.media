@@ -223,7 +223,7 @@ class NextGenDynamicMediaTest {
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
     assertEquals(ContentType.PDF, rendition.getMimeType());
-    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf?accept-experimental=1", rendition.getUrl());
+    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf", rendition.getUrl());
   }
 
   private static void assertUrl(Media media, String urlParams, String extension) {
@@ -243,7 +243,7 @@ class NextGenDynamicMediaTest {
 
   private static String buildUrl(String urlParams, String extension) {
     return "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
-        + extension + "?accept-experimental=1&" + urlParams;
+        + extension + "?" + urlParams;
   }
 
 }

@@ -46,9 +46,9 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertTrue(underTest.isEnabledRemoteAssets());
     assertTrue(underTest.isEnabledLocalAssets());
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
-    assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}?accept-experimental=1", underTest.getImageDeliveryBasePath());
+    assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}", underTest.getImageDeliveryBasePath());
     assertEquals("/videopath1", underTest.getVideoDeliveryPath());
-    assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}?accept-experimental=1", underTest.getAssetOriginalBinaryDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/metadata", underTest.getAssetMetadataPath());
     assertEquals("repo1", underTest.getRemoteAssetsRepositoryId());
     assertEquals("localrepo1", underTest.getLocalAssetsRepositoryId());
@@ -87,9 +87,9 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertFalse(underTest.isEnabledRemoteAssets());
     assertFalse(underTest.isEnabledLocalAssets());
     assertNull(underTest.getAssetSelectorsJsUrl());
-    assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}?accept-experimental=1", underTest.getImageDeliveryBasePath());
+    assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}", underTest.getImageDeliveryBasePath());
     assertNull(underTest.getVideoDeliveryPath());
-    assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}?accept-experimental=1", underTest.getAssetOriginalBinaryDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/metadata", underTest.getAssetMetadataPath());
     assertNull(underTest.getRemoteAssetsRepositoryId());
     assertNull(underTest.getApiKey());

@@ -68,7 +68,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
             + "Placeholders: " + PLACEHOLDER_ASSET_ID + ", " + PLACEHOLDER_SEO_NAME + ", " + PLACEHOLDER_FORMAT + ". "
             + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
     String imageDeliveryBasePath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/as/"
-        + PLACEHOLDER_SEO_NAME + "." + PLACEHOLDER_FORMAT + "?accept-experimental=1";
+        + PLACEHOLDER_SEO_NAME + "." + PLACEHOLDER_FORMAT;
 
     @AttributeDefinition(
         name = "Asset Original Binary Delivery Path",
@@ -76,7 +76,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
             + "Placeholders: " + PLACEHOLDER_ASSET_ID + ", " + PLACEHOLDER_SEO_NAME + ". "
             + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
     String assetOriginalBinaryDeliveryPath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/original/as/"
-        + PLACEHOLDER_SEO_NAME + "?accept-experimental=1";
+        + PLACEHOLDER_SEO_NAME;
 
     @AttributeDefinition(
         name = "Asset Metadata Path",

@@ -109,5 +109,4 @@ The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the As
 [aem-dm-api]: https://adobe-aem-assets-delivery-experimental.redoc.ly/
 [general-concepts]: general-concepts.html
 [file-format-support]: file-format-support.html
-[configuration]: configuration.html
 [wcm-core-components]: https://wcm.io/wcm/core-components/
