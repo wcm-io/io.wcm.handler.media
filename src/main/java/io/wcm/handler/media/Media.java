@@ -284,6 +284,7 @@ public final class Media {
   @Override
   public String toString() {
     ToStringBuilder sb = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    sb.append("valid", isValid());
     if (isValid()) {
       sb.append("url", getUrl());
     }

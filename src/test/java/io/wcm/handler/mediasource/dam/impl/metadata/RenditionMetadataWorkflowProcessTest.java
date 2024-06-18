@@ -73,7 +73,7 @@ class RenditionMetadataWorkflowProcessTest {
 
   @BeforeEach
   @SuppressWarnings("null")
-  void setUp() throws Exception {
+  void setUp() {
     when(workItem.getWorkflowData()).thenReturn(workflowData);
     when(workflowData.getPayloadType()).thenReturn(PayloadMap.TYPE_JCR_PATH);
     when(workflowSession.adaptTo(ResourceResolver.class)).thenReturn(context.resourceResolver());

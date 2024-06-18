@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
-import io.wcm.handler.media.impl.AemObjectsReflectionToStringBuilder;
+import io.wcm.wcm.commons.util.AemObjectReflectionToStringBuilder;
 
 /**
  * Holds all properties that are part of a media handling request.
@@ -123,7 +123,7 @@ public final class MediaRequest {
         io.wcm.wcm.commons.util.ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE);
     if (resource != null) {
       sb.append("resource", resource.getPath());
-      sb.append("resourceProperties", AemObjectsReflectionToStringBuilder.filteredValueMap(resource.getValueMap()));
+      sb.append("resourceProperties", AemObjectReflectionToStringBuilder.filteredValueMap(resource.getValueMap()));
     }
     if (mediaRef != null) {
       sb.append("mediaRef", mediaRef);

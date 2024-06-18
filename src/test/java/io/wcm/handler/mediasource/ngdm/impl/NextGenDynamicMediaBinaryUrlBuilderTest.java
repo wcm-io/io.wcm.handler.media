@@ -45,7 +45,7 @@ class NextGenDynamicMediaBinaryUrlBuilderTest {
   private MimeTypeService mimeTypeService;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
         .setRepositoryId("repo1");
     nextGenDynamicMediaConfig = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
