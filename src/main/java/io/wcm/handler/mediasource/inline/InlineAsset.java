@@ -35,8 +35,8 @@ import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
-import io.wcm.handler.media.impl.AemObjectsReflectionToStringBuilder;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.wcm.commons.util.AemObjectReflectionToStringBuilder;
 
 /**
  * {@link Asset} implementation for inline media objects stored in a node in a content page.
@@ -168,7 +168,7 @@ class InlineAsset extends SlingAdaptable implements Asset {
 
   @Override
   public String toString() {
-    return new AemObjectsReflectionToStringBuilder(this,
+    return new AemObjectReflectionToStringBuilder(this,
         io.wcm.wcm.commons.util.ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE).build();
   }
 
