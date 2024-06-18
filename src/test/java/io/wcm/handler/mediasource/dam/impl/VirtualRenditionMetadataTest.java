@@ -54,14 +54,14 @@ class VirtualRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  void testGetLayer() throws Exception {
+  void testGetLayer() {
     Layer layer = underTest.getLayer();
     assertEquals(108, layer.getWidth());
     assertEquals(51, layer.getHeight());
   }
 
   @Test
-  void testGetInputStream() throws Exception {
+  void testGetInputStream() {
     InputStream is = underTest.getInputStream();
     assertNull(is);
   }

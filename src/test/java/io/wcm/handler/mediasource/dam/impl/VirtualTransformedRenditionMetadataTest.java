@@ -55,7 +55,7 @@ class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  void testGetLayer_cropping() throws Exception {
+  void testGetLayer_cropping() {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 30, 25,
         null, new CropDimension(5, 5, 30, 25), null, null);
 
@@ -65,7 +65,7 @@ class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  void testGetLayer_cropping_resize() throws Exception {
+  void testGetLayer_cropping_resize() {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 30, 25,
         null, new CropDimension(5, 5, 60, 50), null, null);
 
@@ -75,7 +75,7 @@ class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  void testGetLayer_rotation() throws Exception {
+  void testGetLayer_rotation() {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 102, 215,
         null, null, 90, null);
 
@@ -85,7 +85,7 @@ class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  void testGetLayer_cropping_rotation() throws Exception {
+  void testGetLayer_cropping_rotation() {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 25, 30,
         null, new CropDimension(5, 5, 25, 30), 180, null);
 
@@ -95,7 +95,7 @@ class VirtualTransformedRenditionMetadataTest extends AbstractDamTest {
   }
 
   @Test
-  void testGetInputStream() throws Exception {
+  void testGetInputStream() {
     VirtualTransformedRenditionMetadata underTest = new VirtualTransformedRenditionMetadata(rendition, 108, 51,
         null, new CropDimension(5, 5, 30, 25), null, null);
 

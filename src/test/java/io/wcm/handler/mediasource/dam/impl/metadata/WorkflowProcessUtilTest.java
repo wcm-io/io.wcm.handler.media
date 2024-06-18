@@ -66,7 +66,7 @@ class WorkflowProcessUtilTest {
   private WorkflowData workflowData;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     samplePage1 = context.create().page("/content/mysite/page1");
     samplePage2 = context.create().page("/content/mysite/page2");
     sampleAsset = context.create().asset("/content/dam/asset1.jpg", 10, 10, "image/jpeg");

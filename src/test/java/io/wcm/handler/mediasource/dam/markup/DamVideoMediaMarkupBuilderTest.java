@@ -47,7 +47,7 @@ class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
   private DamVideoMediaMarkupBuilder underTest;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     // prepare video profiles
     context.load().json("/mediasource/dam/dam-video-profiles.json", "/etc/dam/video");
 
@@ -57,7 +57,7 @@ class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
   }
 
   @Test
-  void testAccepts() throws Exception {
+  void testAccepts() {
     // accepts video
     assertTrue(underTest.accepts(video));
     // does not accept image
@@ -68,7 +68,7 @@ class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
   }
 
   @Test
-  void testBuild() throws Exception {
+  void testBuild() {
     HtmlElement element = underTest.build(video);
     assertTrue(element instanceof Video);
 

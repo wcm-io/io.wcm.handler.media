@@ -110,7 +110,7 @@ public abstract class AbstractDamTest {
   private MediaHandler mediaHandler;
 
   @BeforeEach
-  final void setUpDamEnvironment() throws Exception {
+  final void setUpDamEnvironment() {
 
     // simulate HTML requests for integrator mode
     context.requestPathInfo().setExtension(FileExtension.HTML);
