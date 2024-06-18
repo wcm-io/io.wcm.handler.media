@@ -28,7 +28,7 @@
         Dynamic Media with OpenAPI: Support Dynamic Media with OpenAPI also for local assets.
       </action>
       <action type="update" dev="sseifert" issue="54">
-        Dynamic Media with OpenAPI: Remove experimental URL parameter/HTTP header from default configuration.
+        Dynamic Media with OpenAPI: Remove experimental URL parameters from default configuration.
       </action>
       <action type="update" dev="sseifert" issue="53">
         Improve trace logging: Make log messages involving value maps and resource/page objects more compact and better readable.
