@@ -88,7 +88,7 @@ class MediaMarkupBuilderUtilTest {
 
   @BeforeEach
   @SuppressWarnings("null")
-  void setUp() throws Exception {
+  void setUp() {
     when(request.getResourceResolver()).thenReturn(resolver);
     when(resolver.adaptTo(PageManager.class)).thenReturn(pageManager);
     when(request.getResource()).thenReturn(resource);
