@@ -33,3 +33,4 @@ npm-debug.log
 .vlt-sync*
 .brackets.json
 .aio
+dependency-reduced-pom.xml
