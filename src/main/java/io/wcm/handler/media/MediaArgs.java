@@ -919,14 +919,23 @@ public final class MediaArgs implements Cloneable {
       this.mandatory = mandatory;
     }
 
+    /**
+     * @return Media format
+     */
     public @Nullable MediaFormat getMediaFormat() {
       return this.mediaFormat;
     }
 
+    /**
+     * @return Media format name
+     */
     public @Nullable String getMediaFormatName() {
       return this.mediaFormatName;
     }
 
+    /**
+     * @return Resolution of this media format is mandatory
+     */
     public boolean isMandatory() {
       return this.mandatory;
     }
