@@ -77,6 +77,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
    * @param params Parameters
    * @return URL or null if invalid/not possible
    */
+  @SuppressWarnings("java:S3776") // complexity
   public @Nullable String build(@NotNull NextGenDynamicMediaImageDeliveryParams params) {
 
     // get parameters from nextgen dynamic media config for URL parameters
