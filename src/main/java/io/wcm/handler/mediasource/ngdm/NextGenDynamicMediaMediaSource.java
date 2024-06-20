@@ -91,7 +91,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private ComponentContext componentContext;
 
-  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaReference.class);
+  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaMediaSource.class);
 
   @Override
   public @NotNull String getId() {
