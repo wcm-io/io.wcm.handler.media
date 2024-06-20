@@ -36,7 +36,7 @@ public enum MediaInvalidReason {
 
   /**
    * Media reference is valid, but the media is not approved.
-   * This is only relevant for media served via Dynamic Media with OpenAPI.
+   * This is only relevant for local assets served via Dynamic Media with OpenAPI.
    */
   NOT_APPROVED,
 
