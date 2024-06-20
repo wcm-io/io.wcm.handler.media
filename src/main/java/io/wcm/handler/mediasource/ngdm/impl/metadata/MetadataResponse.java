@@ -43,6 +43,8 @@ final class MetadataResponse {
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   static final class AssetMetadata {
+    @JsonProperty("dam:assetStatus")
+    public String assetStatus;
     @JsonProperty("tiff:ImageWidth")
     public long tiffImageWidth;
     @JsonProperty("tiff:ImageLength")

@@ -138,10 +138,6 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
     NextGenDynamicMediaMetadata metadata = null;
     Asset localAsset = reference.getAsset();
     if (localAsset != null) {
-      if (!isAssetApproved(localAsset)) {
-        media.setMediaInvalidReason(MediaInvalidReason.NOT_APPROVED);
-        return media;
-      }
       metadata = getMetadataFromAsset(localAsset);
     }
     else if (metadataService != null && metadataService.isEnabled()) {
@@ -150,6 +146,13 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
         media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
         return media;
       }
+    }
+
+    // Do not accept assets that are not approved
+    if (metadata != null && !StringUtils.equals(metadata.getAssetStatus(), ASSET_STATUS_APPROVED)) {
+      log.trace("Reject asset with {}={} (expected: {})", ASSET_STATUS_PROPERTY, metadata.getAssetStatus(), ASSET_STATUS_APPROVED);
+      media.setMediaInvalidReason(MediaInvalidReason.NOT_APPROVED);
+      return media;
     }
 
     // Update media args settings from resource (e.g. alt. text setings)
@@ -189,15 +192,6 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
       }
     }
     return null;
-  }
-
-  private boolean isAssetApproved(@NotNull Asset asset) {
-    String damStatus = asset.getMetadataValueFromJcr(ASSET_STATUS_PROPERTY);
-    if (StringUtils.equals(damStatus, ASSET_STATUS_APPROVED)) {
-      return true;
-    }
-    log.trace("Ignoring DAM asset with {}='{}' (expected '{}')", ASSET_STATUS_PROPERTY, damStatus, ASSET_STATUS_APPROVED);
-    return false;
   }
 
   private @Nullable NextGenDynamicMediaMetadata getMetadataFromAsset(@NotNull Asset asset) {

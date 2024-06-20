@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PENDING;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_PDF;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,8 +53,9 @@ class NextGenDynamicMediaMetadataTest {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson("{}");
     assertEquals(ContentType.OCTET_STREAM, metadata.getMimeType());
     assertNull(metadata.getDimension());
+    assertNull(metadata.getAssetStatus());
     assertFalse(metadata.isValid());
-    assertEquals("[dimension=<null>,mimeType=<null>]", metadata.toString());
+    assertEquals("[assetStatus=<null>,dimension=<null>,mimeType=<null>]", metadata.toString());
   }
 
   @Test
@@ -62,8 +66,9 @@ class NextGenDynamicMediaMetadataTest {
     assertNotNull(dimension);
     assertEquals(1200, dimension.getWidth());
     assertEquals(800, dimension.getHeight());
+    assertEquals(ASSET_STATUS_APPROVED, metadata.getAssetStatus());
     assertTrue(metadata.isValid());
-    assertEquals("[dimension=[width=1200,height=800],mimeType=image/jpeg]", metadata.toString());
+    assertEquals("[assetStatus=approved,dimension=[width=1200,height=800],mimeType=image/jpeg]", metadata.toString());
   }
 
   @Test
@@ -71,8 +76,9 @@ class NextGenDynamicMediaMetadataTest {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_PDF);
     assertEquals(ContentType.PDF, metadata.getMimeType());
     assertNull(metadata.getDimension());
+    assertEquals(ASSET_STATUS_APPROVED, metadata.getAssetStatus());
     assertTrue(metadata.isValid());
-    assertEquals("[dimension=<null>,mimeType=application/pdf]", metadata.toString());
+    assertEquals("[assetStatus=approved,dimension=<null>,mimeType=application/pdf]", metadata.toString());
   }
 
   @Test
@@ -82,7 +88,8 @@ class NextGenDynamicMediaMetadataTest {
 
   @Test
   void testFromAsset() {
-    Asset asset = context.create().asset("/content/dam/sample.jpg", 100, 50, ContentType.JPEG);
+    Asset asset = context.create().asset("/content/dam/sample.jpg", 100, 50, ContentType.JPEG,
+        ASSET_STATUS_PROPERTY, ASSET_STATUS_PENDING);
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromAsset(asset);
 
     assertEquals(ContentType.JPEG, metadata.getMimeType());
@@ -90,6 +97,7 @@ class NextGenDynamicMediaMetadataTest {
     assertNotNull(dimension);
     assertEquals(100, dimension.getWidth());
     assertEquals(50, dimension.getHeight());
+    assertEquals(ASSET_STATUS_PENDING, metadata.getAssetStatus());
     assertTrue(metadata.isValid());
   }
 

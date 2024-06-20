@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
+
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -41,10 +43,11 @@ public final class NextGenDynamicMediaMetadata {
 
   private final String mimeType;
   private final Dimension dimension;
+  private final String assetStatus;
 
   private static final JsonMapper OBJECT_MAPPER = new JsonMapper();
 
-  NextGenDynamicMediaMetadata(@Nullable String mimeType, long width, long height) {
+  NextGenDynamicMediaMetadata(@Nullable String mimeType, long width, long height, @Nullable String assetStatus) {
     this.mimeType = mimeType;
     if (width > 0 && height > 0) {
       this.dimension = new Dimension(width, height);
@@ -52,6 +55,7 @@ public final class NextGenDynamicMediaMetadata {
     else {
       this.dimension = null;
     }
+    this.assetStatus = assetStatus;
   }
 
   /**
@@ -66,6 +70,13 @@ public final class NextGenDynamicMediaMetadata {
    */
   public @Nullable Dimension getDimension() {
     return dimension;
+  }
+
+  /**
+   * @return Asset review status
+   */
+  public String getAssetStatus() {
+    return this.assetStatus;
   }
 
   /**
@@ -97,12 +108,14 @@ public final class NextGenDynamicMediaMetadata {
 
     long width = 0;
     long height = 0;
+    String assetStatus = null;
     if (response.assetMetadata != null) {
       width = response.assetMetadata.tiffImageWidth;
       height = response.assetMetadata.tiffImageLength;
+      assetStatus = response.assetMetadata.assetStatus;
     }
 
-    return new NextGenDynamicMediaMetadata(mimeType, width, height);
+    return new NextGenDynamicMediaMetadata(mimeType, width, height, assetStatus);
   }
 
   /**
@@ -120,8 +133,9 @@ public final class NextGenDynamicMediaMetadata {
       width = dimension.getWidth();
       height = dimension.getHeight();
     }
+    String assetStatus = asset.getMetadataValueFromJcr(ASSET_STATUS_PROPERTY);
 
-    return new NextGenDynamicMediaMetadata(mimeType, width, height);
+    return new NextGenDynamicMediaMetadata(mimeType, width, height, assetStatus);
   }
 
 }
