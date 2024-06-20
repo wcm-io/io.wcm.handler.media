@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.mediasource.ngdm;
 
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -33,6 +36,8 @@ import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.wcm.api.WCMMode;
@@ -86,6 +91,8 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   @AemObject(injectionStrategy = InjectionStrategy.OPTIONAL)
   private ComponentContext componentContext;
 
+  private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaReference.class);
+
   @Override
   public @NotNull String getId() {
     return ID;
@@ -110,6 +117,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   }
 
   @Override
+  @SuppressWarnings("java:S3776") // complexity
   public @NotNull Media resolveMedia(@NotNull Media media) {
     String mediaRef = getMediaRef(media.getMediaRequest(), mediaHandlerConfig);
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
@@ -130,6 +138,10 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
     NextGenDynamicMediaMetadata metadata = null;
     Asset localAsset = reference.getAsset();
     if (localAsset != null) {
+      if (!isAssetApproved(localAsset)) {
+        media.setMediaInvalidReason(MediaInvalidReason.NOT_APPROVED);
+        return media;
+      }
       metadata = getMetadataFromAsset(localAsset);
     }
     else if (metadataService != null && metadataService.isEnabled()) {
@@ -177,6 +189,15 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
       }
     }
     return null;
+  }
+
+  private boolean isAssetApproved(@NotNull Asset asset) {
+    String damStatus = asset.getMetadataValueFromJcr(ASSET_STATUS_PROPERTY);
+    if (StringUtils.equals(damStatus, ASSET_STATUS_APPROVED)) {
+      return true;
+    }
+    log.trace("Ignoring DAM asset with {}='{}' (expected '{}')", ASSET_STATUS_PROPERTY, damStatus, ASSET_STATUS_APPROVED);
+    return false;
   }
 
   private @Nullable NextGenDynamicMediaMetadata getMetadataFromAsset(@NotNull Asset asset) {
