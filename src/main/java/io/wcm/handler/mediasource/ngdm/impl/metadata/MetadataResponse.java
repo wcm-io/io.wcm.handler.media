@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -39,6 +41,16 @@ final class MetadataResponse {
   static final class RepositoryMetadata {
     @JsonProperty("dc:format")
     public String dcFormat;
+    @JsonProperty("smartcrops")
+    public Map<String, SmartCrop> smartCrops;
+  }
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  static final class SmartCrop {
+    public double normalizedWidth;
+    public double normalizedHeight;
+    public double left;
+    public double top;
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)

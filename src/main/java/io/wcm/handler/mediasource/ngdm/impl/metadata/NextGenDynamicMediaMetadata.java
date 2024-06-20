@@ -21,7 +21,10 @@ package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
 import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -34,6 +37,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.mediasource.dam.AssetRendition;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.AssetMetadata;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.RepositoryMetadata;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
@@ -44,10 +49,12 @@ public final class NextGenDynamicMediaMetadata {
   private final String mimeType;
   private final Dimension dimension;
   private final String assetStatus;
+  private final List<SmartCrop> smartCrops;
 
   private static final JsonMapper OBJECT_MAPPER = new JsonMapper();
 
-  NextGenDynamicMediaMetadata(@Nullable String mimeType, long width, long height, @Nullable String assetStatus) {
+  NextGenDynamicMediaMetadata(@Nullable String mimeType, long width, long height,
+      @Nullable String assetStatus, @Nullable List<SmartCrop> smartCrops) {
     this.mimeType = mimeType;
     if (width > 0 && height > 0) {
       this.dimension = new Dimension(width, height);
@@ -56,6 +63,12 @@ public final class NextGenDynamicMediaMetadata {
       this.dimension = null;
     }
     this.assetStatus = assetStatus;
+    if (smartCrops != null) {
+      this.smartCrops = smartCrops;
+    }
+    else {
+      this.smartCrops = Collections.emptyList();
+    }
   }
 
   /**
@@ -80,6 +93,13 @@ public final class NextGenDynamicMediaMetadata {
   }
 
   /**
+   * @return Named smart crop definitions.
+   */
+  public List<SmartCrop> getSmartCrops() {
+    return Collections.unmodifiableList(smartCrops);
+  }
+
+  /**
    * @return true if metadata is valid (has mime type)
    */
   public boolean isValid() {
@@ -100,22 +120,30 @@ public final class NextGenDynamicMediaMetadata {
   @SuppressWarnings("null")
   public static @NotNull NextGenDynamicMediaMetadata fromJson(@NotNull String jsonResponse) throws JsonProcessingException {
     MetadataResponse response = OBJECT_MAPPER.readValue(jsonResponse, MetadataResponse.class);
+    RepositoryMetadata respositoryMetadata = response.repositoryMetadata;
+    AssetMetadata assetMetadata = response.assetMetadata;
 
     String mimeType = null;
-    if (response.repositoryMetadata != null) {
-      mimeType = response.repositoryMetadata.dcFormat;
+    List<SmartCrop> smartCrops = null;
+    if (respositoryMetadata != null) {
+      mimeType = respositoryMetadata.dcFormat;
+      if (respositoryMetadata.smartCrops != null) {
+        smartCrops = respositoryMetadata.smartCrops.entrySet().stream()
+            .map(entry -> new SmartCrop(entry.getKey(), entry.getValue()))
+            .collect(Collectors.toList());
+      }
     }
 
     long width = 0;
     long height = 0;
     String assetStatus = null;
-    if (response.assetMetadata != null) {
-      width = response.assetMetadata.tiffImageWidth;
-      height = response.assetMetadata.tiffImageLength;
-      assetStatus = response.assetMetadata.assetStatus;
+    if (assetMetadata != null) {
+      width = assetMetadata.tiffImageWidth;
+      height = assetMetadata.tiffImageLength;
+      assetStatus = assetMetadata.assetStatus;
     }
 
-    return new NextGenDynamicMediaMetadata(mimeType, width, height, assetStatus);
+    return new NextGenDynamicMediaMetadata(mimeType, width, height, assetStatus, smartCrops);
   }
 
   /**
@@ -135,7 +163,55 @@ public final class NextGenDynamicMediaMetadata {
     }
     String assetStatus = asset.getMetadataValueFromJcr(ASSET_STATUS_PROPERTY);
 
-    return new NextGenDynamicMediaMetadata(mimeType, width, height, assetStatus);
+    return new NextGenDynamicMediaMetadata(mimeType, width, height, assetStatus, Collections.emptyList());
+  }
+
+  /**
+   * Named smart cropping definition.
+   */
+  public static class SmartCrop {
+    private final String name;
+    private final double normalizedWidth;
+    private final double normalizedHeight;
+    private final double left;
+    private final double top;
+
+    SmartCrop(String name, double normalizedWidth, double normalizedHeight, double left, double top) {
+      this.name = name;
+      this.normalizedWidth = normalizedWidth;
+      this.normalizedHeight = normalizedHeight;
+      this.left = left;
+      this.top = top;
+    }
+
+    SmartCrop(String name, MetadataResponse.SmartCrop smartCrop) {
+      this(name, smartCrop.normalizedWidth, smartCrop.normalizedHeight, smartCrop.left, smartCrop.top);
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public double getNormalizedWidth() {
+      return normalizedWidth;
+    }
+
+    public double getNormalizedHeight() {
+      return normalizedHeight;
+    }
+
+    public double getLeft() {
+      return left;
+    }
+
+    public double getTop() {
+      return top;
+    }
+
+    @Override
+    public String toString() {
+      return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+    }
   }
 
 }
