@@ -70,6 +70,22 @@ class MediaArgsDimensionTest {
   }
 
   @Test
+  @SuppressWarnings("null")
+  void testGetRequestedRatioAsWidthHeight_Extrapolation() {
+    Dimension dimension = getRequestedRatioAsWidthHeight(mediaFormat(mf -> mf.ratio(16.125d, 9.2d)));
+    assertEquals(16125, dimension.getWidth());
+    assertEquals(9200, dimension.getHeight());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testGetRequestedRatioAsWidthHeight_ExtrapolationNotRequired() {
+    Dimension dimension = getRequestedRatioAsWidthHeight(mediaFormat(mf -> mf.ratio(16.0000001d, 9.00000005d)));
+    assertEquals(16, dimension.getWidth());
+    assertEquals(9, dimension.getHeight());
+  }
+
+  @Test
   void testGetFirstMediaFormat() {
     MediaFormat mf1 = MediaFormatBuilder.create("mf1").build();
     MediaFormat mf2 = MediaFormatBuilder.create("mf1").build();
