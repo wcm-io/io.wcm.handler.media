@@ -19,25 +19,32 @@
  */
 package io.wcm.handler.mediasource.ngdm;
 
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import com.day.cq.commons.jcr.JcrConstants;
+
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
@@ -56,25 +63,20 @@ class NextGenDynamicMediaTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  private MediaHandler mediaHandler;
   private Resource resource;
 
   @BeforeEach
   @SuppressWarnings("null")
   void setUp() {
-    MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
-    nextGenDynamicMediaConfig.setEnabled(true);
-    nextGenDynamicMediaConfig.setRepositoryId("repo1");
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
-
     resource = context.create().resource(context.currentPage(), "test",
         MediaNameConstants.PN_MEDIA_REF, SAMPLE_REFERENCE);
-
-    mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
   }
 
   @Test
   void testAsset() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Media media = mediaHandler.get(resource)
         .build();
     assertTrue(media.isValid());
@@ -114,6 +116,9 @@ class NextGenDynamicMediaTest {
 
   @Test
   void testRendition_16_10() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.RATIO_16_10)
         .fixedWidth(2048)
@@ -148,6 +153,9 @@ class NextGenDynamicMediaTest {
 
   @Test
   void testRendition_16_10_PNG() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.RATIO_16_10)
         .enforceOutputFileExtension("png")
@@ -163,6 +171,9 @@ class NextGenDynamicMediaTest {
 
   @Test
   void testRendition_FixedDimension() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Media media = mediaHandler.get(resource)
         .fixedDimension(100, 50)
         .build();
@@ -175,6 +186,9 @@ class NextGenDynamicMediaTest {
 
   @Test
   void testRendition_FixedMediaFormat() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.EDITORIAL_1COL)
         .build();
@@ -187,6 +201,9 @@ class NextGenDynamicMediaTest {
 
   @Test
   void testRendition_NonFixedSmallMediaFormat() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.NONFIXED_SMALL)
         .build();
@@ -199,6 +216,9 @@ class NextGenDynamicMediaTest {
 
   @Test
   void testRendition_NonFixedMinWidthHeightMediaFormat() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.NONFIXED_MINWIDTHHEIGHT)
         .build();
@@ -212,6 +232,9 @@ class NextGenDynamicMediaTest {
   @Test
   @SuppressWarnings("null")
   void testPDFDownload() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Resource downloadResource = context.create().resource(context.currentPage(), "download",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.pdf");
 
@@ -228,6 +251,9 @@ class NextGenDynamicMediaTest {
 
   @Test
   void testImageDownload() {
+    setupNGDM(false);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
     Media media = mediaHandler.get(resource)
         .args(new MediaArgs().download(true))
         .build();
@@ -237,6 +263,63 @@ class NextGenDynamicMediaTest {
     assertNotNull(rendition);
     assertEquals(ContentType.JPEG, rendition.getMimeType());
     assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/my-image.jpg", rendition.getUrl());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testLocalAsset() {
+    setupNGDM(true);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG,
+        ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
+    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
+
+    resource = context.create().resource(context.currentPage(), "local-asset",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath());
+
+    Media media = mediaHandler.get(resource)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "preferwebp=true&quality=85", "jpg");
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testLocalAsset_NotApproved() {
+    setupNGDM(true);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG);
+    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
+
+    resource = context.create().resource(context.currentPage(), "local-asset",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath());
+
+    Media media = mediaHandler.get(resource)
+        .build();
+    assertFalse(media.isValid());
+    assertEquals(MediaInvalidReason.NOT_APPROVED, media.getMediaInvalidReason());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testLocalAsset_NoUUID() {
+    setupNGDM(true);
+    MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG,
+        ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
+
+    resource = context.create().resource(context.currentPage(), "local-asset",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath());
+
+    Media media = mediaHandler.get(resource)
+        .build();
+    assertFalse(media.isValid());
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
   }
 
   private static void assertUrl(Media media, String urlParams, String extension) {
@@ -257,6 +340,21 @@ class NextGenDynamicMediaTest {
   private static String buildUrl(String urlParams, String extension) {
     return "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
         + extension + "?" + urlParams;
+  }
+
+  private void setupNGDM(boolean localAssets) {
+    MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
+    nextGenDynamicMediaConfig.setEnabled(true);
+    nextGenDynamicMediaConfig.setRepositoryId("repo1");
+
+    if (localAssets) {
+      context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+          "enabledLocalAssets", true,
+          "localAssetsRepositoryId", "repo1");
+    }
+    else {
+      context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    }
   }
 
 }

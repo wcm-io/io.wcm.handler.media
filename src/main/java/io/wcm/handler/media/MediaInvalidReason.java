@@ -35,6 +35,12 @@ public enum MediaInvalidReason {
   MEDIA_REFERENCE_INVALID,
 
   /**
+   * Media reference is valid, but the media is not approved.
+   * This is only relevant for local assets served via Dynamic Media with OpenAPI.
+   */
+  NOT_APPROVED,
+
+  /**
    * No matching rendition: The media item exists, but no rendition matches for the requested media args.
    */
   NO_MATCHING_RENDITION,

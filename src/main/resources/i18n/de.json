@@ -4,6 +4,7 @@
     "invalidReason": {
       "MEDIA_REFERENCE_MISSING": "Keine Referenz",
       "MEDIA_REFERENCE_INVALID": "Ungültige Referenz",
+      "NOT_APPROVED": "Asset ist nicht genehmigt",
       "NO_MATCHING_RENDITION": "Passt nicht zum Medien-Format",
       "NOT_ENOUGH_MATCHING_RENDITIONS": "Nicht genügend zum Medien-Format passende Renditions",
       "INVALID_MEDIA_FORMAT": "Ungültiges Medien-Format"
