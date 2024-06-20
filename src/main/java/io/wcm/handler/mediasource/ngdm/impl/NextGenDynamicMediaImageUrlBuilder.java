@@ -36,6 +36,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.format.Ratio;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.SmartCrop;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -50,6 +53,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
   static final String PARAM_PREFER_WEBP = "preferwebp";
   static final String PARAM_WIDTH = "width";
   static final String PARAM_CROP = "crop";
+  static final String PARAM_SMARTCROP = "smartcrop";
   static final String PARAM_ROTATE = "rotate";
   static final String PARAM_QUALITY = "quality";
 
@@ -111,7 +115,13 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       urlParamMap.put(PARAM_WIDTH, width.toString());
     }
     if (cropSmartRatio != null) {
-      urlParamMap.put(PARAM_CROP, cropSmartRatio.getWidth() + ":" + cropSmartRatio.getHeight() + ",smart");
+      SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(cropSmartRatio);
+      if (namedSmartCrop != null) {
+        urlParamMap.put(PARAM_SMARTCROP, namedSmartCrop.getName());
+      }
+      else {
+        urlParamMap.put(PARAM_CROP, cropSmartRatio.getWidth() + ":" + cropSmartRatio.getHeight() + ",smart");
+      }
     }
     if (rotation != null && rotation != 0) {
       urlParamMap.put(PARAM_ROTATE, rotation.toString());
@@ -165,6 +175,23 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       format = FileExtension.JPEG;
     }
     return format;
+  }
+
+  /**
+   * Looks up named smart crop definition matching the requested ratio.
+   * @param cropSmartRatio Requested ratio
+   * @return Matching named smart crop or null if none found
+   */
+  private @Nullable SmartCrop getMatchingNamedSmartCrop(@NotNull Dimension cropSmartRatio) {
+    NextGenDynamicMediaMetadata metadata = context.getMetadata();
+    if (metadata == null) {
+      return null;
+    }
+    double requestedRatio = Ratio.get(cropSmartRatio);
+    return metadata.getSmartCrops().stream()
+        .filter(smartCrop -> Ratio.matches(smartCrop.getRatio(), requestedRatio))
+        .findFirst()
+        .orElse(null);
   }
 
 }
