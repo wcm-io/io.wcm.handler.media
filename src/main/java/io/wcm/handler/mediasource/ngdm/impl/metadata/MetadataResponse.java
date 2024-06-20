@@ -47,10 +47,10 @@ final class MetadataResponse {
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   static final class SmartCrop {
-    public double normalizedWidth;
-    public double normalizedHeight;
     public double left;
     public double top;
+    public double normalizedWidth;
+    public double normalizedHeight;
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
