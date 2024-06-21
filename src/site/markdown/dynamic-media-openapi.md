@@ -42,6 +42,10 @@ Smart Cropping is used automatically if a media format with a specific ratio (e.
 
 Media formats without any size restrictions, or e.g. only with a width restrictions, can be rendered, but are not cropped.
 
+If you want to give the business users more control about the actual cropping area of an image, you can create an [image profile][aem-image-profiles] in AEM, enable "Smart Crop" an assign this profile to the asset folders with the assets you want to use (the profile association is inherited to sub folders). Within the image profile, create a cropping entry with a unique name for each rendition you have defined in the media formats, or you are using dynamically for the different breakpoints when using responsive images. If you have already uploaded the assets to this folder you may need to reprocess them. Having this in place, you can use the "Smart Crop" action in the Assets UI to adjust the cropping area for individual assets.
+
+During the media resolution process, when the media handler has detected the required renditions with their sizes and cropping to fit the output media format/ratio, it checks if named smart crops exist in the asset metadata matching for the requested aspect ratio. If this is the case, the manual adjusted cropping area is used instead of the automatic detected one (if present). To support this for remote assets, the metadata service needs to be enabled (see system configuration).
+
 
 ### Validating Assets
 
@@ -110,3 +114,4 @@ The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the As
 [general-concepts]: general-concepts.html
 [file-format-support]: file-format-support.html
 [wcm-core-components]: https://wcm.io/wcm/core-components/
+[aem-image-profiles]: https://experienceleague.adobe.com/docs/experience-manager-65/assets/dynamic/image-profiles.html
