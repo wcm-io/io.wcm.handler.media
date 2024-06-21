@@ -52,6 +52,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
 
   static final String PARAM_PREFER_WEBP = "preferwebp";
   static final String PARAM_WIDTH = "width";
+  static final String PARAM_HEIGHT = "height";
   static final String PARAM_CROP = "crop";
   static final String PARAM_SMARTCROP = "smartcrop";
   static final String PARAM_ROTATE = "rotate";
@@ -77,7 +78,6 @@ public final class NextGenDynamicMediaImageUrlBuilder {
    * @param params Parameters
    * @return URL or null if invalid/not possible
    */
-  @SuppressWarnings("java:S3776") // complexity
   public @Nullable String build(@NotNull NextGenDynamicMediaImageDeliveryParams params) {
 
     // get parameters from nextgen dynamic media config for URL parameters
@@ -89,7 +89,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       repositoryId = context.getNextGenDynamicMediaConfig().getRemoteAssetsRepositoryId();
     }
     String imageDeliveryPath = context.getNextGenDynamicMediaConfig().getImageDeliveryBasePath();
-    if (StringUtils.isAnyBlank(repositoryId, imageDeliveryPath)) {
+    if (repositoryId == null || imageDeliveryPath == null || StringUtils.isAnyBlank(repositoryId, imageDeliveryPath)) {
       return null;
     }
 
@@ -116,13 +116,8 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       urlParamMap.put(PARAM_WIDTH, width.toString());
     }
     if (cropSmartRatio != null) {
-      SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(cropSmartRatio);
-      if (namedSmartCrop != null) {
-        urlParamMap.put(PARAM_SMARTCROP, namedSmartCrop.getName());
-      }
-      else {
-        urlParamMap.put(PARAM_CROP, cropSmartRatio.getWidth() + ":" + cropSmartRatio.getHeight() + ",smart");
-      }
+      boolean hasWidthDefined = width != null || widthPlaceholder != null;
+      applyCroppingParams(urlParamMap, cropSmartRatio, hasWidthDefined);
     }
     if (rotation != null && rotation != 0) {
       urlParamMap.put(PARAM_ROTATE, rotation.toString());
@@ -132,6 +127,14 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     }
 
     // build URL
+    return buildImageUrl(repositoryId, imageDeliveryPath, urlParamMap);
+  }
+
+  /**
+   * Builds image URL based on URL parameter map.
+   */
+  private static @NotNull String buildImageUrl(@NotNull String repositoryId, @NotNull String imageDeliveryPath,
+      @NotNull SortedMap<String, String> urlParamMap) {
     StringBuilder url = new StringBuilder();
     url.append("https://")
         .append(repositoryId)
@@ -151,11 +154,14 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     return url.toString();
   }
 
+  /**
+   * Generates URL parameter key/value pair with escaping where appropriate.
+   */
   private static @NotNull String toUrlParam(@NotNull String key, @NotNull String value) {
     StringBuilder sb = new StringBuilder();
     sb.append(key).append("=");
     // we only need to encode crop, all other parameters are numbers only
-    if (StringUtils.equals(key, PARAM_CROP)) {
+    if (StringUtils.equalsAny(key, PARAM_CROP, PARAM_SMARTCROP)) {
       sb.append(URLEncoder.encode(value, StandardCharsets.UTF_8));
     }
     else {
@@ -165,17 +171,27 @@ public final class NextGenDynamicMediaImageUrlBuilder {
   }
 
   /**
-   * @return Get file extension used for rendering via DM API.
+   * Generates cropping/smart cropping URL parameters with or without named smart crop.
    */
-  public @NotNull String getFileExtension() {
-    String format = context.getDefaultMediaArgs().getEnforceOutputFileExtension();
-    if (StringUtils.isEmpty(format)) {
-      format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(context.getReference().getFileName()));
+  private void applyCroppingParams(@NotNull SortedMap<String, String> urlParamMap,
+      @NotNull Dimension cropSmartRatio, boolean hasWidthDefined) {
+    SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(cropSmartRatio);
+    if (namedSmartCrop != null) {
+      urlParamMap.put(PARAM_SMARTCROP, namedSmartCrop.getName());
+      if (!hasWidthDefined) {
+        // if no width given apply default width/height to not rely on dimensions defined in AEM image profile
+        String imageWidthHeightDefault = Long.toString(context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault());
+        if (namedSmartCrop.getCropDimension().getWidth() >= namedSmartCrop.getCropDimension().getHeight()) {
+          urlParamMap.put(PARAM_WIDTH, imageWidthHeightDefault);
+        }
+        else {
+          urlParamMap.put(PARAM_HEIGHT, imageWidthHeightDefault);
+        }
+      }
     }
-    if (format == null || !SUPPORTED_FORMATS.contains(format)) {
-      format = FileExtension.JPEG;
+    else {
+      urlParamMap.put(PARAM_CROP, cropSmartRatio.getWidth() + ":" + cropSmartRatio.getHeight() + ",smart");
     }
-    return format;
   }
 
   /**
@@ -193,6 +209,20 @@ public final class NextGenDynamicMediaImageUrlBuilder {
         .filter(smartCrop -> Ratio.matches(smartCrop.getRatio(), requestedRatio))
         .findFirst()
         .orElse(null);
+  }
+
+  /**
+   * @return Get file extension used for rendering via DM API.
+   */
+  public @NotNull String getFileExtension() {
+    String format = context.getDefaultMediaArgs().getEnforceOutputFileExtension();
+    if (StringUtils.isEmpty(format)) {
+      format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(context.getReference().getFileName()));
+    }
+    if (format == null || !SUPPORTED_FORMATS.contains(format)) {
+      format = FileExtension.JPEG;
+    }
+    return format;
   }
 
 }

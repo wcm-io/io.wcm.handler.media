@@ -100,11 +100,36 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
         .cropSmartRatio(new Dimension(16, 9))
-        .rotation(90)
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?preferwebp=true&quality=60&rotate=90&smartcrop=Landscape&width=100",
+        + "?preferwebp=true&quality=60&smartcrop=Landscape&width=100",
+        underTest.build(params));
+  }
+
+  @Test
+  void testAllParams_NamedSmartCrop_DefaultWidth() throws Exception {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .cropSmartRatio(new Dimension(16, 9))
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?preferwebp=true&quality=60&smartcrop=Landscape&width=2048",
+        underTest.build(params));
+  }
+
+  @Test
+  void testAllParams_NamedSmartCrop_DefaultHeight() throws Exception {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .cropSmartRatio(new Dimension(1, 2))
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?height=2048&preferwebp=true&quality=60&smartcrop=Portrait",
         underTest.build(params));
   }
 
