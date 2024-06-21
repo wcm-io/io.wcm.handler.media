@@ -4,6 +4,7 @@
     "invalidReason": {
       "MEDIA_REFERENCE_MISSING": "No reference",
       "MEDIA_REFERENCE_INVALID": "Invalid reference",
+      "NOT_APPROVED": "Asset not approved",
       "NO_MATCHING_RENDITION": "No matching media format",
       "NOT_ENOUGH_MATCHING_RENDITIONS": "Not enough renditions matching media formats",
       "INVALID_MEDIA_FORMAT": "Invalid media format"

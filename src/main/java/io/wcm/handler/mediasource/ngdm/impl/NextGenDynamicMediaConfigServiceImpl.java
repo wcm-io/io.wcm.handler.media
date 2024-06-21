@@ -85,6 +85,11 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
             + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
     String assetMetadataPath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/metadata";
 
+    @AttributeDefinition(
+        name = "Default image width/height",
+        description = "Default width/height (longest edge) when requesting image renditions without explicit dimension.")
+    long imageWidthHeightDefault() default 2048;
+
   }
 
   private static final String ADOBE_ASSETS_PREFIX = "/adobe/assets/";
@@ -96,6 +101,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   private String imageDeliveryBasePath;
   private String assetOriginalBinaryDeliveryPath;
   private String assetMetadataPath;
+  private long imageWidthHeightDefault;
 
   @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY, cardinality = ReferenceCardinality.OPTIONAL)
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
@@ -128,6 +134,8 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
       log.debug("localAssetsRepositoryId is not configured, disable local assets.");
       enabledLocalAssets = false;
     }
+
+    imageWidthHeightDefault = config.imageWidthHeightDefault();
   }
 
   @Override
@@ -188,6 +196,11 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   @Override
   public @Nullable String getImsClient() {
     return nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getImsClient() : null;
+  }
+
+  @Override
+  public long getImageWidthHeightDefault() {
+    return imageWidthHeightDefault;
   }
 
 }

@@ -42,19 +42,21 @@ Smart Cropping is used automatically if a media format with a specific ratio (e.
 
 Media formats without any size restrictions, or e.g. only with a width restrictions, can be rendered, but are not cropped.
 
+If you want to give the business users more control about the actual cropping area of an image, you can create an [image profile][aem-image-profiles] in AEM, enable "Smart Crop" an assign this profile to the asset folders with the assets you want to use (the profile association is inherited to sub folders). Within the image profile, create a cropping entry with a unique name for each rendition you have defined in the media formats, or you are using dynamically for the different breakpoints when using responsive images. If you have already uploaded the assets to this folder you may need to reprocess them. Having this in place, you can use the "Smart Crop" action in the Assets UI to adjust the cropping area for individual assets.
+
+During the media resolution process, when the media handler has detected the required renditions with their sizes and cropping to fit the output media format/ratio, it checks if named smart crops exist in the asset metadata matching for the requested aspect ratio. If this is the case, the manual adjusted cropping area is used instead of the automatic detected one (if present). To support this for remote assets, the metadata service needs to be enabled (see system configuration).
+
 
 ### Validating Assets
 
 When rendering local assets, the existence and approval state is checked within the local content repository when resolving the media. For this reason, local assets have to be published in AEM after setting the Approval state.
 
-For remote assets, the Media Handler assumes by default that a given remote asset reference is always valid, and supports all requested resolutions.
-
-Optionally, you can enable the metadata service. If enabled, each time a remote asset reference is resolved, the following checks are executed:
+For remote assets, validating depends on the state of the metadata service (see system configuration). If enabled, the following checks are executed during media resolution:
 
 * If the remote asset does not exist, or is not approved, the reference is handled as invalid and the component can react to it (e.g. hide the image component).
 * If the requested resolution of a rendition is larger than the original resolution of the binary asset, the rendition is handled as invalid. This avoid upscaling, and avoids using an asset in a context which would result in bad image quality for the user.
 
-See system configuration how to enable the metadata service.
+If the metadata services is not enabled, the Media Handler assumes by default that a given remote asset reference is always valid, and supports all requested resolutions.
 
 
 ### System configuration
@@ -93,7 +95,7 @@ The "wcm.io Dynamic Media with OpenAPI Support" OSGi configuration allows to rec
 
 With this, you can configure an environment variable `LOCAL_ASSET_DELIVERY_REPOSITORY_ID` pointing to the actual host name which usually has a syntax like `delivery-pXXXXX-eXXXXX.adobeaemcloud.com` with the corresponding program and environment numbers.
 
-The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the Asset Metadata support (see above). When this is enabled, for each resolved remote asset, a HTTP request is send from the server to the DM API, so make sure this is allowed in the network infrastructure (should work by default in AEMaaCS instances). Optionally, you can configure an proxy server and timeouts.
+The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the Asset Metadata support for validation and Smart Cropping. The metadata service is enabled by default. If enabled, for each resolved remote asset a HTTP request is send from the server to the DM API to fetch the asset's metadata.
 
 
 ### Known Limitations (as of June 2024)
@@ -110,3 +112,4 @@ The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the As
 [general-concepts]: general-concepts.html
 [file-format-support]: file-format-support.html
 [wcm-core-components]: https://wcm.io/wcm/core-components/
+[aem-image-profiles]: https://experienceleague.adobe.com/docs/experience-manager-65/assets/dynamic/image-profiles.html
