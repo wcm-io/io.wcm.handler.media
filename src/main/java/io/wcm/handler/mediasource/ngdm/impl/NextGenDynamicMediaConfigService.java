@@ -153,4 +153,10 @@ public interface NextGenDynamicMediaConfigService {
   @Nullable
   String getImsClient();
 
+  /**
+   * Gets the default image width/height (longest edge) when requesting image renditions without explicit dimension.
+   * @return default width/height
+   */
+  long getImageWidthHeightDefault();
+
 }
