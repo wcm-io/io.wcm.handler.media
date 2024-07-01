@@ -39,7 +39,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService;
 
 /**
- * Prepares Next Generation Dynamic Media Remote Assets configuration for GraniteUI components (fileupload, pathfield).
+ * Prepares Dynamic Media with OpenAPI Remote Assets configuration for GraniteUI components (fileupload, pathfield).
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 @ProviderType
@@ -71,13 +71,13 @@ public final class NextGenDynamicMediaConfigModel {
       return MAPPER.writeValueAsString(map);
     }
     catch (JsonProcessingException ex) {
-      log.warn("Unable to serialize Next Generation Dynamic Media config to JSON.", ex);
+      log.warn("Unable to serialize Dynamic Media with OpenAPI config to JSON.", ex);
       return "{}";
     }
   }
 
   /**
-   * @return true if Next Generation Dynamic Media is available and enabled.
+   * @return true if Dynamic Media with OpenAPI for remote assets is available and enabled.
    */
   public boolean isEnabled() {
     return this.enabled;

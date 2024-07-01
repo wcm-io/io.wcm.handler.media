@@ -48,7 +48,7 @@ public interface NextGenDynamicMediaConfigService {
   boolean isEnabledRemoteAssets();
 
   /**
-   * Enable Next Generation Dynamic Media for local assets in this AEMaaCS instance.
+   * Enable Dynamic Media with OpenAPI for local assets in this AEMaaCS instance.
    * @return true if enabled for local assets.
    */
   boolean isEnabledLocalAssets();
@@ -119,7 +119,7 @@ public interface NextGenDynamicMediaConfigService {
   String getAssetMetadataPath();
 
   /**
-   * Gets the Next Generation Dynamic Media tenant (also known technically as the repository ID) for remote assets.
+   * Gets the Dynamic Media with OpenAPI tenant (also known technically as the repository ID) for remote assets.
    * @return the repository ID
    */
   @Nullable
