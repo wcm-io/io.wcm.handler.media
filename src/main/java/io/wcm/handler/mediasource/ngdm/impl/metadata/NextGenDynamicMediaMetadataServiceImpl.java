@@ -72,7 +72,7 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
         name = "HTTP Headers",
         description = "HTTP headers to be send with the asset metadata request. "
             + "Format: 'header1:value1'.")
-    String[] httpHeaders() default { "X-Adobe-Accept-Experimental:1" };
+    String[] httpHeaders();
 
     @AttributeDefinition(
         name = "Connect Timeout",
