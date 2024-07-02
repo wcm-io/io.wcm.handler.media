@@ -44,7 +44,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
   @ObjectClassDefinition(
       name = "wcm.io Media Handler Dynamic Media with OpenAPI Support",
-      description = "Support for Next Generation Dynamic Media.")
+      description = "Support for Dynamic Media with OpenAPI.")
   @interface Config {
 
     @AttributeDefinition(

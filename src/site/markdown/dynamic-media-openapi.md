@@ -108,7 +108,7 @@ The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the As
 
 
 [aem-nextgen-dm]: https://experienceleague.adobe.com/docs/experience-manager-core-components/using/developing/next-gen-dm.html?lang=en
-[aem-dm-api]: https://adobe-aem-assets-delivery-experimental.redoc.ly/
+[aem-dm-api]: https://adobe-aem-assets-delivery.redoc.ly/
 [general-concepts]: general-concepts.html
 [file-format-support]: file-format-support.html
 [wcm-core-components]: https://wcm.io/wcm/core-components/

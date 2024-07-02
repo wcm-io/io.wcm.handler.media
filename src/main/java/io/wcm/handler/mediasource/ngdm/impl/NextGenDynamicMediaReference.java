@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.dam.api.Asset;
 
 /**
- * Parses and validates Next Generation Dynamic Media references.
+ * Parses and validates Dynamic Media with OpenAPI asset references.
  * <p>
  * Example: <code>/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg</code>
  * </p>
