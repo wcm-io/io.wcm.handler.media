@@ -33,6 +33,9 @@
       <action type="update" dev="sseifert" issue="54">
         Dynamic Media with OpenAPI: Remove experimental URL parameters from default configuration.
       </action>
+      <action type="update" dev="sseifert" issue="55">
+        Dynamic Media with OpenAPI: Remove experimental HTTP header for metadata request from default configuration.
+      </action>
       <action type="update" dev="sseifert" issue="58">
         Dynamic Media with OpenAPI: Prefer named smart crops over auto-cropped smart renditions.
       </action>
