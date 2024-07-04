@@ -31,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mock.Strictness;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.wcm.handler.media.MediaArgs;
@@ -42,7 +43,7 @@ import io.wcm.handler.media.format.MediaFormatHandler;
 @ExtendWith(MockitoExtension.class)
 class CroppingRatiosTest {
 
-  @Mock(lenient = true)
+  @Mock(strictness = Strictness.LENIENT)
   private MediaFormatHandler mediaFormatHandler;
   private SortedSet<MediaFormat> mediaFormats = new TreeSet<>();
 

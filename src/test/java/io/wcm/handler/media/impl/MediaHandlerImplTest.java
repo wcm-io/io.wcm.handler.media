@@ -326,7 +326,7 @@ class MediaHandlerImplTest {
       return List.of(TestPostProcessor.class);
     }
 
-  };
+  }
 
 
   @Model(adaptables = {

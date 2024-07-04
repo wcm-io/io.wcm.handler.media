@@ -144,6 +144,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   void testWithDisallowWebRenditionsViaMediaHandlerConfig() {
     context.registerService(MediaHandlerConfig.class, new MediaHandlerConfig() {
       @Override
+      @Deprecated
       public boolean includeAssetWebRenditionsByDefault() {
         return false;
       }

@@ -52,11 +52,6 @@ public enum DummyAppTemplate {
     this.resourceType = resourceTypeFromPath;
   }
 
-  DummyAppTemplate(String templatePath, String resourceType) {
-    this.templatePath = templatePath;
-    this.resourceType = resourceType;
-  }
-
   /**
    * Template path
    * @return Path

@@ -94,6 +94,6 @@ class MediaHandlerImplAdobeStandardNamingTest {
       // switch to adobe standard naming
       return true;
     }
-  };
+  }
 
 }

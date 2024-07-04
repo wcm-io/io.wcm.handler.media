@@ -47,6 +47,7 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
   }
 
   @Override
+  @Deprecated
   public boolean includeAssetWebRenditionsByDefault() {
     // unit tests rely on old behavior
     return true;
