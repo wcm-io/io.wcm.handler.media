@@ -98,15 +98,15 @@ With this, you can configure an environment variable `LOCAL_ASSET_DELIVERY_REPOS
 The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the Asset Metadata support for validation and Smart Cropping. The metadata service is enabled by default. If enabled, for each resolved remote asset a HTTP request is send from the server to the DM API to fetch the asset's metadata.
 
 
-### Known Limitations (as of June 2024)
+### Known Limitations (as of July 2024)
 
 * Dynamic Media with OpenAPI is not supported in Media Handler for AEM 6.x, only for AEMaaCS
-* Same as with the Adobe AEM WCM Core Components, currently only a single remote AEM Asset instance is supported, which is configured centrally as described in [Dynamic Media with OpenAPI][aem-nextgen-dm]. The media handler uses the same convention for referencing remote assets (using strings starting with `/urn:aaid:aem:...`). This convention also does not support multiple remote AEM Asset instances, as it does not include a pointer to the Repository ID.
+* Same as with the Adobe AEM WCM Core Components, currently only a single remote AEM Asset instance is supported, which is configured centrally as described in [Support for Remote Assets ][aem-remote-assets]. The media handler uses the same convention for referencing remote assets (using strings starting with `/urn:aaid:aem:...`). This convention also does not support multiple remote AEM Asset instances, as it does not include a pointer to the Repository ID.
 * If a component dialog is re-opened with a remote asset references and one of the Media Handler Granite UI widgets (e.g. pathfield), no thumbnail is displayed for the remote asset. But the reference is valid and works. The root cause is a bug/limitation in the underlying AEM pathfield component, which hopefully will be fixed soon by Adobe (SITES-19894).
 * The Dynamic Media with OpenAPI remote asset picker currently ignores any folder structures for assets on the remote AEM Asset instance.
 
 
-[aem-nextgen-dm]: https://experienceleague.adobe.com/docs/experience-manager-core-components/using/developing/next-gen-dm.html?lang=en
+[aem-remote-assets]: https://experienceleague.adobe.com/en/docs/experience-manager-core-components/using/developing/remote-assets
 [aem-dm-api]: https://adobe-aem-assets-delivery.redoc.ly/
 [general-concepts]: general-concepts.html
 [file-format-support]: file-format-support.html
