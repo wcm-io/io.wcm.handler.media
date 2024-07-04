@@ -155,7 +155,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
    * Build URL which points directly to the binary file.
    */
   private String buildBinaryUrl() {
-    return new NextGenDynamicMediaBinaryUrlBuilder(context).build();
+    return new NextGenDynamicMediaBinaryUrlBuilder(context).build(mediaArgs.isContentDispositionAttachment());
   }
 
   @Override

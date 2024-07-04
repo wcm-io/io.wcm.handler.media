@@ -211,7 +211,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_SVG_Original_ContentDisposition() {
     Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
     buildAssertMedia_ContentDisposition(asset, 100, 50,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/sample.svg",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/sample.svg?attachment=true",
         ContentType.SVG);
   }
 

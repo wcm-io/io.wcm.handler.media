@@ -104,7 +104,6 @@ The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the As
 * Same as with the Adobe AEM WCM Core Components, currently only a single remote AEM Asset instance is supported, which is configured centrally as described in [Dynamic Media with OpenAPI][aem-nextgen-dm]. The media handler uses the same convention for referencing remote assets (using strings starting with `/urn:aaid:aem:...`). This convention also does not support multiple remote AEM Asset instances, as it does not include a pointer to the Repository ID.
 * If a component dialog is re-opened with a remote asset references and one of the Media Handler Granite UI widgets (e.g. pathfield), no thumbnail is displayed for the remote asset. But the reference is valid and works. The root cause is a bug/limitation in the underlying AEM pathfield component, which hopefully will be fixed soon by Adobe (SITES-19894).
 * The Dynamic Media with OpenAPI remote asset picker currently ignores any folder structures for assets on the remote AEM Asset instance.
-* The DM API currently does not support sending a "Content-Disposition: attachment" HTTP header for downloads. So, even if this is enforced by the Media Handler, it currently does not work for remote assets.
 
 
 [aem-nextgen-dm]: https://experienceleague.adobe.com/docs/experience-manager-core-components/using/developing/next-gen-dm.html?lang=en

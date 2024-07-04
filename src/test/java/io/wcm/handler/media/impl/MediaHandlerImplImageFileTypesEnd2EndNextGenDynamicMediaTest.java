@@ -211,7 +211,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
   void testAsset_SVG_Original_ContentDisposition() {
     Asset asset = createNextGenDynamicMediaReferenceAsAsset("sample.svg");
     buildAssertMedia_ContentDisposition(asset, 0, 0,
-        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg",
+        "https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/sample.svg?attachment=true",
         ContentType.SVG);
   }
 

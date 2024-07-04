@@ -42,6 +42,9 @@
       <action type="update" dev="sseifert" issue="59">
         Dynamic Media with OpenAPI: Enable metadata service by default.
       </action>
+      <action type="update" dev="sseifert" issue="60">
+        Dynamic Media with OpenAPI: Support setting "Content Disposition Header" to attachment for binary URLs
+      </action>
       <action type="update" dev="sseifert" issue="53">
         Improve trace logging: Make log messages involving value maps and resource/page objects more compact and better readable.
       </action>

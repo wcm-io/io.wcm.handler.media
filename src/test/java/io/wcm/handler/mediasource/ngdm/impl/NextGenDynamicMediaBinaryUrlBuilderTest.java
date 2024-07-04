@@ -59,7 +59,16 @@ class NextGenDynamicMediaBinaryUrlBuilderTest {
     NextGenDynamicMediaBinaryUrlBuilder underTest = getBuilder(new MediaArgs());
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/my-image.jpg",
-        underTest.build());
+        underTest.build(false));
+  }
+
+
+  @Test
+  void testBuild_ContentDispositionAttachment() {
+    NextGenDynamicMediaBinaryUrlBuilder underTest = getBuilder(new MediaArgs());
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/my-image.jpg?attachment=true",
+        underTest.build(true));
   }
 
   @SuppressWarnings("null")
