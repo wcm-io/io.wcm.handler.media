@@ -37,6 +37,8 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
 
   private final NextGenDynamicMediaContext context;
 
+  static final String PARAM_ATTACHMENT = "attachment";
+
   /**
    * @param context Context
    */
@@ -48,7 +50,7 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
    * Builds the URL for a binary.
    * @return URL or null if invalid/not possible
    */
-  public @Nullable String build() {
+  public @Nullable String build(boolean contentDispositionAttachment) {
 
     // get parameters from nextgen dynamic media config for URL parameters
     String repositoryId;
@@ -73,6 +75,9 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
     url.append("https://")
         .append(repositoryId)
         .append(binaryDeliveryPath);
+    if (contentDispositionAttachment) {
+      url.append("?").append(PARAM_ATTACHMENT).append("=true");
+    }
     return url.toString();
   }
 
