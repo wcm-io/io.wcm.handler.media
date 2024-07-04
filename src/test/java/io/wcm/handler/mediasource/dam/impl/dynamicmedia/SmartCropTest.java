@@ -189,19 +189,19 @@ class SmartCropTest {
 
   @Test
   void testIsMatchingSize_MatchesExact_HeightDeviation() {
-    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 80x75 cropping area, treated as 80x50
+    prepareSmartCropRendition(0, 0, 0.5, 0.75); // results in 80x75 cropping area, treated as 80x50
     assertTrue(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 80, 50));
   }
 
   @Test
   void testIsMatchingSize_MatchesSmaller_HeightDeviation() {
-    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 80x75 cropping area, treated as 80x50
+    prepareSmartCropRendition(0, 0, 0.5, 0.75); // results in 80x75 cropping area, treated as 80x50
     assertTrue(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 40, 25));
   }
 
   @Test
   void testIsMatchingSize_TooSmall_HeightDeviation() {
-    prepareSmartCropRendition(0, 0, 0.75, 0.5); // results in 80x75 cropping area, treated as 80x50
+    prepareSmartCropRendition(0, 0, 0.5, 0.75); // results in 80x75 cropping area, treated as 80x50
     assertFalse(isMatchingSize(asset, context.resourceResolver(), dimension16_10, 120, 75));
   }
 
