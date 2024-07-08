@@ -40,7 +40,7 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
   private DefaultRenditionHandler underTest;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     Asset asset = context.resourceResolver().getResource(MEDIAITEM_PATH_16_10).adaptTo(Asset.class);
 
     MediaHandlerConfig mediaHandlerConfig = AdaptTo.notNull(context.request(), MediaHandlerConfig.class);
@@ -53,14 +53,14 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
   }
 
   @Test
-  void testOriginal() throws Exception {
+  void testOriginal() {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs());
     assertEquals(1600, rendition.getWidth());
     assertEquals(1000, rendition.getHeight());
   }
 
   @Test
-  void testInvalidRatio() throws Exception {
+  void testInvalidRatio() {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
         .fixedWidth(100)
         .fixedHeight(100));
@@ -68,7 +68,7 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
   }
 
   @Test
-  void testFixedWith() throws Exception {
+  void testFixedWith() {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
         .fixedWidth(160));
     assertEquals(160, rendition.getWidth());
@@ -76,7 +76,7 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
   }
 
   @Test
-  void testFixedHeight() throws Exception {
+  void testFixedHeight() {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
         .fixedHeight(100));
     assertEquals(160, rendition.getWidth());

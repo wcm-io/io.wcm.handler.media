@@ -57,7 +57,7 @@ class AssetRenditionContentDispositionFilterTest {
   private FilterChain filterChain;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     // setup filter with JPEG on the blacklist
     underTest = context.registerInjectActivateService(new AssetRenditionContentDispositionFilter(),
         BLACK_LIST_MIME_TYPE_CONFIG, new String[] { ContentType.JPEG },

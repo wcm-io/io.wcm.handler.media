@@ -42,6 +42,7 @@ import io.wcm.handler.media.markup.IPERatioCustomize;
 import io.wcm.handler.mediasource.dam.AemRenditionType;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.contenttype.FileExtension;
+import io.wcm.wcm.commons.util.AemObjectReflectionToStringBuilder;
 
 /**
  * Holds parameters to influence the media resolving process.
@@ -843,7 +844,7 @@ public final class MediaArgs implements Cloneable {
       sb.append("webOptimizedImageDeliveryDisabled", webOptimizedImageDeliveryDisabled);
     }
     if (properties != null && !properties.isEmpty()) {
-      sb.append("properties", properties);
+      sb.append("properties", AemObjectReflectionToStringBuilder.filteredValueMap(properties));
     }
     return sb.build();
   }
@@ -918,14 +919,23 @@ public final class MediaArgs implements Cloneable {
       this.mandatory = mandatory;
     }
 
+    /**
+     * @return Media format
+     */
     public @Nullable MediaFormat getMediaFormat() {
       return this.mediaFormat;
     }
 
+    /**
+     * @return Media format name
+     */
     public @Nullable String getMediaFormatName() {
       return this.mediaFormatName;
     }
 
+    /**
+     * @return Resolution of this media format is mandatory
+     */
     public boolean isMandatory() {
       return this.mandatory;
     }

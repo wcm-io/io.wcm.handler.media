@@ -41,8 +41,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
@@ -60,21 +58,21 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
 public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMediaMetadataService {
 
   @ObjectClassDefinition(
-      name = "wcm.io Media Handler Next Generation Dynamic Media Metadata Service",
-      description = "Fetches metadata for Next Generation Dynamic Media assets.")
+      name = "wcm.io Media Handler Dynamic Media with OpenAPI Metadata Service",
+      description = "Fetches metadata for Dynamic Media with OpenAPI remote assets.")
   @interface Config {
 
     @AttributeDefinition(
         name = "Enabled",
-        description = "When enabled, metadata is fetched for each resolved asset. This checks for validity/existence of "
-            + "the asset and for the maximum supported resolution of the original image.")
-    boolean enabled() default false;
+        description = "When enabled, metadata is fetched for each resolved remote asset. This checks for validity/existence of "
+            + "the asset and for the maximum supported resolution of the original image, and allows to fetch Smart Cropping information.")
+    boolean enabled() default true;
 
     @AttributeDefinition(
         name = "HTTP Headers",
         description = "HTTP headers to be send with the asset metadata request. "
             + "Format: 'header1:value1'.")
-    String[] httpHeaders() default { "X-Adobe-Accept-Experimental:1" };
+    String[] httpHeaders();
 
     @AttributeDefinition(
         name = "Connect Timeout",
@@ -103,7 +101,7 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
 
   }
 
-  @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
+  @Reference
   private NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
 
   private boolean enabled;

@@ -51,7 +51,7 @@ class RenditionMetadataTest extends AbstractDamTest {
   private RenditionMetadata biggestRendition;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD).build();
     Asset asset = media.getAsset().adaptTo(Asset.class);
 

@@ -52,26 +52,18 @@ class NextGenDynamicMediaMediaSourceTest {
 
   @Test
   void testGetId() {
+    registerMockNextGenDynamicMediaConfig(false, false);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
     assertEquals(NextGenDynamicMediaMediaSource.ID, underTest.getId());
   }
 
   @Test
-  void testAccepts_withoutNextGenDynamicMediaConfig() {
-    NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
-
-    assertFalse(underTest.accepts(SAMPLE_REFERENCE));
-    assertFalse(underTest.accepts("invalid"));
-    assertFalse(underTest.accepts(""));
-    assertFalse(underTest.accepts((String)null));
-  }
-
-  @Test
   void testAccepts_withNextGenDynamicMediaConfigDisabled() {
-    registerMockNextGenDynamicMediaConfig(false);
+    registerMockNextGenDynamicMediaConfig(false, false);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
 
     assertFalse(underTest.accepts(SAMPLE_REFERENCE));
+    assertFalse(underTest.accepts("/content/dam/sample.jpg"));
     assertFalse(underTest.accepts("invalid"));
     assertFalse(underTest.accepts(""));
     assertFalse(underTest.accepts((String)null));
@@ -79,10 +71,23 @@ class NextGenDynamicMediaMediaSourceTest {
 
   @Test
   void testAccepts_withNextGenDynamicMediaConfigEnabled() {
-    registerMockNextGenDynamicMediaConfig(true);
+    registerMockNextGenDynamicMediaConfig(true, true);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
 
     assertTrue(underTest.accepts(SAMPLE_REFERENCE));
+    assertTrue(underTest.accepts("/content/dam/sample.jpg"));
+    assertFalse(underTest.accepts("invalid"));
+    assertFalse(underTest.accepts(""));
+    assertFalse(underTest.accepts((String)null));
+  }
+
+  @Test
+  void testAccepts_withNextGenDynamicMediaConfigEnabled_NoLocalAssets() {
+    registerMockNextGenDynamicMediaConfig(true, false);
+    NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
+
+    assertTrue(underTest.accepts(SAMPLE_REFERENCE));
+    assertFalse(underTest.accepts("/content/dam/sample.jpg"));
     assertFalse(underTest.accepts("invalid"));
     assertFalse(underTest.accepts(""));
     assertFalse(underTest.accepts((String)null));
@@ -91,6 +96,7 @@ class NextGenDynamicMediaMediaSourceTest {
   @Test
   @SuppressWarnings("null")
   void testEnableMediaDrop() {
+    registerMockNextGenDynamicMediaConfig(false, false);
     NextGenDynamicMediaMediaSource underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaMediaSource.class);
     MediaRequest mediaRequest = new MediaRequest(context.currentResource(), new MediaArgs());
 
@@ -102,6 +108,8 @@ class NextGenDynamicMediaMediaSourceTest {
   @Test
   @SuppressWarnings("null")
   void testEnableMediaDrop_Authoring() {
+    registerMockNextGenDynamicMediaConfig(false, false);
+
     // simulate component context
     ComponentContext wcmComponentContext = mock(ComponentContext.class);
     context.request().setAttribute(ComponentContext.CONTEXT_ATTR_NAME, wcmComponentContext);
@@ -118,10 +126,12 @@ class NextGenDynamicMediaMediaSourceTest {
     assertEquals("cq-dd-image", img.getCssClass());
   }
 
-  void registerMockNextGenDynamicMediaConfig(boolean enabled) {
+  void registerMockNextGenDynamicMediaConfig(boolean remoteAssets, boolean localAssets) {
     MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
-    nextGenDynamicMediaConfig.setEnabled(enabled);
+    nextGenDynamicMediaConfig.setEnabled(remoteAssets);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledLocalAssets", localAssets,
+        "localAssetsRepositoryId", "localrepo1");
   }
 }

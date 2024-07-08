@@ -20,9 +20,12 @@
 package io.wcm.handler.mediasource.ngdm.impl;
 
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
+import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.sling.commons.mime.MimeTypeService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +34,7 @@ import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -46,7 +50,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
   private MimeTypeService mimeTypeService;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
         .setRepositoryId("repo1");
     nextGenDynamicMediaConfig = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
@@ -61,17 +65,17 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?accept-experimental=1&preferwebp=true",
+        + "?preferwebp=true",
         underTest.build(params));
   }
 
   @Test
   void testForceOutputExtension() {
-    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs().enforceOutputFileExtension("png"));
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs().enforceOutputFileExtension("png"), null);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.png"
-        + "?accept-experimental=1&preferwebp=true",
+        + "?preferwebp=true",
         underTest.build(params));
   }
 
@@ -85,7 +89,47 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?accept-experimental=1&crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
+        + "?crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
+        underTest.build(params));
+  }
+
+  @Test
+  void testAllParams_NamedSmartCrop() throws Exception {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .width(100L)
+        .cropSmartRatio(new Dimension(16, 9))
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?preferwebp=true&quality=60&smartcrop=Landscape&width=100",
+        underTest.build(params));
+  }
+
+  @Test
+  void testAllParams_NamedSmartCrop_DefaultWidth() throws Exception {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .cropSmartRatio(new Dimension(16, 9))
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?preferwebp=true&quality=60&smartcrop=Landscape&width=2048",
+        underTest.build(params));
+  }
+
+  @Test
+  void testAllParams_NamedSmartCrop_DefaultHeight() throws Exception {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .cropSmartRatio(new Dimension(1, 2))
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?height=2048&preferwebp=true&quality=60&smartcrop=Portrait",
         underTest.build(params));
   }
 
@@ -116,19 +160,20 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?accept-experimental=1&preferwebp=true&quality=60&width={w}",
+        + "?preferwebp=true&quality=60&width={w}",
         underTest.build(params));
   }
 
   private NextGenDynamicMediaImageUrlBuilder getBuilder() {
-    return getBuilder(new MediaArgs());
+    return getBuilder(new MediaArgs(), null);
   }
 
   @SuppressWarnings("null")
-  private NextGenDynamicMediaImageUrlBuilder getBuilder(MediaArgs mediaArgs) {
+  private NextGenDynamicMediaImageUrlBuilder getBuilder(@NotNull MediaArgs mediaArgs,
+      @Nullable NextGenDynamicMediaMetadata metadata) {
     NextGenDynamicMediaContext ctx = new NextGenDynamicMediaContext(
         NextGenDynamicMediaReference.fromReference(SAMPLE_REFERENCE),
-        null,
+        metadata,
         null,
         mediaArgs,
         nextGenDynamicMediaConfig,

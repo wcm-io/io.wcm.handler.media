@@ -62,7 +62,7 @@ class TransformedRenditionHandlerTest {
 
   @BeforeEach
   @SuppressWarnings("null")
-  void setUp() throws Exception {
+  void setUp() {
 
     // register RenditionMetadataListenerService to generate rendition metadata
     context.registerInjectActivateService(new AssetSynchonizationService());

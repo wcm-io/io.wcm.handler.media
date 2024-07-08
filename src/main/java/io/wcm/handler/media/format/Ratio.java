@@ -84,7 +84,7 @@ public final class Ratio {
    * @return Ratio (returns 0 when ratio is invalid)
    */
   public static double get(long width, long height) {
-    return Ratio.get((double)width, (double)height);
+    return get((double)width, (double)height);
   }
 
   /**

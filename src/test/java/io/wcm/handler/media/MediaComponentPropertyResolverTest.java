@@ -124,7 +124,7 @@ class MediaComponentPropertyResolverTest {
   }
 
   @Test
-  void testIsAutoCrop_ValueMap() throws Exception {
+  void testIsAutoCrop_ValueMap() {
     ValueMap valueMap = new ValueMapDecorator(Map.<String, Object>of(PN_COMPONENT_MEDIA_AUTOCROP, true));
 
     try (MediaComponentPropertyResolver underTest = new MediaComponentPropertyResolver(valueMap)) {
@@ -249,7 +249,6 @@ class MediaComponentPropertyResolverTest {
   }
 
   @Test
-  @SuppressWarnings("unused")
   void testParseWidths() {
     assertNull(parseWidths(null));
     assertNull(parseWidths(""));

@@ -19,21 +19,27 @@
  */
 package io.wcm.handler.mediasource.ngdm;
 
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.Self;
+import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.dam.api.Asset;
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.api.components.EditConfig;
@@ -54,7 +60,7 @@ import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata
 import io.wcm.sling.models.annotations.AemObject;
 
 /**
- * Handles remote asset referenced via Next Generation Dynamic Media.
+ * Handles remote asset referenced via Dynamic Media with OpenAPI.
  */
 @Model(adaptables = {
     SlingHttpServletRequest.class, Resource.class
@@ -71,6 +77,8 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   private Adaptable adaptable;
   @Self
   private MediaHandlerConfig mediaHandlerConfig;
+  @SlingObject
+  private ResourceResolver resourceResolver;
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private NextGenDynamicMediaConfigService nextGenDynamicMediaConfig;
   @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -92,15 +100,15 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
 
   @Override
   public boolean accepts(@Nullable String mediaRef) {
-    return isNextGenDynamicMediaEnabled() && NextGenDynamicMediaReference.isReference(mediaRef);
-  }
-
-  private boolean isNextGenDynamicMediaEnabled() {
     if (nextGenDynamicMediaConfig == null) {
-      log.debug("NGDM media source is disabled: com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig is not available.");
       return false;
     }
-    return nextGenDynamicMediaConfig.enabled();
+    return (nextGenDynamicMediaConfig.isEnabledRemoteAssets() && NextGenDynamicMediaReference.isReference(mediaRef))
+        || (nextGenDynamicMediaConfig.isEnabledLocalAssets() && isDamAssetReference(mediaRef));
+  }
+
+  private boolean isDamAssetReference(@Nullable String mediaRef) {
+    return StringUtils.startsWith(mediaRef, "/content/dam/");
   }
 
   @Override
@@ -109,13 +117,14 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   }
 
   @Override
+  @SuppressWarnings("java:S3776") // complexity
   public @NotNull Media resolveMedia(@NotNull Media media) {
     String mediaRef = getMediaRef(media.getMediaRequest(), mediaHandlerConfig);
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // check reference and enabled status
-    NextGenDynamicMediaReference reference = NextGenDynamicMediaReference.fromReference(mediaRef);
-    if (reference == null || !isNextGenDynamicMediaEnabled()) {
+    NextGenDynamicMediaReference reference = toNextGenDynamicMediaReference(mediaRef);
+    if (reference == null || nextGenDynamicMediaConfig == null) {
       if (StringUtils.isEmpty(mediaRef)) {
         media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_MISSING);
       }
@@ -127,12 +136,23 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
 
     // If enabled: Fetch asset metadata to validate existence and get original dimensions
     NextGenDynamicMediaMetadata metadata = null;
-    if (metadataService != null && metadataService.isEnabled()) {
+    Asset localAsset = reference.getAsset();
+    if (localAsset != null) {
+      metadata = getMetadataFromAsset(localAsset);
+    }
+    else if (metadataService != null && metadataService.isEnabled()) {
       metadata = metadataService.fetchMetadata(reference);
       if (metadata == null) {
         media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
         return media;
       }
+    }
+
+    // Do not accept assets that are not approved
+    if (metadata != null && !StringUtils.equals(metadata.getAssetStatus(), ASSET_STATUS_APPROVED)) {
+      log.trace("Reject asset with {}={} (expected: {})", ASSET_STATUS_PROPERTY, metadata.getAssetStatus(), ASSET_STATUS_APPROVED);
+      media.setMediaInvalidReason(MediaInvalidReason.NOT_APPROVED);
+      return media;
     }
 
     // Update media args settings from resource (e.g. alt. text setings)
@@ -160,6 +180,26 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
     }
 
     return media;
+  }
+
+  private @Nullable NextGenDynamicMediaReference toNextGenDynamicMediaReference(@Nullable String mediaRef) {
+    if (nextGenDynamicMediaConfig != null) {
+      if (nextGenDynamicMediaConfig.isEnabledRemoteAssets() && NextGenDynamicMediaReference.isReference(mediaRef)) {
+        return NextGenDynamicMediaReference.fromReference(mediaRef);
+      }
+      else if (nextGenDynamicMediaConfig.isEnabledLocalAssets() && isDamAssetReference(mediaRef)) {
+        return NextGenDynamicMediaReference.fromDamAssetReference(mediaRef, resourceResolver);
+      }
+    }
+    return null;
+  }
+
+  private @Nullable NextGenDynamicMediaMetadata getMetadataFromAsset(@NotNull Asset asset) {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromAsset(asset);
+    if (metadata.isValid()) {
+      return metadata;
+    }
+    return null;
   }
 
   @Override

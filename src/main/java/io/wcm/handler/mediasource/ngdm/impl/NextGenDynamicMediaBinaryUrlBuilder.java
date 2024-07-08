@@ -37,6 +37,8 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
 
   private final NextGenDynamicMediaContext context;
 
+  static final String PARAM_ATTACHMENT = "attachment";
+
   /**
    * @param context Context
    */
@@ -48,12 +50,18 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
    * Builds the URL for a binary.
    * @return URL or null if invalid/not possible
    */
-  public @Nullable String build() {
+  public @Nullable String build(boolean contentDispositionAttachment) {
 
     // get parameters from nextgen dynamic media config for URL parameters
-    String repositoryId = context.getNextGenDynamicMediaConfig().getRepositoryId();
+    String repositoryId;
+    if (context.getReference().getAsset() != null) {
+      repositoryId = context.getNextGenDynamicMediaConfig().getLocalAssetsRepositoryId();
+    }
+    else {
+      repositoryId = context.getNextGenDynamicMediaConfig().getRemoteAssetsRepositoryId();
+    }
     String binaryDeliveryPath = context.getNextGenDynamicMediaConfig().getAssetOriginalBinaryDeliveryPath();
-    if (StringUtils.isAnyEmpty(repositoryId, binaryDeliveryPath)) {
+    if (StringUtils.isAnyBlank(repositoryId, binaryDeliveryPath)) {
       return null;
     }
 
@@ -67,6 +75,9 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
     url.append("https://")
         .append(repositoryId)
         .append(binaryDeliveryPath);
+    if (contentDispositionAttachment) {
+      url.append("?").append(PARAM_ATTACHMENT).append("=true");
+    }
     return url.toString();
   }
 

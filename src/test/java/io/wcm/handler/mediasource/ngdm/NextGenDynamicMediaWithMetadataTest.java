@@ -149,7 +149,7 @@ class NextGenDynamicMediaWithMetadataTest {
     assertNotNull(rendition);
     assertEquals(ContentType.PDF, rendition.getMimeType());
     assertEquals(
-        "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf?accept-experimental=1",
+        "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf",
         rendition.getUrl());
   }
 
@@ -163,7 +163,7 @@ class NextGenDynamicMediaWithMetadataTest {
 
   private String buildUrl(String urlParams, String extension) {
     return "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
-        + extension + "?accept-experimental=1&" + urlParams;
+        + extension + "?" + urlParams;
   }
 
 }

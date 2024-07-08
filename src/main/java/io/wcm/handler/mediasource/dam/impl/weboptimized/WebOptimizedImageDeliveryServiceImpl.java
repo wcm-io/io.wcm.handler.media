@@ -47,7 +47,7 @@ public class WebOptimizedImageDeliveryServiceImpl implements WebOptimizedImageDe
 
   @ObjectClassDefinition(
       name = "wcm.io Media Handler Web-Optimized Image Delivery Support",
-      description = "Support for Next Generation Dynamic Media Web-Optimized Image Delivery capabilites.")
+      description = "Support for AEMaaCS Web-Optimized Image Delivery capabilites.")
   @interface Config {
 
     @AttributeDefinition(

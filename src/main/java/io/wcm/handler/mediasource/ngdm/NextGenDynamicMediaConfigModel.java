@@ -26,7 +26,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService;
 
 /**
- * Prepares Next Generation Dynamic Media configuration for GraniteUI components (fileupload, pathfield).
+ * Prepares Dynamic Media with OpenAPI Remote Assets configuration for GraniteUI components (fileupload, pathfield).
  */
 @Model(adaptables = SlingHttpServletRequest.class)
 @ProviderType
@@ -49,7 +48,7 @@ public final class NextGenDynamicMediaConfigModel {
   private static final JsonMapper MAPPER = JsonMapper.builder().build();
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigModel.class);
 
-  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
+  @OSGiService
   private NextGenDynamicMediaConfigService config;
 
   private boolean enabled;
@@ -58,29 +57,27 @@ public final class NextGenDynamicMediaConfigModel {
 
   @PostConstruct
   private void activate() {
-    if (config != null) {
-      enabled = config.enabled();
-      assetSelectorsJsUrl = config.getAssetSelectorsJsUrl();
-      configJson = buildConfigJsonString(config);
-    }
+    enabled = config.isEnabledRemoteAssets();
+    assetSelectorsJsUrl = config.getAssetSelectorsJsUrl();
+    configJson = buildConfigJsonString(config);
   }
 
   private static String buildConfigJsonString(@NotNull NextGenDynamicMediaConfigService config) {
     Map<String, Object> map = new TreeMap<>();
-    map.put("repositoryId", config.getRepositoryId());
+    map.put("repositoryId", config.getRemoteAssetsRepositoryId());
     map.put("apiKey", config.getApiKey());
     map.put("env", config.getEnv());
     try {
       return MAPPER.writeValueAsString(map);
     }
     catch (JsonProcessingException ex) {
-      log.warn("Unable to serialize Next Generation Dynamic Media config to JSON.", ex);
+      log.warn("Unable to serialize Dynamic Media with OpenAPI config to JSON.", ex);
       return "{}";
     }
   }
 
   /**
-   * @return true if Next Generation Dynamic Media is available and enabled.
+   * @return true if Dynamic Media with OpenAPI for remote assets is available and enabled.
    */
   public boolean isEnabled() {
     return this.enabled;

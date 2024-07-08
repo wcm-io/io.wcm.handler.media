@@ -110,7 +110,15 @@ public final class MediaArgsDimension {
         ratioWidth *= 100000d;
         ratioHeight *= 100000d;
       }
-      return new Dimension(Math.round(ratioWidth), Math.round(ratioHeight));
+      long ratioWidthLong = Math.round(ratioWidth);
+      long ratioHeightLong = Math.round(ratioHeight);
+      while (ratioWidthLong % 10 == 0 && ratioHeightLong % 10 == 0
+          && ratioWidthLong > 0 && ratioHeightLong > 0) {
+        // de-extrapolate superfluous zeros
+        ratioWidthLong /= 10;
+        ratioHeightLong /= 10;
+      }
+      return new Dimension(ratioWidthLong, ratioHeightLong);
     }
 
     // no ratio

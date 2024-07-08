@@ -23,13 +23,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+
+@ExtendWith(AemContextExtension.class)
 class MediaRequestTest {
+
+  private final AemContext context = AppAemContext.newAemContext();
 
   @Test
   void testToString() {
     MediaRequest request = new MediaRequest("/path", null);
     assertTrue(StringUtils.contains(request.toString(), "/path"));
+  }
+
+  @Test
+  void testToString_Resource() {
+    MediaRequest request = new MediaRequest(context.create().resource("/content/test"), null);
+    assertTrue(StringUtils.contains(request.toString(), "/content/test"));
   }
 
 }

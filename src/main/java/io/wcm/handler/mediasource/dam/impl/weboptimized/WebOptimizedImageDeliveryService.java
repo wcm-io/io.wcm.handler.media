@@ -25,8 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import com.day.cq.dam.api.Asset;
 
 /**
- * Supports rendering asset renditions from stored in AEMaaCS sites instance via Next Generation Dynamic Media
- * "Web-Optimized Image Delivery", rendering the renditions on the edge.
+ * Supports rendering asset renditions from stored in AEMaaCS sites instance via "Web-Optimized Image Delivery",
+ * rendering the renditions on the edge.
  * This is not available in AEM 6.5 or AEMaaCS SDK.
  */
 public interface WebOptimizedImageDeliveryService {

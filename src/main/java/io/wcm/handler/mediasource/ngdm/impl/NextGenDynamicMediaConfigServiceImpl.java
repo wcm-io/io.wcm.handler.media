@@ -20,9 +20,11 @@
 package io.wcm.handler.mediasource.ngdm.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -41,9 +43,24 @@ import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMediaConfigService {
 
   @ObjectClassDefinition(
-      name = "wcm.io Media Handler Next Generation Dynamic Media Support",
-      description = "Support for Next Generation Dynamic Media.")
+      name = "wcm.io Media Handler Dynamic Media with OpenAPI Support",
+      description = "Support for Dynamic Media with OpenAPI.")
   @interface Config {
+
+    @AttributeDefinition(
+        name = "Remote Assets",
+        description = "Enable Dynamic Media with OpenAPI for remote assets.")
+    boolean enabledRemoteAssets() default true;
+
+    @AttributeDefinition(
+        name = "Local Assets",
+        description = "Enable Next Dynamic Media with OpenAPI for local assets in this AEMaaCS instance.")
+    boolean enabledLocalAssets() default false;
+
+    @AttributeDefinition(
+        name = "Repository ID for Local Assets",
+        description = "Dynamic Media with OpenAPI Delivery host name for local assets. Mandatory if local assets is enabled.")
+    String localAssetsRepositoryId();
 
     @AttributeDefinition(
         name = "Image Delivery Base Path",
@@ -51,7 +68,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
             + "Placeholders: " + PLACEHOLDER_ASSET_ID + ", " + PLACEHOLDER_SEO_NAME + ", " + PLACEHOLDER_FORMAT + ". "
             + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
     String imageDeliveryBasePath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/as/"
-        + PLACEHOLDER_SEO_NAME + "." + PLACEHOLDER_FORMAT + "?accept-experimental=1";
+        + PLACEHOLDER_SEO_NAME + "." + PLACEHOLDER_FORMAT;
 
     @AttributeDefinition(
         name = "Asset Original Binary Delivery Path",
@@ -59,7 +76,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
             + "Placeholders: " + PLACEHOLDER_ASSET_ID + ", " + PLACEHOLDER_SEO_NAME + ". "
             + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
     String assetOriginalBinaryDeliveryPath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/original/as/"
-        + PLACEHOLDER_SEO_NAME + "?accept-experimental=1";
+        + PLACEHOLDER_SEO_NAME;
 
     @AttributeDefinition(
         name = "Asset Metadata Path",
@@ -68,80 +85,122 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
             + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
     String assetMetadataPath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/metadata";
 
+    @AttributeDefinition(
+        name = "Default image width/height",
+        description = "Default width/height (longest edge) when requesting image renditions without explicit dimension.")
+    long imageWidthHeightDefault() default 2048;
+
   }
 
   private static final String ADOBE_ASSETS_PREFIX = "/adobe/assets/";
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigServiceImpl.class);
 
+  private boolean enabledRemoteAssets;
+  private boolean enabledLocalAssets;
+  private String localAssetsRepositoryId;
   private String imageDeliveryBasePath;
   private String assetOriginalBinaryDeliveryPath;
   private String assetMetadataPath;
+  private long imageWidthHeightDefault;
 
-  @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY)
+  @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY, cardinality = ReferenceCardinality.OPTIONAL)
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
 
   @Activate
   private void activate(Config config) {
-    log.debug("NGDM config: enabled={}, repositoryId={}, apiKey={}, env={}, imsClient={}",
-        enabled(), getRepositoryId(), getApiKey(), getEnv(), getImsClient());
+    enabledRemoteAssets = config.enabledRemoteAssets();
+    if (enabledRemoteAssets) {
+      if (nextGenDynamicMediaConfig == null) {
+        log.debug("NextGenDynamicMediaConfig service is not available, disable remote assets.");
+        enabledRemoteAssets = false;
+      }
+      else {
+        log.debug("NextGenDynamicMediaConfig: enabled={}, repositoryId={}, apiKey={}, env={}, imsClient={}",
+            nextGenDynamicMediaConfig.enabled(), nextGenDynamicMediaConfig.getRepositoryId(),
+            nextGenDynamicMediaConfig.getApiKey(), nextGenDynamicMediaConfig.getEnv(), nextGenDynamicMediaConfig.getImsClient());
+      }
+    }
 
-    this.imageDeliveryBasePath = StringUtils.defaultIfBlank(config.imageDeliveryBasePath(),
-        this.nextGenDynamicMediaConfig.getImageDeliveryBasePath());
-    this.assetOriginalBinaryDeliveryPath = StringUtils.defaultIfBlank(config.assetOriginalBinaryDeliveryPath(),
-        this.nextGenDynamicMediaConfig.getAssetOriginalBinaryDeliveryPath());
-    this.assetMetadataPath = StringUtils.defaultIfBlank(config.assetMetadataPath(),
-        this.nextGenDynamicMediaConfig.getAssetMetadataPath());
+    imageDeliveryBasePath = StringUtils.defaultIfBlank(config.imageDeliveryBasePath(),
+        nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getImageDeliveryBasePath() : null);
+    assetOriginalBinaryDeliveryPath = StringUtils.defaultIfBlank(config.assetOriginalBinaryDeliveryPath(),
+        nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getAssetOriginalBinaryDeliveryPath() : null);
+    assetMetadataPath = StringUtils.defaultIfBlank(config.assetMetadataPath(),
+        nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getAssetMetadataPath() : null);
 
+    enabledLocalAssets = config.enabledLocalAssets();
+    localAssetsRepositoryId = config.localAssetsRepositoryId();
+    if (enabledLocalAssets && StringUtils.isBlank(localAssetsRepositoryId)) {
+      log.debug("localAssetsRepositoryId is not configured, disable local assets.");
+      enabledLocalAssets = false;
+    }
+
+    imageWidthHeightDefault = config.imageWidthHeightDefault();
   }
 
   @Override
-  public boolean enabled() {
-    return this.nextGenDynamicMediaConfig.enabled();
+  public boolean isEnabledRemoteAssets() {
+    return enabledRemoteAssets && nextGenDynamicMediaConfig != null && nextGenDynamicMediaConfig.enabled();
   }
 
   @Override
-  public String getAssetSelectorsJsUrl() {
-    return this.nextGenDynamicMediaConfig.getAssetSelectorsJsUrl();
+  public boolean isEnabledLocalAssets() {
+    return enabledLocalAssets;
   }
 
   @Override
-  public String getImageDeliveryBasePath() {
+  public @Nullable String getAssetSelectorsJsUrl() {
+    return nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getAssetSelectorsJsUrl() : null;
+  }
+
+  @Override
+  public @Nullable String getImageDeliveryBasePath() {
     return imageDeliveryBasePath;
   }
 
   @Override
-  public String getVideoDeliveryPath() {
-    return this.nextGenDynamicMediaConfig.getVideoDeliveryPath();
+  public @Nullable String getVideoDeliveryPath() {
+    return nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getVideoDeliveryPath() : null;
   }
 
   @Override
-  public String getAssetOriginalBinaryDeliveryPath() {
+  public @Nullable String getAssetOriginalBinaryDeliveryPath() {
     return assetOriginalBinaryDeliveryPath;
   }
 
   @Override
-  public String getAssetMetadataPath() {
+  public @Nullable String getAssetMetadataPath() {
     return assetMetadataPath;
   }
 
   @Override
-  public String getRepositoryId() {
-    return this.nextGenDynamicMediaConfig.getRepositoryId();
+  public @Nullable String getRemoteAssetsRepositoryId() {
+    return nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getRepositoryId() : null;
   }
 
   @Override
-  public String getApiKey() {
-    return this.nextGenDynamicMediaConfig.getApiKey();
+  public @Nullable String getLocalAssetsRepositoryId() {
+    return localAssetsRepositoryId;
   }
 
   @Override
-  public String getEnv() {
-    return this.nextGenDynamicMediaConfig.getEnv();
+  public @Nullable String getApiKey() {
+    return nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getApiKey() : null;
   }
 
   @Override
-  public String getImsClient() {
-    return this.nextGenDynamicMediaConfig.getImsClient();
+  public @Nullable String getEnv() {
+    return nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getEnv() : null;
+  }
+
+  @Override
+  public @Nullable String getImsClient() {
+    return nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getImsClient() : null;
+  }
+
+  @Override
+  public long getImageWidthHeightDefault() {
+    return imageWidthHeightDefault;
   }
 
 }

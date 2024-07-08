@@ -35,9 +35,9 @@ import io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaMediaSource;
 public class DummyMediaHandlerConfig extends MediaHandlerConfig {
 
   private static final List<Class<? extends MediaSource>> MEDIA_SOURCES = List.of(
+      NextGenDynamicMediaMediaSource.class,
       DamMediaSource.class,
-      InlineMediaSource.class,
-      NextGenDynamicMediaMediaSource.class);
+      InlineMediaSource.class);
 
   private boolean enforceVirtualRenditions;
 
@@ -47,6 +47,7 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
   }
 
   @Override
+  @Deprecated
   public boolean includeAssetWebRenditionsByDefault() {
     // unit tests rely on old behavior
     return true;
