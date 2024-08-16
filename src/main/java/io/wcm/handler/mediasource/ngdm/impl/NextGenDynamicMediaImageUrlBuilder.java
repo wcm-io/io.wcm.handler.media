@@ -82,13 +82,6 @@ public final class NextGenDynamicMediaImageUrlBuilder {
    */
   public @Nullable String build(@NotNull NextGenDynamicMediaImageDeliveryParams params) {
 
-    // get original image metadata
-    NextGenDynamicMediaMetadata metadata = context.getMetadata();
-    Dimension orginalDimension = null;
-    if (metadata != null) {
-      orginalDimension = metadata.getDimension();
-    }
-
     // get parameters from nextgen dynamic media config for URL parameters
     String repositoryId;
     if (context.getReference().getAsset() != null) {
@@ -110,61 +103,17 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_FORMAT, format);
 
     // prepare URL params
-    Dimension requestedRatio = params.getRatio();
-    Integer rotation = params.getRotation();
-    Integer quality = params.getQuality();
-
     SortedMap<String, String> urlParamMap = new TreeMap<>();
     urlParamMap.put(PARAM_PREFER_WEBP, "true");
 
-    // check for a matching named smart cropping profile
-    SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(metadata, requestedRatio);
-    if (namedSmartCrop != null) {
-      urlParamMap.put(PARAM_SMARTCROP, namedSmartCrop.getName());
-      boolean widthOrHeightDefined = applyWidthOrPlaceholder(params, urlParamMap) || applyHeightOrPlaceholder(params, urlParamMap);
-      if (!widthOrHeightDefined) {
-        // if no width or height given apply default width/height to not rely on dimensions defined in AEM image profile
-        String imageWidthHeightDefault = Long.toString(context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault());
-        if (namedSmartCrop.getCropDimension().getWidth() >= namedSmartCrop.getCropDimension().getHeight()) {
-          urlParamMap.put(PARAM_WIDTH, imageWidthHeightDefault);
-        }
-        else {
-          urlParamMap.put(PARAM_HEIGHT, imageWidthHeightDefault);
-        }
-      }
-    }
-    else if (orginalDimension != null && requestedRatio != null && isAutoCroppingRequired(orginalDimension, requestedRatio)) {
-      // apply static auto crop (center-cropping)
-      CropDimension cropDimension = ImageTransformation.calculateAutoCropDimension(
-          orginalDimension.getWidth(), orginalDimension.getHeight(), Ratio.get(requestedRatio));
-      urlParamMap.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
-      if (!applyWidthOrPlaceholder(params, urlParamMap)) {
-        applyHeightOrPlaceholder(params, urlParamMap);
-      }
-    }
-    else {
-      // No cropping required or insufficient metadata available to detect cropping
-      boolean widthDefined = applyWidthOrPlaceholder(params, urlParamMap);
-      boolean heightDefined = applyHeightOrPlaceholder(params, urlParamMap);
-      if (!(widthDefined || heightDefined) && requestedRatio != null) {
-        // if no width or height given apply default width/height respecting the requested aspect ratio
-        double ratio = Ratio.get(requestedRatio);
-        long width = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
-        long height = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
-        if (ratio > 1) {
-          height = Math.round(width / ratio);
-        }
-        else if (ratio < 1) {
-          width = Math.round(height * ratio);
-        }
-        urlParamMap.put(PARAM_WIDTH, Long.toString(width));
-        urlParamMap.put(PARAM_HEIGHT, Long.toString(height));
-      }
-    }
+    applyWidthHeightCroppingParams(params, urlParamMap);
 
+    Integer rotation = params.getRotation();
     if (rotation != null && rotation != 0) {
       urlParamMap.put(PARAM_ROTATE, rotation.toString());
     }
+
+    Integer quality = params.getQuality();
     if (quality != null) {
       urlParamMap.put(PARAM_QUALITY, quality.toString());
     }
@@ -211,6 +160,67 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       sb.append(value);
     }
     return sb.toString();
+  }
+
+  /**
+   * Apply URL parameters for cropping, width and height.
+   * @param params Parameters
+   * @param urlParamMap URL parameters
+   */
+  @SuppressWarnings("java:S3776") // complexity
+  private void applyWidthHeightCroppingParams(@NotNull NextGenDynamicMediaImageDeliveryParams params, @NotNull SortedMap<String, String> urlParamMap) {
+    // get original image metadata
+    NextGenDynamicMediaMetadata metadata = context.getMetadata();
+    Dimension orginalDimension = null;
+    if (metadata != null) {
+      orginalDimension = metadata.getDimension();
+    }
+
+    // check for a matching named smart cropping profile
+    Dimension requestedRatio = params.getRatio();
+    SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(metadata, requestedRatio);
+    if (namedSmartCrop != null) {
+      urlParamMap.put(PARAM_SMARTCROP, namedSmartCrop.getName());
+      boolean widthOrHeightDefined = applyWidthOrPlaceholder(params, urlParamMap) || applyHeightOrPlaceholder(params, urlParamMap);
+      if (!widthOrHeightDefined) {
+        // if no width or height given apply default width/height to not rely on dimensions defined in AEM image profile
+        String imageWidthHeightDefault = Long.toString(context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault());
+        if (namedSmartCrop.getCropDimension().getWidth() >= namedSmartCrop.getCropDimension().getHeight()) {
+          urlParamMap.put(PARAM_WIDTH, imageWidthHeightDefault);
+        }
+        else {
+          urlParamMap.put(PARAM_HEIGHT, imageWidthHeightDefault);
+        }
+      }
+    }
+    else if (orginalDimension != null && requestedRatio != null && isAutoCroppingRequired(orginalDimension, requestedRatio)) {
+      // apply static auto crop (center-cropping)
+      CropDimension cropDimension = ImageTransformation.calculateAutoCropDimension(
+          orginalDimension.getWidth(), orginalDimension.getHeight(), Ratio.get(requestedRatio));
+      urlParamMap.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
+      if (!applyWidthOrPlaceholder(params, urlParamMap)) {
+        applyHeightOrPlaceholder(params, urlParamMap);
+      }
+    }
+    else {
+      // No cropping required or insufficient metadata available to detect cropping
+      boolean widthDefined = applyWidthOrPlaceholder(params, urlParamMap);
+      boolean heightDefined = applyHeightOrPlaceholder(params, urlParamMap);
+      if (!(widthDefined || heightDefined) && requestedRatio != null) {
+        // if no width or height given apply default width/height respecting the requested aspect ratio
+        double ratio = Ratio.get(requestedRatio);
+        long width = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
+        long height = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
+        if (ratio > 1) {
+          height = Math.round(width / ratio);
+        }
+        else if (ratio < 1) {
+          width = Math.round(height * ratio);
+        }
+        urlParamMap.put(PARAM_WIDTH, Long.toString(width));
+        urlParamMap.put(PARAM_HEIGHT, Long.toString(height));
+      }
+    }
   }
 
   /**
