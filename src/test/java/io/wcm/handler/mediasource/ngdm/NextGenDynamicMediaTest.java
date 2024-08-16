@@ -271,7 +271,7 @@ class NextGenDynamicMediaTest {
     setupNGDM(true);
     MediaHandler mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
-    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG,
+    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 20, 10, ContentType.JPEG,
         ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
     ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
     props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
@@ -283,6 +283,15 @@ class NextGenDynamicMediaTest {
         .build();
     assertTrue(media.isValid());
     assertUrl(media, "preferwebp=true&quality=85", "jpg");
+
+    // validate URI template
+    Rendition rendition = media.getRendition();
+    UriTemplate uriTemplate = rendition.getUriTemplate(UriTemplateType.SCALE_WIDTH);
+    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?preferwebp=true&quality=85&width={width}",
+        uriTemplate.getUriTemplate());
+    assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplate.getType());
+    assertEquals(20, uriTemplate.getMaxWidth());
+    assertEquals(10, uriTemplate.getMaxHeight());
   }
 
   @Test

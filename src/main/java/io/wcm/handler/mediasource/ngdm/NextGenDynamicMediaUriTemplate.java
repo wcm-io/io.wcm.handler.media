@@ -30,6 +30,7 @@ import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageUrlBuilder;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
 
 /**
  * {@link UriTemplate} implementation for Next Gen. Dynamic Media remote assets.
@@ -38,10 +39,19 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
 
   private final UriTemplateType type;
   private final String uriTemplate;
+  private final Dimension dimension;
 
   NextGenDynamicMediaUriTemplate(@NotNull NextGenDynamicMediaContext context,
       @NotNull UriTemplateType type) {
     this.type = type;
+
+    NextGenDynamicMediaMetadata metadata = context.getMetadata();
+    if (metadata != null) {
+      dimension = metadata.getDimension();
+    }
+    else {
+      dimension = null;
+    }
 
     if (type == UriTemplateType.SCALE_HEIGHT) {
       throw new IllegalArgumentException("URI template type not supported: " + type);
@@ -72,11 +82,17 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
 
   @Override
   public long getMaxWidth() {
+    if (dimension != null) {
+      return dimension.getWidth();
+    }
     return 0; // unknown
   }
 
   @Override
   public long getMaxHeight() {
+    if (dimension != null) {
+      return dimension.getHeight();
+    }
     return 0; // unknown
   }
 
