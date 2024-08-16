@@ -84,12 +84,13 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
+        .height(50L)
         .cropSmartRatio(new Dimension(16, 9))
         .rotation(90)
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
+        + "?height=50&preferwebp=true&quality=60&rotate=90&width=100",
         underTest.build(params));
   }
 
@@ -134,6 +135,20 @@ class NextGenDynamicMediaImageUrlBuilderTest {
   }
 
   @Test
+  void testAllParams_AutoCropping() throws Exception {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .width(100L)
+        .cropSmartRatio(new Dimension(1, 1))
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?crop=200%2C0%2C800%2C800&preferwebp=true&quality=60&width=100",
+        underTest.build(params));
+  }
+
+  @Test
   void testAllParams_EmptyOsgiConfig() {
     nextGenDynamicMediaConfig = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
         "imageDeliveryBasePath", "",
@@ -143,12 +158,13 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
+        .height(50L)
         .cropSmartRatio(new Dimension(16, 9))
         .rotation(90)
         .quality(60);
 
     assertEquals("https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg"
-        + "?crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
+        + "?height=50&preferwebp=true&quality=60&rotate=90&width=100",
         underTest.build(params));
   }
 

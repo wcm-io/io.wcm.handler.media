@@ -53,14 +53,16 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
       dimension = null;
     }
 
-    if (type == UriTemplateType.SCALE_HEIGHT) {
-      throw new IllegalArgumentException("URI template type not supported: " + type);
-    }
-
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .widthPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH)
         .rotation(context.getMedia().getRotation())
         .quality(ImageQualityPercentage.getAsInteger(context.getDefaultMediaArgs(), context.getMediaHandlerConfig()));
+
+    if (type == UriTemplateType.SCALE_HEIGHT) {
+      params.heightPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_HEIGHT);
+    }
+    else {
+      params.widthPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH);
+    }
 
     Dimension ratio = MediaArgsDimension.getRequestedRatioAsWidthHeight(context.getDefaultMediaArgs());
     if (ratio != null) {
