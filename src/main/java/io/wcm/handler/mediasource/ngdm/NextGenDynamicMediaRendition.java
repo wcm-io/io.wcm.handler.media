@@ -126,9 +126,12 @@ final class NextGenDynamicMediaRendition implements Rendition {
     if (this.width > 0) {
       params.width(this.width);
     }
+    if (this.height > 0) {
+      params.height(this.height);
+    }
     Dimension ratioDimension = MediaArgsDimension.getRequestedRatioAsWidthHeight(mediaArgs);
     if (ratioDimension != null) {
-      params.cropSmartRatio(ratioDimension);
+      params.ratio(ratioDimension);
     }
 
     return new NextGenDynamicMediaImageUrlBuilder(context).build(params);

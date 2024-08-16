@@ -35,8 +35,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.format.Ratio;
+import io.wcm.handler.media.impl.ImageTransformation;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.SmartCrop;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -101,27 +103,17 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_FORMAT, format);
 
     // prepare URL params
-    Long width = params.getWidth();
-    String widthPlaceholder = params.getWidthPlaceholder();
-    Dimension cropSmartRatio = params.getCropSmartRatio();
-    Integer rotation = params.getRotation();
-    Integer quality = params.getQuality();
-
     SortedMap<String, String> urlParamMap = new TreeMap<>();
     urlParamMap.put(PARAM_PREFER_WEBP, "true");
-    if (widthPlaceholder != null) {
-      urlParamMap.put(PARAM_WIDTH, widthPlaceholder);
-    }
-    else if (width != null) {
-      urlParamMap.put(PARAM_WIDTH, width.toString());
-    }
-    if (cropSmartRatio != null) {
-      boolean hasWidthDefined = width != null || widthPlaceholder != null;
-      applyCroppingParams(urlParamMap, cropSmartRatio, hasWidthDefined);
-    }
+
+    applyWidthHeightCroppingParams(params, urlParamMap);
+
+    Integer rotation = params.getRotation();
     if (rotation != null && rotation != 0) {
       urlParamMap.put(PARAM_ROTATE, rotation.toString());
     }
+
+    Integer quality = params.getQuality();
     if (quality != null) {
       urlParamMap.put(PARAM_QUALITY, quality.toString());
     }
@@ -171,15 +163,27 @@ public final class NextGenDynamicMediaImageUrlBuilder {
   }
 
   /**
-   * Generates cropping/smart cropping URL parameters with or without named smart crop.
+   * Apply URL parameters for cropping, width and height.
+   * @param params Parameters
+   * @param urlParamMap URL parameters
    */
-  private void applyCroppingParams(@NotNull SortedMap<String, String> urlParamMap,
-      @NotNull Dimension cropSmartRatio, boolean hasWidthDefined) {
-    SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(cropSmartRatio);
+  @SuppressWarnings("java:S3776") // complexity
+  private void applyWidthHeightCroppingParams(@NotNull NextGenDynamicMediaImageDeliveryParams params, @NotNull SortedMap<String, String> urlParamMap) {
+    // get original image metadata
+    NextGenDynamicMediaMetadata metadata = context.getMetadata();
+    Dimension orginalDimension = null;
+    if (metadata != null) {
+      orginalDimension = metadata.getDimension();
+    }
+
+    // check for a matching named smart cropping profile
+    Dimension requestedRatio = params.getRatio();
+    SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(metadata, requestedRatio);
     if (namedSmartCrop != null) {
       urlParamMap.put(PARAM_SMARTCROP, namedSmartCrop.getName());
-      if (!hasWidthDefined) {
-        // if no width given apply default width/height to not rely on dimensions defined in AEM image profile
+      boolean widthOrHeightDefined = applyWidthOrPlaceholder(params, urlParamMap) || applyHeightOrPlaceholder(params, urlParamMap);
+      if (!widthOrHeightDefined) {
+        // if no width or height given apply default width/height to not rely on dimensions defined in AEM image profile
         String imageWidthHeightDefault = Long.toString(context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault());
         if (namedSmartCrop.getCropDimension().getWidth() >= namedSmartCrop.getCropDimension().getHeight()) {
           urlParamMap.put(PARAM_WIDTH, imageWidthHeightDefault);
@@ -189,8 +193,33 @@ public final class NextGenDynamicMediaImageUrlBuilder {
         }
       }
     }
+    else if (orginalDimension != null && requestedRatio != null && isAutoCroppingRequired(orginalDimension, requestedRatio)) {
+      // apply static auto crop (center-cropping)
+      CropDimension cropDimension = ImageTransformation.calculateAutoCropDimension(
+          orginalDimension.getWidth(), orginalDimension.getHeight(), Ratio.get(requestedRatio));
+      urlParamMap.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
+      if (!applyWidthOrPlaceholder(params, urlParamMap)) {
+        applyHeightOrPlaceholder(params, urlParamMap);
+      }
+    }
     else {
-      urlParamMap.put(PARAM_CROP, cropSmartRatio.getWidth() + ":" + cropSmartRatio.getHeight() + ",smart");
+      // No cropping required or insufficient metadata available to detect cropping
+      boolean widthDefined = applyWidthOrPlaceholder(params, urlParamMap);
+      boolean heightDefined = applyHeightOrPlaceholder(params, urlParamMap);
+      if (!(widthDefined || heightDefined) && requestedRatio != null) {
+        // if no width or height given apply default width/height respecting the requested aspect ratio
+        double ratio = Ratio.get(requestedRatio);
+        long width = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
+        long height = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
+        if (ratio > 1) {
+          height = Math.round(width / ratio);
+        }
+        else if (ratio < 1) {
+          width = Math.round(height * ratio);
+        }
+        urlParamMap.put(PARAM_WIDTH, Long.toString(width));
+        urlParamMap.put(PARAM_HEIGHT, Long.toString(height));
+      }
     }
   }
 
@@ -199,9 +228,8 @@ public final class NextGenDynamicMediaImageUrlBuilder {
    * @param cropSmartRatio Requested ratio
    * @return Matching named smart crop or null if none found
    */
-  private @Nullable SmartCrop getMatchingNamedSmartCrop(@NotNull Dimension cropSmartRatio) {
-    NextGenDynamicMediaMetadata metadata = context.getMetadata();
-    if (metadata == null) {
+  private @Nullable SmartCrop getMatchingNamedSmartCrop(@Nullable NextGenDynamicMediaMetadata metadata, @Nullable Dimension cropSmartRatio) {
+    if (metadata == null || cropSmartRatio == null) {
       return null;
     }
     double requestedRatio = Ratio.get(cropSmartRatio);
@@ -209,6 +237,58 @@ public final class NextGenDynamicMediaImageUrlBuilder {
         .filter(smartCrop -> Ratio.matches(smartCrop.getRatio(), requestedRatio))
         .findFirst()
         .orElse(null);
+  }
+
+  /**
+   * Checks if auto cropping is required.
+   * @param originalDimension Dimension of original image
+   * @param cropSmartRatio Requested aspect ratio
+   * @return true if auto cropping is required. False if original image matches the requested ratio.
+   */
+  private boolean isAutoCroppingRequired(@NotNull Dimension originalDimension, @NotNull Dimension cropSmartRatio) {
+    return !Ratio.matches(Ratio.get(originalDimension), Ratio.get(cropSmartRatio));
+  }
+
+  /**
+   * Apply either width value or width placeholder, if available.
+   * @param params Parameters
+   * @param urlParamMap URL parameter map
+   * @return true if any width and/or height value or placeholder was applied
+   */
+  private boolean applyWidthOrPlaceholder(@NotNull NextGenDynamicMediaImageDeliveryParams params, @NotNull SortedMap<String, String> urlParamMap) {
+    Long width = params.getWidth();
+    String widthPlaceholder = params.getWidthPlaceholder();
+    boolean anyApplied = false;
+    if (widthPlaceholder != null) {
+      urlParamMap.put(PARAM_WIDTH, widthPlaceholder);
+      anyApplied = true;
+    }
+    else if (width != null) {
+      urlParamMap.put(PARAM_WIDTH, width.toString());
+      anyApplied = true;
+    }
+    return anyApplied;
+  }
+
+  /**
+   * Apply either height value or height placeholder, if available.
+   * @param params Parameters
+   * @param urlParamMap URL parameter map
+   * @return true if any width and/or height value or placeholder was applied
+   */
+  private boolean applyHeightOrPlaceholder(@NotNull NextGenDynamicMediaImageDeliveryParams params, @NotNull SortedMap<String, String> urlParamMap) {
+    Long height = params.getHeight();
+    String heightPlaceholder = params.getHeightPlaceholder();
+    boolean anyApplied = false;
+    if (heightPlaceholder != null) {
+      urlParamMap.put(PARAM_HEIGHT, heightPlaceholder);
+      anyApplied = true;
+    }
+    else if (height != null) {
+      urlParamMap.put(PARAM_HEIGHT, height.toString());
+      anyApplied = true;
+    }
+    return anyApplied;
   }
 
   /**

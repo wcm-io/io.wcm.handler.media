@@ -31,7 +31,9 @@ public class NextGenDynamicMediaImageDeliveryParams {
 
   private Long width;
   private String widthPlaceholder;
-  private Dimension cropSmartRatio;
+  private Long height;
+  private String heightPlaceholder;
+  private Dimension ratio;
   private Integer rotation;
   private Integer quality;
 
@@ -68,18 +70,50 @@ public class NextGenDynamicMediaImageDeliveryParams {
   }
 
   /**
+   * @return Height
+   */
+  public @Nullable Long getHeight() {
+    return this.height;
+  }
+
+  /**
+   * @param value Height
+   * @return this
+   */
+  public @NotNull NextGenDynamicMediaImageDeliveryParams height(@Nullable Long value) {
+    this.height = value;
+    return this;
+  }
+
+  /**
+   * @return Height placeholder
+   */
+  public @Nullable String getHeightPlaceholder() {
+    return this.heightPlaceholder;
+  }
+
+  /**
+   * @param value Height placeholder
+   * @return this
+   */
+  public @NotNull NextGenDynamicMediaImageDeliveryParams heightPlaceholder(@Nullable String value) {
+    this.heightPlaceholder = value;
+    return this;
+  }
+
+  /**
    * @return Dimension with aspect ratio for smart cropping
    */
-  public @Nullable Dimension getCropSmartRatio() {
-    return this.cropSmartRatio;
+  public @Nullable Dimension getRatio() {
+    return this.ratio;
   }
 
   /**
    * @param value Dimension with aspect ratio for smart cropping
    * @return this
    */
-  public @NotNull NextGenDynamicMediaImageDeliveryParams cropSmartRatio(@Nullable Dimension value) {
-    this.cropSmartRatio = value;
+  public @NotNull NextGenDynamicMediaImageDeliveryParams ratio(@Nullable Dimension value) {
+    this.ratio = value;
     return this;
   }
 
