@@ -110,7 +110,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_FORMAT, format);
 
     // prepare URL params
-    Dimension cropSmartRatio = params.getCropSmartRatio();
+    Dimension requestedRatio = params.getRatio();
     Integer rotation = params.getRotation();
     Integer quality = params.getQuality();
 
@@ -118,7 +118,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     urlParamMap.put(PARAM_PREFER_WEBP, "true");
 
     // check for a matching named smart cropping profile
-    SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(metadata, cropSmartRatio);
+    SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(metadata, requestedRatio);
     if (namedSmartCrop != null) {
       urlParamMap.put(PARAM_SMARTCROP, namedSmartCrop.getName());
       boolean widthOrHeightDefined = applyWidthOrPlaceholder(params, urlParamMap) || applyHeightOrPlaceholder(params, urlParamMap);
@@ -133,10 +133,10 @@ public final class NextGenDynamicMediaImageUrlBuilder {
         }
       }
     }
-    else if (orginalDimension != null && cropSmartRatio != null && isAutoCroppingRequired(orginalDimension, cropSmartRatio)) {
+    else if (orginalDimension != null && requestedRatio != null && isAutoCroppingRequired(orginalDimension, requestedRatio)) {
       // apply static auto crop (center-cropping)
       CropDimension cropDimension = ImageTransformation.calculateAutoCropDimension(
-          orginalDimension.getWidth(), orginalDimension.getHeight(), Ratio.get(cropSmartRatio));
+          orginalDimension.getWidth(), orginalDimension.getHeight(), Ratio.get(requestedRatio));
       urlParamMap.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
       if (!applyWidthOrPlaceholder(params, urlParamMap)) {
         applyHeightOrPlaceholder(params, urlParamMap);
@@ -146,9 +146,9 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       // No cropping required or insufficient metadata available to detect cropping
       boolean widthDefined = applyWidthOrPlaceholder(params, urlParamMap);
       boolean heightDefined = applyHeightOrPlaceholder(params, urlParamMap);
-      if (!(widthDefined || heightDefined) && cropSmartRatio != null) {
+      if (!(widthDefined || heightDefined) && requestedRatio != null) {
         // if no width or height given apply default width/height respecting the requested aspect ratio
-        double ratio = Ratio.get(cropSmartRatio);
+        double ratio = Ratio.get(requestedRatio);
         long width = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
         long height = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
         if (ratio > 1) {

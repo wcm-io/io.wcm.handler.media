@@ -85,7 +85,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
         .height(50L)
-        .cropSmartRatio(new Dimension(16, 9))
+        .ratio(new Dimension(16, 9))
         .rotation(90)
         .quality(60);
 
@@ -98,7 +98,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
   void testOnlyRatio_16_9() {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .cropSmartRatio(new Dimension(16, 9))
+        .ratio(new Dimension(16, 9))
         .rotation(90)
         .quality(60);
 
@@ -111,7 +111,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
   void testOnlyRatio_1_2() {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .cropSmartRatio(new Dimension(1, 2))
+        .ratio(new Dimension(1, 2))
         .rotation(90)
         .quality(60);
 
@@ -124,7 +124,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
   void testOnlyRatio_1_1() {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .cropSmartRatio(new Dimension(1, 1))
+        .ratio(new Dimension(1, 1))
         .rotation(90)
         .quality(60);
 
@@ -139,7 +139,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
-        .cropSmartRatio(new Dimension(16, 9))
+        .ratio(new Dimension(16, 9))
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
@@ -152,7 +152,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .cropSmartRatio(new Dimension(16, 9))
+        .ratio(new Dimension(16, 9))
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
@@ -165,7 +165,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .cropSmartRatio(new Dimension(1, 2))
+        .ratio(new Dimension(1, 2))
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
@@ -179,7 +179,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
-        .cropSmartRatio(new Dimension(1, 1))
+        .ratio(new Dimension(1, 1))
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
@@ -198,7 +198,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
         .height(50L)
-        .cropSmartRatio(new Dimension(16, 9))
+        .ratio(new Dimension(16, 9))
         .rotation(90)
         .quality(60);
 

@@ -36,7 +36,7 @@ class NextGenDynamicMediaImageDeliveryParamsTest {
     assertNull(underTest.getWidthPlaceholder());
     assertNull(underTest.getHeight());
     assertNull(underTest.getHeightPlaceholder());
-    assertNull(underTest.getCropSmartRatio());
+    assertNull(underTest.getRatio());
     assertNull(underTest.getRotation());
     assertNull(underTest.getQuality());
   }
@@ -48,7 +48,7 @@ class NextGenDynamicMediaImageDeliveryParamsTest {
         .widthPlaceholder("{width}")
         .height(50L)
         .heightPlaceholder("{height}")
-        .cropSmartRatio(new Dimension(16, 90))
+        .ratio(new Dimension(16, 9))
         .rotation(90)
         .quality(70);
 
@@ -56,7 +56,7 @@ class NextGenDynamicMediaImageDeliveryParamsTest {
     assertEquals("{width}",underTest.getWidthPlaceholder());
     assertEquals(50L, underTest.getHeight());
     assertEquals("{height}", underTest.getHeightPlaceholder());
-    assertEquals(new Dimension(16, 90), underTest.getCropSmartRatio());
+    assertEquals(new Dimension(16, 9), underTest.getRatio());
     assertEquals(90, underTest.getRotation());
     assertEquals(70, underTest.getQuality());
   }

@@ -66,7 +66,7 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
 
     Dimension ratio = MediaArgsDimension.getRequestedRatioAsWidthHeight(context.getDefaultMediaArgs());
     if (ratio != null) {
-      params.cropSmartRatio(ratio);
+      params.ratio(ratio);
     }
 
     this.uriTemplate = new NextGenDynamicMediaImageUrlBuilder(context).build(params);
