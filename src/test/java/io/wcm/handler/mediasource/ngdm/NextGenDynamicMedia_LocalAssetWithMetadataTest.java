@@ -1,0 +1,147 @@
+/*
+ * #%L
+ * wcm.io
+ * %%
+ * Copyright (C) 2024 wcm.io
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+package io.wcm.handler.mediasource.ngdm;
+
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_UUID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.Resource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.day.cq.commons.jcr.JcrConstants;
+
+import io.wcm.handler.media.Media;
+import io.wcm.handler.media.MediaHandler;
+import io.wcm.handler.media.MediaInvalidReason;
+import io.wcm.handler.media.MediaNameConstants;
+import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
+import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.testing.mock.aem.junit5.AemContext;
+import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import io.wcm.wcm.commons.contenttype.ContentType;
+
+@ExtendWith(AemContextExtension.class)
+class NextGenDynamicMedia_LocalAssetWithMetadataTest {
+
+  private final AemContext context = AppAemContext.newAemContext();
+
+  private MediaHandler mediaHandler;
+  private Resource resource;
+
+  @BeforeEach
+  @SuppressWarnings("null")
+  void setUp() {
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledLocalAssets", true,
+        "localAssetsRepositoryId", "repo1");
+
+    resource = context.create().resource(context.currentPage(), "test",
+        MediaNameConstants.PN_MEDIA_REF, SAMPLE_REFERENCE);
+    mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testLocalAsset() {
+    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 20, 10, ContentType.JPEG,
+        ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
+    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
+
+    resource = context.create().resource(context.currentPage(), "local-asset",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath());
+
+    Media media = mediaHandler.get(resource)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "preferwebp=true&quality=85", "jpg");
+
+    // validate URI template
+    Rendition rendition = media.getRendition();
+
+    UriTemplate uriTemplateScaleWidth = rendition.getUriTemplate(UriTemplateType.SCALE_WIDTH);
+    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?preferwebp=true&quality=85&width={width}",
+        uriTemplateScaleWidth.getUriTemplate());
+    assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplateScaleWidth.getType());
+    assertEquals(20, uriTemplateScaleWidth.getMaxWidth());
+    assertEquals(10, uriTemplateScaleWidth.getMaxHeight());
+
+    UriTemplate uriTemplateScaleHeight = rendition.getUriTemplate(UriTemplateType.SCALE_HEIGHT);
+    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?height={height}&preferwebp=true&quality=85",
+        uriTemplateScaleHeight.getUriTemplate());
+    assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplateScaleHeight.getType());
+    assertEquals(20, uriTemplateScaleHeight.getMaxWidth());
+    assertEquals(10, uriTemplateScaleHeight.getMaxHeight());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testLocalAsset_NotApproved() {
+    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG);
+    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
+
+    resource = context.create().resource(context.currentPage(), "local-asset",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath());
+
+    Media media = mediaHandler.get(resource)
+        .build();
+    assertFalse(media.isValid());
+    assertEquals(MediaInvalidReason.NOT_APPROVED, media.getMediaInvalidReason());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testLocalAsset_NoUUID() {
+    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG,
+        ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
+
+    resource = context.create().resource(context.currentPage(), "local-asset",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath());
+
+    Media media = mediaHandler.get(resource)
+        .build();
+    assertFalse(media.isValid());
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
+  }
+
+  private static void assertUrl(Media media, String urlParams, String extension) {
+    assertEquals(buildUrl(urlParams, extension), media.getUrl());
+  }
+
+  private static String buildUrl(String urlParams, String extension) {
+    return "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
+        + extension + "?" + urlParams;
+  }
+
+}

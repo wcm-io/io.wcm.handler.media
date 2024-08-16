@@ -28,6 +28,7 @@ import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceS
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_PDF;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,6 +50,7 @@ import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadataServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -59,7 +61,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
 @WireMockTest
-class NextGenDynamicMediaWithMetadataTest {
+class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
@@ -81,16 +83,16 @@ class NextGenDynamicMediaWithMetadataTest {
         MediaNameConstants.PN_MEDIA_REF, SAMPLE_REFERENCE);
 
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
-  }
 
-  @Test
-  void testAsset() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
         .willReturn(aResponse()
             .withStatus(HttpStatus.SC_OK)
             .withHeader("Content-Type", ContentType.JSON)
             .withBody(METADATA_JSON_IMAGE)));
+  }
 
+  @Test
+  void testAsset() {
     Media media = mediaHandler.get(resource)
         .build();
     assertTrue(media.isValid());
@@ -121,11 +123,105 @@ class NextGenDynamicMediaWithMetadataTest {
     assertEquals(ContentType.JPEG, fixedRendition.getMimeType());
     assertEquals(100, fixedRendition.getWidth());
     assertEquals(50, fixedRendition.getHeight());
-    assertUrl(fixedRendition, "crop=100%3A50%2Csmart&preferwebp=true&quality=85&width=100", "jpg");
+    assertUrl(fixedRendition, "crop=0%2C100%2C1200%2C600&preferwebp=true&quality=85&width=100", "jpg");
 
     // avoid upscaling
     Rendition tooLargeRendition = asset.getRendition(new MediaArgs().fixedDimension(2048, 1024));
     assertNull(tooLargeRendition);
+  }
+
+  @Test
+  void testRendition_16_9() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.RATIO_16_9)
+        .fixedWidth(1024)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "preferwebp=true&quality=85&smartcrop=Landscape&width=1024", "jpg");
+
+    assertNull(rendition.getPath());
+    assertEquals(SAMPLE_FILENAME, rendition.getFileName());
+    assertEquals("jpg", rendition.getFileExtension());
+    assertEquals(-1, rendition.getFileSize());
+    assertEquals(ContentType.JPEG, rendition.getMimeType());
+    assertEquals(DummyMediaFormats.RATIO_16_9, rendition.getMediaFormat());
+    assertEquals(ValueMap.EMPTY, rendition.getProperties());
+    assertTrue(rendition.isImage());
+    assertTrue(rendition.isBrowserImage());
+    assertFalse(rendition.isVectorImage());
+    assertFalse(rendition.isDownload());
+    assertEquals(1024, rendition.getWidth());
+    assertEquals(576, rendition.getHeight());
+    assertNull(rendition.getModificationDate());
+    assertFalse(rendition.isFallback());
+    assertNull(rendition.adaptTo(Resource.class));
+    assertNotNull(rendition.toString());
+  }
+
+  @Test
+  void testRendition_16_9_PNG() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.RATIO_16_9)
+        .enforceOutputFileExtension("png")
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "preferwebp=true&quality=85&smartcrop=Landscape&width=2048", "png");
+
+    assertEquals("png", rendition.getFileExtension());
+  }
+
+  @Test
+  void testRendition_FixedDimension() {
+    Media media = mediaHandler.get(resource)
+        .fixedDimension(100, 50)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "crop=0%2C100%2C1200%2C600&preferwebp=true&quality=85&width=100", "jpg");
+  }
+
+  @Test
+  void testRendition_FixedMediaFormat() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.EDITORIAL_1COL)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "crop=0%2C116%2C1200%2C569&preferwebp=true&quality=85&width=215", "jpg");
+  }
+
+  @Test
+  void testRendition_NonFixedSmallMediaFormat() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.NONFIXED_SMALL)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "height=20&preferwebp=true&quality=85&width=164", "jpg");
+  }
+
+  @Test
+  void testRendition_NonFixedMinWidthHeightMediaFormat() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.NONFIXED_MINWIDTHHEIGHT)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "preferwebp=true&quality=85", "jpg");
   }
 
   @Test
