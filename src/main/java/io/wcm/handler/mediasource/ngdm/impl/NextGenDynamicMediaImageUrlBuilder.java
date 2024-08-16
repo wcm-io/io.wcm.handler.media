@@ -121,9 +121,9 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     SmartCrop namedSmartCrop = getMatchingNamedSmartCrop(metadata, cropSmartRatio);
     if (namedSmartCrop != null) {
       urlParamMap.put(PARAM_SMARTCROP, namedSmartCrop.getName());
-      boolean widthAndOrHeightDefined = applyWidthOrPlaceholder(params, urlParamMap) || applyHeightOrPlaceholder(params, urlParamMap);
-      if (!widthAndOrHeightDefined) {
-        // if no width given apply default width/height to not rely on dimensions defined in AEM image profile
+      boolean widthOrHeightDefined = applyWidthOrPlaceholder(params, urlParamMap) || applyHeightOrPlaceholder(params, urlParamMap);
+      if (!widthOrHeightDefined) {
+        // if no width or height given apply default width/height to not rely on dimensions defined in AEM image profile
         String imageWidthHeightDefault = Long.toString(context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault());
         if (namedSmartCrop.getCropDimension().getWidth() >= namedSmartCrop.getCropDimension().getHeight()) {
           urlParamMap.put(PARAM_WIDTH, imageWidthHeightDefault);
@@ -144,8 +144,22 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     }
     else {
       // No cropping required or insufficient metadata available to detect cropping
-      applyWidthOrPlaceholder(params, urlParamMap);
-      applyHeightOrPlaceholder(params, urlParamMap);
+      boolean widthDefined = applyWidthOrPlaceholder(params, urlParamMap);
+      boolean heightDefined = applyHeightOrPlaceholder(params, urlParamMap);
+      if (!(widthDefined || heightDefined) && cropSmartRatio != null) {
+        // if no width or height given apply default width/height respecting the requested aspect ratio
+        double ratio = Ratio.get(cropSmartRatio);
+        long width = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
+        long height = context.getNextGenDynamicMediaConfig().getImageWidthHeightDefault();
+        if (ratio > 1) {
+          height = Math.round(width / ratio);
+        }
+        else if (ratio < 1) {
+          width = Math.round(height * ratio);
+        }
+        urlParamMap.put(PARAM_WIDTH, Long.toString(width));
+        urlParamMap.put(PARAM_HEIGHT, Long.toString(height));
+      }
     }
 
     if (rotation != null && rotation != 0) {
