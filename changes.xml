@@ -24,6 +24,9 @@
   <body>
 
     <release version="2.1.2" date="not released">
+      <action type="add" dev="cnagel" issue="62">
+        Add relative cropping support for Web-Optimized Image Delivery
+      </action>
       <action type="add" dev="sseifert" issue="61">
         Dynamic Media with OpenAPI: Use static cropping (center cropping) if named smart cropping based on Image Profile define in AEM is not available.
       </action>

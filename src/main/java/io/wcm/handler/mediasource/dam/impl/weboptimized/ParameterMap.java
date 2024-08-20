@@ -28,10 +28,14 @@ import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 final class ParameterMap {
@@ -81,7 +85,7 @@ final class ParameterMap {
       map.put(PARAM_WIDTH, width.toString());
     }
     if (cropDimension != null) {
-      map.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
+      map.put(PARAM_CROP, createCroppingString(asset, cropDimension));
     }
     if (rotation != null && rotation != 0) {
       map.put(PARAM_ROTATE, rotation.toString());
@@ -90,6 +94,46 @@ final class ParameterMap {
       map.put(PARAM_QUALITY, quality.toString());
     }
     return map;
+  }
+
+  private static @NotNull String createCroppingString(
+          @NotNull Asset asset,
+          @NotNull CropDimension cropDimension) {
+    Dimension imageDimension = loadImageDimension(asset);
+    return imageDimension == null || imageDimension.getWidth() <= 0 || imageDimension.getHeight() <= 0
+            ? cropDimension.getCropStringWidthHeight()
+            : createRelativeCroppingString(imageDimension, cropDimension);
+  }
+
+  private static @Nullable Dimension loadImageDimension(@NotNull Asset asset) {
+    Rendition originalRendition = asset.getOriginal();
+      return originalRendition == null
+            ? null
+            : AssetRendition.getDimension(originalRendition);
+  }
+
+  private static @NotNull String createRelativeCroppingString(
+          @NotNull Dimension imageDimension,
+          @NotNull CropDimension cropDimension) {
+    double x1 = cropDimension.getLeft();
+    double y1 = cropDimension.getTop();
+    double x2 = cropDimension.getRight();
+    double y2 = cropDimension.getBottom();
+    double left = x1 / imageDimension.getWidth();
+    double top = y1 / imageDimension.getHeight();
+    double width = (x2 - x1) / imageDimension.getWidth();
+    double height = (y2 - y1) / imageDimension.getHeight();
+    return createRelativeCroppingString(left, top, width, height);
+  }
+
+  static @NotNull String createRelativeCroppingString(double left, double top, double width, double height) {
+    return String.format("%.0fp,%.0fp,%.0fp,%.0fp",
+            toPercentage(left), toPercentage(top),
+            toPercentage(width), toPercentage(height));
+  }
+
+  private static double toPercentage(double fraction) {
+    return Math.round(fraction * 100);
   }
 
 }

@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.dam.impl.weboptimized;
 
+import static io.wcm.handler.mediasource.dam.impl.weboptimized.ParameterMap.createRelativeCroppingString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -35,6 +36,9 @@ import io.wcm.testing.mock.aem.dam.ngdm.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @ExtendWith(AemContextExtension.class)
 class WebOptimizedImageDeliveryServiceImplTest {
@@ -80,9 +84,24 @@ class WebOptimizedImageDeliveryServiceImplTest {
     assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?preferwebp=true",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()));
 
-    assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?c=0%2C0%2C2%2C4&preferwebp=true&r=90&width=10",
+    String cropping = URLEncoder.encode(createRelativeCroppingString(0, 0, 0.2, 0.4), StandardCharsets.UTF_8);
+    assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?c=" + cropping + "&preferwebp=true&r=90&width=10",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
             .width(10L).cropDimension(new CropDimension(0, 0, 2, 4)).rotation(90)));
+  }
+
+  @Test
+  void testGetDeliveryUrl_relativeCropping() {
+    context.registerInjectActivateService(MockAssetDelivery.class);
+    WebOptimizedImageDeliveryService underTest = context.registerInjectActivateService(WebOptimizedImageDeliveryServiceImpl.class);
+    Asset asset = context.create().asset("/content/dam/Test_1.jpg", 1920, 604, ContentType.JPEG);
+    String assetId = MockAssetDelivery.getAssetId(asset);
+
+    String cropping = URLEncoder.encode(createRelativeCroppingString(0.54, 0, 0.42, 1), StandardCharsets.UTF_8);
+    assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?c=" + cropping + "&preferwebp=true&width=806",
+            underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
+                    .width(806L)
+                    .cropDimension(new CropDimension(1028, 0, 806, 604))));
   }
 
 }
