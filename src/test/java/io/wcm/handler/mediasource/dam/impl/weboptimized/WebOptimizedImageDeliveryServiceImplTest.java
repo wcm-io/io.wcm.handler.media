@@ -19,7 +19,6 @@
  */
 package io.wcm.handler.mediasource.dam.impl.weboptimized;
 
-import static io.wcm.handler.mediasource.dam.impl.weboptimized.ParameterMap.createRelativeCroppingString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -84,7 +83,7 @@ class WebOptimizedImageDeliveryServiceImplTest {
     assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?preferwebp=true",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()));
 
-    String cropping = URLEncoder.encode(createRelativeCroppingString(0, 0, 0.2, 0.4), StandardCharsets.UTF_8);
+    String cropping = URLEncoder.encode(RelativeCroppingString.create(0, 0, 0.2, 0.4), StandardCharsets.UTF_8);
     assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?c=" + cropping + "&preferwebp=true&r=90&width=10",
         underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
             .width(10L).cropDimension(new CropDimension(0, 0, 2, 4)).rotation(90)));
@@ -99,11 +98,11 @@ class WebOptimizedImageDeliveryServiceImplTest {
 
     assertEquals(WebOptimizedImageDeliveryCropOption.RELATIVE_PARAMETERS, underTest.getCropOption());
 
-    String cropping = URLEncoder.encode(createRelativeCroppingString(0.54, 0, 0.42, 1), StandardCharsets.UTF_8);
+    String cropping = URLEncoder.encode(RelativeCroppingString.create(0.535, 0, 0.42, 1), StandardCharsets.UTF_8);
     assertEquals("/adobe/dynamicmedia/deliver/" + assetId + "/test-1.jpg?c=" + cropping + "&preferwebp=true&width=806",
-            underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
-                    .width(806L)
-                    .cropDimension(new CropDimension(1028, 0, 806, 604))));
+        underTest.getDeliveryUrl(asset, new WebOptimizedImageDeliveryParams()
+            .width(806L)
+            .cropDimension(new CropDimension(1028, 0, 806, 604))));
   }
 
   @Test

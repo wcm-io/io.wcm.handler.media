@@ -102,7 +102,7 @@ final class ParameterMap {
     if (cropOption == WebOptimizedImageDeliveryCropOption.RELATIVE_PARAMETERS) {
       Dimension imageDimension = loadImageDimension(asset);
       if (imageDimension != null && imageDimension.getWidth() > 0 && imageDimension.getHeight() > 0) {
-        return createRelativeCroppingString(imageDimension, cropDimension);
+        return RelativeCroppingString.createFromCropDimension(cropDimension, imageDimension);
       }
     }
     return cropDimension.getCropStringWidthHeight();
@@ -113,30 +113,6 @@ final class ParameterMap {
       return originalRendition == null
             ? null
             : AssetRendition.getDimension(originalRendition);
-  }
-
-  private static @NotNull String createRelativeCroppingString(
-          @NotNull Dimension imageDimension,
-          @NotNull CropDimension cropDimension) {
-    double x1 = cropDimension.getLeft();
-    double y1 = cropDimension.getTop();
-    double x2 = cropDimension.getRight();
-    double y2 = cropDimension.getBottom();
-    double left = x1 / imageDimension.getWidth();
-    double top = y1 / imageDimension.getHeight();
-    double width = (x2 - x1) / imageDimension.getWidth();
-    double height = (y2 - y1) / imageDimension.getHeight();
-    return createRelativeCroppingString(left, top, width, height);
-  }
-
-  static @NotNull String createRelativeCroppingString(double left, double top, double width, double height) {
-    return String.format("%.0fp,%.0fp,%.0fp,%.0fp",
-            toPercentage(left), toPercentage(top),
-            toPercentage(width), toPercentage(height));
-  }
-
-  private static double toPercentage(double fraction) {
-    return Math.round(fraction * 100);
   }
 
 }

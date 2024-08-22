@@ -78,7 +78,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_JPEG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.jpg?c=25p%2C0p%2C50p%2C100p&preferwebp=true&quality=85&width=50",
+        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.jpg?c=25.0p%2C0.0p%2C50.0p%2C100.0p&preferwebp=true&quality=85&width=50",
         ContentType.JPEG);
   }
 
@@ -87,7 +87,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_JPEG_AutoCrop_ImageQuality() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.jpg?c=25p%2C0p%2C50p%2C100p&preferwebp=true&quality=60&width=50",
+        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.jpg?c=25.0p%2C0.0p%2C50.0p%2C100.0p&preferwebp=true&quality=60&width=50",
         ContentType.JPEG, 0.6d);
   }
 
@@ -97,7 +97,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.jpg?c=25p%2C0p%2C50p%2C100p&preferwebp=true&quality=85&width=50",
+        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.jpg?c=25.0p%2C0.0p%2C50.0p%2C100.0p&preferwebp=true&quality=85&width=50",
         ContentType.JPEG);
   }
 
@@ -124,7 +124,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_GIF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.gif?c=25p%2C0p%2C50p%2C100p&preferwebp=true&quality=85&width=50",
+        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.gif?c=25.0p%2C0.0p%2C50.0p%2C100.0p&preferwebp=true&quality=85&width=50",
         ContentType.GIF);
   }
 
@@ -151,7 +151,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_PNG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.png?c=25p%2C0p%2C50p%2C100p&preferwebp=true&quality=85&width=50",
+        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.png?c=25.0p%2C0.0p%2C50.0p%2C100.0p&preferwebp=true&quality=85&width=50",
         ContentType.PNG);
   }
 
@@ -178,7 +178,7 @@ class MediaHandlerImplImageFileTypesEnd2EndWebOptimizedImageDeliveryTest extends
   void testAsset_TIFF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.jpg?c=25p%2C0p%2C50p%2C100p&preferwebp=true&quality=85&width=50",
+        "/adobe/dynamicmedia/deliver/" + getAssetId(asset) + "/sample.jpg?c=25.0p%2C0.0p%2C50.0p%2C100.0p&preferwebp=true&quality=85&width=50",
         ContentType.JPEG);
   }
 
