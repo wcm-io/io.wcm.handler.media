@@ -53,7 +53,8 @@ class NextGenDynamicMediaConfigModelTest {
 
   @Test
   void testWithConfigService() throws JSONException {
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledRemoteAssets", true);
 
     NextGenDynamicMediaConfigModel underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaConfigModel.class);
     assertTrue(underTest.isEnabled());

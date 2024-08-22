@@ -51,7 +51,8 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaTest extends Media
     MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     nextGenDynamicMediaConfig.setEnabled(true);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledRemoteAssets", true);
     super.setUp();
   }
 

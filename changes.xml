@@ -30,6 +30,9 @@
       <action type="add" dev="sseifert" issue="61">
         Dynamic Media with OpenAPI: Provide max. width/height in UriTemplate if source image dimension is available in metadata.
       </action>
+      <action type="update" dev="sseifert" issue="64">
+        Dynamic Media with OpenAPI: Do not enable support for remote assets by default. Since general availability the related configuration services not longer protected by a feature flag, so the feature has to be enabled explicitly via OSGi configuration.
+      </action>
       <action type="update" dev="sseifert">
         Eliminate dependency to Commons Lang 2.
       </action>
