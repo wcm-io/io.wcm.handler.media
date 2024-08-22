@@ -61,7 +61,8 @@ final class ParameterMap {
   }
 
   @NotNull
-  static Map<String, Object> build(@NotNull Asset asset, @NotNull WebOptimizedImageDeliveryParams params) {
+  static Map<String, Object> build(@NotNull Asset asset, @NotNull WebOptimizedImageDeliveryParams params,
+      @NotNull WebOptimizedImageDeliveryCropOption cropOption) {
     String path = asset.getPath();
     String seoName = FilenameUtils.getBaseName(asset.getName());
     String format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(asset.getName()));
@@ -85,7 +86,7 @@ final class ParameterMap {
       map.put(PARAM_WIDTH, width.toString());
     }
     if (cropDimension != null) {
-      map.put(PARAM_CROP, createCroppingString(asset, cropDimension));
+      map.put(PARAM_CROP, createCroppingString(asset, cropDimension, cropOption));
     }
     if (rotation != null && rotation != 0) {
       map.put(PARAM_ROTATE, rotation.toString());
@@ -96,13 +97,15 @@ final class ParameterMap {
     return map;
   }
 
-  private static @NotNull String createCroppingString(
-          @NotNull Asset asset,
-          @NotNull CropDimension cropDimension) {
-    Dimension imageDimension = loadImageDimension(asset);
-    return imageDimension == null || imageDimension.getWidth() <= 0 || imageDimension.getHeight() <= 0
-            ? cropDimension.getCropStringWidthHeight()
-            : createRelativeCroppingString(imageDimension, cropDimension);
+  private static @NotNull String createCroppingString(@NotNull Asset asset, @NotNull CropDimension cropDimension,
+      @NotNull WebOptimizedImageDeliveryCropOption cropOption) {
+    if (cropOption == WebOptimizedImageDeliveryCropOption.RELATIVE_PARAMETERS) {
+      Dimension imageDimension = loadImageDimension(asset);
+      if (imageDimension != null && imageDimension.getWidth() > 0 && imageDimension.getHeight() > 0) {
+        return createRelativeCroppingString(imageDimension, cropDimension);
+      }
+    }
+    return cropDimension.getCropStringWidthHeight();
   }
 
   private static @Nullable Dimension loadImageDimension(@NotNull Asset asset) {

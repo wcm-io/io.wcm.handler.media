@@ -37,6 +37,12 @@ public interface WebOptimizedImageDeliveryService {
   boolean isEnabled();
 
   /**
+   * Cropping option to use.
+   * @return Cropping option
+   */
+  WebOptimizedImageDeliveryCropOption getCropOption();
+
+  /**
    * Get delivery URL for a rendition of an asset.
    * @param asset Asset
    * @param params Parameters
