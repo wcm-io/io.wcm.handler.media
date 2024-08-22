@@ -50,7 +50,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
     @AttributeDefinition(
         name = "Remote Assets",
         description = "Enable Dynamic Media with OpenAPI for remote assets.")
-    boolean enabledRemoteAssets() default true;
+    boolean enabledRemoteAssets() default false;
 
     @AttributeDefinition(
         name = "Local Assets",

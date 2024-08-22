@@ -41,6 +41,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
   void testPropertiesDefaultConfig() {
     registerNextGenDynamicMediaConfig(context);
     NextGenDynamicMediaConfigService underTest = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledRemoteAssets", true,
         "enabledLocalAssets", true,
         "localAssetsRepositoryId", "localrepo1");
     assertTrue(underTest.isEnabledRemoteAssets());

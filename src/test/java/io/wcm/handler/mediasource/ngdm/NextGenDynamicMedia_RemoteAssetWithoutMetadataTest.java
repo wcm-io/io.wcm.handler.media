@@ -64,7 +64,8 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
     nextGenDynamicMediaConfig.setEnabled(true);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
 
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledRemoteAssets", true);
 
     resource = context.create().resource(context.currentPage(), "test",
         MediaNameConstants.PN_MEDIA_REF, SAMPLE_REFERENCE);
