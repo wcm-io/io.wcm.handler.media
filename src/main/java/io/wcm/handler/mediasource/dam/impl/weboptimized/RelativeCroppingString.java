@@ -59,7 +59,10 @@ final class RelativeCroppingString {
   }
 
   private static String toPercentage(double fraction) {
-    return DECIMAL_FORMAT.format(Math.round(fraction * 1000d) / 10d);
+    double percentage = Math.round(fraction * 1000d) / 10d;
+    percentage = Math.max(0.0, percentage);
+    percentage = Math.min(100.0, percentage);
+    return DECIMAL_FORMAT.format(percentage);
   }
 
 }
