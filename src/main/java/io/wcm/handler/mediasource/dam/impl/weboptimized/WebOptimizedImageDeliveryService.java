@@ -37,8 +37,8 @@ public interface WebOptimizedImageDeliveryService {
   boolean isEnabled();
 
   /**
-   * Cropping option to use.
-   * @return Cropping option
+   * Crop option to use.
+   * @return Crop option
    */
   WebOptimizedImageDeliveryCropOption getCropOption();
 

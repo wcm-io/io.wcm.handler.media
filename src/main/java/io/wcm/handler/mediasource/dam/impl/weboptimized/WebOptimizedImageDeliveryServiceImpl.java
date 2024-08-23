@@ -56,7 +56,7 @@ public class WebOptimizedImageDeliveryServiceImpl implements WebOptimizedImageDe
     boolean enabled() default true;
 
     @AttributeDefinition(
-        name = "Cropping Option",
+        name = "Crop Option",
         description = "Use relative cropping parameters (e.g. crop=0.0p,5.0p,100.0p,80.0p) "
             + "or absolute cropping paremters (e.g. crop=0,10,200,100), both based on the original image dimensions.")
     WebOptimizedImageDeliveryCropOption cropOption() default WebOptimizedImageDeliveryCropOption.RELATIVE_PARAMETERS;
