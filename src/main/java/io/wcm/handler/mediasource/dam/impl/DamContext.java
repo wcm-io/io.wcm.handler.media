@@ -164,6 +164,14 @@ public final class DamContext implements Adaptable {
   }
 
   /**
+   * @return Whether to control image quality for lossy output formats for each media request via 'qlt' URL parameter
+   *         (instead of relying on default setting within Dynamic Media).
+   */
+  public boolean isDynamicMediaSetImageQuality() {
+    return dynamicMediaSupportService.isSetImageQuality();
+  }
+
+  /**
    * @return Dynamic media reply image size limit
    */
   public @NotNull Dimension getDynamicMediaImageSizeLimit() {

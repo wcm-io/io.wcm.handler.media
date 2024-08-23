@@ -33,6 +33,10 @@
       <action type="update" dev="sseifert" issue="64">
         Dynamic Media with OpenAPI: Do not enable support for remote assets by default. Since general availability the related configuration services not longer protected by a feature flag, so the feature has to be enabled explicitly via OSGi configuration.
       </action>
+      <action type="update" dev="sseifert"><![CDATA[
+        Dynamic Media: Control image quality for lossy output image for each media request by appending "qlt" URL parameter, defaulting to the default image quality configured in the media handler configuration class.<br/>
+        <b>Breaking change:</b> You can disable this behavior by setting "Set Image Quality" to false in the "wcm.io Media Handler Dynamic Media Support" OSGi configuration. If disabled, the default image quality setting configured in Dynamic Media is used for all images.
+      ]]></action>
       <action type="update" dev="sseifert">
         Eliminate dependency to Commons Lang 2.
       </action>

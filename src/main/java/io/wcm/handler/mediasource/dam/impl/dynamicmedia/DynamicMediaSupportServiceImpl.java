@@ -105,6 +105,11 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
         description = "The configured height value for 'Reply Image Size Limit'.")
     long imageSizeLimitHeight() default 2000;
 
+    @AttributeDefinition(
+        name = "Set Image Quality",
+        description = "Control image quality for lossy output formats for each media request via 'qlt' URL parameter (instead of relying on default setting within Dynamic Media).")
+    boolean setImageQuality() default false;
+
   }
 
   @Reference
@@ -118,6 +123,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   private boolean disableAemFallback;
   private boolean validateSmartCropRenditionSizes;
   private Dimension imageSizeLimit;
+  private boolean setImageQuality;
 
   private static final String SERVICEUSER_SUBSERVICE = "dynamic-media-support";
   private static final Pattern DAM_PATH_PATTERN = Pattern.compile("^/content/dam(/.*)?$");
@@ -132,6 +138,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     this.disableAemFallback = config.disableAemFallback();
     this.validateSmartCropRenditionSizes = config.validateSmartCropRenditionSizes();
     this.imageSizeLimit = new Dimension(config.imageSizeLimitWidth(), config.imageSizeLimitHeight());
+    this.setImageQuality = config.setImageQuality();
 
     if (this.enabled) {
       log.info("DynamicMediaSupport: enabled={}, capabilityEnabled={}, capabilityDetection={}, "
@@ -172,6 +179,11 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Override
   public @NotNull Dimension getImageSizeLimit() {
     return this.imageSizeLimit;
+  }
+
+  @Override
+  public boolean isSetImageQuality() {
+    return setImageQuality;
   }
 
   @Override
