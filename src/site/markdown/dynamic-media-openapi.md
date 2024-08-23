@@ -82,9 +82,19 @@ public class MediaHandlerConfigImpl extends MediaHandlerConfig {
 }
 ```
 
-With this configuration, remote assets should work out-of-the-box, if a remote asset repository is configured for the AEMaaCS instance.
+By default, support for local and remote assets is disabled, because it depends on separate licensing for an AEMaaCS environment. For using remove assets, additional configuration (environment variables) are required to configure the remote repository, see AEM documentation.
 
-The "wcm.io Dynamic Media with OpenAPI Support" OSGi configuration allows to reconfigure the actual URLs used for the [Assets Delivery API (DM API)][aem-dm-api]. Usually you can stick with the default values which reflect the latest version of the DM API. Remote assets are supported by default, but can be disabled via this configuration. Local assets are disabled by support, but can be enabled via this configuration. In this case, you also have to configure a repository ID for building the rendition URLs pointing to the AEMaaCS instance. Example:
+The "wcm.io Dynamic Media with OpenAPI Support" OSGi configuration allows to enable the support. Additionally it is possible and to reconfigure the actual URLs used for the [Assets Delivery API (DM API)][aem-dm-api]. Usually you can stick with the default values which reflect the latest version of the DM API.
+
+To enable support for remote Assets configure:
+
+```json
+{
+  "enabledRemoteAssets": true
+}
+```
+
+If you want to enable support for local assets you also have to configure a repository ID for building the rendition URLs pointing to the AEMaaCS instance. Example:
 
 ```json
 {

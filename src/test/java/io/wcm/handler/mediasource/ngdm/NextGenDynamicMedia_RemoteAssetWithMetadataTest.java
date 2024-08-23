@@ -75,7 +75,8 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
     nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     nextGenDynamicMediaConfig.setEnabled(true);
     nextGenDynamicMediaConfig.setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledRemoteAssets", true);
     context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
         "enabled", true);
 
