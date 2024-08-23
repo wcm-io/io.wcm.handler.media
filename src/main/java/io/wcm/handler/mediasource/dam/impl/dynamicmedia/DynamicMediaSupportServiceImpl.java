@@ -108,7 +108,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     @AttributeDefinition(
         name = "Set Image Quality",
         description = "Control image quality for lossy output formats for each media request via 'qlt' URL parameter (instead of relying on default setting within Dynamic Media).")
-    boolean setImageQuality() default false;
+    boolean setImageQuality() default true;
 
   }
 

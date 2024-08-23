@@ -102,8 +102,8 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(2, renditions.size());
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(0).getUrl());
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=40&hei=30&fit=stretch", renditions.get(1).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch&qlt=85", renditions.get(0).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=40&hei=30&fit=stretch&qlt=85", renditions.get(1).getUrl());
   }
 
   @Test
@@ -118,9 +118,9 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(3, renditions.size());
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=100&hei=75&fit=stretch", renditions.get(0).getUrl());
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(1).getUrl());
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=40&hei=30&fit=stretch", renditions.get(2).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=100&hei=75&fit=stretch&qlt=85", renditions.get(0).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch&qlt=85", renditions.get(1).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=40&hei=30&fit=stretch&qlt=85", renditions.get(2).getUrl());
   }
 
   @Test
@@ -144,7 +144,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(1, renditions.size());
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch", renditions.get(0).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=80&hei=60&fit=stretch&qlt=85", renditions.get(0).getUrl());
   }
 
   @Test
@@ -154,7 +154,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(1, renditions.size());
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A16-10?wid=120&hei=75&fit=stretch", renditions.get(0).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A16-10?wid=120&hei=75&fit=stretch&qlt=85", renditions.get(0).getUrl());
   }
 
   @Test

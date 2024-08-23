@@ -33,6 +33,7 @@ import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
@@ -83,13 +84,26 @@ class DynamicMediaPathTest {
   @Test
   void testWidthHeight() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 25);
+    assertEquals("/is/image/DummyFolder/test?wid=30&hei=25&fit=stretch&qlt=85", result);
+  }
+
+  @Test
+  void testWidthHeight_DisableSetImageQuality() {
+    // disable setImageQuality option
+    dynamicMediaSupportService = context.registerInjectActivateService(DynamicMediaSupportServiceImpl.class,
+        "setImageQuality", false,
+        Constants.SERVICE_RANKING, 1000);
+    damContext = new DamContext(asset, new MediaArgs(), mediaHandlerConfig,
+        dynamicMediaSupportService, webOptimizedImageDeliveryService, context.request());
+
+    String result = DynamicMediaPath.buildImage(damContext, 30, 25);
     assertEquals("/is/image/DummyFolder/test?wid=30&hei=25&fit=stretch", result);
   }
 
   @Test
   void testWidthHeight_ImplicitSmartCrop() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20);
-    assertEquals("/is/image/DummyFolder/test%3ACrop-1?wid=30&hei=20&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test%3ACrop-1?wid=30&hei=20&fit=stretch&qlt=85", result);
   }
 
   @Test
@@ -106,49 +120,49 @@ class DynamicMediaPathTest {
   @Test
   void testCrop() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8), null);
-    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&wid=30&hei=20&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&wid=30&hei=20&fit=stretch&qlt=85", result);
   }
 
   @Test
   void testAutoCrop_SmartCrop() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8, true), null);
-    assertEquals("/is/image/DummyFolder/test%3ACrop-1?wid=30&hei=20&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test%3ACrop-1?wid=30&hei=20&fit=stretch&qlt=85", result);
   }
 
   @Test
   void testWidthHeight_MaxWidth() {
     String result = DynamicMediaPath.buildImage(damContext, 3000, 1500);
-    assertEquals("/is/image/DummyFolder/test?wid=2000&hei=1000&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test?wid=2000&hei=1000&fit=stretch&qlt=85", result);
   }
 
   @Test
   void testWidthHeight_MaxHeight() {
     String result = DynamicMediaPath.buildImage(damContext, 2500, 5000);
-    assertEquals("/is/image/DummyFolder/test?wid=1000&hei=2000&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test?wid=1000&hei=2000&fit=stretch&qlt=85", result);
   }
 
   @Test
   void testWidthHeight_MaxWidthHeight() {
     String result = DynamicMediaPath.buildImage(damContext, 6000, 8000);
-    assertEquals("/is/image/DummyFolder/test?wid=1500&hei=2000&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test?wid=1500&hei=2000&fit=stretch&qlt=85", result);
   }
 
   @Test
   void testRotate() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20, null, 180);
-    assertEquals("/is/image/DummyFolder/test?rotate=180&wid=30&hei=20&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test?rotate=180&wid=30&hei=20&fit=stretch&qlt=85", result);
   }
 
   @Test
   void testCropRotate() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8), 90);
-    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&rotate=90&wid=30&hei=20&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&rotate=90&wid=30&hei=20&fit=stretch&qlt=85", result);
   }
 
   @Test
   void testAutoCropRotate_NoSmartCrop() {
     String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8, true), 90);
-    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&rotate=90&wid=30&hei=20&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&rotate=90&wid=30&hei=20&fit=stretch&qlt=85", result);
   }
 
   @Test
