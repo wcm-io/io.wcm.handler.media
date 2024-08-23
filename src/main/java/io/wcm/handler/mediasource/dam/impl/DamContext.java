@@ -35,13 +35,13 @@ import com.day.cq.dam.scene7.api.constants.Scene7Constants;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.impl.ImageQualityPercentage;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportService;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.ImageProfile;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
 import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryParams;
 import io.wcm.handler.mediasource.dam.impl.weboptimized.WebOptimizedImageDeliveryService;
-import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
 
 /**
  * Context objects require in DAM support implementation.
@@ -161,6 +161,14 @@ public final class DamContext implements Adaptable {
    */
   public boolean isDynamicMediaValidateSmartCropRenditionSizes() {
     return dynamicMediaSupportService.isValidateSmartCropRenditionSizes();
+  }
+
+  /**
+   * @return Whether to control image quality for lossy output formats for each media request via 'qlt' URL parameter
+   *         (instead of relying on default setting within Dynamic Media).
+   */
+  public boolean isDynamicMediaSetImageQuality() {
+    return dynamicMediaSupportService.isSetImageQuality();
   }
 
   /**
