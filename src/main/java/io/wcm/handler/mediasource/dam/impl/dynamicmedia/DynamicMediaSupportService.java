@@ -64,6 +64,12 @@ public interface DynamicMediaSupportService {
   Dimension getImageSizeLimit();
 
   /**
+   * @return Whether to control image quality for lossy output formats for each media request via 'qlt' URL parameter
+   *         (instead of relying on default setting within Dynamic Media).
+   */
+  boolean isSetImageQuality();
+
+  /**
    * Get image profile.
    * @param profilePath Full profile path
    * @return Profile or null if no profile found

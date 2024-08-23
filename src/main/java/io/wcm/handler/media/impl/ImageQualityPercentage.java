@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.ngdm.impl;
+package io.wcm.handler.media.impl;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 
 /**
- * Sanitizes SEO names for usage in context of Next Gen. Dynamic Media
+ * Gets image quality for current media request, with fallback to default quality.
  */
 public final class ImageQualityPercentage {
 
