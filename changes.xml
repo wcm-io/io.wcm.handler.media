@@ -25,7 +25,7 @@
 
     <release version="2.2.0" date="not released">
       <action type="update" dev="cnagel" issue="62">
-        Web-Optimized Image Delivery: Use relative (percentage) parameters for cropping instead of abscolute parameters. This should create more reliable renditions esp. for original images in low resolution.
+        Web-Optimized Image Delivery: Use relative (percentage) parameters for cropping instead of absolute parameters. This should create more reliable renditions esp. for original images in low resolution.
         You can switch back to the old behavior by setting "Crop Option" to ABSOLUTE_PARAMETERS in the "wcm.io Media Handler Web-Optimized Image Delivery Support" OSGi configuration.
       </action>
       <action type="update" dev="sseifert" issue="61">
