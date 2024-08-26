@@ -28,10 +28,14 @@ import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.Dimension;
+import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 final class ParameterMap {
@@ -57,7 +61,8 @@ final class ParameterMap {
   }
 
   @NotNull
-  static Map<String, Object> build(@NotNull Asset asset, @NotNull WebOptimizedImageDeliveryParams params) {
+  static Map<String, Object> build(@NotNull Asset asset, @NotNull WebOptimizedImageDeliveryParams params,
+      @NotNull WebOptimizedImageDeliveryCropOption cropOption) {
     String path = asset.getPath();
     String seoName = FilenameUtils.getBaseName(asset.getName());
     String format = StringUtils.toRootLowerCase(FilenameUtils.getExtension(asset.getName()));
@@ -81,7 +86,7 @@ final class ParameterMap {
       map.put(PARAM_WIDTH, width.toString());
     }
     if (cropDimension != null) {
-      map.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
+      map.put(PARAM_CROP, createCroppingString(asset, cropDimension, cropOption));
     }
     if (rotation != null && rotation != 0) {
       map.put(PARAM_ROTATE, rotation.toString());
@@ -90,6 +95,24 @@ final class ParameterMap {
       map.put(PARAM_QUALITY, quality.toString());
     }
     return map;
+  }
+
+  private static @NotNull String createCroppingString(@NotNull Asset asset, @NotNull CropDimension cropDimension,
+      @NotNull WebOptimizedImageDeliveryCropOption cropOption) {
+    if (cropOption == WebOptimizedImageDeliveryCropOption.RELATIVE_PARAMETERS) {
+      Dimension imageDimension = loadImageDimension(asset);
+      if (imageDimension != null && imageDimension.getWidth() > 0 && imageDimension.getHeight() > 0) {
+        return RelativeCroppingString.createFromCropDimension(cropDimension, imageDimension);
+      }
+    }
+    return cropDimension.getCropStringWidthHeight();
+  }
+
+  private static @Nullable Dimension loadImageDimension(@NotNull Asset asset) {
+    Rendition originalRendition = asset.getOriginal();
+      return originalRendition == null
+            ? null
+            : AssetRendition.getDimension(originalRendition);
   }
 
 }
