@@ -37,7 +37,7 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
-import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
+import io.wcm.handler.media.impl.ImageQualityPercentage;
 import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaBinaryUrlBuilder;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
@@ -126,9 +126,12 @@ final class NextGenDynamicMediaRendition implements Rendition {
     if (this.width > 0) {
       params.width(this.width);
     }
+    if (this.height > 0) {
+      params.height(this.height);
+    }
     Dimension ratioDimension = MediaArgsDimension.getRequestedRatioAsWidthHeight(mediaArgs);
     if (ratioDimension != null) {
-      params.cropSmartRatio(ratioDimension);
+      params.ratio(ratioDimension);
     }
 
     return new NextGenDynamicMediaImageUrlBuilder(context).build(params);

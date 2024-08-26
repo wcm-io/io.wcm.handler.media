@@ -184,7 +184,7 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 160, 120,
-        "/adobe/dynamicmedia/deliver/" + assetId + "/sample.jpg?c=16%2C0%2C160%2C120&preferwebp=true&quality=85&width={width}");
+        "/adobe/dynamicmedia/deliver/" + assetId + "/sample.jpg?c=8.3p%2C0.0p%2C83.3p%2C100.0p&preferwebp=true&quality=85&width={width}");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 160, 120,
         "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.0.{height}.16,0,176,120.file/sample.jpg");
   }

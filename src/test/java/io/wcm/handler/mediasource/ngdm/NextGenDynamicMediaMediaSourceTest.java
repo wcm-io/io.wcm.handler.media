@@ -131,6 +131,7 @@ class NextGenDynamicMediaMediaSourceTest {
     nextGenDynamicMediaConfig.setEnabled(remoteAssets);
     nextGenDynamicMediaConfig.setRepositoryId("repo1");
     context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledRemoteAssets", true,
         "enabledLocalAssets", localAssets,
         "localAssetsRepositoryId", "localrepo1");
   }

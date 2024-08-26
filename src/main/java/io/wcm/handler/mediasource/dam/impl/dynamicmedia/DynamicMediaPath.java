@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.format.Ratio;
+import io.wcm.handler.media.impl.ImageQualityPercentage;
 import io.wcm.handler.mediasource.dam.impl.DamContext;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -126,15 +127,8 @@ public final class DynamicMediaPath {
           logResult(damContext, "<too small for " + width + "x" + height + ">");
           return null;
         }
-        result.append("%3A").append(smartCropDef.getName()).append("?")
-            .append("wid=").append(dimension.getWidth()).append("&")
-            .append("hei=").append(dimension.getHeight()).append("&")
-            // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
-            .append("fit=stretch");
-        if (isPNG(damContext)) {
-          // if original image is PNG image, make sure alpha channel is preserved
-          result.append("&fmt=png-alpha");
-        }
+        result.append("%3A").append(smartCropDef.getName()).append("?");
+        appendWidthHeigtFormatQuality(result, dimension, damContext);
         logResult(damContext, result);
         return result.toString();
       }
@@ -147,6 +141,12 @@ public final class DynamicMediaPath {
     if (rotation != null) {
       result.append("rotate=").append(rotation).append("&");
     }
+    appendWidthHeigtFormatQuality(result, dimension, damContext);
+    logResult(damContext, result);
+    return result.toString();
+  }
+
+  private static void appendWidthHeigtFormatQuality(@NotNull StringBuilder result, @NotNull Dimension dimension, @NotNull DamContext damContext) {
     result.append("wid=").append(dimension.getWidth()).append("&")
         .append("hei=").append(dimension.getHeight()).append("&")
         // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
@@ -155,8 +155,10 @@ public final class DynamicMediaPath {
       // if original image is PNG image, make sure alpha channel is preserved
       result.append("&fmt=png-alpha");
     }
-    logResult(damContext, result);
-    return result.toString();
+    else if (damContext.isDynamicMediaSetImageQuality()) {
+      // it not PNG lossy format is used, apply image quality setting
+      result.append("&qlt=").append(ImageQualityPercentage.getAsInteger(damContext.getMediaArgs(), damContext.getMediaHandlerConfig()));
+    }
   }
 
   private static void logResult(@NotNull DamContext damContext, @NotNull CharSequence result) {

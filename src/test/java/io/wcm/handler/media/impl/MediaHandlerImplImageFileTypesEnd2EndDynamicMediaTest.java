@@ -49,7 +49,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_JPEG_Original() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia(asset, 100, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid=100&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid=100&hei=50&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 
@@ -74,7 +74,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_JPEG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid=80&hei=40&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid=80&hei=40&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 
@@ -83,7 +83,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_JPEG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 
@@ -92,7 +92,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_JPEG_AutoCrop_ImageQuality() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch&qlt=60",
         ContentType.JPEG, 0.6d);
   }
 
@@ -102,7 +102,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=25,0,50,50&wid=50&hei=50&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 
@@ -148,7 +148,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_GIF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.gif?wid=80&hei=40&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.gif?wid=80&hei=40&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 
@@ -157,7 +157,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_GIF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.gif?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.gif?crop=25,0,50,50&wid=50&hei=50&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 
@@ -235,7 +235,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_TIFF_Original() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia(asset, 100, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.tif?wid=100&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.tif?wid=100&hei=50&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 
@@ -253,7 +253,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_TIFF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.tif?wid=80&hei=40&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.tif?wid=80&hei=40&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 
@@ -262,7 +262,7 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   void testAsset_TIFF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.tif?crop=25,0,50,50&wid=50&hei=50&fit=stretch",
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.tif?crop=25,0,50,50&wid=50&hei=50&fit=stretch&qlt=85",
         ContentType.JPEG);
   }
 

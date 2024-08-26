@@ -19,28 +19,19 @@
  */
 package io.wcm.handler.mediasource.ngdm;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
-import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
-import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_PDF;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.http.HttpStatus;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 import io.wcm.handler.media.Asset;
 import io.wcm.handler.media.Media;
@@ -48,9 +39,10 @@ import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
+import io.wcm.handler.media.UriTemplate;
+import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
-import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadataServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -58,39 +50,30 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
-@WireMockTest
-class NextGenDynamicMediaWithMetadataTest {
+class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
 
   private final AemContext context = AppAemContext.newAemContext();
 
-  private MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig;
   private MediaHandler mediaHandler;
   private Resource resource;
 
   @BeforeEach
   @SuppressWarnings("null")
-  void setUp(WireMockRuntimeInfo wmRuntimeInfo) {
-    nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
+  void setUp() {
+    MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     nextGenDynamicMediaConfig.setEnabled(true);
-    nextGenDynamicMediaConfig.setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
-    context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
-        "enabled", true);
+    nextGenDynamicMediaConfig.setRepositoryId("repo1");
+
+    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+        "enabledRemoteAssets", true);
 
     resource = context.create().resource(context.currentPage(), "test",
         MediaNameConstants.PN_MEDIA_REF, SAMPLE_REFERENCE);
-
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
   }
 
   @Test
   void testAsset() {
-    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_IMAGE)));
-
     Media media = mediaHandler.get(resource)
         .build();
     assertTrue(media.isValid());
@@ -111,32 +94,28 @@ class NextGenDynamicMediaWithMetadataTest {
     Rendition defaultRendition = asset.getDefaultRendition();
     assertNotNull(defaultRendition);
     assertEquals(ContentType.JPEG, defaultRendition.getMimeType());
-    assertEquals(1200, defaultRendition.getWidth());
-    assertEquals(800, defaultRendition.getHeight());
+    assertEquals(0, defaultRendition.getWidth());
+    assertEquals(0, defaultRendition.getHeight());
     assertUrl(defaultRendition, "preferwebp=true&quality=85", "jpg");
 
     // fixed rendition
     Rendition fixedRendition = asset.getRendition(new MediaArgs().fixedDimension(100, 50));
     assertNotNull(fixedRendition);
     assertEquals(ContentType.JPEG, fixedRendition.getMimeType());
-    assertEquals(100, fixedRendition.getWidth());
-    assertEquals(50, fixedRendition.getHeight());
-    assertUrl(fixedRendition, "crop=100%3A50%2Csmart&preferwebp=true&quality=85&width=100", "jpg");
+    assertUrl(fixedRendition, "height=50&preferwebp=true&quality=85&width=100", "jpg");
 
-    // avoid upscaling
-    Rendition tooLargeRendition = asset.getRendition(new MediaArgs().fixedDimension(2048, 1024));
-    assertNull(tooLargeRendition);
+    assertNotNull(asset.getImageRendition(new MediaArgs()));
+    assertNull(asset.getDownloadRendition(new MediaArgs().download(true)));
+
+    assertUriTemplate(asset.getUriTemplate(UriTemplateType.SCALE_WIDTH),
+        "preferwebp=true&quality=85&width={width}", "jpg");
+    assertUriTemplate(fixedRendition.getUriTemplate(UriTemplateType.SCALE_WIDTH),
+        "preferwebp=true&quality=85&width={width}", "jpg");
   }
 
   @Test
   @SuppressWarnings("null")
   void testPDFDownload() {
-    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_PDF)));
-
     Resource downloadResource = context.create().resource(context.currentPage(), "download",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.pdf");
 
@@ -148,21 +127,39 @@ class NextGenDynamicMediaWithMetadataTest {
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
     assertEquals(ContentType.PDF, rendition.getMimeType());
-    assertEquals(
-        "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf",
-        rendition.getUrl());
+    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf", rendition.getUrl());
   }
 
-  private void assertUrl(Media media, String urlParams, String extension) {
+  @Test
+  void testImageDownload() {
+    Media media = mediaHandler.get(resource)
+        .args(new MediaArgs().download(true))
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(ContentType.JPEG, rendition.getMimeType());
+    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/my-image.jpg", rendition.getUrl());
+  }
+
+  private static void assertUrl(Media media, String urlParams, String extension) {
     assertEquals(buildUrl(urlParams, extension), media.getUrl());
   }
 
-  private void assertUrl(Rendition rendition, String urlParams, String extension) {
+  private static void assertUrl(Rendition rendition, String urlParams, String extension) {
     assertEquals(buildUrl(urlParams, extension), rendition.getUrl());
   }
 
-  private String buildUrl(String urlParams, String extension) {
-    return "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
+  private static void assertUriTemplate(UriTemplate uriTemplate, String urlParams, String extension) {
+    assertEquals(buildUrl(urlParams, extension), uriTemplate.getUriTemplate());
+    assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplate.getType());
+    assertEquals(0, uriTemplate.getMaxWidth());
+    assertEquals(0, uriTemplate.getMaxHeight());
+  }
+
+  private static String buildUrl(String urlParams, String extension) {
+    return "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
         + extension + "?" + urlParams;
   }
 

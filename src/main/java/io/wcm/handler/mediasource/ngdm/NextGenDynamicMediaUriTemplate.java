@@ -25,11 +25,12 @@ import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
-import io.wcm.handler.mediasource.ngdm.impl.ImageQualityPercentage;
+import io.wcm.handler.media.impl.ImageQualityPercentage;
 import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageUrlBuilder;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
 
 /**
  * {@link UriTemplate} implementation for Next Gen. Dynamic Media remote assets.
@@ -38,23 +39,34 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
 
   private final UriTemplateType type;
   private final String uriTemplate;
+  private final Dimension dimension;
 
   NextGenDynamicMediaUriTemplate(@NotNull NextGenDynamicMediaContext context,
       @NotNull UriTemplateType type) {
     this.type = type;
 
-    if (type == UriTemplateType.SCALE_HEIGHT) {
-      throw new IllegalArgumentException("URI template type not supported: " + type);
+    NextGenDynamicMediaMetadata metadata = context.getMetadata();
+    if (metadata != null) {
+      dimension = metadata.getDimension();
+    }
+    else {
+      dimension = null;
     }
 
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .widthPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH)
         .rotation(context.getMedia().getRotation())
         .quality(ImageQualityPercentage.getAsInteger(context.getDefaultMediaArgs(), context.getMediaHandlerConfig()));
 
+    if (type == UriTemplateType.SCALE_HEIGHT) {
+      params.heightPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_HEIGHT);
+    }
+    else {
+      params.widthPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH);
+    }
+
     Dimension ratio = MediaArgsDimension.getRequestedRatioAsWidthHeight(context.getDefaultMediaArgs());
     if (ratio != null) {
-      params.cropSmartRatio(ratio);
+      params.ratio(ratio);
     }
 
     this.uriTemplate = new NextGenDynamicMediaImageUrlBuilder(context).build(params);
@@ -72,11 +84,17 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
 
   @Override
   public long getMaxWidth() {
+    if (dimension != null) {
+      return dimension.getWidth();
+    }
     return 0; // unknown
   }
 
   @Override
   public long getMaxHeight() {
+    if (dimension != null) {
+      return dimension.getHeight();
+    }
     return 0; // unknown
   }
 

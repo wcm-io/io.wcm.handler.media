@@ -75,7 +75,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_JPEG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?height=40&preferwebp=true&quality=85&width=80",
         ContentType.JPEG);
   }
 
@@ -84,7 +84,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_JPEG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=25%2C0%2C50%2C50&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -93,7 +93,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_JPEG_AutoCrop_ImageQuality() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=1%3A1%2Csmart&preferwebp=true&quality=60",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=25%2C0%2C50%2C50&preferwebp=true&quality=60",
         ContentType.JPEG, 0.6d);
   }
 
@@ -103,7 +103,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     context.create().assetRendition(asset, "square.jpg", 50, 50, ContentType.JPEG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=25%2C0%2C50%2C50&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -121,7 +121,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_GIF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?height=40&preferwebp=true&quality=85&width=80",
         ContentType.JPEG);
   }
 
@@ -130,7 +130,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_GIF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.gif", ContentType.GIF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.gif?crop=25%2C0%2C50%2C50&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 
@@ -148,7 +148,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_PNG_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?height=40&preferwebp=true&quality=85&width=80",
         ContentType.PNG);
   }
 
@@ -157,7 +157,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_PNG_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.png", ContentType.PNG);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.png?crop=25%2C0%2C50%2C50&preferwebp=true&quality=85",
         ContentType.PNG);
   }
 
@@ -184,7 +184,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_TIFF_Rescale() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_Rescale(asset, 80, 40,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=80%3A40%2Csmart&preferwebp=true&quality=85&width=80",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?height=40&preferwebp=true&quality=85&width=80",
         ContentType.JPEG);
   }
 
@@ -193,7 +193,7 @@ class MediaHandlerImplImageFileTypesEnd2EndNextGenDynamicMediaLocalAssetTest ext
   void testAsset_TIFF_AutoCrop() {
     Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
     buildAssertMedia_AutoCrop(asset, 50, 50,
-        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=1%3A1%2Csmart&preferwebp=true&quality=85",
+        "https://localrepo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/sample.jpg?crop=25%2C0%2C50%2C50&preferwebp=true&quality=85",
         ContentType.JPEG);
   }
 

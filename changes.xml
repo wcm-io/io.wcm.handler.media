@@ -23,6 +23,30 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="2.2.0" date="2024-08-26">
+      <action type="update" dev="cnagel" issue="62">
+        Web-Optimized Image Delivery: Use relative (percentage) parameters for cropping instead of absolute parameters. This should create more reliable renditions esp. for original images in low resolution.
+        You can switch back to the old behavior by setting "Crop Option" to ABSOLUTE_PARAMETERS in the "wcm.io Media Handler Web-Optimized Image Delivery Support" OSGi configuration.
+      </action>
+      <action type="update" dev="sseifert" issue="61">
+        Dynamic Media with OpenAPI: Use static cropping (center cropping) if named smart cropping based on Image Profile define in AEM is not available.
+      </action>
+      <action type="update" dev="sseifert" issue="61">
+        Dynamic Media with OpenAPI: Provide max. width/height in UriTemplate if source image dimension is available in metadata.
+      </action>
+      <action type="update" dev="sseifert" issue="64"><![CDATA[
+        Dynamic Media with OpenAPI: Do not enable support for remote assets by default. Since general availability the related configuration services not longer protected by a feature flag, so the feature has to be enabled explicitly via OSGi configuration.<br/>
+        <b>Breaking change:</b> You can enable support for remote assets by setting "Remote Assets" to true in the "wcm.io Media Handler Dynamic Media with OpenAPI Support" OSGi configuration.
+      ]]></action>
+      <action type="update" dev="sseifert" issue="65"><![CDATA[
+        Dynamic Media: Control image quality for lossy output image for each media request by appending "qlt" URL parameter, defaulting to the default image quality configured in the media handler configuration class.<br/>
+        <b>Breaking change:</b> You can disable this behavior by setting "Set Image Quality" to false in the "wcm.io Media Handler Dynamic Media Support" OSGi configuration. If disabled, the default image quality setting configured in Dynamic Media is used for all images.
+      ]]></action>
+      <action type="update" dev="sseifert">
+        Eliminate dependency to Commons Lang 2.
+      </action>
+    </release>
+
     <release version="2.1.0" date="2024-07-08">
       <action type="add" dev="sseifert" issue="52">
         Dynamic Media with OpenAPI: Support Dynamic Media with OpenAPI also for local assets.

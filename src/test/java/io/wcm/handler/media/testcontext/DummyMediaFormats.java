@@ -503,6 +503,11 @@ public final class DummyMediaFormats {
       .ratio(16, 10)
       .extensions("gif", "jpg", "png")
       .build();
+  public static final MediaFormat RATIO_16_9 = create("ratio_16_9")
+      .label("Ratio (16:9)")
+      .ratio(16, 9)
+      .extensions("gif", "jpg", "png")
+      .build();
   public static final MediaFormat RATIO_4_3 = create("ratio_4_3")
       .label("Ratio (4:3)")
       .ratio(4, 3)

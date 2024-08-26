@@ -84,12 +84,52 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
-        .cropSmartRatio(new Dimension(16, 9))
+        .height(50L)
+        .ratio(new Dimension(16, 9))
         .rotation(90)
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
+        + "?height=50&preferwebp=true&quality=60&rotate=90&width=100",
+        underTest.build(params));
+  }
+
+  @Test
+  void testOnlyRatio_16_9() {
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .ratio(new Dimension(16, 9))
+        .rotation(90)
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?height=1152&preferwebp=true&quality=60&rotate=90&width=2048",
+        underTest.build(params));
+  }
+
+  @Test
+  void testOnlyRatio_1_2() {
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .ratio(new Dimension(1, 2))
+        .rotation(90)
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?height=2048&preferwebp=true&quality=60&rotate=90&width=1024",
+        underTest.build(params));
+  }
+
+  @Test
+  void testOnlyRatio_1_1() {
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .ratio(new Dimension(1, 1))
+        .rotation(90)
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?height=2048&preferwebp=true&quality=60&rotate=90&width=2048",
         underTest.build(params));
   }
 
@@ -99,7 +139,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
-        .cropSmartRatio(new Dimension(16, 9))
+        .ratio(new Dimension(16, 9))
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
@@ -112,7 +152,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .cropSmartRatio(new Dimension(16, 9))
+        .ratio(new Dimension(16, 9))
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
@@ -125,11 +165,25 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .cropSmartRatio(new Dimension(1, 2))
+        .ratio(new Dimension(1, 2))
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
         + "?height=2048&preferwebp=true&quality=60&smartcrop=Portrait",
+        underTest.build(params));
+  }
+
+  @Test
+  void testAllParams_AutoCropping() throws Exception {
+    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromJson(METADATA_JSON_IMAGE);
+    NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs(), metadata);
+    NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
+        .width(100L)
+        .ratio(new Dimension(1, 1))
+        .quality(60);
+
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
+        + "?crop=200%2C0%2C800%2C800&preferwebp=true&quality=60&width=100",
         underTest.build(params));
   }
 
@@ -143,12 +197,13 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .width(100L)
-        .cropSmartRatio(new Dimension(16, 9))
+        .height(50L)
+        .ratio(new Dimension(16, 9))
         .rotation(90)
         .quality(60);
 
     assertEquals("https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg"
-        + "?crop=16%3A9%2Csmart&preferwebp=true&quality=60&rotate=90&width=100",
+        + "?height=50&preferwebp=true&quality=60&rotate=90&width=100",
         underTest.build(params));
   }
 
