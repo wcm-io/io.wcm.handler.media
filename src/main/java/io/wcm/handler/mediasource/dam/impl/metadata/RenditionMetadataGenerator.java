@@ -26,8 +26,11 @@ import static com.day.cq.commons.jcr.JcrConstants.JCR_LAST_MODIFIED_BY;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_MIMETYPE;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_PRIMARYTYPE;
 import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
+import static com.day.cq.dam.api.DamConstants.METADATA_FOLDER;
 import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
 import static com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.NN_RENDITIONS_METADATA;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_HEIGHT;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_WIDTH;
@@ -47,6 +50,7 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceUtil;
+import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -85,7 +89,10 @@ public final class RenditionMetadataGenerator {
    * Generate/validate rendition metadata of all renditions of this asset.
    * @param asset Asset
    */
-  @SuppressWarnings("java:S1075") // not a file path
+  @SuppressWarnings({
+      "java:S1075", // not a file path
+      "java:S3776" // complexity
+  })
   public void processAllRenditions(Asset asset) {
     Set<String> existingRenditionNames = new HashSet<>();
     List<String> renditionPaths = new ArrayList<>();
@@ -96,6 +103,10 @@ public final class RenditionMetadataGenerator {
 
     // get existing rendition names and paths
     for (Rendition rendition : asset.getRenditions()) {
+      // skip renditions where AEMaaCS asset compute already provided metadata
+      if (hasAemRenditionMetadata(rendition.getPath())) {
+        continue;
+      }
       existingRenditionNames.add(rendition.getName());
       renditionPaths.add(rendition.getPath());
     }
@@ -302,6 +313,24 @@ public final class RenditionMetadataGenerator {
     String assetPath = StringUtils.substringBefore(renditionPath, "/" + JCR_CONTENT + "/" + RENDITIONS_FOLDER + "/");
     String renditionName = Text.getName(renditionPath);
     return assetPath + "/" + JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/" + renditionName;
+  }
+
+  /**
+   * Checks if rendition metadata provided by AEMaaCS asset compute already exists at rendition/jcr:content/metadata.
+   * @param renditionPath Rendition path
+   * @return true if metadata with a valid dimension exists
+   */
+  @SuppressWarnings("java:S1075") // not a file path
+  private boolean hasAemRenditionMetadata(String renditionPath) {
+    String metadatPath = renditionPath + "/" + JCR_CONTENT + "/" + METADATA_FOLDER;
+    Resource metadataResource = resourceResolver.getResource(metadatPath);
+    if (metadataResource != null) {
+      ValueMap props = metadataResource.getValueMap();
+      long width = props.get(TIFF_IMAGEWIDTH, 0L);
+      long height = props.get(TIFF_IMAGELENGTH, 0L);
+      return width > 0 && height > 0;
+    }
+    return false;
   }
 
 }
