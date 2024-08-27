@@ -19,8 +19,12 @@
  */
 package io.wcm.handler.mediasource.dam.impl.metadata;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_LASTMODIFIED;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_LAST_MODIFIED_BY;
+import static com.day.cq.dam.api.DamConstants.METADATA_FOLDER;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.NN_RENDITIONS_METADATA;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_HEIGHT;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_WIDTH;
@@ -49,6 +53,7 @@ import com.adobe.granite.workflow.exec.WorkItem;
 import com.adobe.granite.workflow.exec.WorkflowData;
 import com.adobe.granite.workflow.metadata.MetaDataMap;
 import com.day.cq.dam.api.Asset;
+import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -96,11 +101,18 @@ class RenditionMetadataWorkflowProcessTest {
     context.create().assetRendition(asset, "rendition1.jpg", 12, 12, "image/jpg");
     context.create().assetRendition(asset, "rendition2.png", 10, 5, "image/png");
     context.create().assetRendition(asset, "rendition3.txt", "/sample.txt", "text/plain");
+
+    // prepare rendition with asset compute metadata
+    Rendition rendition4 = context.create().assetRendition(asset, "rendition4.jpg", 15, 15, "image/jpg");
+    context.create().resource(rendition4, JCR_CONTENT + "/" + METADATA_FOLDER,
+        TIFF_IMAGEWIDTH, 15, TIFF_IMAGELENGTH, 15);
+
     when(workflowData.getPayload()).thenReturn(asset.getPath());
 
     assertNoRenditionMetadata(asset, "rendition1.jpg");
     assertNoRenditionMetadata(asset, "rendition2.png");
     assertNoRenditionMetadata(asset, "rendition3.txt");
+    assertNoRenditionMetadata(asset, "rendition4.jpg");
 
     underTest.execute(workItem, workflowSession, metaDataMap);
 
@@ -108,6 +120,8 @@ class RenditionMetadataWorkflowProcessTest {
     assertRenditionMetadata(asset, "rendition2.png", 10, 5);
     // no metadata expected for non-image rendition
     assertNoRenditionMetadata(asset, "rendition3.txt");
+    // no metadata expected when asset compute metadata is present
+    assertNoRenditionMetadata(asset, "rendition4.jpg");
   }
 
   @Test
@@ -150,26 +164,41 @@ class RenditionMetadataWorkflowProcessTest {
   void testRemovalOfObsoleteRenditionMetadata() {
     Asset asset = context.create().asset("/content/dam/asset1.jpg", 10, 10, "image/jpeg");
     context.create().assetRendition(asset, "rendition1.jpg", 12, 12, "image/jpg");
+
+    // prepare rendition with asset compute metadata
+    Rendition rendition4 = context.create().assetRendition(asset, "rendition4.jpg", 15, 15, "image/jpg");
+    context.create().resource(rendition4, JCR_CONTENT + "/" + METADATA_FOLDER,
+        TIFF_IMAGEWIDTH, 15, TIFF_IMAGELENGTH, 15);
+
     when(workflowData.getPayload()).thenReturn(asset.getPath());
 
     // create some obsolete rendition metadata with no rendition attached
-    String obsoletePath = asset.getPath() + "/jcr:content/" + NN_RENDITIONS_METADATA + "/obsolete.jpg";
+    String obsoletePath = asset.getPath() + "/" + JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/obsolete.jpg";
     context.create().resource(obsoletePath,
         PN_IMAGE_WIDTH, 20,
         PN_IMAGE_HEIGHT, 10,
         JCR_LASTMODIFIED, Calendar.getInstance(),
         JCR_LAST_MODIFIED_BY, "dummy");
 
+    // create some obsolete rendition metadata for rendition with asset compute metadata
+    obsoletePath = asset.getPath() + "/" + JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/rendition4.jpg";
+    context.create().resource(obsoletePath,
+        PN_IMAGE_WIDTH, 15,
+        PN_IMAGE_HEIGHT, 15,
+        JCR_LASTMODIFIED, Calendar.getInstance(),
+        JCR_LAST_MODIFIED_BY, "dummy");
+
     assertNoRenditionMetadata(asset, "rendition1.jpg");
     assertRenditionMetadata(asset, "obsolete.jpg", 20, 10);
+    assertRenditionMetadata(asset, "rendition4.jpg", 15, 15);
 
     underTest.execute(workItem, workflowSession, metaDataMap);
 
     assertRenditionMetadata(asset, "rendition1.jpg", 12, 12);
     assertNoRenditionMetadata(asset, "obsolete.jpg");
+    assertNoRenditionMetadata(asset, "rendition4.jpg");
   }
 
-  @SuppressWarnings("null")
   private void assertRenditionMetadata(Asset asset, String renditionName, int width, int height) {
     String renditionPath = asset.getPath() + "/jcr:content/" + NN_RENDITIONS_METADATA + "/" + renditionName;
     Resource metadata = context.resourceResolver().getResource(renditionPath);
