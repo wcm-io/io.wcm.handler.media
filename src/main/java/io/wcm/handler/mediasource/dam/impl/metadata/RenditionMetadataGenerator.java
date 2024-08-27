@@ -185,6 +185,12 @@ public final class RenditionMetadataGenerator {
         log.debug("Skip non-image rendition {}", renditionPath);
         return false;
       }
+
+      // skip renditions where AEMaaCS asset compute already provided metadata
+      if (hasAemRenditionMetadata(renditionPath)) {
+        log.debug("Skip rendition with existing AEM rendition metadata {}", renditionPath);
+        return false;
+      }
     }
 
     // Compare timestamps of rendition and rendition metadata
