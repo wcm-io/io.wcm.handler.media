@@ -23,6 +23,13 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="2.2.2" date="not released">
+      <action type="update" dev="sseifert" issue="66"><![CDATA[
+        Respect Asset Compute Rendition Metadata provided by AEMaaCS: If rendition dimension is available at <code>&lt;rendition&gt;/jcr:content/metadata</code>,
+        don't generate additional metadata by Media Handler and read it directly from there instead.
+      ]]></action>
+    </release>
+
     <release version="2.2.0" date="2024-08-26">
       <action type="update" dev="cnagel" issue="62">
         Web-Optimized Image Delivery: Use relative (percentage) parameters for cropping instead of absolute parameters. This should create more reliable renditions esp. for original images in low resolution.

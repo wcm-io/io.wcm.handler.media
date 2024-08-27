@@ -268,7 +268,7 @@ public final class RenditionMetadataGenerator {
 
     // check if rendition still exist (or exists again) - in this case skip removing of renditions metadata
     Resource renditionResource = resourceResolver.getResource(renditionPath);
-    if (renditionResource != null) {
+    if (renditionResource != null && !hasAemRenditionMetadata(renditionResource.getPath())) {
       log.debug("Skip removing of metadata for existing rendition {}", renditionPath);
       return false;
     }
