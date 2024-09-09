@@ -132,6 +132,34 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   }
 
   @Test
+  void testRendition_SetWidth() {
+    Media media = mediaHandler.get(resource)
+        .fixedWidth(120)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "preferwebp=true&quality=85&width=120", "jpg");
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(120, rendition.getWidth());
+    assertEquals(80, rendition.getHeight());
+  }
+
+  @Test
+  void testRendition_SetHeight() {
+    Media media = mediaHandler.get(resource)
+        .fixedHeight(80)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "height=80&preferwebp=true&quality=85", "jpg");
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(120, rendition.getWidth());
+    assertEquals(80, rendition.getHeight());
+  }
+
+  @Test
   void testRendition_16_9() {
     Media media = mediaHandler.get(resource)
         .mediaFormat(DummyMediaFormats.RATIO_16_9)

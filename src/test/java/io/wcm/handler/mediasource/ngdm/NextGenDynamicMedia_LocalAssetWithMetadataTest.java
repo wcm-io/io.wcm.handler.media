@@ -22,14 +22,18 @@ package io.wcm.handler.mediasource.ngdm;
 import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
 import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
+import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ValueMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +48,7 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -73,15 +78,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   @Test
   @SuppressWarnings("null")
   void testLocalAsset() {
-    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 20, 10, ContentType.JPEG,
-        ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
-    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
-    props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
-
-    resource = context.create().resource(context.currentPage(), "local-asset",
-        MediaNameConstants.PN_MEDIA_REF, asset.getPath());
-
-    Media media = mediaHandler.get(resource)
+    Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
         .build();
     assertTrue(media.isValid());
     assertUrl(media, "preferwebp=true&quality=85", "jpg");
@@ -93,15 +90,74 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
     assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?preferwebp=true&quality=85&width={width}",
         uriTemplateScaleWidth.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplateScaleWidth.getType());
-    assertEquals(20, uriTemplateScaleWidth.getMaxWidth());
-    assertEquals(10, uriTemplateScaleWidth.getMaxHeight());
+    assertEquals(1200, uriTemplateScaleWidth.getMaxWidth());
+    assertEquals(800, uriTemplateScaleWidth.getMaxHeight());
 
     UriTemplate uriTemplateScaleHeight = rendition.getUriTemplate(UriTemplateType.SCALE_HEIGHT);
     assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?height={height}&preferwebp=true&quality=85",
         uriTemplateScaleHeight.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplateScaleHeight.getType());
-    assertEquals(20, uriTemplateScaleHeight.getMaxWidth());
-    assertEquals(10, uriTemplateScaleHeight.getMaxHeight());
+    assertEquals(1200, uriTemplateScaleHeight.getMaxWidth());
+    assertEquals(800, uriTemplateScaleHeight.getMaxHeight());
+  }
+
+  @Test
+  void testRendition_SetWidth() {
+    Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
+        .fixedWidth(120)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "preferwebp=true&quality=85&width=120", "jpg");
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(120, rendition.getWidth());
+    assertEquals(80, rendition.getHeight());
+  }
+
+  @Test
+  void testRendition_SetHeight() {
+    Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
+        .fixedHeight(80)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "height=80&preferwebp=true&quality=85", "jpg");
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(120, rendition.getWidth());
+    assertEquals(80, rendition.getHeight());
+  }
+
+  @Test
+  void testRendition_16_9() {
+    Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
+        .mediaFormat(DummyMediaFormats.RATIO_16_9)
+        .fixedWidth(1024)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "crop=0%2C63%2C1200%2C675&preferwebp=true&quality=85&width=1024", "jpg");
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+
+    assertNull(rendition.getPath());
+    assertEquals(SAMPLE_FILENAME, rendition.getFileName());
+    assertEquals("jpg", rendition.getFileExtension());
+    assertEquals(-1, rendition.getFileSize());
+    assertEquals(ContentType.JPEG, rendition.getMimeType());
+    assertEquals(DummyMediaFormats.RATIO_16_9, rendition.getMediaFormat());
+    assertEquals(ValueMap.EMPTY, rendition.getProperties());
+    assertTrue(rendition.isImage());
+    assertTrue(rendition.isBrowserImage());
+    assertFalse(rendition.isVectorImage());
+    assertFalse(rendition.isDownload());
+    assertEquals(1024, rendition.getWidth());
+    assertEquals(576, rendition.getHeight());
+    assertNull(rendition.getModificationDate());
+    assertFalse(rendition.isFallback());
+    assertNull(rendition.adaptTo(Resource.class));
+    assertNotNull(rendition.toString());
   }
 
   @Test
@@ -142,6 +198,17 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   private static String buildUrl(String urlParams, String extension) {
     return "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
         + extension + "?" + urlParams;
+  }
+
+  @SuppressWarnings("null")
+  private Resource prepareResourceWithApprovedLocalAsset() {
+    com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 1200, 800, ContentType.JPEG,
+        ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
+    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
+
+    return context.create().resource(context.currentPage(), "local-asset",
+        MediaNameConstants.PN_MEDIA_REF, asset.getPath());
   }
 
 }
