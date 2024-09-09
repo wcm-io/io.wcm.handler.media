@@ -24,6 +24,9 @@
   <body>
 
     <release version="2.2.2" date="not released">
+      <action type="update" dev="sseifert" issue="67">
+        Dynamic Media with Open API: Correctly calculate rendition width/height based on requested dimension or original dimension.
+      </action>
       <action type="update" dev="sseifert" issue="66"><![CDATA[
         Respect Asset Compute Rendition Metadata provided by AEMaaCS: If rendition dimension is available at <code>&lt;rendition&gt;/jcr:content/metadata</code>,
         don't generate additional metadata by Media Handler and read it directly from there instead.

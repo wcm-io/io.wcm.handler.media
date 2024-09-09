@@ -23,6 +23,7 @@ import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceS
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,6 +43,7 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
@@ -111,6 +113,65 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
         "preferwebp=true&quality=85&width={width}", "jpg");
     assertUriTemplate(fixedRendition.getUriTemplate(UriTemplateType.SCALE_WIDTH),
         "preferwebp=true&quality=85&width={width}", "jpg");
+  }
+
+  @Test
+  void testRendition_SetWidth() {
+    Media media = mediaHandler.get(resource)
+        .fixedWidth(120)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "preferwebp=true&quality=85&width=120", "jpg");
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(120, rendition.getWidth());
+    assertEquals(0, rendition.getHeight());
+  }
+
+  @Test
+  void testRendition_SetHeight() {
+    Media media = mediaHandler.get(resource)
+        .fixedHeight(80)
+        .build();
+    assertTrue(media.isValid());
+    assertUrl(media, "height=80&preferwebp=true&quality=85", "jpg");
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(0, rendition.getWidth());
+    assertEquals(80, rendition.getHeight());
+  }
+
+  @Test
+  void testRendition_16_9() {
+    Media media = mediaHandler.get(resource)
+        .mediaFormat(DummyMediaFormats.RATIO_16_9)
+        .fixedWidth(1024)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertUrl(rendition, "height=576&preferwebp=true&quality=85&width=1024", "jpg");
+
+    assertNull(rendition.getPath());
+    assertEquals(SAMPLE_FILENAME, rendition.getFileName());
+    assertEquals("jpg", rendition.getFileExtension());
+    assertEquals(-1, rendition.getFileSize());
+    assertEquals(ContentType.JPEG, rendition.getMimeType());
+    assertEquals(DummyMediaFormats.RATIO_16_9, rendition.getMediaFormat());
+    assertEquals(ValueMap.EMPTY, rendition.getProperties());
+    assertTrue(rendition.isImage());
+    assertTrue(rendition.isBrowserImage());
+    assertFalse(rendition.isVectorImage());
+    assertFalse(rendition.isDownload());
+    assertEquals(1024, rendition.getWidth());
+    assertEquals(576, rendition.getHeight());
+    assertNull(rendition.getModificationDate());
+    assertFalse(rendition.isFallback());
+    assertNull(rendition.adaptTo(Resource.class));
+    assertNotNull(rendition.toString());
   }
 
   @Test

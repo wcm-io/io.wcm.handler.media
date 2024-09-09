@@ -37,6 +37,7 @@ import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.format.MediaFormat;
+import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageQualityPercentage;
 import io.wcm.handler.mediasource.ngdm.impl.MediaArgsDimension;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaBinaryUrlBuilder;
@@ -58,6 +59,8 @@ final class NextGenDynamicMediaRendition implements Rendition {
   private final MediaArgs mediaArgs;
   private final String url;
   private MediaFormat resolvedMediaFormat;
+  private long requestedWidth;
+  private long requestedHeight;
   private long width;
   private long height;
   private String fileExtension;
@@ -75,16 +78,16 @@ final class NextGenDynamicMediaRendition implements Rendition {
     }
     this.reference = context.getReference();
     this.mediaArgs = mediaArgs;
-    this.width = mediaArgs.getFixedWidth();
-    this.height = mediaArgs.getFixedHeight();
+    this.requestedWidth = mediaArgs.getFixedWidth();
+    this.requestedHeight = mediaArgs.getFixedHeight();
 
     // set first media format as resolved format - because only the first is supported
     MediaFormat firstMediaFormat = MediaArgsDimension.getFirstMediaFormat(mediaArgs);
     if (firstMediaFormat != null) {
       this.resolvedMediaFormat = firstMediaFormat;
-      if (this.width == 0) {
-        this.width = firstMediaFormat.getEffectiveMinWidth();
-        this.height = firstMediaFormat.getEffectiveMinHeight();
+      if (this.requestedWidth == 0) {
+        this.requestedWidth = firstMediaFormat.getEffectiveMinWidth();
+        this.requestedHeight = firstMediaFormat.getEffectiveMinHeight();
       }
     }
 
@@ -97,14 +100,61 @@ final class NextGenDynamicMediaRendition implements Rendition {
       // deliver as binary
       this.url = buildBinaryUrl();
     }
-    else if (isRequestedDimensionLargerThanOriginal()) {
-      // image upscaling is not supported
-      this.url = null;
-    }
     else {
-      // deliver scaled image rendition
-      this.url = buildImageRenditionUrl();
-      this.fileExtension = new NextGenDynamicMediaImageUrlBuilder(context).getFileExtension();
+      // calculate width/height for rendition metadata
+      calculateWidthHeight();
+      if (isRequestedDimensionLargerThanOriginal()) {
+        // image upscaling is not supported
+        this.url = null;
+      }
+      else {
+        // deliver scaled image rendition
+        this.url = buildImageRenditionUrl();
+        this.fileExtension = new NextGenDynamicMediaImageUrlBuilder(context).getFileExtension();
+      }
+    }
+  }
+
+  /**
+   * Recalculates width and/or height based on requested media format, ratio and original dimensions.
+   */
+  private void calculateWidthHeight() {
+    double requestedRatio = MediaArgsDimension.getRequestedRatio(mediaArgs);
+
+    // use given width/height if fixed dimension is requested
+    if (requestedWidth > 0 && requestedHeight > 0) {
+      this.width = requestedWidth;
+      this.height = requestedHeight;
+    }
+
+    // set original sizes if not width/height is requested
+    else if (this.requestedWidth == 0 && this.requestedHeight == 0 && this.originalDimension != null) {
+      this.width = this.originalDimension.getWidth();
+      this.height = this.originalDimension.getHeight();
+    }
+
+    // calculate height if only width is requested
+    else if (this.requestedWidth > 0 && this.requestedHeight == 0) {
+      this.width = requestedWidth;
+      if (requestedRatio > 0) {
+        this.height = Math.round(this.requestedWidth / requestedRatio);
+        this.requestedHeight = this.height;
+      }
+      else if (originalDimension != null) {
+        this.height = Math.round(this.requestedWidth / Ratio.get(originalDimension));
+      }
+    }
+
+    // calculate width if only height is requested
+    else if (this.requestedHeight > 0 && this.requestedWidth == 0) {
+      this.height = requestedHeight;
+      if (requestedRatio > 0) {
+        this.width = Math.round(this.requestedHeight * requestedRatio);
+        this.requestedWidth = this.width;
+      }
+      else if (originalDimension != null) {
+        this.width = Math.round(this.requestedHeight * Ratio.get(originalDimension));
+      }
     }
   }
 
@@ -112,22 +162,14 @@ final class NextGenDynamicMediaRendition implements Rendition {
    * Build image rendition URL which is dynamically scaled and/or cropped.
    */
   private String buildImageRenditionUrl() {
-    // calculate height
-    if (this.width > 0) {
-      double ratio = MediaArgsDimension.getRequestedRatio(mediaArgs);
-      if (ratio > 0) {
-        this.height = Math.round(this.width / ratio);
-      }
-    }
-
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
         .rotation(context.getMedia().getRotation())
         .quality(ImageQualityPercentage.getAsInteger(mediaArgs, context.getMediaHandlerConfig()));
-    if (this.width > 0) {
-      params.width(this.width);
+    if (this.requestedWidth > 0) {
+      params.width(this.requestedWidth);
     }
-    if (this.height > 0) {
-      params.height(this.height);
+    if (this.requestedHeight > 0) {
+      params.height(this.requestedHeight);
     }
     Dimension ratioDimension = MediaArgsDimension.getRequestedRatioAsWidthHeight(mediaArgs);
     if (ratioDimension != null) {
@@ -144,10 +186,10 @@ final class NextGenDynamicMediaRendition implements Rendition {
    */
   private boolean isRequestedDimensionLargerThanOriginal() {
     if (originalDimension != null
-        && (this.width > originalDimension.getWidth() || this.height > originalDimension.getHeight())) {
+        && (this.requestedWidth > originalDimension.getWidth() || this.requestedHeight > originalDimension.getHeight())) {
       if (log.isTraceEnabled()) {
         log.trace("Requested dimension {} is larger than original image dimension {} of {}",
-            new Dimension(this.width, this.height), originalDimension, context.getReference());
+            new Dimension(this.requestedWidth, this.requestedHeight), originalDimension, context.getReference());
       }
       return true;
     }
@@ -230,17 +272,11 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public long getWidth() {
-    if (width == 0 && originalDimension != null) {
-      return originalDimension.getWidth();
-    }
     return width;
   }
 
   @Override
   public long getHeight() {
-    if (height == 0 && originalDimension != null) {
-      return originalDimension.getHeight();
-    }
     return height;
   }
 
