@@ -308,7 +308,12 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public String toString() {
-    return Objects.toString(url, "#invalid");
+    StringBuilder sb = new StringBuilder();
+    sb.append(Objects.toString(url, "#invalid"));
+    if (width > 0 || height > 0) {
+      sb.append(" (").append(Long.toString(width)).append("x").append(Long.toString(height)).append(")");
+    }
+    return sb.toString();
   }
 
 }
