@@ -19,8 +19,12 @@
  */
 package io.wcm.handler.mediasource.dam.impl.metadata;
 
+import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_LASTMODIFIED;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_LAST_MODIFIED_BY;
+import static com.day.cq.dam.api.DamConstants.METADATA_FOLDER;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.NN_RENDITIONS_METADATA;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_HEIGHT;
 import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataNameConstants.PN_IMAGE_WIDTH;
@@ -76,6 +80,14 @@ class RenditionMetadataListenerServiceTest {
         "threadPoolSize", 0);
     addRendition("test.jpg");
     assertRenditionMetadata("test.jpg", 215, 102, true);
+  }
+
+  @Test
+  void testAddRendition_Metadata_ExistingAemRenditionMetadata() {
+    underTest = context.registerInjectActivateService(new RenditionMetadataListenerService(),
+        "threadPoolSize", 0);
+    addRenditionWithAemRenditionMetadata("test.jpg");
+    assertNoRenditionMetadata("test.jpg");
   }
 
   @Test
@@ -208,6 +220,13 @@ class RenditionMetadataListenerServiceTest {
     underTest.handleEvent(DamEvent.renditionUpdated(assetResource.getPath(), null, rendition.getPath()).toEvent());
   }
 
+  private void addRenditionWithAemRenditionMetadata(String renditionName) {
+    Resource rendition = context.load().binaryFile("/sample_image_215x102.jpg", RENDITIONS_PATH + "/" + renditionName);
+    context.create().resource(rendition, JCR_CONTENT + "/" + METADATA_FOLDER,
+        TIFF_IMAGEWIDTH, 215, TIFF_IMAGELENGTH, 102);
+    underTest.handleEvent(DamEvent.renditionUpdated(assetResource.getPath(), null, rendition.getPath()).toEvent());
+  }
+
   @SuppressWarnings("null")
   private void updateRendition(String renditionName) throws PersistenceException {
     String renditionPath = RENDITIONS_PATH + "/" + renditionName;
@@ -233,7 +252,6 @@ class RenditionMetadataListenerServiceTest {
     underTest.handleEvent(DamEvent.renditionRemoved(assetResource.getPath(), null, renditionPath).toEvent());
   }
 
-  @SuppressWarnings("null")
   private void assertRenditionMetadata(String renditionName, int width, int height, boolean withLastModified) {
     String path = RENDITIONS_METADATA_PATH + "/" + renditionName;
     Resource metadata = context.resourceResolver().getResource(path);

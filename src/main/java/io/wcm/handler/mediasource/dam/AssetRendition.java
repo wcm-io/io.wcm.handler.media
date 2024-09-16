@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.dam;
 import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
 import static com.day.cq.dam.api.DamConstants.EXIF_PIXELXDIMENSION;
 import static com.day.cq.dam.api.DamConstants.EXIF_PIXELYDIMENSION;
+import static com.day.cq.dam.api.DamConstants.METADATA_FOLDER;
 import static com.day.cq.dam.api.DamConstants.ORIGINAL_FILE;
 import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
 import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
@@ -107,8 +108,13 @@ public final class AssetRendition {
     // dimensions for non-original renditions only supported for image binaries
     if (MediaFileType.isImage(fileExtension)) {
       if (dimension == null) {
+        // check if rendition metadata is present in <rendition>/jcr:content/metadata provided by AEMaaCS asset compute
+        dimension = getDimensionFromAemRenditionMetadata(rendition);
+      }
+
+      if (dimension == null) {
         // otherwise get from rendition metadata written by {@link DamRenditionMetadataService}
-        dimension = getDimensionFromRenditionMetadata(rendition);
+        dimension = getDimensionFromMediaHandlerRenditionMetadata(rendition);
       }
 
       // fallback: if width/height could not be read from either asset or rendition metadata load the image
@@ -131,7 +137,7 @@ public final class AssetRendition {
     // asset may have stored dimension in different property names
     long width = getAssetMetadataValueAsLong(asset, TIFF_IMAGEWIDTH, EXIF_PIXELXDIMENSION);
     long height = getAssetMetadataValueAsLong(asset, TIFF_IMAGELENGTH, EXIF_PIXELYDIMENSION);
-    return toDimension(width, height);
+    return toValidDimension(width, height);
   }
 
   private static long getAssetMetadataValueAsLong(Asset asset, String... propertyNames) {
@@ -150,7 +156,7 @@ public final class AssetRendition {
    * @return Dimension or null
    */
   @SuppressWarnings("java:S1075") // not a file path
-  private static @Nullable Dimension getDimensionFromRenditionMetadata(@NotNull Rendition rendition) {
+  private static @Nullable Dimension getDimensionFromMediaHandlerRenditionMetadata(@NotNull Rendition rendition) {
     Asset asset = rendition.getAsset();
     String metadataPath = JCR_CONTENT + "/" + NN_RENDITIONS_METADATA + "/" + rendition.getName();
     Resource metadataResource = AdaptTo.notNull(asset, Resource.class).getChild(metadataPath);
@@ -158,7 +164,25 @@ public final class AssetRendition {
       ValueMap props = metadataResource.getValueMap();
       long width = props.get(PN_IMAGE_WIDTH, 0L);
       long height = props.get(PN_IMAGE_HEIGHT, 0L);
-      return toDimension(width, height);
+      return toValidDimension(width, height);
+    }
+    return null;
+  }
+
+  /**
+   * Asset Compute from AEMaaCS writes rendition metadata including width/height to jcr:content/metadata of the
+   * rendition resource - try to read it from there (it may be missing for not fully processed assets, or in local
+   * AEMaaCS SDK or AEM 6.5 instances).
+   * @param rendition Rendition
+   * @return Dimension or null
+   */
+  private static @Nullable Dimension getDimensionFromAemRenditionMetadata(@NotNull Rendition rendition) {
+    Resource metadataResource = rendition.getChild(JCR_CONTENT + "/" + METADATA_FOLDER);
+    if (metadataResource != null) {
+      ValueMap props = metadataResource.getValueMap();
+      long width = props.get(TIFF_IMAGEWIDTH, 0L);
+      long height = props.get(TIFF_IMAGELENGTH, 0L);
+      return toValidDimension(width, height);
     }
     return null;
   }
@@ -178,7 +202,7 @@ public final class AssetRendition {
         Layer layer = new Layer(is);
         long width = layer.getWidth();
         long height = layer.getHeight();
-        Dimension dimension = toDimension(width, height);
+        Dimension dimension = toValidDimension(width, height);
         if (!suppressLogWarningNoRenditionsMetadata) {
           log.warn("Unable to detect rendition metadata for {}, "
               + "fallback to inefficient detection by loading image into in memory (detected dimension={}). "
@@ -198,12 +222,12 @@ public final class AssetRendition {
   }
 
   /**
-   * Convert width/height to dimension
+   * Convert width/height to dimension.
    * @param width Width
    * @param height Height
    * @return Dimension or null if width or height are not valid
    */
-  private static @Nullable Dimension toDimension(long width, long height) {
+  private static @Nullable Dimension toValidDimension(long width, long height) {
     if (width > 0L && height > 0L) {
       return new Dimension(width, height);
     }
