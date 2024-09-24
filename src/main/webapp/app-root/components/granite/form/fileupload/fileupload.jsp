@@ -207,6 +207,9 @@ pathFieldProps.put("required", cfg.get("required", false));
 // detect root path
 pathFieldProps.putAll(getDamRootPathProperties(cmp, slingRequest, "/content/dam"));
 
+// hook media format validation in GraniteUI validation
+pathFieldProps.put("validation", new String[] { "wcmio.handler.media.mediaFormat" });
+
 Resource pathField = GraniteUiSyntheticResource.child(fileUpload, "pathfield" ,
     "wcm-io/wcm/ui/granite/components/form/pathfield", new ValueMapDecorator(pathFieldProps));
 Map<String,Object> dataProps = new HashMap<>();
