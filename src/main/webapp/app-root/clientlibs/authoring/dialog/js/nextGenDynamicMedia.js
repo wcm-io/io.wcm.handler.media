@@ -137,7 +137,7 @@
         $underlay.removeClass("is-open");
         self._assetSelectorDialog.remove();
       },
-      hideTreeNav: true,
+      hideTreeNav: false,
       acvConfig: {
         selectionType: "single",
       }
