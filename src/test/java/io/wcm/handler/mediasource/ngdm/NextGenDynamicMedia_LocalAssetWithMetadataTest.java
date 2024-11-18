@@ -68,6 +68,8 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 @WireMockTest
 class NextGenDynamicMedia_LocalAssetWithMetadataTest {
 
+  private static final String NOT_FOUND_ASSET_UUID = "99999999-abcd-abcd-abcd-abcd99999999";
+
   private final AemContext context = AppAemContext.newAemContext();
 
   private MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig;
@@ -95,6 +97,9 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
             .withStatus(HttpStatus.SC_OK)
             .withHeader("Content-Type", ContentType.JSON)
             .withBody(METADATA_JSON_IMAGE)));
+    stubFor(get("/adobe/assets/urn:aaid:aem:" + NOT_FOUND_ASSET_UUID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_NOT_FOUND)));
   }
 
   @Test
@@ -187,7 +192,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   void testLocalAsset_NonExistingUUID() {
     com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG);
     ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
-    props.put(JcrConstants.JCR_UUID, "99999999-abcd-abcd-abcd-abcd99999999");
+    props.put(JcrConstants.JCR_UUID, NOT_FOUND_ASSET_UUID);
 
     resource = context.create().resource(context.currentPage(), "local-asset",
         MediaNameConstants.PN_MEDIA_REF, asset.getPath());
