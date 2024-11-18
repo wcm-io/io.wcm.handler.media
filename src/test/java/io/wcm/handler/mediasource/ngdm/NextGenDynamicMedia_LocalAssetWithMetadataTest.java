@@ -21,16 +21,21 @@ package io.wcm.handler.mediasource.ngdm;
 
 import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
 import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_FILENAME;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_UUID;
+import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.http.HttpStatus;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -39,6 +44,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.commons.jcr.JcrConstants;
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
@@ -50,29 +57,50 @@ import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
+import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadataServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
 @ExtendWith(AemContextExtension.class)
+@WireMockTest
 class NextGenDynamicMedia_LocalAssetWithMetadataTest {
+
+  private static final String NOT_FOUND_ASSET_UUID = "99999999-abcd-abcd-abcd-abcd99999999";
 
   private final AemContext context = AppAemContext.newAemContext();
 
+  private MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig;
+  private NextGenDynamicMediaConfigServiceImpl nextGenDynamicMediaConfigService;
   private MediaHandler mediaHandler;
   private Resource resource;
 
   @BeforeEach
   @SuppressWarnings("null")
-  void setUp() {
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+  void setUp(WireMockRuntimeInfo wmRuntimeInfo) {
+    nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
+    nextGenDynamicMediaConfig.setEnabled(true);
+    nextGenDynamicMediaConfig.setRepositoryId("remoterepo1");
+    nextGenDynamicMediaConfigService = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
         "enabledLocalAssets", true,
-        "localAssetsRepositoryId", "repo1");
+        "localAssetsRepositoryId", "localhost:" + wmRuntimeInfo.getHttpPort());
+    context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
+        "enabled", true);
 
     resource = context.create().resource(context.currentPage(), "test",
         MediaNameConstants.PN_MEDIA_REF, SAMPLE_REFERENCE);
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(METADATA_JSON_IMAGE)));
+    stubFor(get("/adobe/assets/urn:aaid:aem:" + NOT_FOUND_ASSET_UUID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_NOT_FOUND)));
   }
 
   @Test
@@ -87,14 +115,16 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
     Rendition rendition = media.getRendition();
 
     UriTemplate uriTemplateScaleWidth = rendition.getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?preferwebp=true&quality=85&width={width}",
+    assertEquals("https://" + nextGenDynamicMediaConfigService.getLocalAssetsRepositoryId()
+        + "/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?preferwebp=true&quality=85&width={width}",
         uriTemplateScaleWidth.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplateScaleWidth.getType());
     assertEquals(1200, uriTemplateScaleWidth.getMaxWidth());
     assertEquals(800, uriTemplateScaleWidth.getMaxHeight());
 
     UriTemplate uriTemplateScaleHeight = rendition.getUriTemplate(UriTemplateType.SCALE_HEIGHT);
-    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?height={height}&preferwebp=true&quality=85",
+    assertEquals("https://" + nextGenDynamicMediaConfigService.getLocalAssetsRepositoryId()
+        + "/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?height={height}&preferwebp=true&quality=85",
         uriTemplateScaleHeight.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplateScaleHeight.getType());
     assertEquals(1200, uriTemplateScaleHeight.getMaxWidth());
@@ -136,7 +166,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
         .fixedWidth(1024)
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "crop=0%2C63%2C1200%2C675&preferwebp=true&quality=85&width=1024", "jpg");
+    assertUrl(media, "preferwebp=true&quality=85&smartcrop=Landscape&width=1024", "jpg");
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
@@ -162,10 +192,10 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
 
   @Test
   @SuppressWarnings("null")
-  void testLocalAsset_NotApproved() {
+  void testLocalAsset_NonExistingUUID() {
     com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG);
     ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
-    props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
+    props.put(JcrConstants.JCR_UUID, NOT_FOUND_ASSET_UUID);
 
     resource = context.create().resource(context.currentPage(), "local-asset",
         MediaNameConstants.PN_MEDIA_REF, asset.getPath());
@@ -173,7 +203,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
     Media media = mediaHandler.get(resource)
         .build();
     assertFalse(media.isValid());
-    assertEquals(MediaInvalidReason.NOT_APPROVED, media.getMediaInvalidReason());
+    assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
   }
 
   @Test
@@ -191,12 +221,13 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
     assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
   }
 
-  private static void assertUrl(Media media, String urlParams, String extension) {
+  private void assertUrl(Media media, String urlParams, String extension) {
     assertEquals(buildUrl(urlParams, extension), media.getUrl());
   }
 
-  private static String buildUrl(String urlParams, String extension) {
-    return "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
+  private String buildUrl(String urlParams, String extension) {
+    return "https://" + nextGenDynamicMediaConfigService.getLocalAssetsRepositoryId()
+        + "/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
         + extension + "?" + urlParams;
   }
 
