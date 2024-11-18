@@ -73,6 +73,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   private final AemContext context = AppAemContext.newAemContext();
 
   private MockNextGenDynamicMediaConfig nextGenDynamicMediaConfig;
+  private NextGenDynamicMediaConfigServiceImpl nextGenDynamicMediaConfigService;
   private MediaHandler mediaHandler;
   private Resource resource;
 
@@ -81,10 +82,10 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   void setUp(WireMockRuntimeInfo wmRuntimeInfo) {
     nextGenDynamicMediaConfig = context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class);
     nextGenDynamicMediaConfig.setEnabled(true);
-    nextGenDynamicMediaConfig.setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
-    context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
+    nextGenDynamicMediaConfig.setRepositoryId("remoterepo1");
+    nextGenDynamicMediaConfigService = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class,
         "enabledLocalAssets", true,
-        "localAssetsRepositoryId", "repo1");
+        "localAssetsRepositoryId", "localhost:" + wmRuntimeInfo.getHttpPort());
     context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
         "enabled", true);
 
@@ -114,14 +115,16 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
     Rendition rendition = media.getRendition();
 
     UriTemplate uriTemplateScaleWidth = rendition.getUriTemplate(UriTemplateType.SCALE_WIDTH);
-    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?preferwebp=true&quality=85&width={width}",
+    assertEquals("https://" + nextGenDynamicMediaConfigService.getLocalAssetsRepositoryId()
+        + "/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?preferwebp=true&quality=85&width={width}",
         uriTemplateScaleWidth.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplateScaleWidth.getType());
     assertEquals(1200, uriTemplateScaleWidth.getMaxWidth());
     assertEquals(800, uriTemplateScaleWidth.getMaxHeight());
 
     UriTemplate uriTemplateScaleHeight = rendition.getUriTemplate(UriTemplateType.SCALE_HEIGHT);
-    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?height={height}&preferwebp=true&quality=85",
+    assertEquals("https://" + nextGenDynamicMediaConfigService.getLocalAssetsRepositoryId()
+        + "/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?height={height}&preferwebp=true&quality=85",
         uriTemplateScaleHeight.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplateScaleHeight.getType());
     assertEquals(1200, uriTemplateScaleHeight.getMaxWidth());
@@ -218,12 +221,13 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
     assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
   }
 
-  private static void assertUrl(Media media, String urlParams, String extension) {
+  private void assertUrl(Media media, String urlParams, String extension) {
     assertEquals(buildUrl(urlParams, extension), media.getUrl());
   }
 
-  private static String buildUrl(String urlParams, String extension) {
-    return "https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
+  private String buildUrl(String urlParams, String extension) {
+    return "https://" + nextGenDynamicMediaConfigService.getLocalAssetsRepositoryId()
+        + "/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image."
         + extension + "?" + urlParams;
   }
 
