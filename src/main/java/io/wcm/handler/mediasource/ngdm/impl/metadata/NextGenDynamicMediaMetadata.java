@@ -19,36 +19,21 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
-import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
-import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
-import static com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_LEFT;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_NORMALIZED_HEIGHT;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_NORMALIZED_WIDTH;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_TOP;
-
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.sling.api.resource.Resource;
-import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.day.cq.dam.api.Asset;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.AssetMetadata;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.RepositoryMetadata;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -163,61 +148,12 @@ public final class NextGenDynamicMediaMetadata {
     return null;
   }
 
-  /**
-   * Gets metadata from DAM asset.
-   * @param asset Asset
-   * @return Metadata object
-   */
-  @SuppressWarnings("null")
-  public static @NotNull NextGenDynamicMediaMetadata fromAsset(@NotNull Asset asset) {
-    String mimeType = asset.getMimeType();
-
-    Dimension dimension = AssetRendition.getDimension(asset.getOriginal());
-    String assetStatus = asset.getMetadataValueFromJcr(ASSET_STATUS_PROPERTY);
-    List<SmartCrop> smartCrops = null;
-
-    if (dimension != null) {
-      smartCrops = getRenditionResources(asset)
-          .filter(rendition -> rendition.isResourceType(RT_RENDITION_SMARTCROP))
-          .map(rendition -> Map.entry(rendition.getName(), renditionToSmartCropDefinition(rendition)))
-          .filter(entry -> isSmartCropDefinitionValid(entry.getKey(), entry.getValue()))
-          .map(entry -> new SmartCrop(entry.getKey(), entry.getValue(), dimension))
-          .collect(Collectors.toList());
-    }
-
-    return new NextGenDynamicMediaMetadata(mimeType, dimension, assetStatus, smartCrops);
-  }
-
-  private static Stream<Resource> getRenditionResources(@NotNull Asset asset) {
-    Resource assetResource = asset.adaptTo(Resource.class);
-    if (assetResource != null) {
-      Resource renditionsFolder = assetResource.getChild(JCR_CONTENT + "/" + RENDITIONS_FOLDER);
-      if (renditionsFolder != null) {
-        return StreamSupport.stream(renditionsFolder.getChildren().spliterator(), false);
-      }
-    }
-    return Stream.empty();
-  }
-
   private static boolean isSmartCropDefinitionValid(@NotNull String name, @NotNull MetadataResponse.SmartCrop smartCop) {
     return StringUtils.isNotBlank(name)
         && smartCop.normalizedWidth > 0
         && smartCop.normalizedHeight > 0
         && smartCop.left >= 0
         && smartCop.top >= 0;
-  }
-
-  private static @NotNull MetadataResponse.SmartCrop renditionToSmartCropDefinition(Resource rendition) {
-    MetadataResponse.SmartCrop result = new MetadataResponse.SmartCrop();
-    Resource content = rendition.getChild(JCR_CONTENT);
-    if (content != null) {
-      ValueMap props = content.getValueMap();
-      result.left = props.get(PN_LEFT, 0d);
-      result.top = props.get(PN_TOP, 0d);
-      result.normalizedWidth = props.get(PN_NORMALIZED_WIDTH, 0d);
-      result.normalizedHeight = props.get(PN_NORMALIZED_HEIGHT, 0d);
-    }
-    return result;
   }
 
 }
