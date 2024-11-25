@@ -73,6 +73,21 @@ public final class MetadataSample {
       + "  }"
       + "}";
 
+  public static final String METADATA_JSON_SVG = "{"
+      + "  \"assetId\": \"" + SAMPLE_ASSET_ID + "\","
+      + "  \"repositoryMetadata\": {"
+      + "    \"repo:name\": \"test.svg\","
+      + "    \"dc:format\": \"image/svg+xml\""
+      + "  },"
+      + "  \"assetMetadata\": {"
+      + "    \"dam:assetStatus\": \"approved\","
+      + "    \"dc:description\": \"Test Description\","
+      + "    \"dc:title\": \"Test Image\","
+      + "    \"tiff:ImageLength\": 600,"
+      + "    \"tiff:ImageWidth\": 900"
+      + "  }"
+      + "}";
+
   public static final String METADATA_JSON_PDF = "{"
       + "  \"assetId\": \"" + SAMPLE_ASSET_ID + "\","
       + "  \"repositoryMetadata\": {"
