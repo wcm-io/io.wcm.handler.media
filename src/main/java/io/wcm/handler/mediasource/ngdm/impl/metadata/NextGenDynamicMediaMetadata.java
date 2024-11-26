@@ -26,11 +26,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +42,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.RepositoryMetadata;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Metadata for Next Gen Dynamic Media asset fetched from the HTTP API.
@@ -120,7 +121,13 @@ public final class NextGenDynamicMediaMetadata {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
+        .append("mimeType", mimeType)
+        .append("dimension", dimension)
+        .append("assetStatus", assetStatus)
+        .append("properties", properties.isEmpty() ? null : new TreeMap<String, Object>(properties))
+        .append("smartCrops", smartCrops.isEmpty() ? null : smartCrops)
+        .toString();
   }
 
   /**
