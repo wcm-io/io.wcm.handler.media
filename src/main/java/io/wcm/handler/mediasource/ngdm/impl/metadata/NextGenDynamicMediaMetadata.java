@@ -19,6 +19,9 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -138,8 +141,8 @@ public final class NextGenDynamicMediaMetadata {
     String assetStatus = null;
     if (assetMetadata != null) {
       properties = new ValueMapDecorator(assetMetadata);
-      width = properties.get("tiff:ImageWidth", 0L);
-      height = properties.get("tiff:ImageLength", 0L);
+      width = properties.get(TIFF_IMAGEWIDTH, 0L);
+      height = properties.get(TIFF_IMAGELENGTH, 0L);
       assetStatus = properties.get("dam:assetStatus", String.class);
     }
     Dimension dimension = toDimension(width, height);

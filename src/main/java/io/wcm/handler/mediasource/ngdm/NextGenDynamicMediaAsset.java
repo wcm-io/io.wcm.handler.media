@@ -88,7 +88,7 @@ final class NextGenDynamicMediaAsset implements Asset {
 
   @Override
   public @NotNull ValueMap getProperties() {
-    return ValueMap.EMPTY;
+    return properties;
   }
 
   @Override

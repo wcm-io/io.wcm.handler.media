@@ -107,7 +107,7 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
     assertEquals("my-image.jpg", asset.getAltText());
     assertNull(asset.getDescription());
     assertEquals(SAMPLE_REFERENCE, asset.getPath());
-    assertEquals(ValueMap.EMPTY, asset.getProperties());
+    assertEquals("approved", asset.getProperties().get("dam:assetStatus"));
     assertNull(asset.adaptTo(Resource.class));
 
     assertUrl(asset.getDefaultRendition(), "preferwebp=true&quality=85", "jpg");
