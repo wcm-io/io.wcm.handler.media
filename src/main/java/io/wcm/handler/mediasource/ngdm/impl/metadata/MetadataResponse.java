@@ -35,7 +35,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 final class MetadataResponse {
 
   public RepositoryMetadata repositoryMetadata;
-  public AssetMetadata assetMetadata;
+  public Map<String, Object> assetMetadata;
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   static final class RepositoryMetadata {
@@ -51,16 +51,6 @@ final class MetadataResponse {
     public double top;
     public double normalizedWidth;
     public double normalizedHeight;
-  }
-
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  static final class AssetMetadata {
-    @JsonProperty("dam:assetStatus")
-    public String assetStatus;
-    @JsonProperty("tiff:ImageWidth")
-    public long tiffImageWidth;
-    @JsonProperty("tiff:ImageLength")
-    public long tiffImageLength;
   }
 
 }

@@ -30,6 +30,7 @@ import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METAD
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE_FULL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -117,6 +118,8 @@ class NextGenDynamicMediaMetadataServiceImpl_ImsAccessTokenTest {
     assertEquals(1500, dimension.getWidth());
     assertEquals(900, dimension.getHeight());
     assertEquals("image/jpeg", metadata.getMimeType());
+    assertEquals("Test Image", metadata.getProperties().get("dc:title", String.class));
+    assertEquals("Test Description", metadata.getProperties().get("dc:description", String.class));
   }
 
   @Test
@@ -136,6 +139,8 @@ class NextGenDynamicMediaMetadataServiceImpl_ImsAccessTokenTest {
     assertEquals(1200, dimension.getWidth());
     assertEquals(800, dimension.getHeight());
     assertEquals("image/jpeg", metadata.getMimeType());
+    assertNull(metadata.getProperties().get("dc:title", String.class));
+    assertNull(metadata.getProperties().get("dc:description", String.class));
   }
 
 }

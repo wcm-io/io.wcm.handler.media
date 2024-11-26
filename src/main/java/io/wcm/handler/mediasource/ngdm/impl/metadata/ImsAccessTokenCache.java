@@ -120,18 +120,17 @@ class ImsAccessTokenCache {
 
   @SuppressWarnings("null")
   private @Nullable AccessTokenResponse processResponse(@NotNull CloseableHttpResponse response) throws IOException {
-    switch (response.getStatusLine().getStatusCode()) {
-      case HttpStatus.SC_OK:
-        String jsonResponse = EntityUtils.toString(response.getEntity());
-        AccessTokenResponse accessTokenResponse = OBJECT_MAPPER.readValue(jsonResponse, AccessTokenResponse.class);
-        log.trace("HTTP response for access token reqeust from {} returned a response, expires in {} sec",
-            imsTokenApiUrl, accessTokenResponse.expiresInSec);
-        return accessTokenResponse;
-      default:
-        log.warn("Unexpected HTTP response for access token request from {}: {}", imsTokenApiUrl, response.getStatusLine());
-        break;
+    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+      String jsonResponse = EntityUtils.toString(response.getEntity());
+      AccessTokenResponse accessTokenResponse = OBJECT_MAPPER.readValue(jsonResponse, AccessTokenResponse.class);
+      log.trace("HTTP response for access token reqeust from {} returned a response, expires in {} sec",
+          imsTokenApiUrl, accessTokenResponse.expiresInSec);
+      return accessTokenResponse;
     }
-    return null;
+    else {
+      log.warn("Unexpected HTTP response for access token request from {}: {}", imsTokenApiUrl, response.getStatusLine());
+      return null;
+    }
   }
 
 }
