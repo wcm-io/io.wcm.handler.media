@@ -33,7 +33,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.checkerframework.checker.index.qual.NonNegative;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -60,12 +59,12 @@ class ImsAccessTokenCache {
           return TimeUnit.SECONDS.toNanos(value.expiresInSec - EXPERIATION_BUFFER_SEC);
         }
         @Override
-        public long expireAfterUpdate(String key, AccessTokenResponse value, long currentTime, @NonNegative long currentDuration) {
+        public long expireAfterUpdate(String key, AccessTokenResponse value, long currentTime, long currentDuration) {
           // not used
           return Long.MAX_VALUE;
         }
         @Override
-        public long expireAfterRead(String key, AccessTokenResponse value, long currentTime, @NonNegative long currentDuration) {
+        public long expireAfterRead(String key, AccessTokenResponse value, long currentTime, long currentDuration) {
           // not used
           return Long.MAX_VALUE;
         }
