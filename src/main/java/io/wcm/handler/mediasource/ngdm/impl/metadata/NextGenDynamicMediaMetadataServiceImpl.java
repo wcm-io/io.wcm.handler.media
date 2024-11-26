@@ -99,6 +99,26 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
         description = "Proxy port")
     int proxyPort();
 
+    @AttributeDefinition(
+        name = "IMS Token API URL",
+        description = "API to obtain IMS access token for obtaining full metadata.")
+    String imsTokenApiUrl() default "https://ims-na1.adobelogin.com/ims/token/v3";
+
+    @AttributeDefinition(
+        name = "IMS OAuth Client ID",
+        description = "Optional: If you want to fetch the full metadata for assets, provide the IMS OAuth Client ID.")
+    String authenticationClientId();
+
+    @AttributeDefinition(
+        name = "IMS OAuth Client Secret",
+        description = "Optional: If you want to fetch the full metadata for assets, provide the IMS OAuth Client Secret.")
+    String authenticationClientSecret();
+
+    @AttributeDefinition(
+        name = "IMS OAuth Scope",
+        description = "OAuth Scope to use for obtaining IMS access token.")
+    String authenticationScope() default "openid,AdobeID,read_organizations,additional_info.projectedProductContext,read_pc.dma_aem_ams";
+
   }
 
   @Reference
@@ -107,6 +127,11 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
   private boolean enabled;
   private CloseableHttpClient httpClient;
 
+  private ImsAccessTokenCache imsAccessTokenCache;
+  private String authenticationClientId;
+  private String authenticationClientSecret;
+  private String authenticationScope;
+
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaMetadataServiceImpl.class);
 
   @Activate
@@ -114,6 +139,15 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
     this.enabled = config.enabled();
     if (enabled) {
       httpClient = createHttpClient(config);
+
+      // if configured, enable IMS access token fetching
+      String imsTokenApiUrl = config.imsTokenApiUrl();
+      authenticationClientId = config.authenticationClientId();
+      authenticationClientSecret = config.authenticationClientSecret();
+      authenticationScope = config.authenticationScope();
+      if (StringUtils.isNoneBlank(imsTokenApiUrl, authenticationClientId, authenticationClientSecret, authenticationScope)) {
+        imsAccessTokenCache = new ImsAccessTokenCache(httpClient, config.imsTokenApiUrl());
+      }
     }
   }
 
@@ -147,6 +181,7 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
   private void deactivate() throws IOException {
     if (httpClient != null) {
       httpClient.close();
+      imsAccessTokenCache = null;
     }
   }
 
@@ -171,6 +206,15 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
     }
 
     HttpGet httpGet = new HttpGet(metadataUrl);
+
+    // add IMS access if configured
+    if (imsAccessTokenCache != null) {
+      String accessToken = imsAccessTokenCache.getAccessToken(authenticationClientId, authenticationClientSecret, authenticationScope);
+      if (accessToken != null) {
+        httpGet.addHeader("Authorization", "Bearer " + accessToken);
+      }
+    }
+
     try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
       return processResponse(response, metadataUrl);
     }
