@@ -19,14 +19,20 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
+
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,9 +40,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.AssetMetadata;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.RepositoryMetadata;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Metadata for Next Gen Dynamic Media asset fetched from the HTTP API.
@@ -46,16 +52,23 @@ public final class NextGenDynamicMediaMetadata {
   private final String mimeType;
   private final Dimension dimension;
   private final String assetStatus;
+  private final ValueMap properties;
   private final List<SmartCrop> smartCrops;
 
   private static final JsonMapper OBJECT_MAPPER = new JsonMapper();
   static final String RT_RENDITION_SMARTCROP = "dam/rendition/smartcrop";
 
   NextGenDynamicMediaMetadata(@Nullable String mimeType, @Nullable Dimension dimension,
-      @Nullable String assetStatus, @Nullable List<SmartCrop> smartCrops) {
+      @Nullable String assetStatus, @Nullable ValueMap properties, @Nullable List<SmartCrop> smartCrops) {
     this.mimeType = mimeType;
     this.dimension = dimension;
     this.assetStatus = assetStatus;
+    if (properties != null) {
+      this.properties = properties;
+    }
+    else {
+      this.properties = ValueMap.EMPTY;
+    }
     if (smartCrops != null) {
       this.smartCrops = smartCrops;
     }
@@ -86,6 +99,13 @@ public final class NextGenDynamicMediaMetadata {
   }
 
   /**
+   * @return Asset properties
+   */
+  public ValueMap getProperties() {
+    return properties;
+  }
+
+  /**
    * @return Named smart crop definitions.
    */
   public List<SmartCrop> getSmartCrops() {
@@ -101,7 +121,13 @@ public final class NextGenDynamicMediaMetadata {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
+        .append("mimeType", mimeType)
+        .append("dimension", dimension)
+        .append("assetStatus", assetStatus)
+        .append("properties", properties.isEmpty() ? null : new TreeMap<String, Object>(properties))
+        .append("smartCrops", smartCrops.isEmpty() ? null : smartCrops)
+        .toString();
   }
 
   /**
@@ -114,15 +140,17 @@ public final class NextGenDynamicMediaMetadata {
   public static @NotNull NextGenDynamicMediaMetadata fromJson(@NotNull String jsonResponse) throws JsonProcessingException {
     MetadataResponse response = OBJECT_MAPPER.readValue(jsonResponse, MetadataResponse.class);
     RepositoryMetadata respositoryMetadata = response.repositoryMetadata;
-    AssetMetadata assetMetadata = response.assetMetadata;
+    Map<String, Object> assetMetadata = response.assetMetadata;
+    ValueMap properties = null;
 
     long width = 0;
     long height = 0;
     String assetStatus = null;
     if (assetMetadata != null) {
-      width = assetMetadata.tiffImageWidth;
-      height = assetMetadata.tiffImageLength;
-      assetStatus = assetMetadata.assetStatus;
+      properties = new ValueMapDecorator(assetMetadata);
+      width = properties.get(TIFF_IMAGEWIDTH, 0L);
+      height = properties.get(TIFF_IMAGELENGTH, 0L);
+      assetStatus = properties.get("dam:assetStatus", String.class);
     }
     Dimension dimension = toDimension(width, height);
 
@@ -138,7 +166,7 @@ public final class NextGenDynamicMediaMetadata {
       }
     }
 
-    return new NextGenDynamicMediaMetadata(mimeType, dimension, assetStatus, smartCrops);
+    return new NextGenDynamicMediaMetadata(mimeType, dimension, assetStatus, properties, smartCrops);
   }
 
   private static @Nullable Dimension toDimension(long width, long height) {
