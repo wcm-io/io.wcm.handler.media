@@ -148,8 +148,8 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
       if (log.isTraceEnabled()) {
         log.trace("Authentication configuration: imsTokenApiUrl={}, authenticationClientId={}, authenticationClientSecret={}, authenticationScope={}",
             StringUtils.defaultString(imsTokenApiUrl),
-            StringUtils.repeat('*', authenticationClientId.length()),
-            StringUtils.repeat('*', authenticationClientSecret.length()),
+            StringUtils.isNotBlank(authenticationClientId) ? "***" : "",
+            StringUtils.isNotBlank(authenticationClientSecret) ? "***" : "",
             StringUtils.defaultString(authenticationScope));
       }
       if (StringUtils.isNoneBlank(imsTokenApiUrl, authenticationClientId, authenticationClientSecret, authenticationScope)) {
