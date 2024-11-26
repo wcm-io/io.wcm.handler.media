@@ -20,6 +20,8 @@
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
 import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
+import static com.day.cq.dam.api.DamConstants.DC_DESCRIPTION;
+import static com.day.cq.dam.api.DamConstants.DC_TITLE;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE_FULL;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_PDF;
@@ -71,8 +73,8 @@ class NextGenDynamicMediaMetadataTest {
     assertEquals(1500, dimension.getWidth());
     assertEquals(900, dimension.getHeight());
     assertEquals(ASSET_STATUS_APPROVED, metadata.getAssetStatus());
-    assertEquals("Test Image", metadata.getProperties().get("dc:title", String.class));
-    assertEquals("Test Description", metadata.getProperties().get("dc:description", String.class));
+    assertEquals("Test Image", metadata.getProperties().get(DC_TITLE, String.class));
+    assertEquals("Test Description", metadata.getProperties().get(DC_DESCRIPTION, String.class));
     assertEquals(0, metadata.getSmartCrops().size());
     assertTrue(metadata.isValid());
   }

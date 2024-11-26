@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
+import static com.day.cq.dam.api.DamConstants.DC_DESCRIPTION;
+import static com.day.cq.dam.api.DamConstants.DC_TITLE;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -118,8 +120,8 @@ class NextGenDynamicMediaMetadataServiceImpl_ImsAccessTokenTest {
     assertEquals(1500, dimension.getWidth());
     assertEquals(900, dimension.getHeight());
     assertEquals("image/jpeg", metadata.getMimeType());
-    assertEquals("Test Image", metadata.getProperties().get("dc:title", String.class));
-    assertEquals("Test Description", metadata.getProperties().get("dc:description", String.class));
+    assertEquals("Test Image", metadata.getProperties().get(DC_TITLE, String.class));
+    assertEquals("Test Description", metadata.getProperties().get(DC_DESCRIPTION, String.class));
   }
 
   @Test
@@ -139,8 +141,8 @@ class NextGenDynamicMediaMetadataServiceImpl_ImsAccessTokenTest {
     assertEquals(1200, dimension.getWidth());
     assertEquals(800, dimension.getHeight());
     assertEquals("image/jpeg", metadata.getMimeType());
-    assertNull(metadata.getProperties().get("dc:title", String.class));
-    assertNull(metadata.getProperties().get("dc:description", String.class));
+    assertNull(metadata.getProperties().get(DC_TITLE, String.class));
+    assertNull(metadata.getProperties().get(DC_DESCRIPTION, String.class));
   }
 
 }
