@@ -129,8 +129,8 @@ To enable IMS authentication for the metadata service:
     ```
     {
       "enabled": true,
-      "authenticationClientId": "$[env:ASSET_DELIVERY_METADATA_AUTH_CLIENT_ID;default=]",
-      "authenticationClientSecret": "$[env:ASSET_DELIVERY_METADATA_AUTH_CLIENT_SECRET;default=]"
+      "authenticationClientId": "$[secret:ASSET_DELIVERY_METADATA_AUTH_CLIENT_ID;default=]",
+      "authenticationClientSecret": "$[secret:ASSET_DELIVERY_METADATA_AUTH_CLIENT_SECRET;default=]"
     }
     ```
 
