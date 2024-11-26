@@ -92,7 +92,11 @@ class ImsAccessTokenCache {
    */
   public @Nullable String getAccessToken(@NotNull String clientId, @NotNull String clientSecret, @NotNull String scope) {
     String key = clientId + "::" + scope;
-    return tokenCache.get(key, k -> createAccessToken(clientId, clientSecret, scope)).accessToken;
+    AccessTokenResponse accessTokenResponse = tokenCache.get(key, k -> createAccessToken(clientId, clientSecret, scope));
+    if (accessTokenResponse != null) {
+      return accessTokenResponse.accessToken;
+    }
+    return null;
   }
 
   private @Nullable AccessTokenResponse createAccessToken(@NotNull String clientId, @NotNull String clientSecret, @NotNull String scope) {
@@ -123,9 +127,6 @@ class ImsAccessTokenCache {
         log.trace("HTTP response for access token reqeust from {} returned a response, expires in {} sec",
             imsTokenApiUrl, accessTokenResponse.expiresInSec);
         return accessTokenResponse;
-      case HttpStatus.SC_NOT_FOUND:
-        log.trace("HTTP response for access token request from {} returns HTTP 404.", imsTokenApiUrl);
-        break;
       default:
         log.warn("Unexpected HTTP response for access token request from {}: {}", imsTokenApiUrl, response.getStatusLine());
         break;
