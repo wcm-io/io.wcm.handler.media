@@ -145,8 +145,19 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
       authenticationClientId = config.authenticationClientId();
       authenticationClientSecret = config.authenticationClientSecret();
       authenticationScope = config.authenticationScope();
+      if (log.isTraceEnabled()) {
+        log.trace("Authentication configuration: imsTokenApiUrl={}, authenticationClientId={}, authenticationClientSecret={}, authenticationScope={}",
+            StringUtils.defaultString(imsTokenApiUrl),
+            StringUtils.repeat('*', authenticationClientId.length()),
+            StringUtils.repeat('*', authenticationClientSecret.length()),
+            StringUtils.defaultString(authenticationScope));
+      }
       if (StringUtils.isNoneBlank(imsTokenApiUrl, authenticationClientId, authenticationClientSecret, authenticationScope)) {
+        log.debug("Enable IMS access token fetching for NGDM asset metadata.");
         imsAccessTokenCache = new ImsAccessTokenCache(httpClient, config.imsTokenApiUrl());
+      }
+      else {
+        log.debug("IMS access token fetching for NGDM asset metadata is disabled.");
       }
     }
   }
