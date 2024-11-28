@@ -105,7 +105,35 @@ If you want to enable support for local assets you also have to configure a repo
 
 With this, you can configure an environment variable `LOCAL_ASSET_DELIVERY_REPOSITORY_ID` pointing to the actual host name which usually has a syntax like `delivery-pXXXXX-eXXXXX.adobeaemcloud.com` with the corresponding program and environment numbers.
 
+#### Metadata Service
+
 The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the Asset Metadata support for validation and Smart Cropping. The metadata service is enabled by default. If enabled, for each resolved remote asset a HTTP request is send from the server to the DM API to fetch the asset's metadata.
+
+By default, Dynamic Media with OpenAPI provides only minimal metadata for each asset (dimensions, mime type). If you want access to full metadata (e.g. title, description and other properties from the asset metadata in AEM), you need to configure an IMS authentication. With that configured, the Media Handler sends an authentication token with each metadata call, which returns the full metadata and exposes it via the Media Handler API.
+
+To enable IMS authentication for the metadata service:
+
+1. In the [Adobe Developer Console][adobe-developer-console] create a new *empty* project
+2. Rename the project to a sensible name
+3. Add an API connection to the project with connection to "Cloud Manager"
+    * Use "OAuth Server-to-Server" credentials
+    * Ensure the name for the credentials created is not too long (shorten it if the auto-generated name is longer than 45 chars)
+    * Use a minimum set of product profiles, e.g. "Integrations"
+4. In the [Adobe Admin Console][adobe-admin-console] go to projects, and manage "Adobe Experience Manager as a Cloud Service"
+5. Choose the instance(s) for the author environment(s) that hosts the assets to be accessed
+6. Create a new profile with minimal access, or re-use an existing profile e.g. the "AEM Users" profile, and add a new entry for "API credentials". Pick the credential entry you created in step 3.
+7. Define two new environment variables (_secret_) in the AEM Sites instances which is using the assets (you can use different names for the variables than shown here):
+    * ASSET_DELIVERY_METADATA_AUTH_CLIENT_ID: Copy the value "Client ID" in Adobe Developer Console from the details view of the credentials created for the API
+    * ASSET_DELIVERY_METADATA_AUTH_CLIENT_SECRET: From the same screen, use the button "Retrieve Client Secret" to get the secret value
+8. Apply an OSGi configuration for the "wcm.io Dynamic Media with OpenAPI Metadata Service" like this:
+    ```
+    {
+      "enabled": true,
+      "authenticationClientId": "$[secret:ASSET_DELIVERY_METADATA_AUTH_CLIENT_ID;default=]",
+      "authenticationClientSecret": "$[secret:ASSET_DELIVERY_METADATA_AUTH_CLIENT_SECRET;default=]"
+    }
+    ```
+
 
 
 ### Known Limitations (as of July 2024)
@@ -122,3 +150,5 @@ The "wcm.io Dynamic Media with OpenAPI Metadata Service" allows to enable the As
 [file-format-support]: file-format-support.html
 [wcm-core-components]: https://wcm.io/wcm/core-components/
 [aem-image-profiles]: https://experienceleague.adobe.com/docs/experience-manager-65/assets/dynamic/image-profiles.html
+[adobe-developer-console]: https://developer.adobe.com/console
+[adobe-admin-console]: https://adminconsole.adobe.com/

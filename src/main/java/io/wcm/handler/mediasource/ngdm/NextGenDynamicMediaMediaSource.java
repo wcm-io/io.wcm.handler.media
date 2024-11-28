@@ -39,7 +39,6 @@ import org.osgi.annotation.versioning.ProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.dam.api.Asset;
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.ComponentContext;
 import com.day.cq.wcm.api.components.EditConfig;
@@ -136,11 +135,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
 
     // If enabled: Fetch asset metadata to validate existence and get original dimensions
     NextGenDynamicMediaMetadata metadata = null;
-    Asset localAsset = reference.getAsset();
-    if (localAsset != null) {
-      metadata = getMetadataFromAsset(localAsset);
-    }
-    else if (metadataService != null && metadataService.isEnabled()) {
+    if (metadataService != null && metadataService.isEnabled()) {
       metadata = metadataService.fetchMetadata(reference);
       if (metadata == null) {
         media.setMediaInvalidReason(MediaInvalidReason.MEDIA_REFERENCE_INVALID);
@@ -190,14 +185,6 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
       else if (nextGenDynamicMediaConfig.isEnabledLocalAssets() && isDamAssetReference(mediaRef)) {
         return NextGenDynamicMediaReference.fromDamAssetReference(mediaRef, resourceResolver);
       }
-    }
-    return null;
-  }
-
-  private @Nullable NextGenDynamicMediaMetadata getMetadataFromAsset(@NotNull Asset asset) {
-    NextGenDynamicMediaMetadata metadata = NextGenDynamicMediaMetadata.fromAsset(asset);
-    if (metadata.isValid()) {
-      return metadata;
     }
     return null;
   }

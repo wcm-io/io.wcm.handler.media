@@ -19,38 +19,26 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * Used for Jackson Object mapping of JSON response from NGDM HTTP API.
+ * Used for Jackson Object mapping of JSON response from IMS Token v3 API.
  */
 @SuppressWarnings({ "checkstyle:VisibilityModifierCheck", "java:S1104" })
 @SuppressFBWarnings("UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD")
 @JsonIgnoreProperties(ignoreUnknown = true)
-final class MetadataResponse {
+final class AccessTokenResponse {
 
-  public RepositoryMetadata repositoryMetadata;
-  public Map<String, Object> assetMetadata;
+  @JsonProperty("access_token")
+  public String accessToken;
 
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  static final class RepositoryMetadata {
-    @JsonProperty("dc:format")
-    public String dcFormat;
-    @JsonProperty("smartcrops")
-    public Map<String, SmartCrop> smartCrops;
-  }
+  @JsonProperty("token_type")
+  public String tokenType;
 
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  static final class SmartCrop {
-    public double left;
-    public double top;
-    public double normalizedWidth;
-    public double normalizedHeight;
-  }
+  @JsonProperty("expires_in")
+  public long expiresInSec;
 
 }

@@ -19,39 +19,30 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
-import static com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT;
-import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
-import static com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_LEFT;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_NORMALIZED_HEIGHT;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_NORMALIZED_WIDTH;
-import static io.wcm.handler.mediasource.dam.impl.dynamicmedia.SmartCrop.PN_TOP;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGELENGTH;
+import static com.day.cq.dam.api.DamConstants.TIFF_IMAGEWIDTH;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.day.cq.dam.api.Asset;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import io.wcm.handler.media.Dimension;
-import io.wcm.handler.mediasource.dam.AssetRendition;
-import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.AssetMetadata;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataResponse.RepositoryMetadata;
 import io.wcm.wcm.commons.contenttype.ContentType;
+import io.wcm.wcm.commons.util.ToStringStyle;
 
 /**
  * Metadata for Next Gen Dynamic Media asset fetched from the HTTP API.
@@ -61,16 +52,23 @@ public final class NextGenDynamicMediaMetadata {
   private final String mimeType;
   private final Dimension dimension;
   private final String assetStatus;
+  private final ValueMap properties;
   private final List<SmartCrop> smartCrops;
 
   private static final JsonMapper OBJECT_MAPPER = new JsonMapper();
   static final String RT_RENDITION_SMARTCROP = "dam/rendition/smartcrop";
 
   NextGenDynamicMediaMetadata(@Nullable String mimeType, @Nullable Dimension dimension,
-      @Nullable String assetStatus, @Nullable List<SmartCrop> smartCrops) {
+      @Nullable String assetStatus, @Nullable ValueMap properties, @Nullable List<SmartCrop> smartCrops) {
     this.mimeType = mimeType;
     this.dimension = dimension;
     this.assetStatus = assetStatus;
+    if (properties != null) {
+      this.properties = properties;
+    }
+    else {
+      this.properties = ValueMap.EMPTY;
+    }
     if (smartCrops != null) {
       this.smartCrops = smartCrops;
     }
@@ -101,6 +99,13 @@ public final class NextGenDynamicMediaMetadata {
   }
 
   /**
+   * @return Asset properties
+   */
+  public ValueMap getProperties() {
+    return properties;
+  }
+
+  /**
    * @return Named smart crop definitions.
    */
   public List<SmartCrop> getSmartCrops() {
@@ -116,7 +121,13 @@ public final class NextGenDynamicMediaMetadata {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
+        .append("mimeType", mimeType)
+        .append("dimension", dimension)
+        .append("assetStatus", assetStatus)
+        .append("properties", properties.isEmpty() ? null : new TreeMap<String, Object>(properties))
+        .append("smartCrops", smartCrops.isEmpty() ? null : smartCrops)
+        .toString();
   }
 
   /**
@@ -129,15 +140,17 @@ public final class NextGenDynamicMediaMetadata {
   public static @NotNull NextGenDynamicMediaMetadata fromJson(@NotNull String jsonResponse) throws JsonProcessingException {
     MetadataResponse response = OBJECT_MAPPER.readValue(jsonResponse, MetadataResponse.class);
     RepositoryMetadata respositoryMetadata = response.repositoryMetadata;
-    AssetMetadata assetMetadata = response.assetMetadata;
+    Map<String, Object> assetMetadata = response.assetMetadata;
+    ValueMap properties = null;
 
     long width = 0;
     long height = 0;
     String assetStatus = null;
     if (assetMetadata != null) {
-      width = assetMetadata.tiffImageWidth;
-      height = assetMetadata.tiffImageLength;
-      assetStatus = assetMetadata.assetStatus;
+      properties = new ValueMapDecorator(assetMetadata);
+      width = properties.get(TIFF_IMAGEWIDTH, 0L);
+      height = properties.get(TIFF_IMAGELENGTH, 0L);
+      assetStatus = properties.get("dam:assetStatus", String.class);
     }
     Dimension dimension = toDimension(width, height);
 
@@ -153,7 +166,7 @@ public final class NextGenDynamicMediaMetadata {
       }
     }
 
-    return new NextGenDynamicMediaMetadata(mimeType, dimension, assetStatus, smartCrops);
+    return new NextGenDynamicMediaMetadata(mimeType, dimension, assetStatus, properties, smartCrops);
   }
 
   private static @Nullable Dimension toDimension(long width, long height) {
@@ -163,61 +176,12 @@ public final class NextGenDynamicMediaMetadata {
     return null;
   }
 
-  /**
-   * Gets metadata from DAM asset.
-   * @param asset Asset
-   * @return Metadata object
-   */
-  @SuppressWarnings("null")
-  public static @NotNull NextGenDynamicMediaMetadata fromAsset(@NotNull Asset asset) {
-    String mimeType = asset.getMimeType();
-
-    Dimension dimension = AssetRendition.getDimension(asset.getOriginal());
-    String assetStatus = asset.getMetadataValueFromJcr(ASSET_STATUS_PROPERTY);
-    List<SmartCrop> smartCrops = null;
-
-    if (dimension != null) {
-      smartCrops = getRenditionResources(asset)
-          .filter(rendition -> rendition.isResourceType(RT_RENDITION_SMARTCROP))
-          .map(rendition -> Map.entry(rendition.getName(), renditionToSmartCropDefinition(rendition)))
-          .filter(entry -> isSmartCropDefinitionValid(entry.getKey(), entry.getValue()))
-          .map(entry -> new SmartCrop(entry.getKey(), entry.getValue(), dimension))
-          .collect(Collectors.toList());
-    }
-
-    return new NextGenDynamicMediaMetadata(mimeType, dimension, assetStatus, smartCrops);
-  }
-
-  private static Stream<Resource> getRenditionResources(@NotNull Asset asset) {
-    Resource assetResource = asset.adaptTo(Resource.class);
-    if (assetResource != null) {
-      Resource renditionsFolder = assetResource.getChild(JCR_CONTENT + "/" + RENDITIONS_FOLDER);
-      if (renditionsFolder != null) {
-        return StreamSupport.stream(renditionsFolder.getChildren().spliterator(), false);
-      }
-    }
-    return Stream.empty();
-  }
-
   private static boolean isSmartCropDefinitionValid(@NotNull String name, @NotNull MetadataResponse.SmartCrop smartCop) {
     return StringUtils.isNotBlank(name)
         && smartCop.normalizedWidth > 0
         && smartCop.normalizedHeight > 0
         && smartCop.left >= 0
         && smartCop.top >= 0;
-  }
-
-  private static @NotNull MetadataResponse.SmartCrop renditionToSmartCropDefinition(Resource rendition) {
-    MetadataResponse.SmartCrop result = new MetadataResponse.SmartCrop();
-    Resource content = rendition.getChild(JCR_CONTENT);
-    if (content != null) {
-      ValueMap props = content.getValueMap();
-      result.left = props.get(PN_LEFT, 0d);
-      result.top = props.get(PN_TOP, 0d);
-      result.normalizedWidth = props.get(PN_NORMALIZED_WIDTH, 0d);
-      result.normalizedHeight = props.get(PN_NORMALIZED_HEIGHT, 0d);
-    }
-    return result;
   }
 
 }

@@ -84,7 +84,7 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
     Asset asset = media.getAsset();
     assertNotNull(asset);
     assertEquals(SAMPLE_FILENAME, asset.getTitle());
-    assertNull(asset.getAltText());
+    assertEquals("my-image.jpg", asset.getAltText());
     assertNull(asset.getDescription());
     assertEquals(SAMPLE_REFERENCE, asset.getPath());
     assertEquals(ValueMap.EMPTY, asset.getProperties());
