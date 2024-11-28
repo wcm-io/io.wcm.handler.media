@@ -23,7 +23,10 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="2.2.4" date="not released">
+    <release version="2.3.0" date="not released">
+      <action type="add" dev="sseifert" issue="69">
+        Add new GraniteUI validator 'wcmio.handler.media.mediaFormat' which can be set on Media Handler File Upload or Path Field components to hook the media format validation into the GraniteUI dialog validation.
+      </action>
       <action type="update" dev="sseifert" issue="71">
         Dynamic Media with Open API: Use remote metadata call to validate and get metadata for local assets as well.
       </action>

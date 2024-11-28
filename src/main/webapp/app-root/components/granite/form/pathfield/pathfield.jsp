@@ -153,9 +153,6 @@ if (contentResource != null) {
   }
 }
 
-// hook media format validation in GraniteUI validation
-pathFieldProps.put("validation", new String[] { "wcmio.handler.media.mediaFormat" });
-
 // simulate resource for dialog field def with updated properties
 Resource pathField = GraniteUiSyntheticResource.wrapMerge(resource, new ValueMapDecorator(pathFieldProps));
 
