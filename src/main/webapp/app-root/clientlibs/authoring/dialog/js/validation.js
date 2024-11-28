@@ -42,7 +42,7 @@
 
   // predefined "responsiveWidths" pattern validator
   foundationValidator.register('foundation.validation.validator', {
-    selector: '[data-validation="wcmio.handler.media.responsiveWidths"]',
+    selector: '[data-foundation-validation="wcmio.handler.media.responsiveWidths"]',
     validate: function(el) {
       var value = getValue(el);
       var valid = value.length === 0 || pattern.responsiveWidths.test(value);
