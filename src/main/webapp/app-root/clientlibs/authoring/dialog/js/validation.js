@@ -42,7 +42,7 @@
 
   // predefined "responsiveWidths" pattern validator
   foundationValidator.register('foundation.validation.validator', {
-    selector: '[data-validation="wcmio.handler.media.responsiveWidths"]',
+    selector: '[data-foundation-validation="wcmio.handler.media.responsiveWidths"]',
     validate: function(el) {
       var value = getValue(el);
       var valid = value.length === 0 || pattern.responsiveWidths.test(value);
@@ -54,10 +54,10 @@
 
   // validates valid media format for asset picker
   foundationValidator.register('foundation.validation.validator', {
-    selector: '[data-validation="wcmio.handler.media.mediaFormat"]',
+    selector: '[data-foundation-validation="wcmio.handler.media.mediaFormat"]',
     validate: function(el) {
       var nextSibling = el.nextSibling;
-      if (nextSibling && nextSibling.tagName === 'coral-alert') {
+      if (nextSibling && nextSibling.tagName.toLowerCase() === 'coral-alert') {
         return nextSibling.textContent;
       }
     }
