@@ -57,7 +57,7 @@
     selector: '[data-foundation-validation="wcmio.handler.media.mediaFormat"]',
     validate: function(el) {
       var nextSibling = el.nextSibling;
-      if (nextSibling && nextSibling.tagName.toLowerCase() === 'coral-alert') {
+      if (nextSibling?.tagName?.toLowerCase() === 'coral-alert') {
         return nextSibling.textContent;
       }
     }
