@@ -33,7 +33,7 @@
       <action type="fix" dev="sseifert" issue="72">
         Dynamic Media with OpenAPI: Respect Image Dimension from SVG asset metadata.
       </action>
-      <action type="fix" dev="sseifert">
+      <action type="fix" dev="sseifert" issue="74">
         GraniteUI validator: Use data-foundation-validation instead of data-validation HTML attribute, the latter is deprecated.
       </action>
     </release>
