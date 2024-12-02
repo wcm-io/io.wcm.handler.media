@@ -52,4 +52,15 @@
     }
   });
 
+  // validates valid media format for asset picker
+  foundationValidator.register('foundation.validation.validator', {
+    selector: '[data-foundation-validation="wcmio.handler.media.mediaFormat"]',
+    validate: function(el) {
+      var nextSibling = el.nextSibling;
+      if (nextSibling?.tagName?.toLowerCase() === 'coral-alert') {
+        return nextSibling.textContent;
+      }
+    }
+  });
+
 })(document, Granite, Granite.$);
