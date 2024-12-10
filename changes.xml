@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="2.3.0" date="not released">
+    <release version="2.3.0" date="2024-12-10">
       <action type="add" dev="sseifert" issue="69">
         Add new GraniteUI validator 'wcmio.handler.media.mediaFormat' which can be set on Media Handler File Upload or Path Field components to hook the media format validation into the GraniteUI dialog validation.
       </action>
