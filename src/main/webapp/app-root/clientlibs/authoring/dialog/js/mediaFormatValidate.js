@@ -80,6 +80,7 @@
 
     self._alert = alert;
     self._$pathfield.after(self._alert);
+    self._checkValidity();
   }
 
   /**
@@ -91,6 +92,16 @@
       $(self._alert).remove();
       delete self._alert;
     }
+    self._checkValidity();
+  }
+
+  /**
+   * Check validity of form control.
+   */
+  MediaFormatValidate.prototype._checkValidity = function ()  {
+    var self = this;
+    var validation = self._$pathfield.adaptTo("foundation-validation");
+    validation.checkValidity();
   }
 
   /**

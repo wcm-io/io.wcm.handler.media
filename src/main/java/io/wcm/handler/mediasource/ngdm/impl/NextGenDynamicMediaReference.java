@@ -92,6 +92,13 @@ public final class NextGenDynamicMediaReference {
   }
 
   /**
+   * @return True if reference points to local asset.
+   */
+  public boolean isLocal() {
+    return asset != null;
+  }
+
+  /**
    * @return Reference
    */
   public @NotNull String toReference() {

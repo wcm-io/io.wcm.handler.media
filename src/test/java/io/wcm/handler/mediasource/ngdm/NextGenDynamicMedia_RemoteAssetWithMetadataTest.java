@@ -27,6 +27,7 @@ import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceS
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_REFERENCE;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_PDF;
+import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_SVG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -102,10 +103,11 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
     Asset asset = media.getAsset();
     assertNotNull(asset);
     assertEquals(SAMPLE_FILENAME, asset.getTitle());
-    assertNull(asset.getAltText());
+    assertNull(asset.getDescription());
+    assertEquals("my-image.jpg", asset.getAltText());
     assertNull(asset.getDescription());
     assertEquals(SAMPLE_REFERENCE, asset.getPath());
-    assertEquals(ValueMap.EMPTY, asset.getProperties());
+    assertEquals("approved", asset.getProperties().get("dam:assetStatus"));
     assertNull(asset.adaptTo(Resource.class));
 
     assertUrl(asset.getDefaultRendition(), "preferwebp=true&quality=85", "jpg");
@@ -273,8 +275,32 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
     assertEquals(ContentType.PDF, rendition.getMimeType());
-    assertEquals(
-        "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf",
+    assertEquals("https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.pdf",
+        rendition.getUrl());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testSVG() {
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(METADATA_JSON_SVG)));
+
+    Resource downloadResource = context.create().resource(context.currentPage(), "image",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.svg");
+
+    Media media = mediaHandler.get(downloadResource)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(ContentType.SVG, rendition.getMimeType());
+    assertEquals(900, rendition.getWidth());
+    assertEquals(600, rendition.getHeight());
+    assertEquals("https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.svg",
         rendition.getUrl());
   }
 

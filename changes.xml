@@ -23,6 +23,24 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="2.3.0" date="2024-12-10">
+      <action type="add" dev="sseifert" issue="69">
+        Add new GraniteUI validator 'wcmio.handler.media.mediaFormat' which can be set on Media Handler File Upload or Path Field components to hook the media format validation into the GraniteUI dialog validation.
+      </action>
+      <action type="update" dev="sseifert" issue="71">
+        Dynamic Media with Open API: Use remote metadata call to validate and get metadata for local assets as well.
+      </action>
+      <action type="update" dev="sseifert" issue="73">
+        Dynamic Media with Open API: Optional IMS Authentication for metadata requests to get full asset metadata.
+      </action>
+      <action type="fix" dev="sseifert" issue="72">
+        Dynamic Media with OpenAPI: Respect Image Dimension from SVG asset metadata.
+      </action>
+      <action type="fix" dev="sseifert" issue="74">
+        GraniteUI validator: Use data-foundation-validation instead of data-validation HTML attribute, the latter is deprecated.
+      </action>
+    </release>
+
     <release version="2.2.2" date="2024-09-16">
       <action type="update" dev="sseifert" issue="67">
         Dynamic Media with Open API: Correctly calculate rendition width/height based on requested dimension or original dimension.

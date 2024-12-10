@@ -42,12 +42,23 @@
 
   // predefined "responsiveWidths" pattern validator
   foundationValidator.register('foundation.validation.validator', {
-    selector: '[data-validation="wcmio.handler.media.responsiveWidths"]',
+    selector: '[data-foundation-validation="wcmio.handler.media.responsiveWidths"]',
     validate: function(el) {
       var value = getValue(el);
       var valid = value.length === 0 || pattern.responsiveWidths.test(value);
       if (!valid) {
         return Granite.I18n.get("Invalid widths list.");
+      }
+    }
+  });
+
+  // validates valid media format for asset picker
+  foundationValidator.register('foundation.validation.validator', {
+    selector: '[data-foundation-validation="wcmio.handler.media.mediaFormat"]',
+    validate: function(el) {
+      var nextSibling = el.nextSibling;
+      if (nextSibling?.tagName?.toLowerCase() === 'coral-alert') {
+        return nextSibling.textContent;
       }
     }
   });

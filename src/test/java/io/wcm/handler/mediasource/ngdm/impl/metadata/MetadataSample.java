@@ -66,10 +66,36 @@ public final class MetadataSample {
       + "  },"
       + "  \"assetMetadata\": {"
       + "    \"dam:assetStatus\": \"approved\","
-      + "    \"dc:description\": \"Test Description\","
-      + "    \"dc:title\": \"Test Image\","
       + "    \"tiff:ImageLength\": 800,"
       + "    \"tiff:ImageWidth\": 1200"
+      + "  }"
+      + "}";
+
+  public static final String METADATA_JSON_IMAGE_FULL = "{"
+      + "  \"assetId\": \"" + SAMPLE_ASSET_ID + "\","
+      + "  \"repositoryMetadata\": {"
+      + "    \"repo:name\": \"test.jpg\","
+      + "    \"dc:format\": \"image/jpeg\""
+      + "  },"
+      + "  \"assetMetadata\": {"
+      + "    \"dam:assetStatus\": \"approved\","
+      + "    \"dc:description\": \"Test Description\","
+      + "    \"dc:title\": \"Test Image\","
+      + "    \"tiff:ImageLength\": 900,"
+      + "    \"tiff:ImageWidth\": 1500"
+      + "  }"
+      + "}";
+
+  public static final String METADATA_JSON_SVG = "{"
+      + "  \"assetId\": \"" + SAMPLE_ASSET_ID + "\","
+      + "  \"repositoryMetadata\": {"
+      + "    \"repo:name\": \"test.svg\","
+      + "    \"dc:format\": \"image/svg+xml\""
+      + "  },"
+      + "  \"assetMetadata\": {"
+      + "    \"dam:assetStatus\": \"approved\","
+      + "    \"tiff:ImageLength\": 600,"
+      + "    \"tiff:ImageWidth\": 900"
       + "  }"
       + "}";
 
@@ -80,9 +106,7 @@ public final class MetadataSample {
       + "    \"dc:format\": \"application/pdf\""
       + "  },"
       + "  \"assetMetadata\": {"
-      + "    \"dam:assetStatus\": \"approved\","
-      + "    \"dc:description\": \"Test Description\","
-      + "    \"dc:title\": \"Test Document\""
+      + "    \"dam:assetStatus\": \"approved\""
       + "  }"
       + "}";
 
