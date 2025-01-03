@@ -54,7 +54,6 @@ import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.imagemap.ImageMapArea;
 
-import javax.swing.text.html.Option;
 
 /**
  * Basic implementation of {@link io.wcm.handler.media.spi.MediaMarkupBuilder} for images.
