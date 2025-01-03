@@ -1268,10 +1268,10 @@ public final class MediaArgs implements Cloneable {
      * @return density descriptor if it is not null and is not "1x", otherwise an empty string is returned
      */
     public @NotNull String getDensityDescriptor() {
-      if (this.density != null && !StringUtils.equalsIgnoreCase(this.density, "1x")) {
-        return this.density;
+      if (StringUtils.isEmpty(this.density) || StringUtils.equalsIgnoreCase(this.density, "1x")) {
+        return StringUtils.EMPTY;
       }
-      return StringUtils.EMPTY;
+      return this.density;
     }
 
     @Override

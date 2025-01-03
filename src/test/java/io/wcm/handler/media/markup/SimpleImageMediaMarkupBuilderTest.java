@@ -35,6 +35,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import io.wcm.handler.media.impl.WidthUtils;
 import org.apache.sling.api.resource.Resource;
 import org.jdom2.Element;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,7 @@ import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.PictureSource;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaInvalidReason;
 import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.MediaRequest;
@@ -278,6 +280,56 @@ class SimpleImageMediaMarkupBuilderTest {
   }
 
   @Test
+  void testBuild_ImageSizes_WithDensityDescriptors() {
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
+
+    MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
+    mediaRequest.getMediaArgs().mediaFormat(RATIO_16_10);
+    mediaRequest.getMediaArgs().imageSizes(new ImageSizes("",
+            new WidthOption(64, "2x", true),
+            new WidthOption(32, "1.5x", false),
+            new WidthOption(16, "1x", true)));
+    mediaRequest.getMediaArgs().property("custom-property", "value1");
+    Media media = new Media(mediaSource, mediaRequest);
+    media.setAsset(asset);
+    media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 16)));
+
+    HtmlElement element = builder.build(media);
+    assertTrue(element instanceof Image);
+    assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
+    assertNull(element.getAttributeValue("width"));
+    assertNull(element.getAttributeValue("height"));
+    assertEquals("", element.getAttributeValue("sizes"));
+    assertEquals("/media/dummy.64.png 2x, /media/dummy.16.png", element.getAttributeValue("srcset"));
+    assertEquals("value1", element.getAttributeValue("custom-property"));
+  }
+
+  @Test
+  void testBuild_ImageSizes_WithDensityDescriptorsAndSizes_ShouldIgnoreDensity() {
+    MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
+
+    MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
+    mediaRequest.getMediaArgs().mediaFormat(RATIO_16_10);
+    mediaRequest.getMediaArgs().imageSizes(new ImageSizes("sizes1",
+            new WidthOption(64, "2x", true),
+            new WidthOption(32, "1.5x", false),
+            new WidthOption(16, "1x", true)));
+    mediaRequest.getMediaArgs().property("custom-property", "value1");
+    Media media = new Media(mediaSource, mediaRequest);
+    media.setAsset(asset);
+    media.setRenditions(List.of(rendition(RATIO_16_10, 128), rendition(RATIO_16_10, 64), rendition(RATIO_16_10, 16)));
+
+    HtmlElement element = builder.build(media);
+    assertTrue(element instanceof Image);
+    assertEquals("/media/dummy.128.png", element.getAttributeValue("src"));
+    assertNull(element.getAttributeValue("width"));
+    assertNull(element.getAttributeValue("height"));
+    assertEquals("sizes1", element.getAttributeValue("sizes"));
+    assertEquals("/media/dummy.64.png 64w, /media/dummy.16.png 16w", element.getAttributeValue("srcset"));
+    assertEquals("value1", element.getAttributeValue("custom-property"));
+  }
+
+  @Test
   void testBuild_Picture() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
@@ -286,7 +338,9 @@ class SimpleImageMediaMarkupBuilderTest {
     mediaRequest.getMediaArgs().pictureSources(new PictureSource[] {
         new PictureSource(RATIO_16_10).media("media1").sizes("sizes1").widths(64, 32),
         new PictureSource(EDITORIAL_1COL).media("media2").widths(215),
-        new PictureSource(RATIO_4_3).widths(40),
+        new PictureSource(RATIO_4_3).widthOptions(
+            new WidthOption(20, null, true),
+            new WidthOption(40, "2x", true)),
     });
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
@@ -305,7 +359,7 @@ class SimpleImageMediaMarkupBuilderTest {
     assertEquals("/media/dummy.64.png 64w, /media/dummy.32.png 32w", source1.getAttributeValue("srcset"));
     HtmlElement source2 = (HtmlElement)sources.get(1);
     assertNull(source2.getAttributeValue("media"));
-    assertEquals("/media/dummy.40.png 40w", source2.getAttributeValue("srcset"));
+    assertEquals("/media/dummy.20.png, /media/dummy.40.png 2x", source2.getAttributeValue("srcset"));
 
     HtmlElement img = (HtmlElement)picture.getChild("img");
     assertTrue(img instanceof Image);
