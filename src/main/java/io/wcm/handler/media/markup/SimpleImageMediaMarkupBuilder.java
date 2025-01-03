@@ -270,7 +270,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
             && rendition.getWidth() == widthOption.getWidth())
         .map(Rendition::getUrl)
         .findFirst()
-        .map(url -> url + " " + descriptor)
+        .map(url -> url + (!descriptor.isEmpty() ? " " + descriptor : ""))
         .orElse(null);
   }
 
