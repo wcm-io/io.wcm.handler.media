@@ -35,17 +35,25 @@ import io.wcm.handler.media.MediaArgs.WidthOption;
 public final class WidthUtils {
 
   // example values:
+  // 800        <- width=800px, mandatory
+  // 800?       <- width=800px, optional
+  // 800:1.5x   <- width=800px, density 1.5x, mandatory
+  // 800:1.5x?  <- width=800px, density 1.5x, optional
+  static final String WIDTH_OPTION = "\\d+(:\\d+(\\.\\d+)?x)?\\??";
+
+  // comma-separated width options; tolerates whitespaces between options.
+  // example values:
   // 800,1024,2048
   // 800,1024?,2048?   <- last two are optional
-  static final Pattern WIDTHS_PATTERN = Pattern.compile("^\\s*\\d+\\??\\s*(,\\s*\\d+\\??\\s*)*+$");
+  static final Pattern WIDTHS_PATTERN = Pattern.compile("^\\s*" + WIDTH_OPTION + "\\s*(,\\s*" + WIDTH_OPTION + "\\s*)*+$");
 
   private WidthUtils() {
     // static methods only
   }
 
   /**
-   * Parse width string.
-   * @param widths Width string
+   * Parse widths string.
+   * @param widths Widths string
    * @return Width options
    */
   public static @Nullable WidthOption @Nullable [] parseWidths(@Nullable String widths) {
@@ -59,19 +67,15 @@ public final class WidthUtils {
     return Arrays.stream(widthItems)
         .map(StringUtils::trim)
         .map(WidthUtils::toWidthOption)
-        .toArray(size -> new WidthOption[size]);
+        .toArray(WidthOption[]::new);
   }
 
-  private static @NotNull WidthOption toWidthOption(String width) {
-    boolean optional = StringUtils.endsWith(width, "?");
-    String widthValue;
-    if (optional) {
-      widthValue = StringUtils.substringBefore(width, "?");
-    }
-    else {
-      widthValue = width;
-    }
-    return new WidthOption(NumberUtils.toLong(widthValue), !optional);
+  private static @NotNull WidthOption toWidthOption(@NotNull String widthOptionString) {
+    boolean optional = StringUtils.endsWith(widthOptionString, "?");
+    String[] tokens = StringUtils.substringBefore(widthOptionString, "?").split(":");
+    long width = NumberUtils.toLong(tokens[0]);
+    String density = tokens.length > 1 ? tokens[1] : null;
+    return new WidthOption(width, density, !optional);
   }
 
 }
