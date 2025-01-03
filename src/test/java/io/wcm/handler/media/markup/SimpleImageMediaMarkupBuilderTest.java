@@ -35,7 +35,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import io.wcm.handler.media.impl.WidthUtils;
 import org.apache.sling.api.resource.Resource;
 import org.jdom2.Element;
 import org.junit.jupiter.api.Test;
