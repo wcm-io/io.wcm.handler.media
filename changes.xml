@@ -23,6 +23,13 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="not-released">
+      <action type="update" dev="mrozati" issue="77">
+        MediaArgs accepts width options with density descriptors to generate srcset attribute with density descriptors like 2x instead of width descriptors like 800w.
+        ResourceMedia and SimpleMadiaMarkupBuilder are also extended to support density descriptors, only when sizes is empty.
+      </action>
+    </release>
+
     <release version="2.3.0" date="2024-12-10">
       <action type="add" dev="sseifert" issue="69">
         Add new GraniteUI validator 'wcmio.handler.media.mediaFormat' which can be set on Media Handler File Upload or Path Field components to hook the media format validation into the GraniteUI dialog validation.

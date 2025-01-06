@@ -167,7 +167,7 @@ class MediaArgsTest {
     assertNull(mediaArgs.getImageSizes().getWidthOptions()[0].getDensity());
 
     mediaArgs.imageSizes(new ImageSizes("",
-            new WidthOption(5, "1x", true),
+            new WidthOption(5, "1x"),
             new WidthOption(15, "2x", false)));
     assertNotNull(mediaArgs.getImageSizes());
     assertNotNull(mediaArgs.getImageSizes().getWidthOptions());
@@ -187,7 +187,7 @@ class MediaArgsTest {
     mediaArgs.pictureSources(
             new PictureSource(EDITORIAL_1COL).widths(10, 20, 30),
             new PictureSource(EDITORIAL_2COL).widthOptions(
-                    new WidthOption(5, null, true),
+                    new WidthOption(5),
                     new WidthOption(15, "2x", false)));
 
     assertNotNull(mediaArgs.getPictureSources());

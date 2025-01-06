@@ -1218,6 +1218,21 @@ public final class MediaArgs implements Cloneable {
     private final String density;
 
     /**
+     * @param width mandatory width value
+     */
+    public WidthOption(long width) {
+      this(width, null, true);
+    }
+
+    /**
+     * @param width mandatory width value
+     * @param density pixel density, or null for default density (1x)
+     */
+    public WidthOption(long width, String density) {
+      this(width, density, true);
+    }
+
+    /**
      * @param width Width value
      * @param mandatory Is it mandatory to resolve a rendition with this width
      */
