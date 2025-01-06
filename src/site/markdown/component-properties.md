@@ -70,4 +70,6 @@ Dialog snippet `/apps/wcm-io/handler/media/components/global/include/responsiveI
 
 ![Responsive Image Settings - Image Sizes](images/componentproperties-responsive-image-sizes.png)
 
+![Responsive Image Settings - Image Densities](../resources/images/componentproperties-responsive-image-densities.png)
+
 ![Responsive Image Settings - Picture Source](images/componentproperties-responsive-picture-source.png)
