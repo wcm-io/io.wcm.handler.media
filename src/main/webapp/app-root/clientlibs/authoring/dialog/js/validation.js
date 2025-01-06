@@ -30,8 +30,9 @@
      * 100,200
      *  500 , 600 , 700
      * 100?, 200, 300?
+     * 100:1x, 200:1.5x, 300:2x?
      */
-    responsiveWidths: /^\s*\d+\??\s*(,\s*\d+\??\s*)*$/
+    responsiveWidths: /^\s*\d+(:\d+(\.\d+)?x)?\??\s*(,\s*\d+(:\d+(\.\d+)?x)?\??\s*)*$/
   };
 
   var foundationValidator = $(window).adaptTo("foundation-registry");
