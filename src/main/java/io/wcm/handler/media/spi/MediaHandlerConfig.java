@@ -128,11 +128,13 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
    * With this switch it's possible to switch all used property and node names from (legacy) wcm.io
    * Handler standard to Adobe Standard (as used e.g. in Adobe Core WCM Components) - e.g.
    * using "fileReference" instead of property name "mediaRef" for the asset reference.
+   *
    * <p>
    * The benefit of the wcm.io Handler standard was that it supported storage multiple asset references
    * in one single node - but this it not well supported by the Touch UI anyway, so it's not of much
    * use nowadays.
    * </p>
+   *
    * <p>
    * For new projects it is recommended to always use the Adobe standard names. But for backward compatibility
    * the default values is false.
@@ -266,12 +268,14 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
 
   /**
    * Enforce to generate only virtual renditions.
+   *
    * <p>
    * By default, virtual renditions (rendered on-the-fly via <code>ImageFileServet</code>) are only
    * generated if there is a need to re-scale or crop or transform an image. Otherwise direct references
    * to renditions or original stored in DAM are returned when there is an direct match with the requested ratio and
    * resolution.
    * </p>
+   *
    * <p>
    * When this flag is set to <code>true</code>, even if there is a direct match a virtual rendition is returned.
    * This ensures that the default quality setting e.g. for JPEG images is always respected, regardless

@@ -52,6 +52,7 @@ import io.wcm.handler.media.format.MediaFormatHandler;
 
 /**
  * Generic resource-based media model.
+ *
  * <p>
  * Optional use parameters when referencing model from Sightly template:
  * </p>
