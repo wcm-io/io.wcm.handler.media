@@ -84,6 +84,6 @@ Sources: https://github.com/wcm-io/io.wcm.handler.media
 [dynamic-media]: dynamic-media.html
 [dynamic-media-openapi]: dynamic-media-openapi.html
 [apidocs]: apidocs/
-[changelog]: changes-report.html
+[changelog]: changes.html
 [url-handler]: ../url/
 [ui-package]: apidocs/io/wcm/handler/media/ui/package-summary.html

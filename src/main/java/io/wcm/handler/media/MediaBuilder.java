@@ -139,11 +139,13 @@ public interface MediaBuilder {
 
   /**
    * Enforces image file type for renditions.
+   *
    * <p>
    * By default, renditions are rendered with the same file type as the original rendition (except if the
    * original renditions uses a file type not directly supported in browser, e.g. a TIFF image).
    * With this parameter, it is possible to enforce generating renditions with this file type.
    * </p>
+   *
    * <p>
    * Supported file types: JPEG, PNG
    * </p>
@@ -286,6 +288,7 @@ public interface MediaBuilder {
   /**
    * Apply responsive image handling for the <code>img</code> element based on the primary media format given.
    * If multiple media formats are given the primary media format is the first media format with a ratio.
+   *
    * <p>
    * It will add a <code>srcset</code> attribute to the <code>img</code> element with renditions for each width given,
    * and set the <code>sizes</code> attribute to the sizes string given.
@@ -303,6 +306,7 @@ public interface MediaBuilder {
   /**
    * Apply responsive image handling for the <code>img</code> element based on the primary media format given.
    * If multiple media formats are given the primary media format is the first media format with a ratio.
+   *
    * <p>
    * It will add a <code>srcset</code> attribute to the <code>img</code> element with renditions for each width given,
    * and set the <code>sizes</code> attribute to the sizes string given.

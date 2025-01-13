@@ -28,6 +28,7 @@ import io.wcm.handler.media.Media;
 
 /**
  * Builds XHTML markup for media element.
+ *
  * <p>
  * This interface has to be implemented by a Sling Model class. The adaptables
  * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.

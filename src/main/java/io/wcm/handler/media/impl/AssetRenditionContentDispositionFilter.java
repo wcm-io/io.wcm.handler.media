@@ -54,6 +54,7 @@ import org.osgi.service.component.annotations.Component;
  * It re-used the configuration of the "Dam Safe Binary Filter"
  * (com.day.cq.dam.core.impl.servlet.DamContentDispositionFilter),
  * so both filters have the same result.
+ *
  * <p>
  * Unlike for Asset paths where the "Dam Safe Binary Filter" applies for rendition paths the
  * "Sling Content Disposition Filter" is applied first which adds a "attachment" content disposition header for all

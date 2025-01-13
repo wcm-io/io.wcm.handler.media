@@ -57,6 +57,7 @@ import io.wcm.handler.media.imagemap.ImageMapArea;
 
 /**
  * Basic implementation of {@link io.wcm.handler.media.spi.MediaMarkupBuilder} for images.
+ *
  * <p>
  * If image sizes or picture sources are set on the media handler this markup builder also
  * generates markup for responsive images using <code>img</code> with <code>sizes</code> and <code>srcset</code>
