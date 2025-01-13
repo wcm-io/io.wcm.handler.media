@@ -26,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -157,6 +157,7 @@ class MediaArgsTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testImageSizesAndWidthOptions() {
     MediaArgs mediaArgs = new MediaArgs();
     mediaArgs.imageSizes(new ImageSizes("size1", 10, 20, 30));
@@ -182,6 +183,7 @@ class MediaArgsTest {
   }
 
   @Test
+  @SuppressWarnings("null")
   void testPictureSourcesWidthOptions() {
     MediaArgs mediaArgs = new MediaArgs();
     mediaArgs.pictureSources(
