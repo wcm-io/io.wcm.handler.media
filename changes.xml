@@ -24,6 +24,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
 
+    <release version="2.3.2" date="not released">
+      <action type="update" dev="sseifert" issue="81">
+        Make package dependencies compatible with AEM 6.5.2025 (with oak-commons 1.68.0).
+      </action>
+    </release>
+
     <release version="2.3.0" date="2024-12-10">
       <action type="add" dev="sseifert" issue="69">
         Add new GraniteUI validator 'wcmio.handler.media.mediaFormat' which can be set on Media Handler File Upload or Path Field components to hook the media format validation into the GraniteUI dialog validation.
