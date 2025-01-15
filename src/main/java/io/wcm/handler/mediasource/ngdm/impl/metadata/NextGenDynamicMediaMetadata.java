@@ -50,6 +50,7 @@ import io.wcm.wcm.commons.util.ToStringStyle;
 public final class NextGenDynamicMediaMetadata {
 
   private final String mimeType;
+  private final Long fileSize;
   private final Dimension dimension;
   private final String assetStatus;
   private final ValueMap properties;
@@ -58,9 +59,10 @@ public final class NextGenDynamicMediaMetadata {
   private static final JsonMapper OBJECT_MAPPER = new JsonMapper();
   static final String RT_RENDITION_SMARTCROP = "dam/rendition/smartcrop";
 
-  NextGenDynamicMediaMetadata(@Nullable String mimeType, @Nullable Dimension dimension,
+  NextGenDynamicMediaMetadata(@Nullable String mimeType, @Nullable Long fileSize, @Nullable Dimension dimension,
       @Nullable String assetStatus, @Nullable ValueMap properties, @Nullable List<SmartCrop> smartCrops) {
     this.mimeType = mimeType;
+    this.fileSize = fileSize;
     this.dimension = dimension;
     this.assetStatus = assetStatus;
     if (properties != null) {
@@ -82,6 +84,13 @@ public final class NextGenDynamicMediaMetadata {
    */
   public @NotNull String getMimeType() {
     return Objects.toString(mimeType, ContentType.OCTET_STREAM);
+  }
+
+  /**
+   * @return File size (in bytes) or null if not available
+   */
+  public @Nullable Long getFileSize() {
+    return fileSize;
   }
 
   /**
@@ -123,6 +132,7 @@ public final class NextGenDynamicMediaMetadata {
   public String toString() {
     return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
         .append("mimeType", mimeType)
+        .append("fileSize", fileSize)
         .append("dimension", dimension)
         .append("assetStatus", assetStatus)
         .append("properties", properties.isEmpty() ? null : new TreeMap<String, Object>(properties))
@@ -155,9 +165,11 @@ public final class NextGenDynamicMediaMetadata {
     Dimension dimension = toDimension(width, height);
 
     String mimeType = null;
+    Long fileSize = null;
     List<SmartCrop> smartCrops = null;
     if (respositoryMetadata != null) {
       mimeType = respositoryMetadata.dcFormat;
+      fileSize = respositoryMetadata.repoSize;
       if (respositoryMetadata.smartCrops != null && dimension != null) {
         smartCrops = respositoryMetadata.smartCrops.entrySet().stream()
             .filter(entry -> isSmartCropDefinitionValid(entry.getKey(), entry.getValue()))
@@ -166,7 +178,7 @@ public final class NextGenDynamicMediaMetadata {
       }
     }
 
-    return new NextGenDynamicMediaMetadata(mimeType, dimension, assetStatus, properties, smartCrops);
+    return new NextGenDynamicMediaMetadata(mimeType, fileSize, dimension, assetStatus, properties, smartCrops);
   }
 
   private static @Nullable Dimension toDimension(long width, long height) {

@@ -41,6 +41,8 @@ final class MetadataResponse {
   static final class RepositoryMetadata {
     @JsonProperty("dc:format")
     public String dcFormat;
+    @JsonProperty("repo:size")
+    public long repoSize;
     @JsonProperty("smartcrops")
     public Map<String, SmartCrop> smartCrops;
   }
