@@ -63,7 +63,7 @@ class NextGenDynamicMediaMetadataTest {
     assertEquals(ASSET_STATUS_APPROVED, metadata.getAssetStatus());
     assertEquals(2, metadata.getSmartCrops().size());
     assertTrue(metadata.isValid());
-    assertEquals("NextGenDynamicMediaMetadata[mimeType=image/jpeg,dimension=[width=1200,height=800],assetStatus=approved,"
+    assertEquals("NextGenDynamicMediaMetadata[mimeType=image/jpeg,fileSize=250467,dimension=[width=1200,height=800],assetStatus=approved,"
         + "properties={dam:assetStatus=approved, tiff:ImageLength=800, tiff:ImageWidth=1200},"
         + "smartCrops=[[cropDimension=[left=0,top=462,width=1200,height=675],name=Landscape,ratio=1.7777777777777777], "
         + "[cropDimension=[left=202,top=0,width=399,height=798],name=Portrait,ratio=0.5]]]", metadata.toString());
@@ -82,7 +82,7 @@ class NextGenDynamicMediaMetadataTest {
     assertEquals("Test Description", metadata.getProperties().get(DC_DESCRIPTION, String.class));
     assertEquals(0, metadata.getSmartCrops().size());
     assertTrue(metadata.isValid());
-    assertEquals("NextGenDynamicMediaMetadata[mimeType=image/jpeg,dimension=[width=1500,height=900],assetStatus=approved,"
+    assertEquals("NextGenDynamicMediaMetadata[mimeType=image/jpeg,fileSize=250467,dimension=[width=1500,height=900],assetStatus=approved,"
         + "properties={dam:assetStatus=approved, dc:description=Test Description, dc:title=Test Image, tiff:ImageLength=900, tiff:ImageWidth=1500}]",
         metadata.toString());
   }
@@ -95,7 +95,8 @@ class NextGenDynamicMediaMetadataTest {
     assertEquals(ASSET_STATUS_APPROVED, metadata.getAssetStatus());
     assertTrue(metadata.getSmartCrops().isEmpty());
     assertTrue(metadata.isValid());
-    assertEquals("NextGenDynamicMediaMetadata[mimeType=application/pdf,assetStatus=approved,properties={dam:assetStatus=approved}]", metadata.toString());
+    assertEquals("NextGenDynamicMediaMetadata[mimeType=application/pdf,fileSize=120357,assetStatus=approved,properties={dam:assetStatus=approved}]",
+        metadata.toString());
   }
 
   @Test

@@ -29,6 +29,12 @@
         MediaArgs accepts width options with density descriptors to generate srcset attribute with density descriptors like 2x instead of width descriptors like 800w.
         ResourceMedia and SimpleMadiaMarkupBuilder are also extended to support density descriptors, only when sizes is empty.
       </action>
+      <action type="update" dev="sseifert" issue="84">
+        Dynamic Media with Open API: Provide access to rendition file size as provided by Dynamic Media.
+      </action>
+      <action type="update" dev="sseifert" issue="81">
+        Make package dependencies compatible with AEM 6.5.2025 (with oak-commons 1.68.0).
+      </action>
     </release>
 
     <release version="2.3.0" date="2024-12-10">
