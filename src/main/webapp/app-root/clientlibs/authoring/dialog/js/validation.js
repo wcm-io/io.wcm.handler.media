@@ -57,8 +57,12 @@
     selector: '[data-foundation-validation="wcmio.handler.media.mediaFormat"]',
     validate: function(el) {
       var nextSibling = el.nextSibling;
-      if (nextSibling?.tagName?.toLowerCase() === 'coral-alert') {
-        return nextSibling.textContent;
+      while (nextSibling) {
+        var tagName = nextSibling.tagName?.toLowerCase();
+        if (tagName === 'coral-alert') {
+          return nextSibling.textContent;
+        }
+        nextSibling = nextSibling.nextSibling;
       }
     }
   });
