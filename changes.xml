@@ -31,6 +31,9 @@
       <action type="update" dev="sseifert" issue="81">
         Make package dependencies compatible with AEM 6.5.2025 (with oak-commons 1.68.0).
       </action>
+      <action type="fix" dev="srikanthgurram" issue="82">
+        GraniteUI validator 'wcmio.handler.media.mediaFormat': Validation error not shown during subsequent requests.
+      </action>
     </release>
 
     <release version="2.3.0" date="2024-12-10">
