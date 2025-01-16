@@ -176,7 +176,7 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
     assertNull(rendition.getPath());
     assertEquals(SAMPLE_FILENAME, rendition.getFileName());
     assertEquals("jpg", rendition.getFileExtension());
-    assertEquals(-1, rendition.getFileSize());
+    assertEquals(250467, rendition.getFileSize());
     assertEquals(ContentType.JPEG, rendition.getMimeType());
     assertEquals(DummyMediaFormats.RATIO_16_9, rendition.getMediaFormat());
     assertEquals(ValueMap.EMPTY, rendition.getProperties());

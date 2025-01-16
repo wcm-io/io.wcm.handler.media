@@ -232,6 +232,12 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public long getFileSize() {
+    if (this.metadata != null) {
+      Long fileSize = this.metadata.getFileSize();
+      if (fileSize != null) {
+        return fileSize;
+      }
+    }
     // file size is unknown
     return -1;
   }

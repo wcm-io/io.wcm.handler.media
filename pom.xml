@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>2.4.3-SNAPSHOT</version>
+    <version>2.4.4</version>
     <relativePath/>
   </parent>
 
@@ -273,6 +273,8 @@
               javax.annotation;version="[0.0,2)",\
               <!-- Package version newer in AEM 6.5 than in AEMaaCS -->\
               com.day.cq.dam.api.handler;version="[2.0,3)",\
+              <!-- Package got major bump when removing Guava dependency -->\
+              org.apache.jackrabbit.oak.commons;version="[1.6,3)",\
               <!-- Package is not accessible in AEM 6.5 -->\
               com.adobe.cq.ui.wcm.commons.config;resolution:=optional,\
               <!-- Caffeine is embedded -->\
@@ -361,6 +363,24 @@
       </plugin>
 
     </plugins>
+    <pluginManagement>
+    
+      <!-- Disable parallel unit tests for all environment -->
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <properties>
+              <configurationParameters>
+                junit.jupiter.execution.parallel.enabled = false
+              </configurationParameters>
+            </properties>
+          </configuration>
+        </plugin>
+      </plugins>
+
+    </pluginManagement>
   </build>
 
   <reporting>
