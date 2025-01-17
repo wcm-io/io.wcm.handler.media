@@ -98,6 +98,7 @@ final class ImageUtils {
    * @param widthOptions Width options string
    * @return Widths array which is empty in case given widthOptions is blank
    */
+  @SuppressWarnings("null")
   public static @NotNull WidthOption @NotNull[] toWidthOptionArray(@NotNull String widthOptions) {
     return Optional.ofNullable(WidthUtils.parseWidths(widthOptions))
             .orElse(new WidthOption[0]);

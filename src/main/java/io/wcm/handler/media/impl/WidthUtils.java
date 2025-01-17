@@ -29,6 +29,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.media.MediaArgs.WidthOption;
 
 /**
@@ -65,6 +66,7 @@ public final class WidthUtils {
    * @param widths Widths string
    * @return Width options
    */
+  @SuppressFBWarnings("NP_NONNULL_RETURN_VIOLATION")
   public static @NotNull WidthOption @Nullable [] parseWidths(@Nullable String widths) {
     if (StringUtils.isBlank(widths)) {
       return null;

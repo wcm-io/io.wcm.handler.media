@@ -249,6 +249,7 @@ class MediaComponentPropertyResolverTest {
   }
 
   @Test
+  @SuppressWarnings("unused")
   void testParseWidths() {
     assertNull(parseWidths(null));
     assertNull(parseWidths(""));
