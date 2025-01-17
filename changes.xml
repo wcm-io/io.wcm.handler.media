@@ -24,7 +24,11 @@
     xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
 
-    <release version="2.3.2" date="not released">
+    <release version="2.4.0" date="not released">
+      <action type="add" dev="mrozati" issue="77">
+        MediaArgs accepts width options with density descriptors to generate srcset attribute with density descriptors like 2x instead of width descriptors like 800w.
+        ResourceMedia and SimpleMadiaMarkupBuilder are also extended to support density descriptors, only when sizes is empty.
+      </action>
       <action type="update" dev="sseifert" issue="84">
         Dynamic Media with Open API: Provide access to rendition file size as provided by Dynamic Media.
       </action>

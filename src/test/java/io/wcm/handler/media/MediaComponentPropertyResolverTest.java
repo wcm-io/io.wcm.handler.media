@@ -249,6 +249,7 @@ class MediaComponentPropertyResolverTest {
   }
 
   @Test
+  @SuppressWarnings("unused")
   void testParseWidths() {
     assertNull(parseWidths(null));
     assertNull(parseWidths(""));
@@ -265,6 +266,18 @@ class MediaComponentPropertyResolverTest {
         new WidthOption(400, true),
         new WidthOption(300, true),
     }, parseWidths(" 100  , 200? , 500?,400,300  "));
+
+    assertArrayEquals(new WidthOption[] {
+            new WidthOption(100, "2x", true)
+    }, parseWidths("100:2x"));
+
+    assertArrayEquals(new WidthOption[] {
+            new WidthOption(100, null, true),
+            new WidthOption(200, "0.33x", false),
+            new WidthOption(500, "1.5x", false),
+            new WidthOption(400, "2x", true),
+            new WidthOption(300, "3.12x", true),
+    }, parseWidths(" 100  , 200:0.33x? , 500:1.5x?,400:2x,300:3.12x  "));
   }
 
   @Test

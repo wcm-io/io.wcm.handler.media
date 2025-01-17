@@ -20,19 +20,20 @@
 package io.wcm.handler.media.ui;
 
 import java.util.Arrays;
+import java.util.Optional;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.wcm.handler.media.MediaArgs;
 import io.wcm.handler.media.MediaArgs.PictureSource;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.MediaBuilder;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.format.MediaFormatHandler;
+import io.wcm.handler.media.impl.WidthUtils;
 
 final class ImageUtils {
 
@@ -57,11 +58,11 @@ final class ImageUtils {
       MediaFormat mediaFormat = mediaFormatHandler.getMediaFormat(mediaFormatNames[i]);
       if (mediaFormat != null) {
         String media = medias[i];
-        long[] widthsArray = toWidthsArray(widths[i]);
-        if (widthsArray.length > 0) {
+        WidthOption[] widthOptions = toWidthOptionArray(widths[i]);
+        if (widthOptions.length > 0) {
 
           PictureSource pictureSource = new PictureSource(mediaFormat);
-          pictureSource.widths(widthsArray);
+          pictureSource.widthOptions(widthOptions);
           if (StringUtils.isNotBlank(media)) {
             pictureSource.media(media);
           }
@@ -80,7 +81,7 @@ final class ImageUtils {
    * @param widths Widths string
    * @return Widths array
    */
-  public static long[] toWidthsArray(@NotNull String widths) {
+  public static long @NotNull[] toWidthsArray(@NotNull String widths) {
     if (StringUtils.isBlank(widths)) {
       return new long[0];
     }
@@ -93,23 +94,14 @@ final class ImageUtils {
   }
 
   /**
-   * Convert width options string to MediaArgs.WidthOption array and ignore invalid numbers and invalid format, sort
-   * values descending.
+   * Convert width options string to WidthOption array and ignore invalid numbers and invalid format.
    * @param widthOptions Width options string
    * @return Widths array which is empty in case given widthOptions is blank
    */
-  public static MediaArgs.WidthOption[] toWidthOptionArray(@NotNull String widthOptions) {
-    if (StringUtils.isBlank(widthOptions)) {
-      return new MediaArgs.WidthOption[0];
-    }
-    return Arrays.stream(StringUtils.split(widthOptions, ","))
-        .filter(StringUtils::isNotBlank)
-        .map(widthOption -> StringUtils.split(widthOption, ":"))
-        .filter(widthOptionArray -> widthOptionArray.length == 2)
-        .map(widthOptionArray -> new MediaArgs.WidthOption(NumberUtils.toLong(widthOptionArray[0]), BooleanUtils.toBoolean(widthOptionArray[1])))
-        .filter(widthOption -> widthOption.getWidth() > 0)
-        .sorted((wo1, wo2) -> Long.compare(wo2.getWidth(), wo1.getWidth()))
-        .toArray(MediaArgs.WidthOption[]::new);
+  @SuppressWarnings("null")
+  public static @NotNull WidthOption @NotNull[] toWidthOptionArray(@NotNull String widthOptions) {
+    return Optional.ofNullable(WidthUtils.parseWidths(widthOptions))
+            .orElse(new WidthOption[0]);
   }
 
 }

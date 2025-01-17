@@ -21,6 +21,7 @@ package io.wcm.handler.media.ui;
 
 import static io.wcm.handler.media.MediaNameConstants.PROP_CSS_CLASS;
 import static io.wcm.handler.media.impl.WidthUtils.parseWidths;
+import static io.wcm.handler.media.impl.WidthUtils.hasDensityDescriptor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,14 +69,15 @@ import io.wcm.handler.media.format.MediaFormatHandler;
  * {@value io.wcm.handler.media.MediaNameConstants#PN_COMPONENT_MEDIA_AUTOCROP}.</li>
  * <li><code>imageWidths</code>: Responsive rendition widths for image. Example:
  * "{@literal 2560?,1920,?1280,640,320}".<br>
- * Appending the suffix "{@literal ?}" makes the width optional, eg. "1440?"<br>
- * Use always 'imageWidths' together with 'imageSizes' property.<br>
+ * Appending the suffix "{@literal ?}" makes the width optional, e.g. "1440?"<br>
+ * Pixel density descriptors can be added with a colon separator, e.g. "1440:2x?". Default density is 1x.<br>
+ * Use always 'imageWidths' together with 'imageSizes' property unless you add pixel density descriptors.<br>
  * Cannot be used together with the picture source parameters.</li>
  * <li><code>imageSizes</code>: "Sizes" string for img element. Example:
  * "{@literal (min-width: 400px) 400px, 100vw}".<br>
  * Cannot be used together with the picture source parameters.</li>
  * <li><code>pictureSourceMediaFormat</code>: List of media formats for the picture source elements. Example:
- * "{@literal ['mf_16_9']}"<br>
+ * "{@literal ['mf_16_9','mf_4_3']}"<br>
  * You have to define the same number of array items in all pictureSource* properties.<br>
  * Cannot be used together with image sizes.</li>
  * <li><code>pictureSourceMedia</code>: List of media expressions for the picture source elements.
@@ -83,13 +85,14 @@ import io.wcm.handler.media.format.MediaFormatHandler;
  * You have to define the same number of array items in all pictureSource* properties.<br>
  * Cannot be used together with image sizes.</li>
  * <li><code>pictureSourceWidths</code>: List of widths for the picture source elements.
- * Example: "{@literal 479,719,959,1279,1439?,1440?}".<br>
- * Appending the suffix "{@literal ?}" makes the width optional, eg. "1440?"<br>
+ * Example: "{@literal ['479,719,959,1279,1439?,1440?','640,1200:2x?']}".<br>
+ * Appending the suffix "{@literal ?}" makes the width optional, e.g. "1440?"<br>
+ * Pixel density descriptors can be added with a colon separator, e.g. "1440:2x?". Default density is 1x.<br>
  * You have to define the same number of array items in all pictureSource* properties.<br>
  * Cannot be used together with image sizes.</li>
  * <li><code>property:&lt;propertyname&gt;</code>: Custom properties for MediaArgs can be added with the name prefix
  * {@value #RA_PROPERTY_PREFIX},
- * e.g. {@literal "property:myprop1"="value1"} which adds property {@literal "myprop1"} to the the MediaArgs. Custom
+ * e.g. {@literal "property:myprop1"="value1"} which adds property {@literal "myprop1"} to the MediaArgs. Custom
  * properties with null value will be ignored.</li>
  * </ul>
  */
@@ -108,7 +111,7 @@ public class ResourceMedia {
 
   /**
    * Optional: Media format to be used.
-   * By default the media formats are read from the component properties of the component and this
+   * By default, the media formats are read from the component properties of the component and this
    * parameter should not be set. But for components that allow to choose one from the allowed media
    * formats via their edit dialog the format can be set here.
    * To be used together with 'imageSizes' and 'widths'.<br>
@@ -136,7 +139,10 @@ public class ResourceMedia {
    * Defines responsive rendition widths for image.
    * To be used together with 'imageSizes' property.
    * Example: "{@literal 2560?,1920,?1280,640,320}" <br>
+   * Example with density descriptor: "{@literal 100,200:1.5x,200:2x?}"<br>
    * Widths are by default required. To declare an optional width append the "{@literal ?}" suffix, eg. "1440?"<br>
+   * Density descriptor is separated by a colon e.g. "1440:2x?". You can eliminate 1x descriptor. Density descriptors
+   * are considered when at least one width has a density descriptor and image sizes is not set.<br>
    * Cannot be used together with the picture source parameters.
    */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -171,8 +177,11 @@ public class ResourceMedia {
   /**
    * List of widths for the picture source elements.
    * Example: "{@literal 479,719,959,1279,1439?,1440?}"<br>
+   * Example with density descriptor: "{@literal 100,200:1.5x,200:2x?}"<br>
    * You have to define the same number of array items in all pictureSource* properties.
    * Widths are by default required. To declare an optional width append the "{@literal ?}" suffix, eg. "1440?"<br>
+   * Density descriptor is separated by a colon e.g. "1440:2x?". You can eliminate 1x descriptor. Density descriptors
+   * are considered when at least one width has a density descriptor and image sizes is not set.<br>
    * Cannot be used together with image sizes.
    */
   @RequestAttribute(injectionStrategy = InjectionStrategy.OPTIONAL)
@@ -214,10 +223,11 @@ public class ResourceMedia {
     }
 
     // apply responsive image handling - either via image sizes or picture sources
-    if (StringUtils.isNotEmpty(imageSizes)) {
+    // image sizes is applied when sizes is configured ot if image widths contain density descriptors (separated by ":")
+    if (StringUtils.isNotEmpty(imageSizes) || hasDensityDescriptor(imageWidths)) {
       WidthOption[] widthOptionsArray = parseWidths(imageWidths);
       if (widthOptionsArray != null) {
-        builder.imageSizes(imageSizes, widthOptionsArray);
+        builder.imageSizes(StringUtils.defaultString(imageSizes), widthOptionsArray);
       }
     }
     else if (pictureSourceMediaFormat != null && pictureSourceMedia != null && pictureSourceWidths != null) {
