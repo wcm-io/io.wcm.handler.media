@@ -262,7 +262,7 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param hasDensityDescriptors render density descriptors instead of width descriptors
    * @return a media URL with descriptor, or null if no matching renditions found
    */
-  protected final @Nullable String getSrcSetRenditionUrl(@NotNull Media media, @NotNull MediaFormat mediaFormat, @NotNull WidthOption widthOption, boolean hasDensityDescriptors) {
+  protected @Nullable String getSrcSetRenditionUrl(@NotNull Media media, @NotNull MediaFormat mediaFormat, @NotNull WidthOption widthOption, boolean hasDensityDescriptors) {
     String descriptor = hasDensityDescriptors ? widthOption.getDensityDescriptor() : widthOption.getWidthDescriptor();
     return media.getRenditions().stream()
         .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
@@ -272,6 +272,59 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
         .findFirst()
         .map(url -> url + (!descriptor.isEmpty() ? " " + descriptor : ""))
         .orElse(null);
+  }
+
+  /**
+   * Generate srcset list from the resolved renditions for the ratio of the given media formats and the given widths.
+   * Widths that have no match are ignored.
+   * @param media Media
+   * @param mediaFormat Media format
+   * @param widths widths
+   * @return srcset String or null if no matching renditions found
+   */
+  protected @Nullable String getSrcSetRenditions(@NotNull Media media, @NotNull MediaFormat mediaFormat,
+      @NotNull WidthOption @Nullable... widths) {
+    if (widths == null) {
+      return null;
+    }
+    return getSrcSetRenditions(media, mediaFormat, Arrays.stream(widths)
+        .mapToLong(WidthOption::getWidth)
+        .toArray());
+  }
+
+  /**
+   * Generate srcset list from the resolved renditions for the ratio of the given media formats and the given widths.
+   * Widths that have no match are ignored.
+   * @param media Media
+   * @param mediaFormat Media format
+   * @param widths widths
+   * @return srcset String or null if no matching renditions found
+   */
+  protected @Nullable String getSrcSetRenditions(@NotNull Media media, @NotNull MediaFormat mediaFormat,
+      long @NotNull... widths) {
+    StringBuilder srcset = new StringBuilder();
+
+    for (long width : widths) {
+      Optional<String> url = media.getRenditions().stream()
+          .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
+              || Ratio.matches(mediaFormat.getRatio(), 0d))
+              && rendition.getWidth() == width)
+          .map(Rendition::getUrl)
+          .findFirst();
+      if (url.isPresent()) {
+        if (srcset.length() > 0) {
+          srcset.append(", ");
+        }
+        srcset.append(url.get()).append(" ").append(Long.toString(width)).append("w");
+      }
+    }
+
+    if (srcset.length() > 0) {
+      return srcset.toString();
+    }
+    else {
+      return null;
+    }
   }
 
   /**
