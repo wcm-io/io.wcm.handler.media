@@ -994,7 +994,6 @@ public final class MediaArgs implements Cloneable {
 
     private final @NotNull String sizes;
     private final @NotNull WidthOption @NotNull [] widthOptions;
-    private final boolean hasDensityDescriptors;
 
     /**
      * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
@@ -1007,7 +1006,6 @@ public final class MediaArgs implements Cloneable {
           .distinct()
           .mapToObj(width -> new WidthOption(width, true))
           .toArray(WidthOption[]::new);
-      this.hasDensityDescriptors = false;
     }
 
     /**
@@ -1018,8 +1016,6 @@ public final class MediaArgs implements Cloneable {
     public ImageSizes(@NotNull String sizes, @NotNull WidthOption @NotNull... widthOptions) {
       this.sizes = sizes;
       this.widthOptions = widthOptions;
-      this.hasDensityDescriptors = StringUtils.isEmpty(sizes) &&
-           Arrays.stream(widthOptions).map(WidthOption::getDensity).anyMatch(Objects::nonNull);
     }
 
     /**
@@ -1041,7 +1037,8 @@ public final class MediaArgs implements Cloneable {
      * @return whether density descriptors should be used instead of width descriptors.
      */
     public boolean hasDensityDescriptors() {
-      return hasDensityDescriptors;
+      return StringUtils.isEmpty(this.sizes) &&
+              Arrays.stream(this.widthOptions).map(WidthOption::getDensity).anyMatch(Objects::nonNull);
     }
 
     @Override
@@ -1232,7 +1229,7 @@ public final class MediaArgs implements Cloneable {
      * @param width mandatory width value
      * @param density pixel density, or null for default density (1x)
      */
-    public WidthOption(long width, String density) {
+    public WidthOption(long width, @Nullable String density) {
       this(width, density, true);
     }
 

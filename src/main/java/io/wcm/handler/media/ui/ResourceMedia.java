@@ -21,6 +21,7 @@ package io.wcm.handler.media.ui;
 
 import static io.wcm.handler.media.MediaNameConstants.PROP_CSS_CLASS;
 import static io.wcm.handler.media.impl.WidthUtils.parseWidths;
+import static io.wcm.handler.media.impl.WidthUtils.hasDensityDescriptor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -223,7 +224,7 @@ public class ResourceMedia {
 
     // apply responsive image handling - either via image sizes or picture sources
     // image sizes is applied when sizes is configured ot if image widths contain density descriptors (separated by ":")
-    if (StringUtils.isNotEmpty(imageSizes) || StringUtils.contains(imageWidths, ":")) {
+    if (StringUtils.isNotEmpty(imageSizes) || hasDensityDescriptor(imageWidths)) {
       WidthOption[] widthOptionsArray = parseWidths(imageWidths);
       if (widthOptionsArray != null) {
         builder.imageSizes(StringUtils.defaultString(imageSizes), widthOptionsArray);

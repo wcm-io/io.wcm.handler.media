@@ -20,6 +20,7 @@
 package io.wcm.handler.media.ui;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -80,7 +81,7 @@ final class ImageUtils {
    * @param widths Widths string
    * @return Widths array
    */
-  public static long[] toWidthsArray(@NotNull String widths) {
+  public static long @NotNull[] toWidthsArray(@NotNull String widths) {
     if (StringUtils.isBlank(widths)) {
       return new long[0];
     }
@@ -97,8 +98,9 @@ final class ImageUtils {
    * @param widthOptions Width options string
    * @return Widths array which is empty in case given widthOptions is blank
    */
-  public static WidthOption[] toWidthOptionArray(@NotNull String widthOptions) {
-    return WidthUtils.parseWidths(widthOptions);
+  public static @NotNull WidthOption @NotNull[] toWidthOptionArray(@NotNull String widthOptions) {
+    return Optional.ofNullable(WidthUtils.parseWidths(widthOptions))
+            .orElse(new WidthOption[0]);
   }
 
 }

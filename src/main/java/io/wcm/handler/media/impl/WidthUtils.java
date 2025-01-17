@@ -20,6 +20,8 @@
 package io.wcm.handler.media.impl;
 
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +42,7 @@ public final class WidthUtils {
   // 800:1.5x   <- width=800px, density 1.5x, mandatory
   // 800:1.5x?  <- width=800px, density 1.5x, optional
   static final String WIDTH_OPTION = "\\d+(:\\d+(\\.\\d+)?x)?\\??";
+  static final Pattern WIDTH_OPTION_PATTERN = Pattern.compile("(?<width>\\d+)(:(?<density>\\d+(\\.\\d+)?x))?(?<optional>\\?)?");
 
   // comma-separated width options; tolerates whitespaces between options.
   // example values:
@@ -52,11 +55,17 @@ public final class WidthUtils {
   }
 
   /**
-   * Parse widths string.
+   * Parse widths string. The string should contain a comma-separated list of width options.
+   * Whitespaces between options are tolerated.<br>
+   * Examples:
+   * <ul>
+   *   <li>{@literal 100, 200? , 300?} returns three width options, the last two ones are optional</li>
+   *   <li>{@literal 100, 200:1.5x, 300:2x?} returns three options with pixel densities, last options is optional</li>
+   * </ul>
    * @param widths Widths string
    * @return Width options
    */
-  public static @Nullable WidthOption @Nullable [] parseWidths(@Nullable String widths) {
+  public static @NotNull WidthOption @Nullable [] parseWidths(@Nullable String widths) {
     if (StringUtils.isBlank(widths)) {
       return null;
     }
@@ -67,15 +76,35 @@ public final class WidthUtils {
     return Arrays.stream(widthItems)
         .map(StringUtils::trim)
         .map(WidthUtils::toWidthOption)
+        .filter(Objects::nonNull)
         .toArray(WidthOption[]::new);
   }
 
-  private static @NotNull WidthOption toWidthOption(@NotNull String widthOptionString) {
-    boolean optional = StringUtils.endsWith(widthOptionString, "?");
-    String[] tokens = StringUtils.substringBefore(widthOptionString, "?").split(":");
-    long width = NumberUtils.toLong(tokens[0]);
-    String density = tokens.length > 1 ? tokens[1] : null;
-    return new WidthOption(width, density, !optional);
+  private static @Nullable WidthOption toWidthOption(@NotNull String widthOptionString) {
+    Matcher widthOptionMatcher = WIDTH_OPTION_PATTERN.matcher(widthOptionString);
+    if (!widthOptionMatcher.matches()) {
+      // this should never happen because we already checked against this pattern in the caller method,
+      // but we have to call matches() anyway
+      return null;
+    }
+
+    long width = NumberUtils.toLong(widthOptionMatcher.group("width"));
+    String density = widthOptionMatcher.group("density");
+    boolean mandatory = widthOptionMatcher.group("optional") == null;
+    return new WidthOption(width, density, mandatory);
+  }
+
+  /**
+   * @param widths Widths string
+   * @return true if the widths string is valid and contains density descriptor ":"
+   */
+  public static boolean hasDensityDescriptor(@Nullable String widths) {
+    // first make sure the widths string is valid
+    if (StringUtils.isBlank(widths) || !WIDTHS_PATTERN.matcher(widths).matches()) {
+      return false;
+    }
+    // now check if the valid string contains a density separator
+    return StringUtils.contains(widths, ":");
   }
 
 }

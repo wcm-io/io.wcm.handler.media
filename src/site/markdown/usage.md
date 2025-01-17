@@ -261,10 +261,11 @@ This results in a markup like this:
 ```
 
 #### Using density descriptors
-By default `srcset` attribute is generated using width descriptors, e.g. `800w`. This fits well when you want to
-use different sizes of image in different media conditions. But if you prefer using same size
+By default `srcset` attribute is generated using width descriptors, e.g. `800w`. This fits well when you need different 
+sizes of image in different media conditions. But if you prefer using same size
 with different pixel densities depending on the client's device capabilities, you should use density descriptors instead. 
-For example `2x` for retina displays. Density descriptors cannot be used together with `sizes`.
+For example `2x` for retina displays.\
+_Note:_ Density descriptor cannot be used together with `sizes`.
 
 ```java
 import io.wcm.handler.media.MediaArgs;
@@ -300,7 +301,7 @@ This results in a markup like this:
   <img src="/path/mymedia.jpg">
 </picture>
 ```
-
+Picture element can also mix sources with width descriptor and sources with density descriptor.
 
 [media-handler]: apidocs/io/wcm/handler/media/MediaHandler.html
 [media-builder]: apidocs/io/wcm/handler/media/MediaBuilder.html
