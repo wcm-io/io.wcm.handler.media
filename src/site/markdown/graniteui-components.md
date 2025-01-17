@@ -25,7 +25,7 @@ Enhancements over AEM version:
 * The property `allowUpload` is set to `false` by default
 * The property `mimeTypes` is pre-initialized with mimetypes for GIF, JPEG and PNG images
 
-Properties
+Properties:
 - `name` (String) = {default value configured in media handler}\
   The name that identifies the file upload location. E.g. ./file or ./image/file.
 - `fileNameParameter` (String) = {default value configured in media handler}\
@@ -84,7 +84,7 @@ This component extends the [wcm.io Granite UI components Path Field][wcmio-wcm-u
 * The property `rootPath` defaults to `/content/dam`
 * When the property `fieldDescription` is not set, it is set automatically with information about the expected media formats
 
-Properties
+Properties:
 - `name` (String) = {default value configured in media handler for media reference}\
     The name that identifies the file upload location. E.g. ./file or ./image/file
 - `namePrefix` (String) = "./"\
@@ -127,7 +127,7 @@ Multi-select field that allows to select one or multiple media formats.
 }
 ```
 
-Properties
+Properties:
 - `multiple` (Boolean) = `true`\
   Media format select is multiple by default
 
