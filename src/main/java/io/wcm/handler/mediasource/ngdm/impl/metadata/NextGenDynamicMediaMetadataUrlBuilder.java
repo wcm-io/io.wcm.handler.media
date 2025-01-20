@@ -30,6 +30,7 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
 
 /**
  * Builds URL to reference a asset metadata via NextGen Dynamic Media.
+ *
  * <p>
  * Example URL that might be build:
  * https://host/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/metadata

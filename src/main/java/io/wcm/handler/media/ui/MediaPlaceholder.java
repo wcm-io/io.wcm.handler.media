@@ -43,6 +43,7 @@ import io.wcm.handler.media.MediaInvalidReason;
 
 /**
  * Model for media replacement placeholder.
+ *
  * <p>
  * Mandatory use parameters:
  * </p>

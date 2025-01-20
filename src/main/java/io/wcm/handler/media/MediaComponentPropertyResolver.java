@@ -56,6 +56,7 @@ import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
  * Resolves Media Handler component properties for the component associated
  * with the given resource from content policies and properties defined in the component resource.
  * Please make sure to {@link #close()} instances of this class after usage.
+ *
  * <p>
  * Alternatively, it's possible to use the resolver on a ValueMap. In this case, the properties
  * are directly read from the provided value map. Picture Sources are not supported for that option.
@@ -194,6 +195,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   /**
    * @return Image sizes
    */
+  @SuppressWarnings("null")
   public @Nullable ImageSizes getImageSizes() {
     String responsiveType = getResponsiveType();
     if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {

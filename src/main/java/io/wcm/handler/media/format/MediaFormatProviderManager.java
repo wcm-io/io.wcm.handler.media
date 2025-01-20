@@ -28,6 +28,7 @@ import io.wcm.handler.media.spi.MediaFormatProvider;
 
 /**
  * Collects all media format definitions provided by applications via {@link MediaFormatProvider} interface.
+ *
  * <p>
  * This interface is implemented by an OSGi services.
  * It should be considered INTERNAL and not be used by applications.

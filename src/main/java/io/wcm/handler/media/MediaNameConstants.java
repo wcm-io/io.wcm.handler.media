@@ -23,6 +23,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Names used for media handling.
+ *
  * <p>
  * Conventions:
  * </p>
@@ -159,6 +160,7 @@ public final class MediaNameConstants {
 
   /**
    * Enable "auto-cropping" mode for this component by setting to true.
+   *
    * <p>
    * Property is to be set on component or in policy.
    * </p>
@@ -167,6 +169,7 @@ public final class MediaNameConstants {
 
   /**
    * List of media format names accepted by this component.
+   *
    * <p>
    * Property is to be set on component or in policy.
    * </p>
@@ -176,6 +179,7 @@ public final class MediaNameConstants {
   /**
    * Resolving of all media formats is mandatory. This can be a single boolean, or a boolean array
    * where each entry matches with the media format name defined in {@link #PN_COMPONENT_MEDIA_FORMATS}.
+   *
    * <p>
    * Property is to be set on component or in policy.
    * </p>
@@ -186,6 +190,7 @@ public final class MediaNameConstants {
    * List of media format names that are mandatory. The list of names is merged with the list
    * of names defined in {@link #PN_COMPONENT_MEDIA_FORMATS}, but all formats defined in
    * this property ad defined as mandatory.
+   *
    * <p>
    * Property is to be set on component or in policy.
    * </p>
@@ -195,6 +200,7 @@ public final class MediaNameConstants {
   /**
    * If multiple responsive image settings are defined, this property defines which gets active.
    * Possible values: <code>none</code>, <code>imageSizes</code>, <code>pictureSources</code>
+   *
    * <p>
    * Property is to be set on component or in policy.
    * </p>
@@ -204,6 +210,7 @@ public final class MediaNameConstants {
   /**
    * Defines "image sizes" responsive image setting.
    * Contains properties <code>sizes</code>, <code>widths</code>.
+   *
    * <p>
    * Child node is to be defined on component or in policy.
    * </p>
@@ -214,6 +221,7 @@ public final class MediaNameConstants {
    * Defines "picture sources" responsive image setting.
    * Contains child nodes for each source definition with properties <code>mediaFormat</code>, <code>media</code>,
    * <code>widths</code>.
+   *
    * <p>
    * Child node is to be defined on component or in policy.
    * </p>

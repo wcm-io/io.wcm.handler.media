@@ -260,6 +260,48 @@ This results in a markup like this:
 </picture>
 ```
 
+#### Using density descriptors
+By default `srcset` attribute is generated using width descriptors, e.g. `800w`. This fits well when you need different 
+sizes of image in different media conditions. But if you prefer using same size
+with different pixel densities depending on the client's device capabilities, you should use density descriptors instead. 
+For example `2x` for retina displays.\
+_Note:_ Density descriptor cannot be used together with `sizes`.
+
+```java
+import io.wcm.handler.media.MediaArgs;
+
+Media media = mediaHandler.get(resource)
+        .mediaFormat(MF_16_9)
+        .imageSizes("", new WidthOption(800, "1x"), new WidthOption(1600, "2x"))
+        .build();
+```
+This results in a markup like this:
+
+```html
+<img src="/path/mymedia.jpg"
+    srcset="/path/mymedia.800.500.jpg, /path/mymedia.jpg 2x">
+```
+
+Alternatively you can generate a picture element:
+
+```java
+Media media = mediaHandler.get(resource)
+    .mediaFormat(MF_16_9)
+    .pictureSource(new PictureSource(MF_16_9).media("(min-width: 1024px)").widthOptions(new WidthOption(800, "1x"), new WidthOption(1600, "2x")))
+    .pictureSource(new PictureSource(MF_4_3).widthOptions(new WidthOption(400), new WidthOption(800, "2x")))
+    .build();
+```
+
+This results in a markup like this:
+
+```html
+<picture>
+  <source media="(min-width: 1024px)" srcset="/path/mymedia.800.500.jpg, /path/mymedia.jpg 2x">
+  <source srcset="/path/mymedia.400.300.jpg, /path/mymedia.800.600.jpg 2x">
+  <img src="/path/mymedia.jpg">
+</picture>
+```
+Picture element can also mix sources with width descriptor and sources with density descriptor.
 
 [media-handler]: apidocs/io/wcm/handler/media/MediaHandler.html
 [media-builder]: apidocs/io/wcm/handler/media/MediaBuilder.html

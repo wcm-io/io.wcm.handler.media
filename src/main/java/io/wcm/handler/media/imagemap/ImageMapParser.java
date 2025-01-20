@@ -26,6 +26,7 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Parses image maps produced by the AEM image editor.
+ *
  * <p>
  * The interface is implemented by a Sling Model. You can adapt from
  * {@link org.apache.sling.api.SlingHttpServletRequest} or {@link org.apache.sling.api.resource.Resource} to get a

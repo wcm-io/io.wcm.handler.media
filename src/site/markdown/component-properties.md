@@ -33,7 +33,7 @@ By defining a child resource named `wcmio:mediaResponsiveImageSizes` the respons
 | Property name | Description
 |---------------|---------------------------------------------------------------------
 | `sizes`       | A valid [source size list][w3c-source-size-list]. Example: `(min-width: 1280px) 1200px, 100vw`.
-| `widths`      | Widths for the renditions in the `srcset` attribute, based on the primary media format. Separate widths by ','. Suffix optional widths with '?'.",
+| `widths`      | Widths for the renditions in the `srcset` attribute, based on the primary media format. Separate widths by ','. Suffix optional widths with '?'. Example: `768,1024,2048?`.<br/>You may also use density descriptors for each width separated by ':', e.g. `1024,2048:2x?`.<br/>_Note_: Do not use density descriptors together with `sizes` otherwise density descriptors are ignored and `srcset` is generated with width descriptors.
 
 
 #### Child resource `wcmio:mediaResponsivePictureSources`
@@ -45,7 +45,7 @@ By defining a child resource named `wcmio:mediaResponsivePictureSources` the res
 | `mediaFormat` | Media format with ratio for the renditions of the `source` element.
 | `media`       | Optional. A valid [media query list][w3c-media-query-list]. Example: `(min-width: 1024px)`.
 | `sizes`       | Optional. A valid [source size list][w3c-source-size-list]. Example: `(min-width: 1280px) 1200px, 100vw`.
-| `widths`      | Widths for the renditions in the `srcset` attribute, based on the primary media format. Separate widths by ','. Suffix optional widths with '?'.",
+| `widths`      | Widths for the renditions in the `srcset` attribute, based on the primary media format. Separate widths by ','. Suffix optional widths with '?'. Example: `768,1024,2048?`.<br/>You may also use density descriptors for each width separated by ':', e.g. `1024,2048:2x?`.<br/>_Note:_ Do not use density descriptors together with `sizes` otherwise density descriptors are ignored and `srcset` is generated with width descriptors.
 
 
 
@@ -69,5 +69,7 @@ Dialog snippet `/apps/wcm-io/handler/media/components/global/include/mediaFormat
 Dialog snippet `/apps/wcm-io/handler/media/components/global/include/responsiveImageSettings`:
 
 ![Responsive Image Settings - Image Sizes](images/componentproperties-responsive-image-sizes.png)
+
+![Responsive Image Settings - Image Densities](../resources/images/componentproperties-responsive-image-densities.png)
 
 ![Responsive Image Settings - Picture Source](images/componentproperties-responsive-picture-source.png)

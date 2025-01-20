@@ -30,8 +30,9 @@
      * 100,200
      *  500 , 600 , 700
      * 100?, 200, 300?
+     * 100:1x, 200:1.5x, 300:2x?
      */
-    responsiveWidths: /^\s*\d+\??\s*(,\s*\d+\??\s*)*$/
+    responsiveWidths: /^\s*\d+(:\d+(\.\d+)?x)?\??\s*(,\s*\d+(:\d+(\.\d+)?x)?\??\s*)*$/
   };
 
   var foundationValidator = $(window).adaptTo("foundation-registry");
@@ -57,8 +58,12 @@
     selector: '[data-foundation-validation="wcmio.handler.media.mediaFormat"]',
     validate: function(el) {
       var nextSibling = el.nextSibling;
-      if (nextSibling?.tagName?.toLowerCase() === 'coral-alert') {
-        return nextSibling.textContent;
+      while (nextSibling) {
+        var tagName = nextSibling.tagName?.toLowerCase();
+        if (tagName === 'coral-alert') {
+          return nextSibling.textContent;
+        }
+        nextSibling = nextSibling.nextSibling;
       }
     }
   });

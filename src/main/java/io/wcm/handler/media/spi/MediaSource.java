@@ -56,6 +56,7 @@ import io.wcm.handler.media.imagemap.ImageMapParser;
 /**
  * Via {@link MediaSource} OSGi services applications can define additional media sources supported by
  * {@link MediaHandler}.
+ *
  * <p>
  * This class has to be extended by a Sling Model class. The adaptables
  * should be {@link org.apache.sling.api.SlingHttpServletRequest} and {@link org.apache.sling.api.resource.Resource}.

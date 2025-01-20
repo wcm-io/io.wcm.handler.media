@@ -76,6 +76,7 @@ class ResourceMediaTest {
     context.request().setAttribute("mediaFormat", EDITORIAL_1COL.getName());
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertTrue(underTest.isValid());
     assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.215.102.file/asset1.jpg",
         underTest.getMetadata().getUrl());
@@ -86,12 +87,14 @@ class ResourceMediaTest {
     context.request().setAttribute("mediaFormat", SHOWROOM_CAMPAIGN.getName());
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertFalse(underTest.isValid());
   }
 
   @Test
   void testWithoutMediaFormat() {
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertTrue(underTest.isValid());
     assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg",
         underTest.getMetadata().getUrl());
@@ -102,6 +105,7 @@ class ResourceMediaTest {
     context.request().setAttribute("cssClass", "mycss");
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertTrue(underTest.isValid());
     assertEquals("mycss", underTest.getMetadata().getElement().getCssClass());
   }
@@ -121,12 +125,14 @@ class ResourceMediaTest {
     context.currentResource(resource2);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertTrue(underTest.isValid());
     assertEquals("/content/dam/asset2.jpg/_jcr_content/renditions/original.image_file.120.76.20,12,140,88.file/asset2.jpg",
         underTest.getMetadata().getUrl());
 
     context.request().removeAttribute("cropProperty");
     ResourceMedia underTest2 = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest2);
     assertTrue(underTest2.isValid());
     assertEquals("/content/dam/asset2.jpg/_jcr_content/renditions/original./asset2.jpg",
         underTest2.getMetadata().getUrl());
@@ -144,6 +150,7 @@ class ResourceMediaTest {
     context.currentResource(resource2);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertTrue(underTest.isValid());
     assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.450.213.-.180.file/asset1.jpg",
         underTest.getMetadata().getUrl());
@@ -152,12 +159,14 @@ class ResourceMediaTest {
   @Test
   void testWithAutoCrop() {
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertTrue(underTest.isValid());
     assertFalse(underTest.getMetadata().getMediaRequest().getMediaArgs().isAutoCrop());
 
     context.request().setAttribute("autoCrop", true);
 
     ResourceMedia underTest2 = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest2);
     assertTrue(underTest2.isValid());
     assertTrue(underTest2.getMetadata().getMediaRequest().getMediaArgs().isAutoCrop());
 
@@ -172,6 +181,7 @@ class ResourceMediaTest {
     context.request().setAttribute("imageSizes", sizes);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertTrue(underTest.isValid());
 
     HtmlElement img = underTest.getMetadata().getElement();
@@ -194,22 +204,65 @@ class ResourceMediaTest {
     context.request().setAttribute("imageSizes", sizes);
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertFalse(underTest.isValid());
+  }
+
+  @Test
+  void testWithImageSizeAndWidthOptions_WithDensityDescriptors_NoSizes() {
+    context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
+    context.request().setAttribute("imageWidths", "50:0.5x,100:1x,150:2x,3000:3x?");
+
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
+    assertTrue(underTest.isValid());
+
+    HtmlElement img = underTest.getMetadata().getElement();
+    assertTrue(img instanceof io.wcm.handler.commons.dom.Image);
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.50.24.file/asset1.jpg 0.5x, "
+        + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg, "
+        + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.150.71.file/asset1.jpg 2x",
+        img.getAttributeValue("srcset"));
+    assertEquals("", img.getAttributeValue("sizes"));
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg", img.getAttributeValue("src"));
+  }
+
+  @Test
+  void testWithImageSizeAndWidthOptions_WithDensityDescriptorsAndSizes_ShouldIgnoreDensityDescriptors() {
+    final String sizes = "sizes string";
+
+    context.request().setAttribute("mediaFormat", EDITORIAL_2COL.getName());
+    context.request().setAttribute("imageWidths", "50:0.5x,100:1x,150:2x,3000:3x?");
+    context.request().setAttribute("imageSizes", sizes);
+
+    ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
+    assertTrue(underTest.isValid());
+
+    HtmlElement img = underTest.getMetadata().getElement();
+    assertTrue(img instanceof io.wcm.handler.commons.dom.Image);
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.50.24.file/asset1.jpg 50w, "
+        + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg 100w, "
+        + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.150.71.file/asset1.jpg 150w",
+        img.getAttributeValue("srcset"));
+    assertEquals(sizes, img.getAttributeValue("sizes"));
+    assertEquals("/content/dam/asset1.jpg/_jcr_content/renditions/original./asset1.jpg", img.getAttributeValue("src"));
   }
 
   @Test
   void testWithPictureSourceProperties() {
     context.request().setAttribute("pictureSourceMediaFormat", new String[] {
-        EDITORIAL_2COL.getName(), EDITORIAL_1COL.getName()
+        EDITORIAL_2COL.getName(), EDITORIAL_1COL.getName(), EDITORIAL_2COL.getName()
     });
     context.request().setAttribute("pictureSourceMedia", new String[] {
-        "media1", ""
+        "media1", "", "media2"
     });
     context.request().setAttribute("pictureSourceWidths", new String[] {
-        "150,100", "90,40"
+        "150,100", "90,40", "100,200:2x"
     });
 
     ResourceMedia underTest = context.request().adaptTo(ResourceMedia.class);
+    assertNotNull(underTest);
     assertTrue(underTest.isValid());
 
     // validate picture and sources
@@ -217,7 +270,7 @@ class ResourceMediaTest {
     assertTrue(picture instanceof io.wcm.handler.commons.dom.Picture);
 
     List<Element> sources = picture.getChildren("source");
-    assertEquals(2, sources.size());
+    assertEquals(3, sources.size());
 
     HtmlElement source1 = (HtmlElement)sources.get(0);
     assertEquals("media1", source1.getAttributeValue("media"));
@@ -232,6 +285,13 @@ class ResourceMediaTest {
         "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.90.43.file/asset1.jpg 90w, "
             + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.40.19.file/asset1.jpg 40w",
         source2.getAttributeValue("srcset"));
+
+    HtmlElement source3 = (HtmlElement)sources.get(2);
+    assertEquals("media2", source3.getAttributeValue("media"));
+    assertEquals(
+        "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.100.47.file/asset1.jpg, "
+            + "/content/dam/asset1.jpg/_jcr_content/renditions/original.image_file.200.95.file/asset1.jpg 2x",
+        source3.getAttributeValue("srcset"));
 
     // validate img
     HtmlElement img = (HtmlElement)picture.getChild("img");

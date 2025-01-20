@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Builds URL to reference a binary file via NextGen Dynamic Media.
+ *
  * <p>
  * Example URL that might be build:
  * https://host/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/original/as/my-file.pdf

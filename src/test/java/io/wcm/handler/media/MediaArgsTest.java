@@ -21,9 +21,12 @@ package io.wcm.handler.media;
 
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_1COL;
 import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_2COL;
+import static io.wcm.handler.media.testcontext.DummyMediaFormats.EDITORIAL_3COL;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import io.wcm.handler.media.MediaArgs.ImageSizes;
 import io.wcm.handler.media.MediaArgs.MediaFormatOption;
 import io.wcm.handler.media.MediaArgs.PictureSource;
+import io.wcm.handler.media.MediaArgs.WidthOption;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.media.markup.IPERatioCustomize;
@@ -153,6 +157,61 @@ class MediaArgsTest {
   }
 
   @Test
+  @SuppressWarnings("null")
+  void testImageSizesAndWidthOptions() {
+    MediaArgs mediaArgs = new MediaArgs();
+    mediaArgs.imageSizes(new ImageSizes("size1", 10, 20, 30));
+    assertNotNull(mediaArgs.getImageSizes());
+    assertNotNull(mediaArgs.getImageSizes().getWidthOptions());
+    assertEquals("size1", mediaArgs.getImageSizes().getSizes());
+    assertEquals(3, mediaArgs.getImageSizes().getWidthOptions().length);
+    assertNull(mediaArgs.getImageSizes().getWidthOptions()[0].getDensity());
+
+    mediaArgs.imageSizes(new ImageSizes("",
+            new WidthOption(5, "1x"),
+            new WidthOption(15, "2x", false)));
+    assertNotNull(mediaArgs.getImageSizes());
+    assertNotNull(mediaArgs.getImageSizes().getWidthOptions());
+    assertEquals("", mediaArgs.getImageSizes().getSizes());
+    assertEquals(2, mediaArgs.getImageSizes().getWidthOptions().length);
+    assertEquals("1x", mediaArgs.getImageSizes().getWidthOptions()[0].getDensity());
+    assertEquals("", mediaArgs.getImageSizes().getWidthOptions()[0].getDensityDescriptor());
+    assertTrue(mediaArgs.getImageSizes().getWidthOptions()[0].isMandatory());
+    assertFalse(mediaArgs.getImageSizes().getWidthOptions()[1].isMandatory());
+    assertEquals("[sizes=,widthOptions=5:1x,15:2x?]", mediaArgs.getImageSizes().toString());
+    assertEquals("15:2x?", mediaArgs.getImageSizes().getWidthOptions()[1].toString());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testPictureSourcesWidthOptions() {
+    MediaArgs mediaArgs = new MediaArgs();
+    mediaArgs.pictureSources(
+            new PictureSource(EDITORIAL_1COL).widths(10, 20, 30),
+            new PictureSource(EDITORIAL_2COL).widthOptions(
+                    new WidthOption(5),
+                    new WidthOption(15, "2x", false)));
+
+    assertNotNull(mediaArgs.getPictureSources());
+    assertEquals(2, mediaArgs.getPictureSources().length);
+
+    PictureSource source1 = mediaArgs.getPictureSources()[0];
+    assertNotNull(source1.getWidthOptions());
+    assertEquals(10L, source1.getWidthOptions()[0].getWidth());
+    assertNull(source1.getWidthOptions()[0].getDensity());
+    assertEquals("", source1.getWidthOptions()[0].getDensityDescriptor());
+    assertTrue(source1.getWidthOptions()[0].isMandatory());
+    assertEquals("[mediaFormat=Editorial Standard 1 Column (215x102px; 215:102; gif,jpg,png),widthOptions=10,20,30]", source1.toString());
+
+    PictureSource source2 = mediaArgs.getPictureSources()[1];
+    assertNotNull(source2.getWidthOptions());
+    assertEquals(15L, source2.getWidthOptions()[1].getWidth());
+    assertEquals("2x", source2.getWidthOptions()[1].getDensityDescriptor());
+    assertFalse(source2.getWidthOptions()[1].isMandatory());
+    assertEquals("[mediaFormat=Editorial Standard 2 Columns (450x213px; 75:35.5; gif,jpg,png),widthOptions=5,15:2x?]", source2.toString());
+  }
+
+  @Test
   @SuppressWarnings({
       "deprecation",
       "java:S5961" // ignore number of asserts
@@ -171,7 +230,10 @@ class MediaArgsTest {
     ImageSizes imageSizes = new ImageSizes("sizes1", new long[] { 1, 2, 3 });
     PictureSource[] pictureSourceSets = new PictureSource[] {
         new PictureSource(EDITORIAL_1COL).media("media1").widths(1,2,3),
-        new PictureSource(EDITORIAL_2COL).widths(4)
+        new PictureSource(EDITORIAL_2COL).widths(4),
+        new PictureSource(EDITORIAL_3COL).widthOptions(
+            new WidthOption(5, "1x", true),
+            new WidthOption(6, "2x", false))
     };
 
     MediaArgs mediaArgs = new MediaArgs();

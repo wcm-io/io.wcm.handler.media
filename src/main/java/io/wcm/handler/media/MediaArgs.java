@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -331,11 +332,13 @@ public final class MediaArgs implements Cloneable {
 
   /**
    * Enforces image file type for renditions.
+   *
    * <p>
    * By default, renditions are rendered with the same file type as the original rendition (except if the
    * original renditions uses a file type not directly supported in browser, e.g. a TIFF image).
    * With this parameter, it is possible to enforce generating renditions with this file type.
    * </p>
+   *
    * <p>
    * Supported file types: JPEG, PNG
    * </p>
@@ -347,11 +350,13 @@ public final class MediaArgs implements Cloneable {
 
   /**
    * Enforces image file type for renditions.
+   *
    * <p>
    * By default, renditions are rendered with the same file type as the original rendition (except if the
    * original renditions uses a file type not directly supported in browser, e.g. a TIFF image).
    * With this parameter, it is possible to enforce generating renditions with this file type.
    * </p>
+   *
    * <p>
    * Supported file types: JPEG, PNG
    * </p>
@@ -360,7 +365,7 @@ public final class MediaArgs implements Cloneable {
    */
   public @NotNull MediaArgs enforceOutputFileExtension(@Nullable String value) {
     if (!ALLOWED_FORCED_FILE_EXTENSIONS.contains(value)) {
-      throw new IllegalArgumentException("Allowed enfourced output file extensions: "
+      throw new IllegalArgumentException("Allowed enforced output file extensions: "
           + StringUtils.join(ALLOWED_FORCED_FILE_EXTENSIONS, ","));
     }
     this.enforceOutputFileExtension = value;
@@ -998,8 +1003,9 @@ public final class MediaArgs implements Cloneable {
     public ImageSizes(@NotNull String sizes, long @NotNull... widths) {
       this.sizes = sizes;
       this.widthOptions = Arrays.stream(widths)
+          .distinct()
           .mapToObj(width -> new WidthOption(width, true))
-          .toArray(size -> new WidthOption[size]);
+          .toArray(WidthOption[]::new);
     }
 
     /**
@@ -1025,6 +1031,14 @@ public final class MediaArgs implements Cloneable {
      */
     public @NotNull WidthOption @Nullable [] getWidthOptions() {
       return this.widthOptions;
+    }
+
+    /**
+     * @return whether density descriptors should be used instead of width descriptors.
+     */
+    public boolean hasDensityDescriptors() {
+      return StringUtils.isEmpty(this.sizes) &&
+              Arrays.stream(this.widthOptions).map(WidthOption::getDensity).anyMatch(Objects::nonNull);
     }
 
     @Override
@@ -1078,8 +1092,9 @@ public final class MediaArgs implements Cloneable {
 
     private static @NotNull WidthOption @NotNull [] toWidthOptions(long @NotNull... widths) {
       return Arrays.stream(widths)
+          .distinct()
           .mapToObj(width -> new WidthOption(width, true))
-          .toArray(size -> new WidthOption[size]);
+          .toArray(WidthOption[]::new);
     }
 
     /**
@@ -1157,6 +1172,14 @@ public final class MediaArgs implements Cloneable {
       return this.media;
     }
 
+    /**
+     * @return whether density descriptors should be used instead of width descriptors.
+     */
+    public boolean hasDensityDescriptors() {
+      return StringUtils.isEmpty(this.sizes) &&
+          Arrays.stream(this.widthOptions).map(WidthOption::getDensity).anyMatch(Objects::nonNull);
+    }
+
     @Override
     public int hashCode() {
       return HashCodeBuilder.reflectionHashCode(this);
@@ -1193,14 +1216,40 @@ public final class MediaArgs implements Cloneable {
 
     private final long width;
     private final boolean mandatory;
+    private final String density;
+
+    /**
+     * @param width mandatory width value
+     */
+    public WidthOption(long width) {
+      this(width, null, true);
+    }
+
+    /**
+     * @param width mandatory width value
+     * @param density pixel density, or null for default density (1x)
+     */
+    public WidthOption(long width, @Nullable String density) {
+      this(width, density, true);
+    }
 
     /**
      * @param width Width value
      * @param mandatory Is it mandatory to resolve a rendition with this width
      */
     public WidthOption(long width, boolean mandatory) {
+      this(width, null, mandatory);
+    }
+
+    /**
+     * @param width Width value
+     * @param density pixel density, or null for default density (1x)
+     * @param mandatory Is it mandatory to resolve a rendition with this width
+     */
+    public WidthOption(long width, @Nullable String density, boolean mandatory) {
       this.width = width;
       this.mandatory = mandatory;
+      this.density = density;
     }
 
     /**
@@ -1217,6 +1266,30 @@ public final class MediaArgs implements Cloneable {
       return this.mandatory;
     }
 
+    /**
+     * @return density descriptor or null
+     */
+    public @Nullable String getDensity() {
+      return density;
+    }
+
+    /**
+     * @return width descriptor for srcset, e.g. 200w
+     */
+    public @NotNull String getWidthDescriptor() {
+      return String.format("%dw", this.width);
+    }
+
+    /**
+     * @return density descriptor if it is not null and is not "1x", otherwise an empty string is returned
+     */
+    public @NotNull String getDensityDescriptor() {
+      if (StringUtils.isEmpty(this.density) || StringUtils.equalsIgnoreCase(this.density, "1x")) {
+        return StringUtils.EMPTY;
+      }
+      return this.density;
+    }
+
     @Override
     public int hashCode() {
       return HashCodeBuilder.reflectionHashCode(this);
@@ -1231,6 +1304,9 @@ public final class MediaArgs implements Cloneable {
     public String toString() {
       StringBuilder sb = new StringBuilder();
       sb.append(Long.toString(width));
+      if (density != null) {
+        sb.append(":").append(density);
+      }
       if (!mandatory) {
         sb.append("?");
       }

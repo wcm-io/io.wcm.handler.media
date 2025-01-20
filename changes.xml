@@ -19,9 +19,26 @@
   #L%
   -->
 
-<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/changes/1.0.0"
-    xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
+<document xmlns="http://maven.apache.org/changes/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
+
+    <release version="2.4.0" date="2025-01-20">
+      <action type="add" dev="mrozati" issue="77">
+        MediaArgs accepts width options with density descriptors to generate srcset attribute with density descriptors like 2x instead of width descriptors like 800w.
+        ResourceMedia and SimpleMadiaMarkupBuilder are also extended to support density descriptors, only when sizes is empty.
+      </action>
+      <action type="update" dev="sseifert" issue="84">
+        Dynamic Media with Open API: Provide access to rendition file size as provided by Dynamic Media.
+      </action>
+      <action type="update" dev="sseifert" issue="81">
+        Make package dependencies compatible with AEM 6.5.2025 (with oak-commons 1.68.0).
+      </action>
+      <action type="fix" dev="srikanthgurram" issue="82">
+        GraniteUI validator 'wcmio.handler.media.mediaFormat': Validation error not shown during subsequent requests.
+      </action>
+    </release>
 
     <release version="2.3.0" date="2024-12-10">
       <action type="add" dev="sseifert" issue="69">

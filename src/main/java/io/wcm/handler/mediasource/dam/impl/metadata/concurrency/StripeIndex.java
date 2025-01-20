@@ -21,6 +21,7 @@ package io.wcm.handler.mediasource.dam.impl.metadata.concurrency;
 
 /**
  * Maps keys to a striped index set. Each key is mapped to a index within the max stripe count.
+ *
  * <p>
  * The logic is extracted from <a href=
  * "https://github.com/google/guava/blob/master/guava/src/com/google/common/util/concurrent/Striped.java">Striped</a>,

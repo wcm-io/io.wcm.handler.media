@@ -32,6 +32,7 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
  * <i>stripes</i>, increasing the granularity of a single lock and allowing independent operations
  * to lock different stripes and proceed concurrently, instead of creating contention for a single
  * lock.
+ *
  * <p>
  * This is inspired by Guava's <a href=
  * "https://github.com/google/guava/blob/master/guava/src/com/google/common/util/concurrent/Striped.java">Striped</a>,
