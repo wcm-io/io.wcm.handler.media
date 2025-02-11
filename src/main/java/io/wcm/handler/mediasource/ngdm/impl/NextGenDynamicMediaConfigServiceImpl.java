@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -38,7 +39,7 @@ import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 /**
  * Wraps access to NextGenDynamicMediaConfig - which is deployed but not accessible on AEM 6.5.
  */
-@Component(service = NextGenDynamicMediaConfigService.class, immediate = true)
+@Component(service = NextGenDynamicMediaConfigService.class, immediate = true, configurationPolicy = ConfigurationPolicy.REQUIRE)
 @Designate(ocd = NextGenDynamicMediaConfigServiceImpl.Config.class)
 public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMediaConfigService {
 
