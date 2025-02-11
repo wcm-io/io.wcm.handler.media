@@ -20,6 +20,8 @@
 package io.wcm.handler.mediasource.ngdm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.json.JSONException;
@@ -61,6 +63,14 @@ class NextGenDynamicMediaConfigModelTest {
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
     JSONAssert.assertEquals("{repositoryId:'repo1',apiKey:'key1',env:'env1'}",
         underTest.getConfigJson(), true);
+  }
+
+  @Test
+  void testWithoutConfigService() {
+    NextGenDynamicMediaConfigModel underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaConfigModel.class);
+    assertFalse(underTest.isEnabled());
+    assertNull(underTest.getAssetSelectorsJsUrl());
+    assertNull(underTest.getConfigJson());
   }
 
 }
