@@ -1,6 +1,6 @@
 ## Dynamic Media with OpenAPI
 
-wcm.io Media Handler optionally supports the [Dynamic Media with OpenAPI][aem-nextgen-dm] feature of AEM as a Cloud Service for:
+wcm.io Media Handler optionally supports the [Dynamic Media with OpenAPI][aem-remote-assets] feature of AEM as a Cloud Service for:
 
 * Rendering renditions including resizing and cropping
 * Delivery via Dynamic Media with OpenAPI CDN
