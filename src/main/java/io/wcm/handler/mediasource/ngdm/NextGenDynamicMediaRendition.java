@@ -102,7 +102,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
     }
     else if (isVectorImage()) {
       // calculate width/height for rendition metadata
-      calculateWidthHeight();
+      calculateWidthHeightVectorImage();
       // deliver as binary
       this.url = buildBinaryUrl();
     }
@@ -161,6 +161,20 @@ final class NextGenDynamicMediaRendition implements Rendition {
       else if (originalDimension != null) {
         this.width = Math.round(this.requestedHeight * Ratio.get(originalDimension));
       }
+    }
+  }
+
+  /**
+   * Recalculates width and/or height based on requested media format, ratio and original dimensions.
+   * For vector images, original dimensions are used, if present.
+   */
+  private void calculateWidthHeightVectorImage() {
+    if (this.originalDimension != null) {
+      this.width = this.originalDimension.getWidth();
+      this.height = this.originalDimension.getHeight();
+    }
+    else {
+      calculateWidthHeight();
     }
   }
 
