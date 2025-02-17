@@ -57,16 +57,9 @@ class RenditionMetadataTest extends AbstractDamTest {
     Asset asset = media.getAsset().adaptTo(Asset.class);
 
     originalRendition = new RenditionMetadata(asset.getRendition("original"));
-    assertNotNull(originalRendition);
-
     originalRenditionCopy = new RenditionMetadata(asset.getRendition("cq5dam.thumbnail.215.102.jpg"));
-    assertNotNull(originalRenditionCopy);
-
     smallestRendition = new RenditionMetadata(asset.getRendition("cq5dam.web.450.213.jpg"));
-    assertNotNull(smallestRendition);
-
     biggestRendition = new RenditionMetadata(asset.getRendition("cq5dam.web.960.455.jpg"));
-    assertNotNull(biggestRendition);
   }
 
   /**
@@ -148,7 +141,6 @@ class RenditionMetadataTest extends AbstractDamTest {
     Asset asset = context.create().asset("/content/dam/sample.svg", "/filetype/sample.svg", ContentType.SVG);
 
     originalRendition = new RenditionMetadata(asset.getRendition("original"));
-    assertNotNull(originalRendition);
 
     assertTrue(originalRendition.matches(400, 100, 400, 100, 0, 0d));
     assertFalse(originalRendition.matches(400, 100, 400, 100, 0, 4d));
