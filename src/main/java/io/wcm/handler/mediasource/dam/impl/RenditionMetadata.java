@@ -252,7 +252,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   /**
-   * Checks if this rendition matches the given width/height/ration restrictions.
+   * Checks if this rendition matches the given width/height/ratio restrictions.
+   * For vector images, min. width/height restrictions are ignored.
    * @param minWidth Min. width
    * @param minHeight Min. height
    * @param maxWidth Max. width
@@ -261,21 +262,24 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @param ratio Ratio
    * @return true if matches
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   public boolean matches(long minWidth, long minHeight, long maxWidth, long maxHeight, long minWidthHeight, double ratio) {
-    if (minWidthHeight > 0 && (getWidth() < minWidthHeight && getHeight() < minWidthHeight)) {
-      return false;
-    }
-    if (minWidth > 0 && getWidth() < minWidth) {
-      return false;
-    }
-    if (minHeight > 0 && getHeight() < minHeight) {
-      return false;
-    }
-    if (maxWidth > 0 && getWidth() > maxWidth) {
-      return false;
-    }
-    if (maxHeight > 0 && getHeight() > maxHeight) {
-      return false;
+    if (!isVectorImage()) {
+      if (minWidthHeight > 0 && (getWidth() < minWidthHeight && getHeight() < minWidthHeight)) {
+        return false;
+      }
+      if (minWidth > 0 && getWidth() < minWidth) {
+        return false;
+      }
+      if (minHeight > 0 && getHeight() < minHeight) {
+        return false;
+      }
+      if (maxWidth > 0 && getWidth() > maxWidth) {
+        return false;
+      }
+      if (maxHeight > 0 && getHeight() > maxHeight) {
+        return false;
+      }
     }
     if (ratio > 0) {
       double renditionRatio = Ratio.get(getWidth(), getHeight());
