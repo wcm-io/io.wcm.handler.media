@@ -252,7 +252,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   }
 
   /**
-   * Checks if this rendition matches the given width/height/ration restrictions.
+   * Checks if this rendition matches the given width/height/ratio restrictions.
    * For vector images, min. width/height restrictions are ignored.
    * @param minWidth Min. width
    * @param minHeight Min. height
@@ -262,6 +262,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @param ratio Ratio
    * @return true if matches
    */
+  @SuppressWarnings("java:S3776") // ignore complexity
   public boolean matches(long minWidth, long minHeight, long maxWidth, long maxHeight, long minWidthHeight, double ratio) {
     if (!isVectorImage()) {
       if (minWidthHeight > 0 && (getWidth() < minWidthHeight && getHeight() < minWidthHeight)) {

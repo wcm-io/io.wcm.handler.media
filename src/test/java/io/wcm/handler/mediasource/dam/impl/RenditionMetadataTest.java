@@ -38,6 +38,7 @@ import com.day.image.Layer;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.mediasource.dam.AbstractDamTest;
+import io.wcm.wcm.commons.contenttype.ContentType;
 
 /**
  * Tests the {@link RenditionMetadata}, especially the compareTo method
@@ -140,6 +141,21 @@ class RenditionMetadataTest extends AbstractDamTest {
 
     assertTrue(smallestRendition.matches(0, 0, 0, 0, 0, 2.11d));
     assertFalse(smallestRendition.matches(0, 0, 0, 0, 0, 2.2d));
+  }
+
+  @Test
+  void testMatchesSpec_SVG() {
+    Asset asset = context.create().asset("/content/dam/sample.svg", "/filetype/sample.svg", ContentType.SVG);
+
+    originalRendition = new RenditionMetadata(asset.getRendition("original"));
+    assertNotNull(originalRendition);
+
+    assertTrue(originalRendition.matches(400, 100, 400, 100, 0, 0d));
+    assertFalse(originalRendition.matches(400, 100, 400, 100, 0, 4d));
+
+    assertTrue(originalRendition.matches(200, 100, 200, 100, 0, 2d)); // allow SVG upscaling
+    assertTrue(originalRendition.matches(100, 50, 100, 50, 0, 2d));
+    assertTrue(originalRendition.matches(50, 25, 50, 25, 0, 2d));
   }
 
   @Test
