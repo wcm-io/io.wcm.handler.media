@@ -292,6 +292,7 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.svg");
 
     Media media = mediaHandler.get(downloadResource)
+        .fixedWidth(1200)
         .build();
     assertTrue(media.isValid());
 
