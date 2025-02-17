@@ -101,8 +101,14 @@ final class NextGenDynamicMediaRendition implements Rendition {
       this.url = buildBinaryUrl();
     }
     else if (isVectorImage()) {
-      // calculate width/height for rendition metadata
-      calculateWidthHeight();
+      if (this.originalDimension != null) {
+        // set original width/height for vector image
+        this.width = this.originalDimension.getWidth();
+        this.height = this.originalDimension.getHeight();
+      }
+      else {
+        calculateWidthHeight();
+      }
       // deliver as binary
       this.url = buildBinaryUrl();
     }
