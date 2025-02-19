@@ -204,6 +204,27 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
     assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/my-image.jpg", rendition.getUrl());
   }
 
+  @Test
+  @SuppressWarnings("null")
+  void testSVG() {
+    Resource downloadResource = context.create().resource(context.currentPage(), "image",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.svg");
+
+    Media media = mediaHandler.get(downloadResource)
+        .fixedWidth(1200)
+        .fixedHeight(800)
+        .build();
+    assertTrue(media.isValid());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals(ContentType.SVG, rendition.getMimeType());
+    assertEquals(1200, rendition.getWidth());
+    assertEquals(800, rendition.getHeight());
+    assertEquals("https://repo1/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.svg",
+        rendition.getUrl());
+  }
+
   private static void assertUrl(Media media, String urlParams, String extension) {
     assertEquals(buildUrl(urlParams, extension), media.getUrl());
   }

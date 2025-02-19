@@ -26,6 +26,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
 import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +49,7 @@ public final class NextGenDynamicMediaConfigModel {
   private static final JsonMapper MAPPER = JsonMapper.builder().build();
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigModel.class);
 
-  @OSGiService
+  @OSGiService(injectionStrategy = InjectionStrategy.OPTIONAL)
   private NextGenDynamicMediaConfigService config;
 
   private boolean enabled;
@@ -57,9 +58,11 @@ public final class NextGenDynamicMediaConfigModel {
 
   @PostConstruct
   private void activate() {
-    enabled = config.isEnabledRemoteAssets();
-    assetSelectorsJsUrl = config.getAssetSelectorsJsUrl();
-    configJson = buildConfigJsonString(config);
+    if (config != null) {
+      enabled = config.isEnabledRemoteAssets();
+      assetSelectorsJsUrl = config.getAssetSelectorsJsUrl();
+      configJson = buildConfigJsonString(config);
+    }
   }
 
   private static String buildConfigJsonString(@NotNull NextGenDynamicMediaConfigService config) {
