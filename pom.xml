@@ -216,7 +216,7 @@
     <dependency>
       <groupId>org.wiremock</groupId>
       <artifactId>wiremock</artifactId>
-      <!-- Stich with version 3.4.0 because recent versions require a newer Jackson version -->
+      <!-- Stick with version 3.4.0 because recent versions require a newer Jackson version -->
       <version>3.4.0</version>
       <scope>test</scope>
     </dependency>    
