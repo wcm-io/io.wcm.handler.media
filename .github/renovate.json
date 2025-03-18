@@ -6,6 +6,7 @@
     "github>wcm-io/renovate-config:automerge-testing"
   ],
   "ignoreDeps": [
+    "com.day.commons:day-commons-gfx",
     "org.wiremock:wiremock"
   ]
 }
