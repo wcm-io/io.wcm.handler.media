@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -110,7 +111,7 @@ class NextGenDynamicMediaReferenceTest {
   void testFromDamAssetReference_AssetWithUUID_Approved() {
     Asset asset = context.create().asset("/content/dam/" + SAMPLE_FILENAME, 10, 10, ContentType.JPEG,
         ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
-    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    ModifiableValueMap props = AdaptTo.notNull(AdaptTo.notNull(asset, Resource.class), ModifiableValueMap.class);
     props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
 
     NextGenDynamicMediaReference underTest = NextGenDynamicMediaReference.fromDamAssetReference(asset.getPath(),

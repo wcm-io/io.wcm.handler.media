@@ -406,7 +406,7 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
     }
     Asset asset = context.create().asset("/content/dam/" + fileName, classpathResource, contentType, metadata);
     context.create().assetRendition(asset, "cq5dam.web.sample." + fileExtension, classpathResource, contentType);
-    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    ModifiableValueMap props = AdaptTo.notNull(AdaptTo.notNull(asset, Resource.class), ModifiableValueMap.class);
     props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
     return asset;
   }
