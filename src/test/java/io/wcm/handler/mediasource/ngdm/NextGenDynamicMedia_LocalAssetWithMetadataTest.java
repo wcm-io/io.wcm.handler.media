@@ -194,7 +194,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testLocalAsset_NonExistingUUID() {
     com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 10, 10, ContentType.JPEG);
-    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    ModifiableValueMap props = AdaptTo.notNull(AdaptTo.notNull(asset, Resource.class), ModifiableValueMap.class);
     props.put(JcrConstants.JCR_UUID, NOT_FOUND_ASSET_UUID);
 
     resource = context.create().resource(context.currentPage(), "local-asset",
@@ -235,7 +235,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   private Resource prepareResourceWithApprovedLocalAsset() {
     com.day.cq.dam.api.Asset asset = context.create().asset("/content/dam/my-image.jpg", 1200, 800, ContentType.JPEG,
         ASSET_STATUS_PROPERTY, ASSET_STATUS_APPROVED);
-    ModifiableValueMap props = AdaptTo.notNull(asset, ModifiableValueMap.class);
+    ModifiableValueMap props = AdaptTo.notNull(AdaptTo.notNull(asset, Resource.class), ModifiableValueMap.class);
     props.put(JcrConstants.JCR_UUID, SAMPLE_UUID);
 
     return context.create().resource(context.currentPage(), "local-asset",
