@@ -363,24 +363,6 @@
       </plugin>
 
     </plugins>
-    <pluginManagement>
-    
-      <!-- Disable parallel unit tests for all environment -->
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <properties>
-              <configurationParameters>
-                junit.jupiter.execution.parallel.enabled = false
-              </configurationParameters>
-            </properties>
-          </configuration>
-        </plugin>
-      </plugins>
-
-    </pluginManagement>
   </build>
 
   <reporting>
