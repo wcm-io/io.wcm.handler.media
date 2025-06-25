@@ -29,7 +29,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * Used for Jackson Object mapping of JSON response from NGDM HTTP API.
  */
-@SuppressWarnings({ "checkstyle:VisibilityModifierCheck", "java:S1104" })
+@SuppressWarnings({ "checkstyle:VisibilityModifierCheck", "checkstyle:JavadocVariable", "java:S1104" })
 @SuppressFBWarnings("UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD")
 @JsonIgnoreProperties(ignoreUnknown = true)
 final class MetadataResponse {

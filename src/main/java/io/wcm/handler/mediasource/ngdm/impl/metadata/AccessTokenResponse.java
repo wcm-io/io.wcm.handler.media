@@ -22,13 +22,10 @@ package io.wcm.handler.mediasource.ngdm.impl.metadata;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 /**
  * Used for Jackson Object mapping of JSON response from IMS Token v3 API.
  */
-@SuppressWarnings({ "checkstyle:VisibilityModifierCheck", "java:S1104" })
-@SuppressFBWarnings("UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD")
+@SuppressWarnings({ "checkstyle:VisibilityModifierCheck", "checkstyle:JavadocVariable", "java:S1104" })
 @JsonIgnoreProperties(ignoreUnknown = true)
 final class AccessTokenResponse {
 

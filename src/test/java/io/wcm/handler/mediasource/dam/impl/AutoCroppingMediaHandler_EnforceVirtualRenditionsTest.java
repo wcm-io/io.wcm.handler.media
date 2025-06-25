@@ -36,7 +36,7 @@ class AutoCroppingMediaHandler_EnforceVirtualRenditionsTest extends AutoCropping
 
   @Override
   @BeforeEach
-  protected void setUp() {
+  void setUp() {
     DummyMediaHandlerConfig config = new DummyMediaHandlerConfig();
     config.setEnforceVirtualRenditions(true);
     context.registerService(MediaHandlerConfig.class, config,

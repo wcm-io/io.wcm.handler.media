@@ -39,7 +39,6 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.sling.commons.request.RequestPath;
 import io.wcm.wcm.commons.caching.CacheHeader;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -52,7 +51,6 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
   @Override
-  @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
   protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response) throws ServletException, IOException {
 
     // get binary data resource

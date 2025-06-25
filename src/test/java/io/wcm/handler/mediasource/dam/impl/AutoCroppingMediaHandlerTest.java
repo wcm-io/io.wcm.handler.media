@@ -56,7 +56,7 @@ class AutoCroppingMediaHandlerTest {
   private Resource resource;
 
   @BeforeEach
-  protected void setUp() {
+  void setUp() {
     // register RenditionMetadataListenerService to generate rendition metadata
     context.registerInjectActivateService(new AssetSynchonizationService());
     context.registerInjectActivateService(new RenditionMetadataListenerService(),

@@ -121,7 +121,7 @@ public final class MediaHandlerImpl implements MediaHandler {
       "java:S112", // allow runtime exception
       "java:S1192" // multiple strings
   })
-  @SuppressFBWarnings({ "CORRECTNESS", "STYLE" })
+  @SuppressFBWarnings({ "STYLE" })
   Media processRequest(@NotNull final MediaRequest mediaRequest) {
 
     // detect media source
