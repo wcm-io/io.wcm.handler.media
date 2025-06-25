@@ -28,7 +28,7 @@
       <action type="update" dev="sseifert" issue="101">
         global.jsp: Get rid of deprecated Granite XSS API.
       </action>
-      <action type="update" dev="sseifert">
+      <action type="update" dev="sseifert" issue="102">
         Mediaformats Data Source JSP: Switch to Commons Collections 4.
       </action>
     </release>
