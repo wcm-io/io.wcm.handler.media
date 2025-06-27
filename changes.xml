@@ -25,7 +25,7 @@
   <body>
 
     <release version="2.5.0" date="not released">
-      <action type="add" dev="sseifert"><![CDATA[
+      <action type="add" dev="sseifert" issue="103"><![CDATA[
         Dynamic Media: Make response image format (<code>fmt</code> URL parameter) configurable via OSGi for images with and without alpha channel.<br/>
         <b>Breaking change:</b> The default format for images with alpha channel has changed from "png-alpha" to "webp-alpha". Your can restore the previous behavior by setting <code>defaultFmtAlpha</code> to "png-alpha" via OSGi configuration.
       ]]></action>
