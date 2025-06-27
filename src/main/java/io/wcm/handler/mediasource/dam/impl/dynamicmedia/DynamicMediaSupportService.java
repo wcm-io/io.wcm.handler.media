@@ -70,6 +70,21 @@ public interface DynamicMediaSupportService {
   boolean isSetImageQuality();
 
   /**
+   * @return Default response image format. If empty, the default setting that is configured on the Dynamic Media server
+   *         environment is used. Accepts the same values as the 'fmt' parameter from the Dynamic Media Image Service
+   *         API.
+   */
+  @NotNull
+  String getDefaultFmt();
+
+  /**
+   * @return Default response image format for source images that may have an alpha channel (e.g. for PNG). Accepts the
+   *         same values as the 'fmt' parameter from the Dynamic Media Image Service API.
+   */
+  @NotNull
+  String getDefaultFmtAlpha();
+
+  /**
    * Get image profile.
    * @param profilePath Full profile path
    * @return Profile or null if no profile found

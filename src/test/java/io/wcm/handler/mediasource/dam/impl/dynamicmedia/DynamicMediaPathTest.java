@@ -88,16 +88,18 @@ class DynamicMediaPathTest {
   }
 
   @Test
-  void testWidthHeight_DisableSetImageQuality() {
+  void testWidthHeight_DisableSetImageQuality_DefaultFmt() {
     // disable setImageQuality option
     dynamicMediaSupportService = context.registerInjectActivateService(DynamicMediaSupportServiceImpl.class,
         "setImageQuality", false,
+        "defaultFmt", "avif",
+        "defaultFmtAlpha", "avif-alpha",
         Constants.SERVICE_RANKING, 1000);
     damContext = new DamContext(asset, new MediaArgs(), mediaHandlerConfig,
         dynamicMediaSupportService, webOptimizedImageDeliveryService, context.request());
 
     String result = DynamicMediaPath.buildImage(damContext, 30, 25);
-    assertEquals("/is/image/DummyFolder/test?wid=30&hei=25&fit=stretch", result);
+    assertEquals("/is/image/DummyFolder/test?wid=30&hei=25&fit=stretch&fmt=avif", result);
   }
 
   @Test
@@ -196,7 +198,7 @@ class DynamicMediaPathTest {
         dynamicMediaSupportService, webOptimizedImageDeliveryService, context.request());
 
     String result = DynamicMediaPath.buildImage(damContext, 30, 20, new CropDimension(5, 2, 10, 8), null);
-    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&wid=30&hei=20&fit=stretch&fmt=png-alpha", result);
+    assertEquals("/is/image/DummyFolder/test?crop=5,2,10,8&wid=30&hei=20&fit=stretch&fmt=webp-alpha", result);
   }
 
 }

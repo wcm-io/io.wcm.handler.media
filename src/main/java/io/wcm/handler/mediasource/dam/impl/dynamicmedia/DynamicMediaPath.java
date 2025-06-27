@@ -147,17 +147,26 @@ public final class DynamicMediaPath {
   }
 
   private static void appendWidthHeigtFormatQuality(@NotNull StringBuilder result, @NotNull Dimension dimension, @NotNull DamContext damContext) {
-    result.append("wid=").append(dimension.getWidth()).append("&")
-        .append("hei=").append(dimension.getHeight()).append("&")
+    result.append("wid=").append(dimension.getWidth())
+        .append("&hei=").append(dimension.getHeight())
         // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
-        .append("fit=stretch");
-    if (isPNG(damContext)) {
-      // if original image is PNG image, make sure alpha channel is preserved
-      result.append("&fmt=png-alpha");
+        .append("&fit=stretch");
+    // if original image may have an alpha channel, make sure it's preserved in the output format
+    if (mayHaveAlphaChannel(damContext)) {
+      applyFmt(result, damContext.getDynamicMediaDefaultFmtAlpha());
     }
-    else if (damContext.isDynamicMediaSetImageQuality()) {
+    else {
+      applyFmt(result, damContext.getDynamicMediaDefaultFmt());
+    }
+    if (damContext.isDynamicMediaSetImageQuality() && !isLosslessImageFormat(damContext)) {
       // it not PNG lossy format is used, apply image quality setting
       result.append("&qlt=").append(ImageQualityPercentage.getAsInteger(damContext.getMediaArgs(), damContext.getMediaHandlerConfig()));
+    }
+  }
+
+  private static void applyFmt(@NotNull StringBuilder result, @NotNull String fmt) {
+    if (StringUtils.isNotBlank(fmt)) {
+      result.append("&fmt=").append(fmt);
     }
   }
 
@@ -206,8 +215,24 @@ public final class DynamicMediaPath {
     return StringUtils.join(pathParts, "/");
   }
 
-  private static boolean isPNG(@NotNull DamContext damContext) {
-    return StringUtils.equals(damContext.getAsset().getMimeType(), ContentType.PNG);
+  /**
+   * Checks if the asset is an image format that may have an alpha channel.
+   * @param damContext DAM context
+   * @return true if the asset may have an alpha channel
+   */
+  private static boolean mayHaveAlphaChannel(@NotNull DamContext damContext) {
+    String mimeType = damContext.getAsset().getMimeType();
+    return StringUtils.equalsAny(mimeType, ContentType.PNG, ContentType.WEBP);
+  }
+
+  /**
+   * Checks if the asset is a lossless image format.
+   * @param damContext DAM context
+   * @return true if the asset has a lossless image format
+   */
+  private static boolean isLosslessImageFormat(@NotNull DamContext damContext) {
+    String mimeType = damContext.getAsset().getMimeType();
+    return StringUtils.equals(mimeType, ContentType.PNG);
   }
 
 }

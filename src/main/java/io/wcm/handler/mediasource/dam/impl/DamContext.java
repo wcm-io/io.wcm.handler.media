@@ -172,6 +172,23 @@ public final class DamContext implements Adaptable {
   }
 
   /**
+   * @return Default response image format. If empty, the default setting that is configured on the Dynamic Media server
+   *         environment is used. Accepts the same values as the 'fmt' parameter from the Dynamic Media Image Service
+   *         API.
+   */
+  public @NotNull String getDynamicMediaDefaultFmt() {
+    return dynamicMediaSupportService.getDefaultFmt();
+  }
+
+  /**
+   * @return Default response image format for source images that may have an alpha channel (e.g. for PNG). Accepts the
+   *         same values as the 'fmt' parameter from the Dynamic Media Image Service API.
+   */
+  public @NotNull String getDynamicMediaDefaultFmtAlpha() {
+    return dynamicMediaSupportService.getDefaultFmtAlpha();
+  }
+
+  /**
    * @return Dynamic media reply image size limit
    */
   public @NotNull Dimension getDynamicMediaImageSizeLimit() {
