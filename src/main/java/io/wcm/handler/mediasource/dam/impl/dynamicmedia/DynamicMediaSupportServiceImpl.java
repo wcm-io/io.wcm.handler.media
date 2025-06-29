@@ -110,6 +110,19 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
         description = "Control image quality for lossy output formats for each media request via 'qlt' URL parameter (instead of relying on default setting within Dynamic Media).")
     boolean setImageQuality() default true;
 
+    @AttributeDefinition(
+        name = "Default Format",
+        description = "Default response image format. "
+            + "If empty, the default setting that is configured on the Dynamic Media server environment is used. "
+            + "Accepts the same values as the 'fmt' parameter from the Dynamic Media Image Service API.")
+    String defaultFmt() default "";
+
+    @AttributeDefinition(
+        name = "Default Format Alpha Channel",
+        description = "Default response image format for source images that may have an alpha channel (e.g. for PNG). "
+            + "Accepts the same values as the 'fmt' parameter from the Dynamic Media Image Service API.")
+    String defaultFmtAlpha() default "webp-alpha";
+
   }
 
   @Reference
@@ -124,6 +137,8 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   private boolean validateSmartCropRenditionSizes;
   private Dimension imageSizeLimit;
   private boolean setImageQuality;
+  private String defaultFmt;
+  private String defaultFmtAlpha;
 
   private static final String SERVICEUSER_SUBSERVICE = "dynamic-media-support";
   private static final Pattern DAM_PATH_PATTERN = Pattern.compile("^/content/dam(/.*)?$");
@@ -139,6 +154,8 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     this.validateSmartCropRenditionSizes = config.validateSmartCropRenditionSizes();
     this.imageSizeLimit = new Dimension(config.imageSizeLimitWidth(), config.imageSizeLimitHeight());
     this.setImageQuality = config.setImageQuality();
+    this.defaultFmt = StringUtils.trim(config.defaultFmt());
+    this.defaultFmtAlpha = StringUtils.trim(config.defaultFmtAlpha());
 
     if (this.enabled) {
       log.info("DynamicMediaSupport: enabled={}, capabilityEnabled={}, capabilityDetection={}, "
@@ -183,7 +200,18 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
 
   @Override
   public boolean isSetImageQuality() {
-    return setImageQuality;
+    return this.setImageQuality;
+  }
+
+
+  @Override
+  public @NotNull String getDefaultFmt() {
+    return this.defaultFmt;
+  }
+
+  @Override
+  public @NotNull String getDefaultFmtAlpha() {
+    return this.defaultFmtAlpha;
   }
 
   @Override

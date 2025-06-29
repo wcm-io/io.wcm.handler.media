@@ -24,7 +24,11 @@
     xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
 
-    <release version="2.4.4" date="not released">
+    <release version="2.5.0" date="not released">
+      <action type="add" dev="sseifert" issue="103"><![CDATA[
+        Dynamic Media: Make response image format (<code>fmt</code> URL parameter) configurable via OSGi for images with and without alpha channel.<br/>
+        <b>Breaking change:</b> The default format for images with alpha channel has changed from "png-alpha" to "webp-alpha". Your can restore the previous behavior by setting <code>defaultFmtAlpha</code> to "png-alpha" via OSGi configuration.
+      ]]></action>
       <action type="update" dev="sseifert" issue="101">
         global.jsp: Get rid of deprecated Granite XSS API.
       </action>
