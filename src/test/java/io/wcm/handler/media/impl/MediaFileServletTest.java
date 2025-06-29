@@ -24,10 +24,18 @@ import static io.wcm.handler.media.impl.MediaFileServletConstants.HEADER_CONTENT
 import static io.wcm.handler.media.impl.MediaFileServletConstants.SELECTOR_DOWNLOAD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
+
+import java.io.InputStream;
+import java.net.URI;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.external.ExternalizableInputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -121,6 +129,25 @@ class MediaFileServletTest {
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getOutput().length);
     assertEquals(EXPECTED_CONTENT_LENGTH, context.response().getContentLength());
     assertEquals("attachment;filename=\"sample_image.jpg\"", context.response().getHeader(HEADER_CONTENT_DISPOSITION));
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testGet_ExternalizableInputStream() throws Exception {
+    // prepare ExternalizableInputStream
+    final String EXTERNAL_IMAGE_URI = "https://example.com/sample_image.jpg";
+    InputStream is = mock(InputStream.class, withSettings().extraInterfaces(ExternalizableInputStream.class));
+    ExternalizableInputStream externalizableInputStream = (ExternalizableInputStream)is;
+    when(externalizableInputStream.getURI()).thenReturn(new URI(EXTERNAL_IMAGE_URI));
+
+    Resource resource = spy(context.currentResource());
+    when(resource.adaptTo(InputStream.class)).thenReturn(is);
+    context.currentResource(resource);
+
+    underTest.service(context.request(), context.response());
+
+    assertEquals(HttpServletResponse.SC_MOVED_TEMPORARILY, context.response().getStatus());
+    assertEquals(EXTERNAL_IMAGE_URI, context.response().getHeader("Location"));
   }
 
   @Test

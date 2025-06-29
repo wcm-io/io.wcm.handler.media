@@ -68,7 +68,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
 
   @Override
   @SuppressWarnings("java:S3776") // ignore complexity
-  protected byte @Nullable [] getBinaryData(@NotNull Resource resource, @NotNull SlingHttpServletRequest request) throws IOException {
+  protected @NotNull BinaryDataResponse getBinaryData(@NotNull Resource resource, @NotNull SlingHttpServletRequest request) throws IOException {
     // get media app config
     MediaHandlerConfig config = AdaptTo.notNull(request, MediaHandlerConfig.class);
 
@@ -82,12 +82,12 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
 
     // ensure valid image size
     if (width < 0 || height < 0 || (width == 0 && height == 0)) {
-      return null;
+      return BinaryDataResponse.invalid();
     }
 
     Layer layer = ResourceLayerUtil.toLayer(resource, assetStore);
     if (layer == null) {
-      return null;
+      return BinaryDataResponse.invalid();
     }
 
     // if only width or only height is given - derive other value from ratio
@@ -142,7 +142,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     layer.write(contentType, layerQuality, bos);
     bos.flush();
-    return bos.toByteArray();
+    return BinaryDataResponse.binaryData(bos.toByteArray());
   }
 
   @Override

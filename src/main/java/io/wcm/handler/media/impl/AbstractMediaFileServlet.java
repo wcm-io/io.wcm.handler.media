@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.external.ExternalizableInputStream;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,13 +67,19 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
     }
 
     // get binary data and send to client
-    byte[] binaryData = getBinaryData(resource, request);
-    if (binaryData == null || binaryData.length == 0) {
-      response.sendError(HttpServletResponse.SC_NOT_FOUND);
-    }
-    else {
+    BinaryDataResponse binaryDataResponse = getBinaryData(resource, request);
+    byte[] binaryData = binaryDataResponse.getBinaryData();
+    String redirectUrl = binaryDataResponse.getRedirectUrl();
+    if (binaryData != null && binaryData.length > 0) {
       String contentType = getContentType(resource, request);
       sendBinaryData(binaryData, contentType, request, response);
+    }
+    // redirect to external binary data URL
+    else if (redirectUrl != null) {
+      response.sendRedirect(redirectUrl);
+    }
+    else {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
   }
@@ -106,14 +113,20 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @param resource Resource
    * @return Binary data or null if not binary data found
    */
-  protected byte @Nullable [] getBinaryData(@NotNull Resource resource,
+  protected @NotNull BinaryDataResponse getBinaryData(@NotNull Resource resource,
       @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {
-      return null;
+      return BinaryDataResponse.invalid();
     }
     try {
-      return IOUtils.toByteArray(is);
+      if (is instanceof ExternalizableInputStream) {
+        String redirectUrl = ((ExternalizableInputStream)is).getURI().toString();
+        return BinaryDataResponse.redirectUrl(redirectUrl);
+      }
+      else {
+        return BinaryDataResponse.binaryData(IOUtils.toByteArray(is));
+      }
     }
     finally {
       is.close();
