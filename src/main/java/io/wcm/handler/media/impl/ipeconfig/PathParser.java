@@ -29,7 +29,11 @@ import org.apache.commons.lang3.StringUtils;
 
 class PathParser {
 
+  /**
+   * Aspect ratios node name
+   */
   public static final String NN_ASPECT_RATIOS = "aspectRatios";
+
   static final String NN_MEDIA_FORMAT = "wcmio:mediaFormat";
   static final String NN_CONFIG = "wcmio:config";
 

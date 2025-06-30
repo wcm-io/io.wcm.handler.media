@@ -168,7 +168,7 @@ class MediaHandlerImplEnd2EndDynamicMediaSmartCropTest {
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(1, renditions.size());
-    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=133&hei=100&fit=stretch&fmt=png-alpha", renditions.get(0).getUrl());
+    assertEquals("https://dummy.scene7.com/is/image/DummyFolder/test%3A4-3?wid=133&hei=100&fit=stretch&fmt=webp-alpha", renditions.get(0).getUrl());
   }
 
 

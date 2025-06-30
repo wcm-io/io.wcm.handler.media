@@ -24,6 +24,19 @@
     xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
 
+    <release version="2.5.0" date="2025-06-30">
+      <action type="add" dev="sseifert" issue="103"><![CDATA[
+        Dynamic Media: Make response image format (<code>fmt</code> URL parameter) configurable via OSGi for images with and without alpha channel.<br/>
+        <b>Breaking change:</b> The default format for images with alpha channel has changed from "png-alpha" to "webp-alpha". Your can restore the previous behavior by setting <code>defaultFmtAlpha</code> to "png-alpha" via OSGi configuration.
+      ]]></action>
+      <action type="update" dev="sseifert" issue="101">
+        global.jsp: Get rid of deprecated Granite XSS API.
+      </action>
+      <action type="update" dev="sseifert" issue="102">
+        Mediaformats Data Source JSP: Switch to Commons Collections 4.
+      </action>
+    </release>
+
     <release version="2.4.2" date="2025-02-19">
       <action type="fix" dev="sseifert" issue="85">
         Dynamic Media with Open API: Enable only when OSGi configuration for "wcm.io Media Handler Dynamic Media with OpenAPI Support" is present to avoid problems in AEM 6.5.

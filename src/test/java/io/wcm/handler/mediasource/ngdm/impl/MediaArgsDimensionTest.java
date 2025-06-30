@@ -28,9 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-
-import com.drew.lang.annotations.NotNull;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;

@@ -30,8 +30,8 @@
 <%@page import="io.wcm.handler.media.format.MediaFormatHandler"%>
 <%@page import="io.wcm.handler.media.format.MediaFormatProviderManager"%>
 <%@page import="io.wcm.wcm.ui.granite.util.GraniteUi"%>
-<%@page import="org.apache.commons.collections.Transformer"%>
-<%@page import="org.apache.commons.collections.iterators.TransformIterator"%>
+<%@page import="org.apache.commons.collections4.Transformer"%>
+<%@page import="org.apache.commons.collections4.iterators.TransformIterator"%>
 <%@page import="org.apache.sling.api.resource.Resource"%>
 <%@page import="org.apache.sling.api.resource.ResourceResolver"%>
 <%@page import="org.apache.sling.api.resource.ResourceMetadata"%>
