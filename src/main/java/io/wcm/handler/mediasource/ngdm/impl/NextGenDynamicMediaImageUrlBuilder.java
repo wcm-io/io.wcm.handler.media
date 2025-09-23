@@ -49,7 +49,8 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  *
  * <p>
  * Example URL that might be build:
- * https://host/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg?quality=85&width=300&crop=16:9,smart
+ * https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg?quality=60&smartcrop=Landscape&width=100
+ * https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg?crop=16.7p%2C0.0p%2C66.7p%2C100.0p&quality=60&width=100
  * </p>
  */
 public final class NextGenDynamicMediaImageUrlBuilder {
