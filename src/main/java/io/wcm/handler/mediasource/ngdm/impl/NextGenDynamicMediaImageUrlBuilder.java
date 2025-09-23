@@ -199,9 +199,8 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       CropDimension cropDimension = ImageTransformation.calculateAutoCropDimension(
           orginalDimension.getWidth(), orginalDimension.getHeight(), Ratio.get(requestedRatio));
       urlParamMap.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
-      if (!applyWidthOrPlaceholder(params, urlParamMap)) {
-        applyHeightOrPlaceholder(params, urlParamMap);
-      }
+      applyWidthOrPlaceholder(params, urlParamMap);
+      applyHeightOrPlaceholder(params, urlParamMap);
     }
     else {
       // No cropping required or insufficient metadata available to detect cropping
