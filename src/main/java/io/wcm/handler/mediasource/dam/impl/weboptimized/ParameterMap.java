@@ -35,6 +35,7 @@ import com.day.cq.dam.api.Rendition;
 
 import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
+import io.wcm.handler.media.impl.RelativeCroppingString;
 import io.wcm.handler.mediasource.dam.AssetRendition;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 

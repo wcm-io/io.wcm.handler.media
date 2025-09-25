@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.weboptimized;
+package io.wcm.handler.media.impl;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -33,7 +33,7 @@ import io.wcm.handler.media.Dimension;
  * Creates relative crop string with percentage values as required by the Web-Optimized Image Delivery API.
  * It uses one fractional digit for the percentage values.
  */
-final class RelativeCroppingString {
+public final class RelativeCroppingString {
 
   private static final NumberFormat DECIMAL_FORMAT = new DecimalFormat("0.0", new DecimalFormatSymbols(Locale.US));
 
@@ -41,7 +41,13 @@ final class RelativeCroppingString {
     // static methods only
   }
 
-  static @NotNull String createFromCropDimension(
+  /**
+   * Create relative cropping string from crop dimension and image dimension.
+   * @param cropDimension Crop dimension
+   * @param imageDimension Image dimension
+   * @return Cropping string
+   */
+  public static @NotNull String createFromCropDimension(
       @NotNull CropDimension cropDimension, @NotNull Dimension imageDimension) {
     double x1 = cropDimension.getLeft();
     double y1 = cropDimension.getTop();
@@ -52,7 +58,15 @@ final class RelativeCroppingString {
     return create(left, top, width, height);
   }
 
-  static @NotNull String create(double left, double top, double width, double height) {
+  /**
+   * Create relative cropping string from percentage values.
+   * @param left Left
+   * @param top Top
+   * @param width Width
+   * @param height Height
+   * @return Cropping string
+   */
+  public static @NotNull String create(double left, double top, double width, double height) {
     return String.format("%sp,%sp,%sp,%sp",
         toPercentage(left), toPercentage(top),
         toPercentage(width), toPercentage(height));

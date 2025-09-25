@@ -79,7 +79,7 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
     Media media = mediaHandler.get(resource)
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "preferwebp=true&quality=85", "jpg");
+    assertUrl(media, "quality=85", "jpg");
 
     Asset asset = media.getAsset();
     assertNotNull(asset);
@@ -90,7 +90,7 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
     assertEquals(ValueMap.EMPTY, asset.getProperties());
     assertNull(asset.adaptTo(Resource.class));
 
-    assertUrl(asset.getDefaultRendition(), "preferwebp=true&quality=85", "jpg");
+    assertUrl(asset.getDefaultRendition(), "quality=85", "jpg");
 
     // default rendition
     Rendition defaultRendition = asset.getDefaultRendition();
@@ -98,21 +98,21 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
     assertEquals(ContentType.JPEG, defaultRendition.getMimeType());
     assertEquals(0, defaultRendition.getWidth());
     assertEquals(0, defaultRendition.getHeight());
-    assertUrl(defaultRendition, "preferwebp=true&quality=85", "jpg");
+    assertUrl(defaultRendition, "quality=85", "jpg");
 
     // fixed rendition
     Rendition fixedRendition = asset.getRendition(new MediaArgs().fixedDimension(100, 50));
     assertNotNull(fixedRendition);
     assertEquals(ContentType.JPEG, fixedRendition.getMimeType());
-    assertUrl(fixedRendition, "height=50&preferwebp=true&quality=85&width=100", "jpg");
+    assertUrl(fixedRendition, "height=50&quality=85&width=100", "jpg");
 
     assertNotNull(asset.getImageRendition(new MediaArgs()));
     assertNull(asset.getDownloadRendition(new MediaArgs().download(true)));
 
     assertUriTemplate(asset.getUriTemplate(UriTemplateType.SCALE_WIDTH),
-        "preferwebp=true&quality=85&width={width}", "jpg");
+        "quality=85&width={width}", "jpg");
     assertUriTemplate(fixedRendition.getUriTemplate(UriTemplateType.SCALE_WIDTH),
-        "preferwebp=true&quality=85&width={width}", "jpg");
+        "quality=85&width={width}", "jpg");
   }
 
   @Test
@@ -121,7 +121,7 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
         .fixedWidth(120)
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "preferwebp=true&quality=85&width=120", "jpg");
+    assertUrl(media, "quality=85&width=120", "jpg");
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
@@ -135,7 +135,7 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
         .fixedHeight(80)
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "height=80&preferwebp=true&quality=85", "jpg");
+    assertUrl(media, "height=80&quality=85", "jpg");
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
@@ -153,7 +153,7 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
-    assertUrl(rendition, "height=576&preferwebp=true&quality=85&width=1024", "jpg");
+    assertUrl(rendition, "height=576&quality=85&width=1024", "jpg");
 
     assertNull(rendition.getPath());
     assertEquals(SAMPLE_FILENAME, rendition.getFileName());

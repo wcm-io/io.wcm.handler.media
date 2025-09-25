@@ -64,8 +64,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder();
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
-    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?preferwebp=true",
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg",
         underTest.build(params));
   }
 
@@ -74,8 +73,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
     NextGenDynamicMediaImageUrlBuilder underTest = getBuilder(new MediaArgs().enforceOutputFileExtension("png"), null);
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams();
 
-    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.png"
-        + "?preferwebp=true",
+    assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.png",
         underTest.build(params));
   }
 
@@ -90,7 +88,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?height=50&preferwebp=true&quality=60&rotate=90&width=100",
+        + "?height=50&quality=60&rotate=90&width=100",
         underTest.build(params));
   }
 
@@ -103,7 +101,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?height=1152&preferwebp=true&quality=60&rotate=90&width=2048",
+        + "?height=1152&quality=60&rotate=90&width=2048",
         underTest.build(params));
   }
 
@@ -116,7 +114,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?height=2048&preferwebp=true&quality=60&rotate=90&width=1024",
+        + "?height=2048&quality=60&rotate=90&width=1024",
         underTest.build(params));
   }
 
@@ -129,7 +127,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?height=2048&preferwebp=true&quality=60&rotate=90&width=2048",
+        + "?height=2048&quality=60&rotate=90&width=2048",
         underTest.build(params));
   }
 
@@ -143,7 +141,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?preferwebp=true&quality=60&smartcrop=Landscape&width=100",
+        + "?quality=60&smartcrop=Landscape&width=100",
         underTest.build(params));
   }
 
@@ -156,7 +154,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?preferwebp=true&quality=60&smartcrop=Landscape&width=2048",
+        + "?quality=60&smartcrop=Landscape&width=2048",
         underTest.build(params));
   }
 
@@ -169,7 +167,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?height=2048&preferwebp=true&quality=60&smartcrop=Portrait",
+        + "?height=2048&quality=60&smartcrop=Portrait",
         underTest.build(params));
   }
 
@@ -183,7 +181,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?crop=200%2C0%2C800%2C800&preferwebp=true&quality=60&width=100",
+        + "?crop=16.7p%2C0.0p%2C66.7p%2C100.0p&quality=60&width=100",
         underTest.build(params));
   }
 
@@ -203,7 +201,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/dynamicmedia/deliver/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/my-image.jpg"
-        + "?height=50&preferwebp=true&quality=60&rotate=90&width=100",
+        + "?height=50&quality=60&rotate=90&width=100",
         underTest.build(params));
   }
 
@@ -215,7 +213,7 @@ class NextGenDynamicMediaImageUrlBuilderTest {
         .quality(60);
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg"
-        + "?preferwebp=true&quality=60&width={w}",
+        + "?quality=60&width={w}",
         underTest.build(params));
   }
 

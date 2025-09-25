@@ -109,14 +109,14 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
     Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "preferwebp=true&quality=85", "jpg");
+    assertUrl(media, "quality=85", "jpg");
 
     // validate URI template
     Rendition rendition = media.getRendition();
 
     UriTemplate uriTemplateScaleWidth = rendition.getUriTemplate(UriTemplateType.SCALE_WIDTH);
     assertEquals("https://" + nextGenDynamicMediaConfigService.getLocalAssetsRepositoryId()
-        + "/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?preferwebp=true&quality=85&width={width}",
+        + "/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?quality=85&width={width}",
         uriTemplateScaleWidth.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_WIDTH, uriTemplateScaleWidth.getType());
     assertEquals(1200, uriTemplateScaleWidth.getMaxWidth());
@@ -124,7 +124,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
 
     UriTemplate uriTemplateScaleHeight = rendition.getUriTemplate(UriTemplateType.SCALE_HEIGHT);
     assertEquals("https://" + nextGenDynamicMediaConfigService.getLocalAssetsRepositoryId()
-        + "/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?height={height}&preferwebp=true&quality=85",
+        + "/adobe/assets/" + SAMPLE_ASSET_ID + "/as/my-image.jpg?height={height}&quality=85",
         uriTemplateScaleHeight.getUriTemplate());
     assertEquals(UriTemplateType.SCALE_HEIGHT, uriTemplateScaleHeight.getType());
     assertEquals(1200, uriTemplateScaleHeight.getMaxWidth());
@@ -137,7 +137,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
         .fixedWidth(120)
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "preferwebp=true&quality=85&width=120", "jpg");
+    assertUrl(media, "quality=85&width=120", "jpg");
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
@@ -151,7 +151,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
         .fixedHeight(80)
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "height=80&preferwebp=true&quality=85", "jpg");
+    assertUrl(media, "height=80&quality=85", "jpg");
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
@@ -166,7 +166,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
         .fixedWidth(1024)
         .build();
     assertTrue(media.isValid());
-    assertUrl(media, "preferwebp=true&quality=85&smartcrop=Landscape&width=1024", "jpg");
+    assertUrl(media, "quality=85&smartcrop=Landscape&width=1024", "jpg");
 
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);

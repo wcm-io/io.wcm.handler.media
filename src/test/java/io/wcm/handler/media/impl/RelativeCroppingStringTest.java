@@ -17,10 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.handler.mediasource.dam.impl.weboptimized;
+package io.wcm.handler.media.impl;
 
-import static io.wcm.handler.mediasource.dam.impl.weboptimized.RelativeCroppingString.create;
-import static io.wcm.handler.mediasource.dam.impl.weboptimized.RelativeCroppingString.createFromCropDimension;
+import static io.wcm.handler.media.impl.RelativeCroppingString.create;
+import static io.wcm.handler.media.impl.RelativeCroppingString.createFromCropDimension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
