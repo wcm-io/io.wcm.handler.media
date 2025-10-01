@@ -20,5 +20,5 @@
 /**
  * Media Handler API.
  */
-@org.osgi.annotation.versioning.Version("2.2.0")
+@org.osgi.annotation.versioning.Version("2.2.1")
 package io.wcm.handler.media;

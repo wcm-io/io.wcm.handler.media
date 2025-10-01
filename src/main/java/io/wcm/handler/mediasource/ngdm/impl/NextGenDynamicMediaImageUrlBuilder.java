@@ -39,6 +39,7 @@ import io.wcm.handler.media.CropDimension;
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.format.Ratio;
 import io.wcm.handler.media.impl.ImageTransformation;
+import io.wcm.handler.media.impl.RelativeCroppingString;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.SmartCrop;
 import io.wcm.wcm.commons.contenttype.FileExtension;
@@ -48,12 +49,12 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
  *
  * <p>
  * Example URL that might be build:
- * https://host/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg?preferwebp=true&quality=85&width=300&crop=16:9,smart
+ * https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg?quality=60&smartcrop=Landscape&width=100
+ * https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/as/my-image.jpg?crop=16.7p%2C0.0p%2C66.7p%2C100.0p&quality=60&width=100
  * </p>
  */
 public final class NextGenDynamicMediaImageUrlBuilder {
 
-  static final String PARAM_PREFER_WEBP = "preferwebp";
   static final String PARAM_WIDTH = "width";
   static final String PARAM_HEIGHT = "height";
   static final String PARAM_CROP = "crop";
@@ -105,7 +106,6 @@ public final class NextGenDynamicMediaImageUrlBuilder {
 
     // prepare URL params
     SortedMap<String, String> urlParamMap = new TreeMap<>();
-    urlParamMap.put(PARAM_PREFER_WEBP, "true");
 
     applyWidthHeightCroppingParams(params, urlParamMap);
 
@@ -198,7 +198,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       // apply static auto crop (center-cropping)
       CropDimension cropDimension = ImageTransformation.calculateAutoCropDimension(
           orginalDimension.getWidth(), orginalDimension.getHeight(), Ratio.get(requestedRatio));
-      urlParamMap.put(PARAM_CROP, cropDimension.getCropStringWidthHeight());
+      urlParamMap.put(PARAM_CROP, RelativeCroppingString.createFromCropDimension(cropDimension, orginalDimension));
       if (!applyWidthOrPlaceholder(params, urlParamMap)) {
         applyHeightOrPlaceholder(params, urlParamMap);
       }

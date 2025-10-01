@@ -33,6 +33,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.day.cq.dam.api.Asset;
 
 import io.wcm.handler.media.CropDimension;
+import io.wcm.handler.media.impl.RelativeCroppingString;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.dam.ngdm.MockAssetDelivery;
 import io.wcm.testing.mock.aem.junit5.AemContext;
