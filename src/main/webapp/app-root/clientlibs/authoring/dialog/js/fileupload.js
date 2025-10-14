@@ -46,6 +46,13 @@
     // validate on load
     var assetPath = self._$pathfield.val();
     self._validate.validateMediaFormat(assetPath);
+
+    // workaround for NGDM asset reference: trigger asset selected on load to display thumbnail image
+    // the built-in functionality from AEM checks hard-coded for a field with [data-cq-fileupload-parameter='filereference'] which we do not have
+    var currentAssetPath = self._$pathfield.val();
+    if (currentAssetPath.startsWith("/urn:")) {
+      this._triggerAssetSelected(currentAssetPath);
+    }
   };
 
   /**

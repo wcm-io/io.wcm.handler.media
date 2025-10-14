@@ -227,14 +227,15 @@ if (mediaFormats != null && mediaFormats.length > 0) {
 if (hasTransformation) {
   dataProps.put("wcmio-media-hastransformation", hasTransformation);
 }
-if (!dataProps.isEmpty()) {
-  GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
-}
 
 // NGDM config (if enabled)
 NextGenDynamicMediaConfigModel nextGenDynamicMediaConfig = slingRequest.adaptTo(NextGenDynamicMediaConfigModel.class);
 if (nextGenDynamicMediaConfig.isEnabled()) {
   dataProps.put("wcmio-nextgendynamicmedia-config", nextGenDynamicMediaConfig.getConfigJson());
+}
+
+if (!dataProps.isEmpty()) {
+  GraniteUiSyntheticResource.child(pathField, "granite:data", null, new ValueMapDecorator(dataProps));
 }
 
 dispatcher = slingRequest.getRequestDispatcher(pathField);

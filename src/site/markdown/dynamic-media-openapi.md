@@ -136,11 +136,12 @@ To enable IMS authentication for the metadata service:
 
 
 
-### Known Limitations (as of July 2024)
+### Known Limitations
+
+Known Limitations as of October 2025:
 
 * Dynamic Media with OpenAPI is not supported in Media Handler for AEM 6.x, only for AEMaaCS
 * Same as with the Adobe AEM WCM Core Components, currently only a single remote AEM Asset instance is supported, which is configured centrally as described in [Support for Remote Assets ][aem-remote-assets]. The media handler uses the same convention for referencing remote assets (using strings starting with `/urn:aaid:aem:...`). This convention also does not support multiple remote AEM Asset instances, as it does not include a pointer to the Repository ID.
-* If a component dialog is re-opened with a remote asset references and one of the Media Handler Granite UI widgets (e.g. pathfield), no thumbnail is displayed for the remote asset. But the reference is valid and works. The root cause is a bug/limitation in the underlying AEM pathfield component, which hopefully will be fixed soon by Adobe (SITES-19894).
 * The Dynamic Media with OpenAPI remote asset picker currently ignores any folder structures for assets on the remote AEM Asset instance.
 
 
