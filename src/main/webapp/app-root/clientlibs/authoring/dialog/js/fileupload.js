@@ -101,6 +101,7 @@
       self._$pathfield.val("");
       self._validate.validateMediaFormat(null);
     });
+
   };
 
   /**
