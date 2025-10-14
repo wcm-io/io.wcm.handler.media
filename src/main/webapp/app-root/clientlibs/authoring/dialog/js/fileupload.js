@@ -31,7 +31,7 @@
     self._updatePickLink();
 
     // enable nextgen dynamic media
-    self._validate = new ns.NextGenDynamicMedia({
+    self._nextgenDynamicMedia = new ns.NextGenDynamicMedia({
       fileupload: self._element,
       pathfield: self._pathfield,
       assetSelectedCallback: (assetReference) => {
@@ -93,28 +93,6 @@
     self._element.on("coral-fileupload:load", function (event) {
       self._$pathfield.val("");
       self._validate.validateMediaFormat(null);
-    });
-
-    // NGDM/Polaris asset picker does not send an assetselected event - so we look for DOM mutations
-    // when a thumbnail is added after picking 
-    self._$element.find("[data-cq-fileupload-thumbnail-img]").each(function() {
-      const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          mutation.addedNodes.forEach(node => {
-            // detect thumbnail image with '/urn:' in the source, which is an polaris thumbnail
-            if (node.tagName == "IMG" && node.src && node.src.includes('/urn:')) {
-              // fileupload-polaris.js stores the references hardcoded in this input field - regardless 
-              // of the configured property name
-              const $fileReferenceInput = $('input[name="./fileReference"]');
-              const assetPath = $fileReferenceInput.val();
-              self._$pathfield.val(assetPath);
-              self._validate.validateMediaFormat(assetPath);
-              self._removeDuplicatedFileRefInput();
-            }
-          });
-        });
-      });
-      observer.observe(this, { childList: true });
     });
 
   };
