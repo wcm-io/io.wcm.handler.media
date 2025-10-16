@@ -117,7 +117,10 @@
         const cfg = $(".cq-FileUpload-picker-polaris").attr("polaris-config");
         if (cfg) {
           const repositoryId = JSON.parse(cfg).repositoryId;
-          const thumbnailUrl = `https://${repositoryId}/adobe/dynamicmedia/deliver${assetPath}?width=320&preferwebp=true`;
+          const fileReferenceParts = assetPath.split("/");
+          const assetId = fileReferenceParts[1];
+          const assetName = fileReferenceParts[2];
+          const thumbnailUrl = `https://${repositoryId}/adobe/assets/${assetId}/as/${assetName}?width=320`;
           thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
         }
       }
