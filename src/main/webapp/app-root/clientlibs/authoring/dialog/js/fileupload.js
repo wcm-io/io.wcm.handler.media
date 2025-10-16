@@ -116,7 +116,7 @@
         // thumbnail for NGDM asset reference  
         const cfg = $(".cq-FileUpload-picker-polaris").attr("polaris-config");
         if (cfg) {
-          repositoryId = JSON.parse(cfg).repositoryId;
+          const repositoryId = JSON.parse(cfg).repositoryId;
           const thumbnailUrl = `https://${repositoryId}/adobe/dynamicmedia/deliver${assetPath}?width=320&preferwebp=true`;
           thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
         }
