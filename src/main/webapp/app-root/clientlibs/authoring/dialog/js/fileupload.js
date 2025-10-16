@@ -31,7 +31,7 @@
     self._updatePickLink();
 
     // enable nextgen dynamic media
-    self._validate = new ns.NextGenDynamicMedia({
+    self._nextgenDynamicMedia = new ns.NextGenDynamicMedia({
       fileupload: self._element,
       pathfield: self._pathfield,
       assetSelectedCallback: (assetReference) => {
@@ -46,6 +46,13 @@
     // validate on load
     var assetPath = self._$pathfield.val();
     self._validate.validateMediaFormat(assetPath);
+
+    // workaround for NGDM asset reference: trigger asset selected on load to display thumbnail image
+    // the built-in functionality from AEM checks hard-coded for a field with [data-cq-fileupload-parameter='filereference'] which we do not have
+    var currentAssetPath = self._$pathfield.val();
+    if (currentAssetPath.startsWith("/urn:")) {
+      this._triggerAssetSelected(currentAssetPath);
+    }
   };
 
   /**
@@ -95,28 +102,6 @@
       self._validate.validateMediaFormat(null);
     });
 
-    // NGDM/Polaris asset picker does not send an assetselected event - so we look for DOM mutations
-    // when a thumbnail is added after picking 
-    self._$element.find("[data-cq-fileupload-thumbnail-img]").each(function() {
-      const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          mutation.addedNodes.forEach(node => {
-            // detect thumbnail image with '/urn:' in the source, which is an polaris thumbnail
-            if (node.tagName == "IMG" && node.src && node.src.includes('/urn:')) {
-              // fileupload-polaris.js stores the references hardcoded in this input field - regardless 
-              // of the configured property name
-              const $fileReferenceInput = $('input[name="./fileReference"]');
-              const assetPath = $fileReferenceInput.val();
-              self._$pathfield.val(assetPath);
-              self._validate.validateMediaFormat(assetPath);
-              self._removeDuplicatedFileRefInput();
-            }
-          });
-        });
-      });
-      observer.observe(this, { childList: true });
-    });
-
   };
 
   /**
@@ -131,8 +116,11 @@
         // thumbnail for NGDM asset reference  
         const cfg = $(".cq-FileUpload-picker-polaris").attr("polaris-config");
         if (cfg) {
-          repositoryId = JSON.parse(cfg).repositoryId;
-          const thumbnailUrl = `https://${repositoryId}/adobe/dynamicmedia/deliver${assetPath}?width=320&preferwebp=true`;
+          const repositoryId = JSON.parse(cfg).repositoryId;
+          const fileReferenceParts = assetPath.split("/");
+          const assetId = fileReferenceParts[1];
+          const assetName = fileReferenceParts[2];
+          const thumbnailUrl = `https://${repositoryId}/adobe/assets/${assetId}/as/${assetName}?width=320`;
           thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
         }
       }

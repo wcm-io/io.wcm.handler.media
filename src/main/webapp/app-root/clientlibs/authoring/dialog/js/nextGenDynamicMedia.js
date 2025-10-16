@@ -220,10 +220,15 @@
   NextGenDynamicMedia.prototype._updateRemotePickLink = function (onclickHandler) {
     const self = this;
     if (self._$fileupload) {
-      // it would be more correct to look for the .cq-FileUpload-picker-polaris in scope of self._$fileupload,
-      // but the click tricker is registered this way in /libs/cq/gui/components/authoring/dialog/fileupload/clientlibs/fileupload/js/fileupload-polaris.js
-      // so we have to do it the same way.
-      $(document).off("click", ".cq-FileUpload-picker-polaris").on("click", ".cq-FileUpload-picker-polaris", onclickHandler);
+      const $polarisPickerButton = self._$fileupload.find(".cq-FileUpload-picker-polaris");
+      if ($polarisPickerButton.length > 0) {
+        $polarisPickerButton.on("click", function(event) {
+          // prevent the event from being handled by the default document level click handler as registered in
+          // /libs/cq/gui/components/authoring/dialog/fileupload/clientlibs/fileupload/js/fileupload-polaris.js
+          event.stopPropagation();
+          onclickHandler(event);
+        });
+      }
     }
   };
 
