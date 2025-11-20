@@ -19,11 +19,16 @@
  */
 package io.wcm.handler.media.impl;
 
+import static org.osgi.framework.Constants.SERVICE_RANKING;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.Asset;
 
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 import io.wcm.wcm.commons.contenttype.ContentType;
 
@@ -35,7 +40,18 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  */
 @ExtendWith(AemContextExtension.class)
 @SuppressWarnings("java:S2699") // all tests have assertions
-class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
+class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaWithDownloadsTest extends MediaHandlerImplImageFileTypesEnd2EndTest {
+
+  @BeforeEach
+  @Override
+  void setUp() {
+    // enable downloads in dynamic media for these tests (backward-compatibiltiy mode)
+    context.registerInjectActivateService(DynamicMediaSupportServiceImpl.class,
+        "enableDownloads", true,
+        SERVICE_RANKING, 1000);
+
+    super.setUp();
+  }
 
   @Override
   boolean isCreateAssetWithDynamicMediaMetadata() {
@@ -62,7 +78,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_JPEG_Original_ContentDisposition() {
-    super.testAsset_JPEG_Original_ContentDisposition();
+    Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.jpg" + DynamicMediaPath.DOWNLOAD_SUFFIX,
+        ContentType.JPEG);
   }
 
   @Override
@@ -238,7 +257,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_TIFF_Original_ContentDisposition() {
-    super.testAsset_TIFF_Original_ContentDisposition();
+    Asset asset = createSampleAsset("/filetype/sample.tif", ContentType.TIFF);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.tif" + DynamicMediaPath.DOWNLOAD_SUFFIX,
+        ContentType.TIFF);
   }
 
   @Override
@@ -299,7 +321,10 @@ class MediaHandlerImplImageFileTypesEnd2EndDynamicMediaTest extends MediaHandler
   @Override
   @Test
   void testAsset_SVG_Original_ContentDisposition() {
-    super.testAsset_SVG_Original_ContentDisposition();
+    Asset asset = createSampleAsset("/filetype/sample.svg", ContentType.SVG);
+    buildAssertMedia_ContentDisposition(asset, 100, 50,
+        "https://dummy.scene7.com/is/content/DummyFolder/sample.svg" + DynamicMediaPath.DOWNLOAD_SUFFIX,
+        ContentType.SVG);
   }
 
   @Override
