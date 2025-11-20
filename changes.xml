@@ -25,7 +25,7 @@
   <body>
 
     <release version="2.6.0" date="not released">
-      <action type="update" dev="sseifert" issue="121">
+      <action type="update" dev="sseifert" issue="123">
         Dynamic Media: Do not use Dynamic Media to generate download URLs, unless explicitly enabled via OSGi configuration (backward-compatibility mode).
         Latest setups of Dynamic Media do not support downloading original binaries of images, thus Dynamic Media is only used for rendering image renditions and no longer for any downloads.
       </action>
