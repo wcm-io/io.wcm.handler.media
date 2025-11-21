@@ -66,11 +66,13 @@ import io.wcm.handler.media.imagemap.ImageMapParser;
 public abstract class MediaSource {
 
   /**
+   * Get media source ID.
    * @return Media source ID
    */
   public abstract @NotNull String getId();
 
   /**
+   * Get name of the property in which the primary media request is stored.
    * @return Name of the property in which the primary media request is stored
    */
   public abstract @Nullable String getPrimaryMediaRefProperty();

@@ -62,6 +62,7 @@ public enum AemRenditionType {
   }
 
   /**
+   * Check if rendition name matches this type.
    * @param renditionName Rendition name
    * @return true if Rendition name matches with this type
    */
@@ -70,6 +71,7 @@ public enum AemRenditionType {
   }
 
   /**
+   * Check if rendition matches this type.
    * @param rendition Rendition
    * @return true if Rendition name matches with this type
    */
@@ -78,6 +80,7 @@ public enum AemRenditionType {
   }
 
   /**
+   * Get matching AEM rendition type for given rendition name.
    * @param renditionName Rendition name
    * @return Matching AEM rendition type or null if no match
    */
@@ -90,6 +93,7 @@ public enum AemRenditionType {
   }
 
   /**
+   * Get matching AEM rendition type for given rendition.
    * @param rendition Rendition
    * @return Matching AEM rendition type or null if no match
    */

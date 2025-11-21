@@ -88,6 +88,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Create media arguments with media formats.
    * @param mediaFormats Media formats
    */
   @SuppressWarnings("null")
@@ -96,6 +97,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Create media arguments with media format names.
    * @param mediaFormatNames Media format names
    */
   public MediaArgs(@NotNull String @NotNull... mediaFormatNames) {
@@ -276,6 +278,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Check if auto-cropping mode is enabled.
    * @return Enables "auto-cropping" mode. If no matching rendition is found
    *         it is tried to generate one by automatically cropping another one.
    */
@@ -284,6 +287,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Enable or disable auto-cropping mode.
    * @param value Enables "auto-cropping" mode. If no matching rendition is found
    *          it is tried to generate one by automatically cropping another one.
    * @return this
@@ -294,6 +298,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get accepted file extensions.
    * @return Accepted file extensions
    */
   public String @Nullable [] getFileExtensions() {
@@ -301,6 +306,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set accepted file extensions.
    * @param values Accepted file extensions
    * @return this
    */
@@ -315,6 +321,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set accepted file extension.
    * @param value Accepted file extension
    * @return this
    */
@@ -373,6 +380,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get URL mode.
    * @return URL mode
    */
   public @Nullable UrlMode getUrlMode() {
@@ -380,6 +388,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set URL mode.
    * @param value URS mode
    * @return this
    */
@@ -437,6 +446,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Check if only download media formats are accepted.
    * @return Accept only media formats that have the download flag set.
    */
   public boolean isDownload() {
@@ -444,6 +454,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set whether to accept only download media formats.
    * @param value Accept only media formats that have the download flag set.
    * @return this
    */
@@ -453,6 +464,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Check if Content-Disposition header should be set to attachment.
    * @return Whether to set a "Content-Disposition" header to "attachment" for forcing a "Save as" dialog on the client
    */
   public boolean isContentDispositionAttachment() {
@@ -460,6 +472,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set whether Content-Disposition header should be set to attachment.
    * @param value Whether to set a "Content-Disposition" header to "attachment" for forcing a "Save as" dialog on the
    *          client
    * @return this
@@ -470,6 +483,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get custom alternative text.
    * @return The custom alternative text that is to be used instead of the one defined in the the asset metadata.
    */
   public @Nullable String getAltText() {
@@ -488,6 +502,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Check if alt text should be forced from DAM asset description.
    * @return Whether to force to read alt. text from DAM asset description.
    */
   public boolean isForceAltValueFromAsset() {
@@ -495,6 +510,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set whether to force alt text from DAM asset description.
    * @param value Whether to force to read alt. text from DAM asset description.
    *          If not set, the asset description is used as fallback value of no custom alt. text is defined.
    * @return this
@@ -505,6 +521,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Check if image is marked as decorative.
    * @return Marks this image as "decorative". Alt. text is then explicitly set to an empty string.
    */
   public boolean isDecorative() {
@@ -512,6 +529,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set whether image is decorative.
    * @param value Marks this image as "decorative". Alt. text is then explicitly set to an empty string.
    * @return this
    */
@@ -521,6 +539,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Check if dummy image is enabled.
    * @return If set to true, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    */
   public boolean isDummyImage() {
@@ -528,6 +547,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set whether dummy image is enabled.
    * @param value If set to false, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
@@ -537,6 +557,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get URL of custom dummy image.
    * @return Url of custom dummy image. If null default dummy image is used.
    */
   public @Nullable String getDummyImageUrl() {
@@ -544,6 +565,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set URL of custom dummy image.
    * @param value Url of custom dummy image. If null default dummy image is used.
    * @return this
    */
@@ -553,6 +575,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get which types of AEM-generated renditions are included.
    * @return Defines which types of AEM-generated renditions (with <code>cq5dam.</code> prefix) are taken into
    *         account when trying to resolve the media request.
    */
@@ -561,6 +584,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set which types of AEM-generated renditions are included.
    * @param value Defines which types of AEM-generated renditions (with <code>cq5dam.</code> prefix) are taken into
    *          account when trying to resolve the media request.
    * @return this
@@ -616,6 +640,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get image sizes for responsive image handling.
    * @return Image sizes for responsive image handling
    */
   public @Nullable ImageSizes getImageSizes() {
@@ -623,6 +648,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set image sizes for responsive image handling.
    * @param value Image sizes for responsive image handling
    * @return this
    */
@@ -632,6 +658,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get picture sources for responsive image handling.
    * @return Picture sources for responsive image handling
    */
   public PictureSource @Nullable [] getPictureSources() {
@@ -639,6 +666,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set picture sources for responsive image handling.
    * @param value Picture sources for responsive image handling
    * @return this
    */
@@ -648,6 +676,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Check if dynamic media support is disabled.
    * @return If set to true, dynamic media support is disabled even when enabled on the instance.
    */
   public boolean isDynamicMediaDisabled() {
@@ -655,6 +684,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set whether dynamic media support is disabled.
    * @param value If set to true, dynamic media support is disabled even when enabled on the instance.
    * @return this
    */
@@ -664,6 +694,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Check if web-optimized image delivery is disabled.
    * @return If set to true, web-optimized image delivery is disabled even when enabled on the instance.
    */
   public boolean isWebOptimizedImageDeliveryDisabled() {
@@ -671,6 +702,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set whether web-optimized image delivery is disabled.
    * @param value If set to true, web-optimized image delivery is disabled even when enabled on the instance.
    * @return this
    */
@@ -680,6 +712,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get image quality percentage.
    * @return Image quality in percent (0..1) for images with lossy compression (e.g. JPEG).
    */
   public @Nullable Double getImageQualityPercentage() {
@@ -687,6 +720,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set image quality percentage.
    * @param value Image quality in percent (0..1) for images with lossy compression (e.g. JPEG).
    * @return this
    */
@@ -714,6 +748,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get IPE ratio customization setting.
    * @return Whether to set customized list of IPE cropping ratios.
    */
   public IPERatioCustomize getIPERatioCustomize() {
@@ -721,6 +756,7 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Set IPE ratio customization setting.
    * @param value Whether to set customized list of IPE cropping ratios.
    * @return this
    */
@@ -905,6 +941,7 @@ public final class MediaArgs implements Cloneable {
     private final boolean mandatory;
 
     /**
+     * Create media format option.
      * @param mediaFormat Media format
      * @param mandatory Resolution of this media format is mandatory
      */
@@ -915,6 +952,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Create media format option with format name.
      * @param mediaFormatName Media format name
      * @param mandatory Resolution of this media format is mandatory
      */
@@ -925,6 +963,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get media format.
      * @return Media format
      */
     public @Nullable MediaFormat getMediaFormat() {
@@ -932,6 +971,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get media format name.
      * @return Media format name
      */
     public @Nullable String getMediaFormatName() {
@@ -939,6 +979,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Check if resolution of this media format is mandatory.
      * @return Resolution of this media format is mandatory
      */
     public boolean isMandatory() {
@@ -996,6 +1037,7 @@ public final class MediaArgs implements Cloneable {
     private final @NotNull WidthOption @NotNull [] widthOptions;
 
     /**
+     * Create image sizes with widths.
      * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
      *          source size list</a>
      * @param widths Widths for the renditions in the <code>srcset</code> attribute (all mandatory).
@@ -1009,6 +1051,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Create image sizes with width options.
      * @param sizes A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
      *          source size list</a>
      * @param widthOptions Widths for the renditions in the <code>srcset</code> attribute.
@@ -1019,6 +1062,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get source size list.
      * @return A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
      *         source size list</a>
      */
@@ -1077,6 +1121,7 @@ public final class MediaArgs implements Cloneable {
     private WidthOption[] widthOptions;
 
     /**
+     * Create picture source with media format.
      * @param mediaFormat Media format
      */
     public PictureSource(@NotNull MediaFormat mediaFormat) {
@@ -1084,6 +1129,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Create picture source with media format name.
      * @param mediaFormatName Media format name
      */
     public PictureSource(@Nullable String mediaFormatName) {
@@ -1098,6 +1144,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get media format.
      * @return Media format
      */
     public @Nullable MediaFormat getMediaFormat() {
@@ -1105,6 +1152,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get media format name.
      * @return Media format
      */
     public @Nullable String getMediaFormatName() {

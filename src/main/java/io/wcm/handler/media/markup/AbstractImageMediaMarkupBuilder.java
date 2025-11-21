@@ -117,6 +117,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
 
 
   /**
+   * Get current WCM mode.
    * @return Current WCM Mode (may be null)
    */
   protected final @Nullable WCMMode getWcmMode() {
@@ -124,6 +125,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
   }
 
   /**
+   * Get current Sling HTTP servlet request.
    * @return Current request
    */
   protected final @Nullable SlingHttpServletRequest getRequest() {
