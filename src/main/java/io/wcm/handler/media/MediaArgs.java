@@ -1160,6 +1160,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Set width options for renditions.
      * @param value Widths for the renditions in the <code>srcset</code> attribute.
      * @return this
      */
@@ -1169,6 +1170,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get width options for renditions.
      * @return Widths for the renditions in the <code>srcset</code> attribute.
      */
     public @NotNull WidthOption @Nullable [] getWidthOptions() {
@@ -1176,6 +1178,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Set widths for renditions.
      * @param value Widths for the renditions in the <code>srcset</code> attribute.
      * @return this
      */
@@ -1185,6 +1188,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Set source size list.
      * @param value A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid
      *          source size list</a>.
      * @return this
@@ -1195,6 +1199,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get source size list.
      * @return A <a href="http://w3c.github.io/html/semantics-embedded-content.html#valid-source-size-list">valid source
      *         size list</a>.
      */
@@ -1203,6 +1208,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Set media query list.
      * @param value A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
      *          list</a>.
      * @return this
@@ -1213,6 +1219,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get media query list.
      * @return A <a href="http://w3c.github.io/html/infrastructure.html#valid-media-query-list">valid media query
      *         list</a>.
      */
@@ -1267,6 +1274,7 @@ public final class MediaArgs implements Cloneable {
     private final String density;
 
     /**
+     * Create width option with mandatory width.
      * @param width mandatory width value
      */
     public WidthOption(long width) {
@@ -1274,6 +1282,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Create width option with mandatory width and density.
      * @param width mandatory width value
      * @param density pixel density, or null for default density (1x)
      */
@@ -1282,6 +1291,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Create width option with optional mandatory flag.
      * @param width Width value
      * @param mandatory Is it mandatory to resolve a rendition with this width
      */
@@ -1290,6 +1300,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Create width option with all parameters.
      * @param width Width value
      * @param density pixel density, or null for default density (1x)
      * @param mandatory Is it mandatory to resolve a rendition with this width
@@ -1301,6 +1312,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get width value.
      * @return Width value
      */
     public long getWidth() {
@@ -1308,6 +1320,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Check if width is mandatory.
      * @return Is it mandatory to resolve a rendition with this width
      */
     public boolean isMandatory() {
@@ -1315,6 +1328,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get density descriptor.
      * @return density descriptor or null
      */
     public @Nullable String getDensity() {
@@ -1322,6 +1336,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get width descriptor for srcset attribute.
      * @return width descriptor for srcset, e.g. 200w
      */
     public @NotNull String getWidthDescriptor() {
@@ -1329,6 +1344,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get density descriptor or empty string.
      * @return density descriptor if it is not null and is not "1x", otherwise an empty string is returned
      */
     public @NotNull String getDensityDescriptor() {
