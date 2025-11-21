@@ -96,6 +96,7 @@ public final class NextGenDynamicMediaConfigModel {
   }
 
   /**
+   * Get client-side configuration JSON.
    * @return JSON string with configuration data required on the client-side.
    */
   public @Nullable String getConfigJson() {

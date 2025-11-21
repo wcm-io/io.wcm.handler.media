@@ -300,6 +300,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get allowed IPE editor types.
    * @return Allowed editor types for image IPE (in-place editor).
    *         By default, only the OOTB "image" editor type is supported.
    */

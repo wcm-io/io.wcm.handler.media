@@ -63,6 +63,7 @@ public final class MediaRequest {
   }
 
   /**
+   * Create media request with all parameters.
    * @param resource Resource containing reference to media asset
    * @param mediaRef Reference to media item
    * @param mediaArgs Additional arguments affection media resolving
@@ -109,6 +110,7 @@ public final class MediaRequest {
   }
 
   /**
+   * Get properties from resource.
    * @return Properties from resource containing target link. The value map is a copy
    *         of the original map so it is safe to change the property values contained in the map.
    */
