@@ -62,6 +62,7 @@ public final class Media {
   private String markup;
 
   /**
+   * Create a media object.
    * @param mediaSource Media source
    * @param mediaRequest Processed media request
    */
@@ -71,6 +72,7 @@ public final class Media {
   }
 
   /**
+   * Get media source.
    * @return Media source
    */
   @JsonIgnore
@@ -79,6 +81,7 @@ public final class Media {
   }
 
   /**
+   * Get media handling request.
    * @return Media handling request
    */
   @JsonIgnore
@@ -87,6 +90,7 @@ public final class Media {
   }
 
   /**
+   * Set media handling request.
    * @param mediaRequest Media handling request
    */
   public void setMediaRequest(@NotNull MediaRequest mediaRequest) {
@@ -94,6 +98,7 @@ public final class Media {
   }
 
   /**
+   * Get HTML element.
    * @return Html element
    */
   @JsonIgnore
@@ -106,6 +111,7 @@ public final class Media {
   }
 
   /**
+   * Get media HTML element serialized to string.
    * @return Media HTML element serialized to string. Returns null if media element is null.
    */
   @JsonIgnore
@@ -128,6 +134,7 @@ public final class Media {
   }
 
   /**
+   * Set function that builds the HTML element representation on demand.
    * @param value Function that builds the HTML element representation on demand
    */
   public void setElementBuilder(@NotNull Function<Media, HtmlElement> value) {
@@ -136,6 +143,7 @@ public final class Media {
   }
 
   /**
+   * Get media URL.
    * @return Media URL
    */
   public @Nullable String getUrl() {
@@ -143,6 +151,7 @@ public final class Media {
   }
 
   /**
+   * Set media URL.
    * @param value Media URL
    */
   public void setUrl(@Nullable String value) {
@@ -199,6 +208,7 @@ public final class Media {
   }
 
   /**
+   * Get crop dimensions.
    * @return Crop dimensions (optional)
    */
   @JsonIgnore
@@ -207,6 +217,7 @@ public final class Media {
   }
 
   /**
+   * Set crop dimensions.
    * @param cropDimension Crop dimensions (optional)
    */
   public void setCropDimension(@Nullable CropDimension cropDimension) {
@@ -214,6 +225,7 @@ public final class Media {
   }
 
   /**
+   * Get image rotation.
    * @return Image rotation (optional)
    */
   @JsonIgnore
@@ -222,6 +234,7 @@ public final class Media {
   }
 
   /**
+   * Set image rotation.
    * @param rotation Image Rotation (optional)
    */
   public void setRotation(@Nullable Integer rotation) {
@@ -229,6 +242,7 @@ public final class Media {
   }
 
   /**
+   * Get image map.
    * @return Image map (optional)
    */
   @JsonIgnore
@@ -237,6 +251,7 @@ public final class Media {
   }
 
   /**
+   * Set image map.
    * @param map Image map (optional)
    */
   public void setMap(@Nullable List<ImageMapArea> map) {
@@ -244,6 +259,7 @@ public final class Media {
   }
 
   /**
+   * Check if media is valid.
    * @return true if link is valid and was resolved successfully
    */
   public boolean isValid() {
@@ -251,6 +267,7 @@ public final class Media {
   }
 
   /**
+   * Get reason why the requested media could not be resolved.
    * @return Reason why the requested media could not be resolved and is invalid
    */
   @JsonIgnore
@@ -259,6 +276,7 @@ public final class Media {
   }
 
   /**
+   * Set reason why the requested media could not be resolved.
    * @param mediaInvalidReason Reason why the requested media could not be resolved and is invalid
    */
   public void setMediaInvalidReason(@Nullable MediaInvalidReason mediaInvalidReason) {
@@ -266,6 +284,7 @@ public final class Media {
   }
 
   /**
+   * Get custom message when media invalid reason is CUSTOM.
    * @return Custom message when {@link #getMediaInvalidReason()} is set to {@link MediaInvalidReason#CUSTOM}.
    *         Message is interpreted as i18n key.
    */
@@ -274,6 +293,7 @@ public final class Media {
   }
 
   /**
+   * Set custom message when media invalid reason is CUSTOM.
    * @param mediaInvalidReasonCustomMessage Custom message when {@link #getMediaInvalidReason()} is set to
    *          {@link MediaInvalidReason#CUSTOM}. Message is interpreted as i18n key.
    */

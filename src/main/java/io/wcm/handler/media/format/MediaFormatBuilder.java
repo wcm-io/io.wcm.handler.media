@@ -74,6 +74,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set label for displaying to user.
    * @param value Label for displaying to user
    * @return this
    */
@@ -83,6 +84,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set description for displaying to user.
    * @param value Description for displaying to user
    * @return this
    */
@@ -92,6 +94,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set fixed image width.
    * @param value Fixed image width (px)
    * @return this
    */
@@ -101,6 +104,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set minimum image width.
    * @param value Image width min (px)
    * @return this
    */
@@ -110,6 +114,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set maximum image width.
    * @param value Image width max (px)
    * @return this
    */
@@ -119,6 +124,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set image width range.
    * @param min Image width min (px)
    * @param max Image width max (px)
    * @return this
@@ -130,6 +136,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set fixed image height.
    * @param value Fixed image height (px)
    * @return this
    */
@@ -139,6 +146,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set minimum image height.
    * @param value Image height min (px)
    * @return this
    */
@@ -148,6 +156,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set maximum image height.
    * @param value Image height max (px)
    * @return this
    */
@@ -157,6 +166,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set image height range.
    * @param min Image height min (px)
    * @param max Image height max (px)
    * @return this
@@ -168,6 +178,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set minimum width/height dimension.
    * @param value Min. width/height (px) - the longest edge is checked.
    *          Cannot be combined with other width/height restrictions.
    * @return this
@@ -178,6 +189,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set fixed width and height dimensions.
    * @param widthValue Fixed image width (px)
    * @param heightValue Fixed image height (px)
    * @return this
@@ -189,6 +201,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set ratio width/height as double value.
    * @param value Ratio (width/height)
    * @return this
    */
@@ -198,6 +211,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set ratio width and height sample values.
    * @param widthValue Ratio width sample value (is used for calculating the ratio together with ratioHeight, and for
    *          display)
    * @param heightValue Ratio height sample value (is used for calculating the ratio together with ratioWidth, and for
@@ -211,6 +225,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set ratio width and height sample values as doubles.
    * @param widthValue Ratio width sample value (is used for calculating the ratio together with ratioHeight, and for
    *          display)
    * @param heightValue Ratio height sample value (is used for calculating the ratio together with ratioWidth, and for
@@ -224,6 +239,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set maximum file size.
    * @param value Max. file size (bytes)
    * @return this
    */
@@ -233,6 +249,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set allowed file extensions.
    * @param value Allowed file extensions
    * @return this
    */
@@ -242,7 +259,8 @@ public final class MediaFormatBuilder {
   }
 
   /**
-   * @param value Rendition group id
+   * Set rendition group.
+   * @param value Rendition group
    * @return this
    */
   public @NotNull MediaFormatBuilder renditionGroup(String value) {
@@ -251,6 +269,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set whether media assets should be downloaded.
    * @param value Media assets with this format should be downloaded and not displayed directly
    * @return this
    */
@@ -260,6 +279,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set whether format is for internal use only.
    * @param value For internal use only (not displayed for user)
    * @return this
    */
@@ -269,6 +289,7 @@ public final class MediaFormatBuilder {
   }
 
   /**
+   * Set ranking for auto-detection priority.
    * @param value Ranking for controlling priority in auto-detection. Lowest value = highest priority.
    * @return this
    */

@@ -38,18 +38,21 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public interface Asset extends Adaptable {
 
   /**
+   * Get title of media item.
    * @return Title of media item
    */
   @Nullable
   String getTitle();
 
   /**
+   * Get alternative text for media item.
    * @return Alternative text for media item
    */
   @Nullable
   String getAltText();
 
   /**
+   * Get description for this media item.
    * @return Description for this media item
    */
   @Nullable
@@ -63,6 +66,7 @@ public interface Asset extends Adaptable {
   String getPath();
 
   /**
+   * Get properties of media item.
    * @return Properties of media item
    */
   @NotNull

@@ -61,29 +61,34 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   String getPath();
 
   /**
+   * Get file name of rendition.
    * @return File name of the renditions source binary
    */
   @Nullable
   String getFileName();
 
   /**
+   * Get file extension of rendition.
    * @return File extension of the renditions source binary
    */
   @Nullable
   String getFileExtension();
 
   /**
+   * Get file size of rendition.
    * @return File size of the rendition in bytes (or -1 if it is unknown).
    */
   long getFileSize();
 
   /**
+   * Get MIME type of rendition.
    * @return Mime type of the renditions source binary.
    */
   @Nullable
   String getMimeType();
 
   /**
+   * Get media format of rendition.
    * @return Media format that matches with the resolved rendition. Null if no media format was specified for resolving.
    */
   @Nullable
@@ -91,6 +96,7 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   MediaFormat getMediaFormat();
 
   /**
+   * Get properties of rendition.
    * @return Properties of rendition
    */
   @NotNull
@@ -98,24 +104,28 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   ValueMap getProperties();
 
   /**
+   * Check if rendition is an image.
    * @return true if the rendition is an image format supported by the media handler.
    */
   @JsonIgnore
   boolean isImage();
 
   /**
+   * Check if rendition is a browser-displayable image.
    * @return true if the rendition is a web image file that can be displayed in a browser.
    */
   @JsonIgnore
   boolean isBrowserImage();
 
   /**
+   * Check if rendition is a vector image.
    * @return true if the rendition is a vector image that can be displayed in a browser.
    */
   @JsonIgnore
   boolean isVectorImage();
 
   /**
+   * Check if rendition should be downloaded.
    * @return true if the rendition is not and image nor a flash movie.
    */
   @JsonIgnore
@@ -155,6 +165,7 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   Date getModificationDate();
 
   /**
+   * Check if this is a fallback rendition.
    * @return true if this rendition is returned as "fallback" not fully fulfilling the media request.
    *         Example: An explicit cropping was given, but it could not be fulfilled. If in this case another
    *         rendition is returned that fulfills all other media format restrictions, this flag is set to true.

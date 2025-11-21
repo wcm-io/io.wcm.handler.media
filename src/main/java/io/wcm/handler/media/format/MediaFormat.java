@@ -95,6 +95,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get media format name.
    * @return Media format name
    */
   @JsonProperty("mediaFormat")
@@ -103,6 +104,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get media format label for display.
    * @return Media format label
    */
   @JsonIgnore
@@ -111,6 +113,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get media format description.
    * @return Media format description
    */
   @JsonIgnore
@@ -119,6 +122,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get image width.
    * @return Image width (px)
    */
   @JsonIgnore
@@ -127,6 +131,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get minimum image width.
    * @return Min. image width (px)
    */
   @JsonIgnore
@@ -135,6 +140,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get maximum image width.
    * @return Max. image width (px)
    */
   @JsonIgnore
@@ -143,6 +149,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get image height.
    * @return Image height (px)
    */
   @JsonIgnore
@@ -151,6 +158,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get minimum image height.
    * @return Min. image height (px)
    */
   @JsonIgnore
@@ -159,6 +167,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get maximum image height.
    * @return Max. image height (px)
    */
   @JsonIgnore
@@ -167,6 +176,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get minimum width/height constraint.
    * @return Min. width/height (px) - the longest edge is checked.
    *         Cannot be combined with other width/height restrictions.
    */
@@ -175,6 +185,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get ratio width value.
    * @return Ration width (px)
    */
   @JsonIgnore
@@ -183,6 +194,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get ratio height value.
    * @return Ration height (px)
    */
   @JsonIgnore
@@ -304,6 +316,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Check if media format has ratio.
    * @return true if the media format has ratio (calculated for fixed dimensions or defined in media format)
    */
   @JsonIgnore
@@ -312,6 +325,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get maximum file size.
    * @return Max. file size (bytes)
    */
   @JsonIgnore
@@ -320,6 +334,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get allowed file extensions.
    * @return Allowed file extensions
    */
   @JsonIgnore
@@ -328,6 +343,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get rendition group ID.
    * @return Rendition group id
    */
   @JsonIgnore
@@ -336,6 +352,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Check if media should be downloaded.
    * @return Media assets with this format should be downloaded and not displayed directly
    */
   @JsonIgnore
@@ -344,6 +361,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Check if format is for internal use only.
    * @return For internal use only (not displayed for user)
    */
   @JsonIgnore
@@ -352,6 +370,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get ranking for auto-detection priority.
    * @return Ranking for auto-detection. Lowest value = highest priority.
    */
   @JsonIgnore
@@ -360,6 +379,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Check if format allows image extensions.
    * @return Whether the format allows at least one image extension
    */
   @JsonIgnore
@@ -400,6 +420,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get effective minimum image width.
    * @return Effective min. image width (px). Takes widthMin and width into account.
    */
   @JsonIgnore
@@ -412,6 +433,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get effective maximum image width.
    * @return Effective max. image width (px). Takes widthMax and width into account.
    */
   @JsonIgnore
@@ -424,6 +446,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get effective minimum image height.
    * @return Effective min. image height (px). Takes heightMin and height into account.
    */
   @JsonIgnore
@@ -436,6 +459,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get effective maximum image height.
    * @return Effective max. image height (px). Takes heightMax and height into account.
    */
   @JsonIgnore
@@ -578,6 +602,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get custom properties.
    * @return Custom properties that my be used by application-specific markup builders or processors.
    */
   @JsonIgnore

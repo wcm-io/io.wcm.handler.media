@@ -42,6 +42,7 @@ public final class CropDimension extends Dimension {
   private final boolean autoCrop;
 
   /**
+   * Create crop dimension.
    * @param left Left in pixels
    * @param top Top in pixels
    * @param width Width in pixels
@@ -52,6 +53,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Create crop dimension with auto-crop flag.
    * @param left Left in pixels
    * @param top Top in pixels
    * @param width Width in pixels
@@ -66,6 +68,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Get left coordinate in pixels.
    * @return Left in pixels
    */
   public long getLeft() {
@@ -73,6 +76,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Get top coordinate in pixels.
    * @return Top in pixels
    */
   public long getTop() {
@@ -80,6 +84,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Get right coordinate in pixels.
    * @return Right in pixels
    */
   public long getRight() {
@@ -87,6 +92,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Get bottom coordinate in pixels.
    * @return Bottom in pixels
    */
   public long getBottom() {
@@ -94,6 +100,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Check if dimension is marked as auto-cropped.
    * @return true if is dimenions is marked as auto-cropped
    */
   public boolean isAutoCrop() {
@@ -121,6 +128,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Get crop string with coordinates.
    * @return Crop string with left,top,right,bottom.
    */
   public @NotNull String getCropString() {
@@ -128,6 +136,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Get crop string with dimensions.
    * @return Crop string with left,top,width,height.
    */
   public @NotNull String getCropStringWidthHeight() {
@@ -135,6 +144,7 @@ public final class CropDimension extends Dimension {
   }
 
   /**
+   * Get rectangle representation of crop dimension.
    * @return Rectangle
    */
   public @NotNull Rectangle2D getRectangle() {
