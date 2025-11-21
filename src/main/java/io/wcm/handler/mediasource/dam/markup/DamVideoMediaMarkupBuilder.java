@@ -121,6 +121,7 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
   }
 
   /**
+   * Get DAM asset from media metadata.
    * @param media Media metadata
    * @return DAM asset or null
    */

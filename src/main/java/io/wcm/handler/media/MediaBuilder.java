@@ -116,6 +116,7 @@ public interface MediaBuilder {
   MediaBuilder mediaFormatOptions(@NotNull MediaFormatOption @NotNull... values);
 
   /**
+   * Enable or disable auto-cropping mode.
    * @param value Enables "auto-cropping" mode. If no matching rendition is found
    *          it is tried to generate one by automatically cropping another one.
    * @return this
@@ -124,6 +125,7 @@ public interface MediaBuilder {
   MediaBuilder autoCrop(boolean value);
 
   /**
+   * Set accepted file extensions.
    * @param values Accepted file extensions
    * @return this
    */
@@ -131,6 +133,7 @@ public interface MediaBuilder {
   MediaBuilder fileExtensions(@NotNull String @NotNull... values);
 
   /**
+   * Set accepted file extension.
    * @param value Accpeted file extension
    * @return this
    */
@@ -156,6 +159,7 @@ public interface MediaBuilder {
   MediaBuilder enforceOutputFileExtension(@NotNull String value);
 
   /**
+   * Set URL mode.
    * @param value URS mode
    * @return this
    */
@@ -188,6 +192,7 @@ public interface MediaBuilder {
   MediaBuilder fixedDimension(long widthValue, long heightValue);
 
   /**
+   * Set whether Content-Disposition header should be set to attachment.
    * @param value Whether to set a "Content-Disposition" header to "attachment"
    *          for forcing a "Save as" dialog on the client
    * @return this
@@ -205,6 +210,7 @@ public interface MediaBuilder {
   MediaBuilder altText(@NotNull String value);
 
   /**
+   * Set whether to force alt text from DAM asset description.
    * @param value Whether to force to read alt. text from DAM asset description.
    *          If not set, the asset description is used as fallback value of no custom alt. text is defined.
    * @return this
@@ -213,6 +219,7 @@ public interface MediaBuilder {
   MediaBuilder forceAltValueFromAsset(boolean value);
 
   /**
+   * Set whether image is decorative.
    * @param value Marks this image as "decorative". Alt. text is then explicitly set to an empty string.
    * @return this
    */
@@ -220,6 +227,7 @@ public interface MediaBuilder {
   MediaBuilder decorative(boolean value);
 
   /**
+   * Set whether dummy image is enabled.
    * @param value If set to false, media handler never returns a dummy image. Otherwise this can happen in edit mode.
    * @return this
    */
@@ -227,6 +235,7 @@ public interface MediaBuilder {
   MediaBuilder dummyImage(boolean value);
 
   /**
+   * Set URL of custom dummy image.
    * @param value Url of custom dummy image. If null default dummy image is used.
    * @return this
    */
@@ -234,6 +243,7 @@ public interface MediaBuilder {
   MediaBuilder dummyImageUrl(@NotNull String value);
 
   /**
+   * Set image quality percentage.
    * @param value Image quality in percent (0..1) for images with lossy compression (e.g. JPEG).
    * @return this
    */
@@ -241,6 +251,7 @@ public interface MediaBuilder {
   MediaBuilder imageQualityPercentage(@NotNull Double value);
 
   /**
+   * Set which types of AEM-generated renditions are included.
    * @param value Defines which types of AEM-generated renditions (with <code>cq5dam.</code> prefix) are taken into
    *          account when trying to resolve the media request.
    * @return this

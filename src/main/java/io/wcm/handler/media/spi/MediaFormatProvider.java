@@ -45,6 +45,7 @@ public abstract class MediaFormatProvider implements ContextAwareService {
   private static final Logger log = LoggerFactory.getLogger(MediaFormatProvider.class);
 
   /**
+   * Initialize provider with explicit set of media formats.
    * @param mediaFormats Set of media formats for parameter provider
    */
   protected MediaFormatProvider(Set<MediaFormat> mediaFormats) {
@@ -52,6 +53,7 @@ public abstract class MediaFormatProvider implements ContextAwareService {
   }
 
   /**
+   * Initialize provider from media format definitions in class fields.
    * @param type Type containing media format definitions as public static fields.
    */
   protected MediaFormatProvider(Class<?> type) {
@@ -59,6 +61,7 @@ public abstract class MediaFormatProvider implements ContextAwareService {
   }
 
   /**
+   * Get media formats defined by this provider.
    * @return Media formats that the application defines
    */
   public @NotNull Set<MediaFormat> getMediaFormats() {

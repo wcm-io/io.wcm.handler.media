@@ -93,6 +93,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   /**
+   * Create resolver with value map.
    * @param valueMap Value map to read properties directly from
    */
   public MediaComponentPropertyResolver(@NotNull ValueMap valueMap) {
@@ -101,6 +102,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   /**
+   * Check if auto-crop is enabled.
    * @return AutoCrop state
    */
   public boolean isAutoCrop() {
@@ -108,6 +110,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   /**
+   * Get media format options with mandatory flags.
    * @return List of media formats with and without mandatory setting.
    */
   @SuppressWarnings("java:S3776") // ignore complexity
@@ -154,6 +157,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   /**
+   * Get media format names.
    * @return List of media formats with and without mandatory setting.
    */
   @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
@@ -172,6 +176,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   /**
+   * Get mandatory media format names.
    * @return List of media formats with and without mandatory setting.
    */
   @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
@@ -191,6 +196,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   /**
+   * Get image sizes for responsive image handling.
    * @return Image sizes
    */
   @SuppressWarnings("null")
@@ -210,6 +216,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   /**
+   * Get picture sources for responsive image handling.
    * @return List of picture sources
    */
   @SuppressWarnings("null")
