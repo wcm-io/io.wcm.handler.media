@@ -176,6 +176,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   }
 
   /**
+   * Get minimum width/height constraint.
    * @return Min. width/height (px) - the longest edge is checked.
    *         Cannot be combined with other width/height restrictions.
    */

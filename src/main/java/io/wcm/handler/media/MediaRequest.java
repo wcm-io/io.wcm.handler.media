@@ -45,6 +45,7 @@ public final class MediaRequest {
   private ValueMap resourceProperties;
 
   /**
+   * Create media request from resource.
    * @param resource Resource containing reference to media asset
    * @param mediaArgs Additional arguments affection media resolving
    */
@@ -53,6 +54,7 @@ public final class MediaRequest {
   }
 
   /**
+   * Create media request from media reference.
    * @param mediaRef Reference to media item
    * @param mediaArgs Additional arguments affection media resolving
    */
@@ -75,6 +77,7 @@ public final class MediaRequest {
   }
 
   /**
+   * Get resource containing media reference.
    * @return Resource containing reference to media asset
    */
   public @Nullable Resource getResource() {
@@ -82,6 +85,7 @@ public final class MediaRequest {
   }
 
   /**
+   * Get media reference.
    * @return Reference to media item
    */
   public @Nullable String getMediaRef() {
@@ -89,6 +93,7 @@ public final class MediaRequest {
   }
 
   /**
+   * Get media arguments.
    * @return Additional arguments affection media resolving
    */
   public @NotNull MediaArgs getMediaArgs() {
@@ -96,6 +101,7 @@ public final class MediaRequest {
   }
 
   /**
+   * Get custom property names for media parameters.
    * @return Defines property names to read media parameters from for this media request.
    */
   public @NotNull MediaPropertyNames getMediaPropertyNames() {
@@ -146,6 +152,7 @@ public final class MediaRequest {
     private String mapProperty;
 
     /**
+     * Set media reference property name.
      * @param name Name of the property from which the media reference is read
      * @return this
      */
@@ -155,6 +162,7 @@ public final class MediaRequest {
     }
 
     /**
+     * Get media reference property name.
      * @return Name of the property from which the media reference is read
      */
     public @Nullable String getRefProperty() {
@@ -162,6 +170,7 @@ public final class MediaRequest {
     }
 
     /**
+     * Set cropping property name.
      * @param name Name of the property which contains the cropping parameters
      * @return this
      */
@@ -171,6 +180,7 @@ public final class MediaRequest {
     }
 
     /**
+     * Get cropping property name.
      * @return Name of the property which contains the cropping parameters
      */
     public @Nullable String getCropProperty() {
@@ -178,6 +188,7 @@ public final class MediaRequest {
     }
 
     /**
+     * Set rotation property name.
      * @param name Name of the property which contains the rotation parameter
      * @return this
      */
@@ -187,6 +198,7 @@ public final class MediaRequest {
     }
 
     /**
+     * Get rotation property name.
      * @return Name of the property which contains the rotation parameter
      */
     public @Nullable String getRotationProperty() {
@@ -194,6 +206,7 @@ public final class MediaRequest {
     }
 
     /**
+     * Set image map property name.
      * @param name Name of the property which contains the image map data
      * @return this
      */
@@ -203,6 +216,7 @@ public final class MediaRequest {
     }
 
     /**
+     * Get image map property name.
      * @return Name of the property which contains the image map data
      */
     public @Nullable String getMapProperty() {

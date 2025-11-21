@@ -29,23 +29,27 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface UriTemplate {
 
   /**
+   * Get URI template string.
    * @return URI template string containing placeholders like <code>{width}</code> or <code>{height}</code>.
    */
   @NotNull
   String getUriTemplate();
 
   /**
+   * Get URI template type.
    * @return URI template type
    */
   @NotNull
   UriTemplateType getType();
 
   /**
+   * Get maximum width constraint.
    * @return Maximum width that can be requested for the given asset. Returns 0 if no maximum width is defined.
    */
   long getMaxWidth();
 
   /**
+   * Get maximum height constraint.
    * @return Maximum height that can be requested for the given asset. Returns 0 if no maximum height is defined.
    */
   long getMaxHeight();

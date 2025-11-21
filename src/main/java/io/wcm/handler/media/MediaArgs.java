@@ -1071,6 +1071,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Get width options for responsive image renditions.
      * @return Widths for the renditions in the <code>srcset</code> attribute.
      */
     public @NotNull WidthOption @Nullable [] getWidthOptions() {
@@ -1078,6 +1079,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Check if density descriptors should be used.
      * @return whether density descriptors should be used instead of width descriptors.
      */
     public boolean hasDensityDescriptors() {
@@ -1228,6 +1230,7 @@ public final class MediaArgs implements Cloneable {
     }
 
     /**
+     * Check if density descriptors should be used.
      * @return whether density descriptors should be used instead of width descriptors.
      */
     public boolean hasDensityDescriptors() {

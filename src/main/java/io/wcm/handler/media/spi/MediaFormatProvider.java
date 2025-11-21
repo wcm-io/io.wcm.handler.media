@@ -61,6 +61,7 @@ public abstract class MediaFormatProvider implements ContextAwareService {
   }
 
   /**
+   * Get media formats defined by this provider.
    * @return Media formats that the application defines
    */
   public @NotNull Set<MediaFormat> getMediaFormats() {

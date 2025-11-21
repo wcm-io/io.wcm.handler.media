@@ -80,6 +80,7 @@ public final class NextGenDynamicMediaConfigModel {
   }
 
   /**
+   * Check if Next Gen Dynamic Media is enabled.
    * @return true if Dynamic Media with OpenAPI for remote assets is available and enabled.
    */
   public boolean isEnabled() {
@@ -87,6 +88,7 @@ public final class NextGenDynamicMediaConfigModel {
   }
 
   /**
+   * Get Asset Selectors JavaScript URL.
    * @return Asset Selectors URL
    */
   public @Nullable String getAssetSelectorsJsUrl() {
