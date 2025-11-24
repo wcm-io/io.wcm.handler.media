@@ -24,7 +24,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
 
-    <release version="2.6.0" date="not released">
+    <release version="2.6.0" date="2025-11-24">
       <action type="update" dev="sseifert" issue="123"><![CDATA[
         Dynamic Media: Do not use Dynamic Media to generate download URLs, unless explicitly enabled via OSGi configuration (backward-compatibility mode).
         Latest setups of Dynamic Media do not support downloading original binaries of images, thus Dynamic Media is only used for rendering image renditions and no longer for any downloads.<br/>
