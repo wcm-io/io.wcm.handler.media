@@ -87,8 +87,17 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     @AttributeDefinition(
         name = "Disable AEM Fallback",
         description = "Disable the automatic fallback to AEM-based rendering of renditions (via Media Handler) "
-            + "if Dynamic Media is enabled, but the asset has not the appropriate Dynamic Media metadata.")
+            + "if Dynamic Media is enabled, but the asset has not the appropriate Dynamic Media metadata. "
+            + "Please note that AEM is still used to deliver binaries for downloads even if this is activated, "
+            + "unless 'Enable Downloads' is activated as well (which is not recommended).")
     boolean disableAemFallback() default false;
+
+    @AttributeDefinition(
+        name = "Enable Downloads",
+        description = "Use Dynamic Media for downloads (for both image and non-image binaries). "
+            + "It is NOT recommended to enable this setting. Dynamic Media does provides reliable downloads only for non-image files, not to original binaries of images files "
+            + "(although this did work for older setups). Enable this option only if you know what you are doing (backward-compatibility mode).")
+    boolean enableDownloads() default false;
 
     @AttributeDefinition(
         name = "Validate Smart Crop Rendition Sizes",
@@ -134,6 +143,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   private DynamicMediaCapabilityDetection dmCapabilityDetection;
   private boolean authorPreviewMode;
   private boolean disableAemFallback;
+  private boolean enableDownloads;
   private boolean validateSmartCropRenditionSizes;
   private Dimension imageSizeLimit;
   private boolean setImageQuality;
@@ -151,6 +161,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
     this.dmCapabilityDetection = config.dmCapabilityDetection();
     this.authorPreviewMode = config.authorPreviewMode();
     this.disableAemFallback = config.disableAemFallback();
+    this.enableDownloads = config.enableDownloads();
     this.validateSmartCropRenditionSizes = config.validateSmartCropRenditionSizes();
     this.imageSizeLimit = new Dimension(config.imageSizeLimitWidth(), config.imageSizeLimitHeight());
     this.setImageQuality = config.setImageQuality();
@@ -186,6 +197,11 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Override
   public boolean isAemFallbackDisabled() {
     return disableAemFallback;
+  }
+
+  @Override
+  public boolean isEnableDownloads() {
+    return enableDownloads;
   }
 
   @Override
