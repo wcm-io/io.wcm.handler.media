@@ -36,6 +36,7 @@ public class Dimension {
   private final long height;
 
   /**
+   * Create dimension with width and height.
    * @param width Width in pixels
    * @param height Height in pixels
    */
@@ -45,6 +46,7 @@ public class Dimension {
   }
 
   /**
+   * Get width in pixels.
    * @return Width in pixels
    */
   public final long getWidth() {
@@ -52,6 +54,7 @@ public class Dimension {
   }
 
   /**
+   * Get height in pixels.
    * @return Height in pixels
    */
   public final long getHeight() {

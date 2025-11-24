@@ -78,6 +78,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Get content types for this media file type.
    * @return Content types
    */
   public Set<String> getContentTypes() {
@@ -85,6 +86,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Get file extensions for this media file type.
    * @return File extensions
    */
   public Set<String> getExtensions() {
@@ -92,6 +94,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Check if this image type supports quality percentage.
    * @return true if this image type has lossy compression and image quality is specified in percentage
    */
   public boolean isImageQualityPercentage() {
@@ -133,6 +136,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Get image file extensions supported by the Media Handler.
    * @return Image file extensions supported by the Media Handler for rendering as image.
    */
   public static @NotNull Set<String> getImageFileExtensions() {
@@ -140,6 +144,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Get image content types supported by the Media Handler.
    * @return Image content types supported by the Media Handler for rendering as image.
    */
   public static @NotNull Set<String> getImageContentTypes() {
@@ -156,6 +161,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Get browser-supported image file extensions.
    * @return Image file extensions supported for direct display in a browser.
    */
   public static @NotNull Set<String> getBrowserImageFileExtensions() {
@@ -163,6 +169,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Get browser-supported image content types.
    * @return Image content types supported for direct display in a browser.
    */
   public static @NotNull Set<String> getBrowserImageContentTypes() {
@@ -179,6 +186,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Get vector image file extensions.
    * @return Image file extensions that are vector images.
    */
   public static @NotNull Set<String> getVectorImageFileExtensions() {
@@ -186,6 +194,7 @@ public enum MediaFileType {
   }
 
   /**
+   * Get vector image content types.
    * @return Image content types that are vector images.
    */
   public static @NotNull Set<String> getVectorImageContentTypes() {

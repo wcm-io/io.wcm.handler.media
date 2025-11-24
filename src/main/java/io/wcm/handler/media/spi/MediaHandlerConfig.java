@@ -67,6 +67,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
       DummyImageMediaMarkupBuilder.class);
 
   /**
+   * Get supported media sources.
    * @return Supported media sources
    */
   public @NotNull List<Class<? extends MediaSource>> getSources() {
@@ -74,6 +75,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get available media markup builders.
    * @return Available media markup builders
    */
   public @NotNull List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
@@ -81,6 +83,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get media metadata pre processors.
    * @return List of media metadata pre processors (optional). The processors are applied in list order.
    */
   public @NotNull List<Class<? extends MediaProcessor>> getPreProcessors() {
@@ -89,6 +92,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get media metadata post processors.
    * @return List of media metadata post processors (optional). The processors are applied in list order.
    */
   public @NotNull List<Class<? extends MediaProcessor>> getPostProcessors() {
@@ -146,6 +150,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get default media reference property name.
    * @return Default property name for reference to media library item
    */
   public @NotNull String getMediaRefProperty() {
@@ -158,6 +163,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get default cropping property name.
    * @return Default property name for cropping parameters
    */
   public @NotNull String getMediaCropProperty() {
@@ -170,6 +176,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get default rotation property name.
    * @return Default property name for rotate parameter
    */
   public @NotNull String getMediaRotationProperty() {
@@ -182,6 +189,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get default image map property name.
    * @return Default property name for map parameter
    */
   public @NotNull String getMediaMapProperty() {
@@ -194,6 +202,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get default alt text property name.
    * @return Default property name for media alt. text
    */
   public @NotNull String getMediaAltTextProperty() {
@@ -206,6 +215,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get default force alt from asset property name.
    * @return Default property name for forcing reading alt. text from DAM asset description
    */
   public @NotNull String getMediaForceAltTextFromAssetProperty() {
@@ -218,6 +228,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get default decorative image property name.
    * @return Default property name for marking image as "decorative" - requiring no alt. text
    */
   public @NotNull String getMediaIsDecorativeProperty() {
@@ -230,6 +241,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get default inline media node name.
    * @return Default node name for inline media item stored in node within the content page
    */
   public @NotNull String getMediaInlineNodeName() {
@@ -288,6 +300,7 @@ public abstract class MediaHandlerConfig implements ContextAwareService {
   }
 
   /**
+   * Get allowed IPE editor types.
    * @return Allowed editor types for image IPE (in-place editor).
    *         By default, only the OOTB "image" editor type is supported.
    */

@@ -116,6 +116,8 @@ public final class DamContext implements Adaptable {
     return dynamicMediaSupportService.isDynamicMediaEnabled()
         // check that DM capability is enabled for the given asset
         && dynamicMediaSupportService.isDynamicMediaCapabilityEnabled(isDynamicMediaAsset())
+        // use dynamic media only for downloads if explicitly enabled
+        && (!(mediaArgs.isDownload() || mediaArgs.isContentDispositionAttachment()) || dynamicMediaSupportService.isEnableDownloads())
         // ensure DM is not disabled within MediaArgs for this media request
         && !mediaArgs.isDynamicMediaDisabled();
   }
