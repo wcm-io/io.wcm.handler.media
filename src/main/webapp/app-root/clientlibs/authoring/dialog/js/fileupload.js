@@ -119,8 +119,7 @@
           const repositoryId = JSON.parse(cfg).repositoryId;
           const fileReferenceParts = assetPath.split("/");
           const assetId = fileReferenceParts[1];
-          const assetName = fileReferenceParts[2];
-          const thumbnailUrl = `https://${repositoryId}/adobe/assets/${assetId}/as/${assetName}?width=320`;
+          const thumbnailUrl = `https://${repositoryId}/adobe/assets/${assetId}/as/thumbnail.jpg?width=320&height=320`;
           thumbnailObject = $("<img/>").attr({"src": thumbnailUrl});
         }
       }
