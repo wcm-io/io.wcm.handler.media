@@ -35,12 +35,13 @@ Make sure to configure the service user mapping for Dynamic Media as described i
 
 The "wcm.io Media Handler Dynamic Media Support" OSGi configuration supports additional options:
 
-* Enabled: Dynamic media support is enabled by default, if Dynamic Media is configured for the AEM instance. With this flag it is possible to disable it in the media handler.
+* **Enabled**: Dynamic media support is enabled by default, if Dynamic Media is configured for the AEM instance. With this flag it is possible to disable it in the media handler.
 * Author Preview Mode: If activated, Dynamic Media requests are routed through the AEM instance. Ths is useful when the "Publish Assets" configuration is not set to "Immediately", and thus images that are not yet accessible live via Dynamic Media can be previewed on author instances. Must not be activated on publish instances.
-* Disable AEM Fallback: Disable the automatic fallback to AEM-based rendering of renditions (via Media Handler) if Dynamic Media is enabled, but the asset has not the appropriate Dynamic Media metadata. The asset is then handled as invalid.
-* Image width/height limit: Has to be configured to the same values as the image server "Reply Image Size Limit" in Dynamic Media.
+* **Disable AEM Fallback**: Disable the automatic fallback to AEM-based rendering of renditions (via Media Handler) if Dynamic Media is enabled, but the asset has not the appropriate Dynamic Media metadata. The asset is then handled as invalid.
+* **Enable Downloads**: By default this is disabled and downloads are not served by Dynamic Media. Instead, all downloads are service by AEM DAM, because Dynamic Media has limitations providing access to original binaries for images. If you enable this setting, all downloads are served by Dynamic Media (although this may not work for some file types).
+* **Image width/height limit**: Has to be configured to the same values as the image server "Reply Image Size Limit" in Dynamic Media.
 
-To support serving static content for "download" (with `Content-Disposition: attachment` header) please activate this ruleset in Dynamic Media for the image servers:
+*Backward compatibility:* If you have enabled the **Enable Downloads** flag, activate this ruleset in Dynamic Media for the images services to support serving static content for "download" (with `Content-Disposition: attachment` header):
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
