@@ -135,6 +135,26 @@ To enable IMS authentication for the metadata service:
     ```
 
 
+### Client-side Customization
+
+When using the Remote Asset Picker in the authoring environment, it is possible to customize the configuration passed to the asset selector (e.g. to enable multi-select or add custom filters) via a jQuery event.
+
+The event `wcmio-handler-media-ngdm-configure-selector` is triggered on the pathfield input element before the asset selector is opened. The `assetSelectorProps` object is passed as a second argument and can be modified directly.
+
+Example:
+
+```javascript
+(function($) {
+  "use strict";
+
+  $(document).on("wcmio-handler-media-ngdm-configure-selector", function(event, assetSelectorProps) {
+    // Enable multi-selection
+    assetSelectorProps.acvConfig.selectionType = "multiple";
+  });
+
+})(Granite.$);
+```
+
 
 ### Known Limitations
 
