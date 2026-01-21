@@ -24,9 +24,9 @@
     xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
 
-    <release version="2.6.4" date="not released">
+    <release version="2.7.0" date="not released">
       <action type="add" dev="mwehner">
-        Dynamic Media with Open API: Support client-side customization of asset selector properties via jQuery event.
+        Dynamic Media with Open API: Support client-side customization of asset selector properties via JavaScript Event.
       </action>
     </release>
 
