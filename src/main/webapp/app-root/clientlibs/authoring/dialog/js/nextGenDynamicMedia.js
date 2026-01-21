@@ -199,6 +199,10 @@
       ];
     }
 
+    // trigger event to allow customization of asset selector props
+    var event = $.Event("wcmio-handler-media-ngdm-configure-selector");
+    self._$pathfield.trigger(event, [assetSelectorProps]);
+
     return assetSelectorProps;
   }
 
