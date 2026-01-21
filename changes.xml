@@ -25,7 +25,7 @@
   <body>
 
     <release version="2.7.0" date="not released">
-      <action type="add" dev="mwehner">
+      <action type="add" dev="mwehner" issue="131">
         Dynamic Media with Open API: Support client-side customization of asset selector properties via JavaScript Event.
       </action>
     </release>
