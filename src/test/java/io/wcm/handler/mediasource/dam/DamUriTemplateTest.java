@@ -95,11 +95,11 @@ class DamUriTemplateTest {
     Media media = mediaHandler.get(asset.getPath()).build();
 
     assertUriTemplate(media, CROP_CENTER, 100, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&hei={height}&fit=crop");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&hei={height}&fit=crop&qlt=85");
     assertUriTemplate(media, SCALE_WIDTH, 100, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&qlt=85");
     assertUriTemplate(media, SCALE_HEIGHT, 100, 50,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}&qlt=85");
   }
 
   @Test

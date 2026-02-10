@@ -230,7 +230,7 @@ public final class DynamicMediaPath {
    * @param damContext DAM context
    * @return true if the asset has a lossless image format
    */
-  private static boolean isLosslessImageFormat(@NotNull DamContext damContext) {
+  public static boolean isLosslessImageFormat(@NotNull DamContext damContext) {
     String mimeType = damContext.getAsset().getMimeType();
     return StringUtils.equals(mimeType, ContentType.PNG);
   }
