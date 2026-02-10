@@ -48,6 +48,7 @@ import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
@@ -58,6 +59,7 @@ import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -127,6 +129,27 @@ class DamUriTemplateRenditionTest {
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&qlt=95");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 192, 120,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}&qlt=95");
+  }
+
+  @Test
+  void testOriginal_DynamicMedia_DisableSetImageQuality() {
+    // disable setImageQuality option
+    context.registerInjectActivateService(DynamicMediaSupportServiceImpl.class,
+        "setImageQuality", false,
+        "defaultFmt", "avif",
+        "defaultFmtAlpha", "avif-alpha",
+        Constants.SERVICE_RANKING, 1000);
+    mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    Asset asset = createSampleAssetWithDynamicMedia();
+    Media media = mediaHandler.get(asset.getPath())
+        .mediaFormat(RATIO_16_10)
+        .build();
+
+    assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}");
+    assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 192, 120,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}");
   }
 
   @Test
