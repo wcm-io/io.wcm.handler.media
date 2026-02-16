@@ -114,6 +114,21 @@ public final class MetadataSample {
       + "  }"
       + "}";
 
+  public static final String METADATA_JSON_VIDEO = "{"
+      + "  \"assetId\": \"" + SAMPLE_ASSET_ID + "\","
+      + "  \"repositoryMetadata\": {"
+      + "    \"repo:name\": \"test.mp4\","
+      + "    \"dc:format\": \"video/mp4\","
+      + "    \"repo:size\": \"9123456\""
+      + "  },"
+      + "  \"assetMetadata\": {"
+      + "    \"dam:assetStatus\": \"approved\","
+      + "    \"duration\": \"43\","
+      + "    \"xmpDM:videoFrameSize_stDim:w\": \"1920\","
+      + "    \"xmpDM:videoFrameSize_stDim:h\": \"1080\""
+      + "  }"
+      + "}";
+
   private MetadataSample() {
     // constants only
   }
