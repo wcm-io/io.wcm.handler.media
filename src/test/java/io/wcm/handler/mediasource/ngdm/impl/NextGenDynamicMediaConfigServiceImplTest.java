@@ -48,7 +48,9 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertTrue(underTest.isEnabledLocalAssets());
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
     assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}", underTest.getImageDeliveryBasePath());
-    assertEquals("/videopath1", underTest.getVideoDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/manifest.{format}", underTest.getVideoDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/play", underTest.getVideoPlayerPath());
+    assertEquals("HLS", underTest.getDefaultVideoManifestFormat());
     assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/metadata", underTest.getAssetMetadataPath());
     assertEquals("repo1", underTest.getRemoteAssetsRepositoryId());
@@ -66,6 +68,9 @@ class NextGenDynamicMediaConfigServiceImplTest {
         "enabledLocalAssets", false,
         "localAssetsRepositoryId", "",
         "imageDeliveryBasePath", "",
+        "videoDeliveryPath", "",
+        "videoPlayerPath", "",
+        "defaultVideoManifestFormat", "",
         "assetOriginalBinaryDeliveryPath", "",
         "assetMetadataPath", "");
     assertFalse(underTest.isEnabledRemoteAssets());
@@ -73,6 +78,8 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertEquals("/selector1", underTest.getAssetSelectorsJsUrl());
     assertEquals("/imagepath1", underTest.getImageDeliveryBasePath());
     assertEquals("/videopath1", underTest.getVideoDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/play", underTest.getVideoPlayerPath());
+    assertEquals("HLS", underTest.getDefaultVideoManifestFormat());
     assertEquals("/assetpath1", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/metadatapath1", underTest.getAssetMetadataPath());
     assertEquals("repo1", underTest.getRemoteAssetsRepositoryId());
@@ -89,7 +96,9 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertFalse(underTest.isEnabledLocalAssets());
     assertNull(underTest.getAssetSelectorsJsUrl());
     assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}", underTest.getImageDeliveryBasePath());
-    assertNull(underTest.getVideoDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/manifest.{format}", underTest.getVideoDeliveryPath());
+    assertEquals("/adobe/assets/{asset-id}/play", underTest.getVideoPlayerPath());
+    assertEquals("HLS", underTest.getDefaultVideoManifestFormat());
     assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/metadata", underTest.getAssetMetadataPath());
     assertNull(underTest.getRemoteAssetsRepositoryId());

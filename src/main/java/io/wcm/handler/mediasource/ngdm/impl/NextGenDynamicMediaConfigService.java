@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -90,6 +91,24 @@ public interface NextGenDynamicMediaConfigService {
    */
   @Nullable
   String getVideoDeliveryPath();
+
+  /**
+   * Gets the path expression for the hosted player experience.
+   * The following placeholders with the below meaning are contained within that path:
+   * <ul>
+   * <li><code>{asset-id}</code> - the uuid of the asset in the format 'urn:aaid:aem:UUID'</li>
+   * </ul>
+   * @return the path expression for the video player path
+   */
+  @Nullable
+  String getVideoPlayerPath();
+
+  /**
+   * Gets the default video manifest format.
+   * @return Default manifest format as string ("HLS" or "DASH")
+   */
+  @NotNull
+  String getDefaultVideoManifestFormat();
 
   /**
    * Gets the path expression for the the Original Asset Delivery which delivers
