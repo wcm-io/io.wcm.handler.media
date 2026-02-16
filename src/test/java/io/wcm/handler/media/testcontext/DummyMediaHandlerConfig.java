@@ -23,11 +23,17 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.wcm.handler.media.markup.DummyImageMediaMarkupBuilder;
+import io.wcm.handler.media.markup.SimpleImageMediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
+import io.wcm.handler.media.spi.MediaMarkupBuilder;
 import io.wcm.handler.media.spi.MediaSource;
 import io.wcm.handler.mediasource.dam.DamMediaSource;
+import io.wcm.handler.mediasource.dam.markup.DamVideoMediaMarkupBuilder;
 import io.wcm.handler.mediasource.inline.InlineMediaSource;
 import io.wcm.handler.mediasource.ngdm.NextGenDynamicMediaMediaSource;
+import io.wcm.handler.mediasource.ngdm.markup.NextGenDynamicMediaHostedPlayerMarkupBuilder;
+import io.wcm.handler.mediasource.ngdm.markup.NextGenDynamicMediaVideoMarkupBuilder;
 
 /**
  * Dummy media configuration
@@ -39,11 +45,23 @@ public class DummyMediaHandlerConfig extends MediaHandlerConfig {
       DamMediaSource.class,
       InlineMediaSource.class);
 
+  private static final List<Class<? extends MediaMarkupBuilder>> MEDIA_MARKUP_BUILDERS = List.of(
+      NextGenDynamicMediaVideoMarkupBuilder.class,
+      NextGenDynamicMediaHostedPlayerMarkupBuilder.class,
+      DamVideoMediaMarkupBuilder.class,
+      SimpleImageMediaMarkupBuilder.class,
+      DummyImageMediaMarkupBuilder.class);
+
   private boolean enforceVirtualRenditions;
 
   @Override
   public @NotNull List<Class<? extends MediaSource>> getSources() {
     return MEDIA_SOURCES;
+  }
+
+  @Override
+  public @NotNull List<Class<? extends MediaMarkupBuilder>> getMarkupBuilders() {
+    return MEDIA_MARKUP_BUILDERS;
   }
 
   @Override
