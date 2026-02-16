@@ -24,6 +24,13 @@
     xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
 
+    <release version="2.8.0" date="not released">
+      <action type="add" dev="mwehner"><![CDATA[
+        Dynamic Media with Open API: Add video support. Support adaptive streaming (HLS/DASH), hosted player URLs, and automated poster image generation for NGDM video assets.<br/>
+        <b>Breaking change:</b> With Dynamic Media, video URLs are now generated for streaming manifests by default. You can restore the previous behavior with <code>MediaArgs.download(true)</code>.
+      ]]></action>
+    </release>
+
     <release version="2.7.0" date="2026-02-16">
       <action type="add" dev="mwehner" issue="131">
         Dynamic Media with Open API: Support client-side customization of asset selector properties via JavaScript Event.
