@@ -36,6 +36,7 @@ import io.wcm.handler.media.UriTemplate;
 import io.wcm.handler.media.UriTemplateType;
 import io.wcm.handler.media.impl.ImageFileServlet;
 import io.wcm.handler.media.impl.ImageFileServletSelector;
+import io.wcm.handler.media.impl.ImageQualityPercentage;
 import io.wcm.handler.media.impl.MediaFileServletConstants;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaPath;
 import io.wcm.handler.mediasource.dam.impl.dynamicmedia.NamedDimension;
@@ -168,6 +169,7 @@ final class DamUriTemplate implements UriTemplate {
       result.append("%3A").append(smartCropDef.getName()).append("?")
           .append(getDynamicMediaWidthHeightParameters(type))
           .append("&fit=constrain");
+      appendDynamicMediaQuality(result, damContext);
       return result.toString();
     }
 
@@ -180,6 +182,7 @@ final class DamUriTemplate implements UriTemplate {
       result.append("rotate=").append(rotation).append("&");
     }
     result.append(getDynamicMediaWidthHeightParameters(type));
+    appendDynamicMediaQuality(result, damContext);
     return result.toString();
   }
 
@@ -203,6 +206,13 @@ final class DamUriTemplate implements UriTemplate {
       return SmartCrop.getDimensionForRatio(damContext.getImageProfile(), ratio);
     }
     return null;
+  }
+
+  private static void appendDynamicMediaQuality(@NotNull StringBuilder result, @NotNull DamContext damContext) {
+    if (damContext.isDynamicMediaSetImageQuality() && !DynamicMediaPath.isLosslessImageFormat(damContext)) {
+      // it not PNG lossy format is used, apply image quality setting
+      result.append("&qlt=").append(ImageQualityPercentage.getAsInteger(damContext.getMediaArgs(), damContext.getMediaHandlerConfig()));
+    }
   }
 
   @Override

@@ -48,6 +48,7 @@ import org.apache.sling.testing.mock.osgi.MapUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.osgi.framework.Constants;
 
 import com.day.cq.dam.api.Asset;
 import com.day.cq.dam.api.DamConstants;
@@ -58,6 +59,7 @@ import io.wcm.handler.media.MediaArgs.PictureSource;
 import io.wcm.handler.media.MediaHandler;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
+import io.wcm.handler.mediasource.dam.impl.dynamicmedia.DynamicMediaSupportServiceImpl;
 import io.wcm.handler.mediasource.dam.impl.metadata.AssetSynchonizationService;
 import io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataListenerService;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -120,6 +122,28 @@ class DamUriTemplateRenditionTest {
     Asset asset = createSampleAssetWithDynamicMedia();
     Media media = mediaHandler.get(asset.getPath())
         .mediaFormat(RATIO_16_10)
+        .imageQualityPercentage(0.95)
+        .build();
+
+    assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&qlt=95");
+    assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 192, 120,
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}&qlt=95");
+  }
+
+  @Test
+  void testOriginal_DynamicMedia_DisableSetImageQuality() {
+    // disable setImageQuality option
+    context.registerInjectActivateService(DynamicMediaSupportServiceImpl.class,
+        "setImageQuality", false,
+        "defaultFmt", "avif",
+        "defaultFmtAlpha", "avif-alpha",
+        Constants.SERVICE_RANKING, 1000);
+    mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
+
+    Asset asset = createSampleAssetWithDynamicMedia();
+    Media media = mediaHandler.get(asset.getPath())
+        .mediaFormat(RATIO_16_10)
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
@@ -167,9 +191,9 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 160, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&wid={width}&qlt=85");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 160, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&hei={height}&qlt=85");
   }
 
   @Test
@@ -235,22 +259,22 @@ class DamUriTemplateRenditionTest {
     assertEquals(4, renditions.size());
 
     assertUriTemplate(renditions.get(0), SCALE_WIDTH, 192, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&qlt=85");
     assertUriTemplate(renditions.get(1), SCALE_WIDTH, 192, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&qlt=85");
     assertUriTemplate(renditions.get(2), SCALE_WIDTH, 120, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&wid={width}&qlt=85");
     assertUriTemplate(renditions.get(3), SCALE_WIDTH, 160, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&wid={width}&qlt=85");
 
     assertUriTemplate(renditions.get(0), SCALE_HEIGHT, 192, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}&qlt=85");
     assertUriTemplate(renditions.get(1), SCALE_HEIGHT, 192, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?hei={height}&qlt=85");
     assertUriTemplate(renditions.get(2), SCALE_HEIGHT, 120, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&hei={height}&qlt=85");
     assertUriTemplate(renditions.get(3), SCALE_HEIGHT, 160, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&hei={height}&qlt=85");
   }
 
   @Test
@@ -282,22 +306,22 @@ class DamUriTemplateRenditionTest {
     assertEquals(4, renditions.size());
 
     assertUriTemplate(renditions.get(0), SCALE_WIDTH, 173, 108,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}&fit=constrain");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}&fit=constrain&qlt=85");
     assertUriTemplate(renditions.get(1), SCALE_WIDTH, 173, 108,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}&fit=constrain");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?wid={width}&fit=constrain&qlt=85");
     assertUriTemplate(renditions.get(2), SCALE_WIDTH, 120, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&wid={width}&qlt=85");
     assertUriTemplate(renditions.get(3), SCALE_WIDTH, 115, 86,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?wid={width}&fit=constrain");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?wid={width}&fit=constrain&qlt=85");
 
     assertUriTemplate(renditions.get(0), SCALE_HEIGHT, 173, 108,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}&fit=constrain");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}&fit=constrain&qlt=85");
     assertUriTemplate(renditions.get(1), SCALE_HEIGHT, 173, 108,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}&fit=constrain");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A16-10?hei={height}&fit=constrain&qlt=85");
     assertUriTemplate(renditions.get(2), SCALE_HEIGHT, 120, 120,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=36,0,120,120&hei={height}&qlt=85");
     assertUriTemplate(renditions.get(3), SCALE_HEIGHT, 115, 86,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?hei={height}&fit=constrain");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg%3A4-3?hei={height}&fit=constrain&qlt=85");
   }
 
   @Test
@@ -329,9 +353,9 @@ class DamUriTemplateRenditionTest {
         .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 50, 75,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=5,5,75,50&rotate=90&wid={width}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=5,5,75,50&rotate=90&wid={width}&qlt=85");
     assertUriTemplate(media.getRendition(), SCALE_HEIGHT, 50, 75,
-        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=5,5,75,50&rotate=90&hei={height}");
+        "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=5,5,75,50&rotate=90&hei={height}&qlt=85");
   }
 
   Asset createSampleAsset() {
