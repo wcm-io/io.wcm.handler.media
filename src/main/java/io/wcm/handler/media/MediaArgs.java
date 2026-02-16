@@ -75,6 +75,8 @@ public final class MediaArgs implements Cloneable {
   private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
   private boolean dynamicMediaDisabled;
   private boolean webOptimizedImageDeliveryDisabled;
+  private VideoManifestFormat videoManifestFormat;
+  private boolean hostedVideoPlayer;
   private ValueMap properties;
 
   private static final Set<String> ALLOWED_FORCED_FILE_EXTENSIONS = Set.of(
@@ -766,6 +768,44 @@ public final class MediaArgs implements Cloneable {
   }
 
   /**
+   * Get the preferred video manifest format.
+   * @return Preferred video manifest format
+   */
+  public @Nullable VideoManifestFormat getVideoManifestFormat() {
+    return this.videoManifestFormat;
+  }
+
+  /**
+   * Set the preferred video manifest format.
+   * @param value Preferred video manifest format
+   * @return this
+   */
+  public @NotNull MediaArgs videoManifestFormat(@Nullable VideoManifestFormat value) {
+    this.videoManifestFormat = value;
+    return this;
+  }
+
+  /**
+   * Check if hosted video player is enabled.
+   * @return Whether to use Adobe's hosted video player instead of a streaming manifest,
+   *         affecting both URL generation and markup (iframe vs. HTML5 video element).
+   */
+  public boolean isHostedVideoPlayer() {
+    return this.hostedVideoPlayer;
+  }
+
+  /**
+   * Set whether to use hosted video player.
+   * @param value Whether to use Adobe's hosted video player instead of a streaming manifest,
+   *          affecting both URL generation and markup (iframe vs. HTML5 video element).
+   * @return this
+   */
+  public @NotNull MediaArgs hostedVideoPlayer(boolean value) {
+    this.hostedVideoPlayer = value;
+    return this;
+  }
+
+  /**
    * Custom properties that my be used by application-specific markup builders or processors.
    * @param map Property map. Is merged with properties already set.
    * @return this
@@ -884,6 +924,12 @@ public final class MediaArgs implements Cloneable {
     if (webOptimizedImageDeliveryDisabled) {
       sb.append("webOptimizedImageDeliveryDisabled", webOptimizedImageDeliveryDisabled);
     }
+    if (videoManifestFormat != null) {
+      sb.append("videoManifestFormat", videoManifestFormat);
+    }
+    if (hostedVideoPlayer) {
+      sb.append("hostedVideoPlayer", hostedVideoPlayer);
+    }
     if (properties != null && !properties.isEmpty()) {
       sb.append("properties", AemObjectReflectionToStringBuilder.filteredValueMap(properties));
     }
@@ -923,6 +969,8 @@ public final class MediaArgs implements Cloneable {
     clone.ipeRatioCustomize = this.ipeRatioCustomize;
     clone.dynamicMediaDisabled = this.dynamicMediaDisabled;
     clone.webOptimizedImageDeliveryDisabled = this.webOptimizedImageDeliveryDisabled;
+    clone.videoManifestFormat = this.videoManifestFormat;
+    clone.hostedVideoPlayer = this.hostedVideoPlayer;
     if (this.properties != null) {
       clone.properties = new ValueMapDecorator(new HashMap<>(this.properties));
     }

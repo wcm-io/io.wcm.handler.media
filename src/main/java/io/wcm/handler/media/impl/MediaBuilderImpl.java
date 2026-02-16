@@ -43,6 +43,7 @@ import io.wcm.handler.media.MediaRequest.MediaPropertyNames;
 import io.wcm.handler.media.format.MediaFormat;
 import io.wcm.handler.media.markup.DragDropSupport;
 import io.wcm.handler.mediasource.dam.AemRenditionType;
+import io.wcm.handler.media.VideoManifestFormat;
 import io.wcm.handler.url.UrlMode;
 import io.wcm.wcm.commons.component.ComponentPropertyResolverFactory;
 
@@ -323,6 +324,24 @@ final class MediaBuilderImpl implements MediaBuilder {
   @Override
   public @NotNull MediaBuilder webOptimizedImageDeliveryDisabled(boolean value) {
     this.mediaArgs.webOptimizedImageDeliveryDisabled(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder download(boolean value) {
+    this.mediaArgs.download(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder videoManifestFormat(@Nullable VideoManifestFormat value) {
+    this.mediaArgs.videoManifestFormat(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder hostedVideoPlayer(boolean value) {
+    this.mediaArgs.hostedVideoPlayer(value);
     return this;
   }
 

@@ -61,7 +61,22 @@ public enum MediaFileType {
   /**
    * SVG
    */
-  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG }, false);
+  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG }, false),
+
+  /**
+   * MP4
+   */
+  MP4(new String[] { "video/mp4" }, new String[] { "mp4" }, false),
+
+  /**
+   * WebM
+   */
+  WEBM(new String[] { "video/webm" }, new String[] { "webm" }, false),
+
+  /**
+   * MOV
+   */
+  MOV(new String[] { "video/quicktime" }, new String[] { "mov" }, false);
 
 
   private final Set<String> contentTypes;
@@ -125,6 +140,14 @@ public enum MediaFileType {
    */
   private static final EnumSet<MediaFileType> VECTOR_IMAGE_FILE_TYPES = EnumSet.of(
       SVG);
+
+  /**
+   * All file types that are supported by the Media Handler for video delivery.
+   */
+  private static final EnumSet<MediaFileType> VIDEO_FILE_TYPES = EnumSet.of(
+      MP4,
+      WEBM,
+      MOV);
 
   /**
    * Check if the given file extension is supported by the Media Handler for rendering as image.
@@ -199,6 +222,31 @@ public enum MediaFileType {
    */
   public static @NotNull Set<String> getVectorImageContentTypes() {
     return getContentTypes(VECTOR_IMAGE_FILE_TYPES);
+  }
+
+  /**
+   * Check if the given file extension is supported by the Media Handler for video delivery.
+   * @param fileExtension File extension
+   * @return true if video
+   */
+  public static boolean isVideo(@Nullable String fileExtension) {
+    return isExtension(VIDEO_FILE_TYPES, fileExtension);
+  }
+
+  /**
+   * Get video file extensions supported by the Media Handler.
+   * @return Video file extensions supported by the Media Handler for video delivery.
+   */
+  public static @NotNull Set<String> getVideoFileExtensions() {
+    return getFileExtensions(VIDEO_FILE_TYPES);
+  }
+
+  /**
+   * Get video content types supported by the Media Handler.
+   * @return Video content types supported by the Media Handler for video delivery.
+   */
+  public static @NotNull Set<String> getVideoContentTypes() {
+    return getContentTypes(VIDEO_FILE_TYPES);
   }
 
   private static Set<String> getContentTypes(@NotNull EnumSet<MediaFileType> fileTypes) {
