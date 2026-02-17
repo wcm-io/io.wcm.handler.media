@@ -29,9 +29,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.media.MediaArgs;
+import io.wcm.handler.media.VideoManifestFormat;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
-import io.wcm.handler.media.VideoManifestFormat;
 import io.wcm.sling.commons.adapter.AdaptTo;
 import io.wcm.testing.mock.aem.dam.ngdm.MockNextGenDynamicMediaConfig;
 import io.wcm.testing.mock.aem.junit5.AemContext;
@@ -98,6 +98,7 @@ class NextGenDynamicMediaVideoUrlBuilderTest {
     assertNull(underTest.buildPlayerUrl());
   }
 
+  @SuppressWarnings("null")
   private NextGenDynamicMediaVideoUrlBuilder getBuilder() {
     NextGenDynamicMediaContext ctx = new NextGenDynamicMediaContext(
         NextGenDynamicMediaReference.fromReference(SAMPLE_REFERENCE),

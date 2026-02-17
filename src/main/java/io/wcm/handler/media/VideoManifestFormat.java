@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Adaptive streaming manifest formats for video delivery.
+ *
  * <p>
  * These formats represent the <em>delivery</em> manifest that references multiple encoded qualities of the original
  * video asset. They are distinct from the original binary file types (MP4, WEBM, MOV) that are still tracked via
@@ -57,14 +58,16 @@ public enum VideoManifestFormat {
   }
 
   /**
-   * @return File extension of the manifest without leading dot.
+   * File extension of the manifest without leading dot.
+   * @return File extension
    */
   public @NotNull String getExtension() {
     return extension;
   }
 
   /**
-   * @return MIME type for playlist delivery.
+   * MIME type for playlist delivery.
+   * @return MIME type
    */
   public @NotNull String getMimeType() {
     return mimeType;

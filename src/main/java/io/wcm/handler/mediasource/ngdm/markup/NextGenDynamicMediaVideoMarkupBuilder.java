@@ -45,10 +45,11 @@ public class NextGenDynamicMediaVideoMarkupBuilder implements MediaMarkupBuilder
 
   @Override
   public boolean accepts(@NotNull Media media) {
-    if (!media.isValid() || media.getRendition() == null || media.getMediaRequest().getMediaArgs().isHostedVideoPlayer()) {
+    Rendition rendition = media.getRendition();
+    if (!media.isValid() || rendition == null || media.getMediaRequest().getMediaArgs().isHostedVideoPlayer()) {
       return false;
     }
-    return media.getRendition().isVideo();
+    return rendition.isVideo();
   }
 
   @Override

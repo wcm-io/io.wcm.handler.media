@@ -47,6 +47,7 @@ public final class NextGenDynamicMediaVideoUrlBuilder {
    * @param requestedFormat Requested format, falls back to configured default if {@code null}
    * @return Manifest URL or {@code null} if configuration is incomplete
    */
+  @SuppressWarnings("null")
   public @Nullable String buildManifestUrl(@Nullable VideoManifestFormat requestedFormat) {
     String repositoryId = getRepositoryId();
     String videoDeliveryPath = context.getNextGenDynamicMediaConfig().getVideoDeliveryPath();
@@ -81,6 +82,7 @@ public final class NextGenDynamicMediaVideoUrlBuilder {
    * Build remote player URL (HTML micro-frontend hosted by Dynamic Media).
    * @return Player URL or {@code null} if configuration is incomplete
    */
+  @SuppressWarnings("null")
   public @Nullable String buildPlayerUrl() {
     String repositoryId = getRepositoryId();
     String videoPlayerPath = context.getNextGenDynamicMediaConfig().getVideoPlayerPath();
