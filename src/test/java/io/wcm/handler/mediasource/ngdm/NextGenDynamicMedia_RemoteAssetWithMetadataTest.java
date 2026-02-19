@@ -387,6 +387,7 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
     Rendition rendition = media.getRendition();
     assertNotNull(rendition);
     assertTrue(rendition.isVideo());
+    assertFalse(rendition.isDownload());
     assertEquals("mp4", rendition.getFileExtension());
     assertEquals("video/mp4", rendition.getMimeType());
   }
