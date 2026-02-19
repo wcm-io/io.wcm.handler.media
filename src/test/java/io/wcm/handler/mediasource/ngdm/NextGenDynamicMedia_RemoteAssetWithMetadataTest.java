@@ -53,7 +53,6 @@ import io.wcm.handler.media.MediaNameConstants;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.handler.media.testcontext.DummyMediaFormats;
-import io.wcm.handler.media.VideoManifestFormat;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServiceImpl;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadataServiceImpl;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -351,7 +350,7 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
 
     Media media = mediaHandler.get(videoResource)
-        .videoManifestFormat(VideoManifestFormat.DASH)
+        .videoManifestFormat("mpd")
         .build();
     assertTrue(media.isValid());
 

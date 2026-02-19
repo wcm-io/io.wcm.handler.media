@@ -355,7 +355,7 @@ public interface MediaBuilder {
    * @return this
    */
   @NotNull
-  MediaBuilder videoManifestFormat(@Nullable VideoManifestFormat value);
+  MediaBuilder videoManifestFormat(@Nullable String value);
 
   /**
    * Disable dynamic media support.

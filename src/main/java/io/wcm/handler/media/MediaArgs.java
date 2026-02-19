@@ -75,7 +75,7 @@ public final class MediaArgs implements Cloneable {
   private IPERatioCustomize ipeRatioCustomize = IPERatioCustomize.AUTO;
   private boolean dynamicMediaDisabled;
   private boolean webOptimizedImageDeliveryDisabled;
-  private VideoManifestFormat videoManifestFormat;
+  private String videoManifestFormat;
   private boolean hostedVideoPlayer;
   private ValueMap properties;
 
@@ -771,16 +771,18 @@ public final class MediaArgs implements Cloneable {
    * Get the preferred video manifest format.
    * @return Preferred video manifest format
    */
-  public @Nullable VideoManifestFormat getVideoManifestFormat() {
+  public @Nullable String getVideoManifestFormat() {
     return this.videoManifestFormat;
   }
 
   /**
    * Set the preferred video manifest format.
-   * @param value Preferred video manifest format
+   * @param value Preferred video manifest format as file extension string
+   *          (e.g. {@link MediaFileType#M3U8}{@code .getExtension()} for HLS,
+   *          {@link MediaFileType#MPD}{@code .getExtension()} for DASH)
    * @return this
    */
-  public @NotNull MediaArgs videoManifestFormat(@Nullable VideoManifestFormat value) {
+  public @NotNull MediaArgs videoManifestFormat(@Nullable String value) {
     this.videoManifestFormat = value;
     return this;
   }

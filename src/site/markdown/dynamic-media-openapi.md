@@ -58,7 +58,7 @@ You can control how videos are delivered using the following options in `MediaAr
 * **Adaptive Streaming (Default)**: Returns a manifest URL for adaptive bitrate streaming. By default, HLS (`.m3u8`) is used. You can switch to DASH (`.mpd`) using the `videoManifestFormat` option:
   ```java
   mediaHandler.get(resource)
-      .videoManifestFormat(VideoManifestFormat.DASH)
+      .videoManifestFormat(MediaFileType.MPD.getExtension())
       .build();
   ```
 * **Hosted Player**: Returns the URL to Adobe's hosted video player (intended for use in an `<iframe>`). This is enabled via the `hostedVideoPlayer` flag:

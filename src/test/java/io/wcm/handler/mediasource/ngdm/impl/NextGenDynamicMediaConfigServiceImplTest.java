@@ -50,7 +50,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}", underTest.getImageDeliveryBasePath());
     assertEquals("/adobe/assets/{asset-id}/manifest.{format}", underTest.getVideoDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/play", underTest.getVideoPlayerPath());
-    assertEquals("HLS", underTest.getDefaultVideoManifestFormat());
+    assertEquals("m3u8", underTest.getDefaultVideoManifestFormat());
     assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/metadata", underTest.getAssetMetadataPath());
     assertEquals("repo1", underTest.getRemoteAssetsRepositoryId());
@@ -79,7 +79,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertEquals("/imagepath1", underTest.getImageDeliveryBasePath());
     assertEquals("/videopath1", underTest.getVideoDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/play", underTest.getVideoPlayerPath());
-    assertEquals("HLS", underTest.getDefaultVideoManifestFormat());
+    assertEquals("m3u8", underTest.getDefaultVideoManifestFormat());
     assertEquals("/assetpath1", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/metadatapath1", underTest.getAssetMetadataPath());
     assertEquals("repo1", underTest.getRemoteAssetsRepositoryId());
@@ -98,7 +98,7 @@ class NextGenDynamicMediaConfigServiceImplTest {
     assertEquals("/adobe/assets/{asset-id}/as/{seo-name}.{format}", underTest.getImageDeliveryBasePath());
     assertEquals("/adobe/assets/{asset-id}/manifest.{format}", underTest.getVideoDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/play", underTest.getVideoPlayerPath());
-    assertEquals("HLS", underTest.getDefaultVideoManifestFormat());
+    assertEquals("m3u8", underTest.getDefaultVideoManifestFormat());
     assertEquals("/adobe/assets/{asset-id}/original/as/{seo-name}", underTest.getAssetOriginalBinaryDeliveryPath());
     assertEquals("/adobe/assets/{asset-id}/metadata", underTest.getAssetMetadataPath());
     assertNull(underTest.getRemoteAssetsRepositoryId());

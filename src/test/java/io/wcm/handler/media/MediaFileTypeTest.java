@@ -105,6 +105,14 @@ class MediaFileTypeTest {
   }
 
   @Test
+  void testGetExtension() {
+    assertEquals("jpg", MediaFileType.JPEG.getExtension());
+    assertEquals("tif", MediaFileType.TIFF.getExtension());
+    assertEquals("m3u8", MediaFileType.M3U8.getExtension());
+    assertEquals("mpd", MediaFileType.MPD.getExtension());
+  }
+
+  @Test
   void testGetByFileExtensions() {
     assertEquals(MediaFileType.JPEG, MediaFileType.getByFileExtensions("jpg"));
     assertEquals(MediaFileType.JPEG, MediaFileType.getByFileExtensions("JPG"));

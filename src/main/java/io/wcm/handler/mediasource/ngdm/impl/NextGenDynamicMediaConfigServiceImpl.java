@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
 
-import io.wcm.handler.media.VideoManifestFormat;
 
 /**
  * Wraps access to NextGenDynamicMediaConfig - which is deployed but not accessible on AEM 6.5.
@@ -113,15 +112,15 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
         name = "Default video manifest format",
         description = "Default adaptive streaming manifest format used when no per-request override is given.",
         options = {
-            @Option(label = "HLS (m3u8)", value = "HLS"),
-            @Option(label = "DASH (mpd)", value = "DASH")
+            @Option(label = "HLS (m3u8)", value = "m3u8"),
+            @Option(label = "DASH (mpd)", value = "mpd")
         })
     String defaultVideoManifestFormat() default DEFAULT_VIDEO_MANIFEST_FORMAT;
   }
 
   private static final String ADOBE_ASSETS_PREFIX = "/adobe/assets/";
   private static final String DEFAULT_VIDEO_PLAYER_PATH = ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/play";
-  private static final String DEFAULT_VIDEO_MANIFEST_FORMAT = "HLS";
+  private static final String DEFAULT_VIDEO_MANIFEST_FORMAT = "m3u8";
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigServiceImpl.class);
 
   private boolean enabledRemoteAssets;
@@ -133,7 +132,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
   private String assetOriginalBinaryDeliveryPath;
   private String assetMetadataPath;
   private long imageWidthHeightDefault;
-  private VideoManifestFormat defaultVideoManifestFormat;
+  private String defaultVideoManifestFormat = DEFAULT_VIDEO_MANIFEST_FORMAT;
 
   @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY, cardinality = ReferenceCardinality.OPTIONAL)
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
@@ -172,14 +171,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
     imageWidthHeightDefault = config.imageWidthHeightDefault();
 
-    try {
-      defaultVideoManifestFormat = VideoManifestFormat.valueOf(config.defaultVideoManifestFormat().toUpperCase());
-    }
-    catch (IllegalArgumentException ex) {
-      log.warn("Unsupported video manifest format '{}', falling back to {}.",
-          config.defaultVideoManifestFormat(), DEFAULT_VIDEO_MANIFEST_FORMAT, ex);
-      defaultVideoManifestFormat = VideoManifestFormat.valueOf(DEFAULT_VIDEO_MANIFEST_FORMAT);
-    }
+    defaultVideoManifestFormat = StringUtils.defaultIfBlank(config.defaultVideoManifestFormat(), DEFAULT_VIDEO_MANIFEST_FORMAT);
   }
 
   @Override
@@ -214,7 +206,7 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
   @Override
   public @NotNull String getDefaultVideoManifestFormat() {
-    return defaultVideoManifestFormat.name();
+    return defaultVideoManifestFormat;
   }
 
   @Override

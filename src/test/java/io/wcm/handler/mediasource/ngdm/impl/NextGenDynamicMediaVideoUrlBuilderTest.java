@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.VideoManifestFormat;
 import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.media.testcontext.AppAemContext;
 import io.wcm.sling.commons.adapter.AdaptTo;
@@ -69,7 +68,7 @@ class NextGenDynamicMediaVideoUrlBuilderTest {
     NextGenDynamicMediaVideoUrlBuilder underTest = getBuilder();
 
     assertEquals("https://repo1/adobe/assets/urn:aaid:aem:12345678-abcd-abcd-abcd-abcd12345678/manifest.mpd",
-        underTest.buildManifestUrl(VideoManifestFormat.DASH));
+        underTest.buildManifestUrl("mpd"));
   }
 
   @Test

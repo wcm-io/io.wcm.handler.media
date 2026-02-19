@@ -76,10 +76,21 @@ public enum MediaFileType {
   /**
    * MOV
    */
-  MOV(new String[] { "video/quicktime" }, new String[] { "mov" }, false);
+  MOV(new String[] { "video/quicktime" }, new String[] { "mov" }, false),
+
+  /**
+   * HLS adaptive streaming manifest
+   */
+  M3U8(new String[] { "application/vnd.apple.mpegurl" }, new String[] { "m3u8" }, false),
+
+  /**
+   * MPEG-DASH adaptive streaming manifest
+   */
+  MPD(new String[] { "application/dash+xml" }, new String[] { "mpd" }, false);
 
 
   private final Set<String> contentTypes;
+  private final String extension;
   private final Set<String> extensions;
   private final boolean imageQualityPercentage;
 
@@ -88,6 +99,7 @@ public enum MediaFileType {
       @NotNull String @NotNull [] extensions,
       boolean imageQualityPercentage) {
     this.contentTypes = Set.of(contentTypes);
+    this.extension = extensions[0];
     this.extensions = Set.of(extensions);
     this.imageQualityPercentage = imageQualityPercentage;
   }
@@ -98,6 +110,14 @@ public enum MediaFileType {
    */
   public Set<String> getContentTypes() {
     return this.contentTypes;
+  }
+
+  /**
+   * Get primary file extension for this media file type.
+   * @return Primary file extension (without leading dot)
+   */
+  public @NotNull String getExtension() {
+    return extension;
   }
 
   /**

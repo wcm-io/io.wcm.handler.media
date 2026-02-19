@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import io.wcm.handler.media.VideoManifestFormat;
 
 /**
  * Builds URLs for delivering videos via Dynamic Media with OpenAPI.
@@ -48,7 +47,7 @@ public final class NextGenDynamicMediaVideoUrlBuilder {
    * @return Manifest URL or {@code null} if configuration is incomplete
    */
   @SuppressWarnings("null")
-  public @Nullable String buildManifestUrl(@Nullable VideoManifestFormat requestedFormat) {
+  public @Nullable String buildManifestUrl(@Nullable String requestedFormat) {
     String repositoryId = getRepositoryId();
     String videoDeliveryPath = context.getNextGenDynamicMediaConfig().getVideoDeliveryPath();
 
@@ -56,14 +55,11 @@ public final class NextGenDynamicMediaVideoUrlBuilder {
       return null;
     }
 
-    VideoManifestFormat targetFormat = requestedFormat;
-    if (targetFormat == null) {
-      String defaultFormatString = context.getNextGenDynamicMediaConfig().getDefaultVideoManifestFormat();
-      targetFormat = VideoManifestFormat.fromString(defaultFormatString);
-    }
+    String targetFormat = StringUtils.defaultIfBlank(requestedFormat,
+        context.getNextGenDynamicMediaConfig().getDefaultVideoManifestFormat());
 
     String resolvedPath = StringUtils.replace(videoDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
-    resolvedPath = StringUtils.replace(resolvedPath, PLACEHOLDER_FORMAT, targetFormat.getExtension());
+    resolvedPath = StringUtils.replace(resolvedPath, PLACEHOLDER_FORMAT, targetFormat);
 
     return buildBaseUrl(repositoryId, resolvedPath);
   }

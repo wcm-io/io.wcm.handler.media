@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import io.wcm.handler.media.Dimension;
 import io.wcm.handler.media.MediaArgs;
-import io.wcm.handler.media.VideoManifestFormat;
 import io.wcm.handler.media.MediaFileType;
 import io.wcm.handler.media.Rendition;
 import io.wcm.handler.media.UriTemplate;
@@ -69,7 +68,7 @@ final class NextGenDynamicMediaRendition implements Rendition {
   private long height;
   private String fileExtension;
   private final String originalFileExtension;
-  private VideoManifestFormat videoManifestFormat;
+  private String videoManifestFormat;
 
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaRendition.class);
 
@@ -252,15 +251,14 @@ final class NextGenDynamicMediaRendition implements Rendition {
     }
 
     // default: streaming manifest URL (HLS/DASH)
-    VideoManifestFormat format = mediaArgs.getVideoManifestFormat();
-    if (format == null) {
-      String defaultFormatString = context.getNextGenDynamicMediaConfig().getDefaultVideoManifestFormat();
-      format = VideoManifestFormat.fromString(defaultFormatString);
+    String format = mediaArgs.getVideoManifestFormat();
+    if (StringUtils.isBlank(format)) {
+      format = context.getNextGenDynamicMediaConfig().getDefaultVideoManifestFormat();
     }
     String manifestUrl = builder.buildManifestUrl(format);
     if (manifestUrl != null) {
       this.videoManifestFormat = format;
-      this.fileExtension = format.getExtension();
+      this.fileExtension = format;
       return manifestUrl;
     }
 
@@ -331,9 +329,12 @@ final class NextGenDynamicMediaRendition implements Rendition {
   @Override
   public @Nullable String getMimeType() {
     if (this.videoManifestFormat != null) {
-      return this.videoManifestFormat.getMimeType();
+      MediaFileType fileType = MediaFileType.getByFileExtensions(this.videoManifestFormat);
+      if (fileType != null) {
+        return fileType.getContentTypes().iterator().next();
+      }
     }
-    else if (this.metadata != null) {
+    if (this.metadata != null) {
       return this.metadata.getMimeType();
     }
     else {
