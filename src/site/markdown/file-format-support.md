@@ -21,10 +21,12 @@ The following video file formats are supported:
 | File Extension    | Mime Type         |
 |-------------------|-------------------|
 | `mp4`             | `video/mp4`       |
-| `mov`             | `video/quicktime` |
+| `mov`, `qt`       | `video/quicktime` |
 | `mpeg`, `mpg`     | `video/mpeg`      |
 | `avi`             | `video/x-msvideo` |
 | `m4v`             | `video/x-m4v`     |
+| `mkv`             | `video/x-matroska` |
+| `wmv`             | `video/x-ms-wmv`  |
 | `webm`            | `video/webm`      |
 
 #### Video delivery with Dynamic Media with OpenAPI

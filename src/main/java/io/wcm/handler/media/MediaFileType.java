@@ -69,14 +69,39 @@ public enum MediaFileType {
   MP4(new String[] { "video/mp4" }, new String[] { "mp4" }, false),
 
   /**
+   * MPEG/MPG
+   */
+  MPEG(new String[] { "video/mpeg" }, new String[] { "mpeg", "mpg" }, false),
+
+  /**
+   * AVI
+   */
+  AVI(new String[] { "video/x-msvideo" }, new String[] { "avi" }, false),
+
+  /**
+   * M4V
+   */
+  M4V(new String[] { "video/x-m4v" }, new String[] { "m4v" }, false),
+
+  /**
+   * MKV
+   */
+  MKV(new String[] { "video/x-matroska" }, new String[] { "mkv" }, false),
+
+  /**
+   * WMV
+   */
+  WMV(new String[] { "video/x-ms-wmv" }, new String[] { "wmv" }, false),
+
+  /**
    * WebM
    */
   WEBM(new String[] { "video/webm" }, new String[] { "webm" }, false),
 
   /**
-   * MOV
+   * QuickTime (MOV/QT)
    */
-  MOV(new String[] { "video/quicktime" }, new String[] { "mov" }, false),
+  MOV(new String[] { "video/quicktime" }, new String[] { "mov", "qt" }, false),
 
   /**
    * HLS adaptive streaming manifest
@@ -166,6 +191,11 @@ public enum MediaFileType {
    */
   private static final EnumSet<MediaFileType> VIDEO_FILE_TYPES = EnumSet.of(
       MP4,
+      MPEG,
+      AVI,
+      M4V,
+      MKV,
+      WMV,
       WEBM,
       MOV);
 

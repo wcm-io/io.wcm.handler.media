@@ -95,6 +95,28 @@ class MediaFileTypeTest {
   }
 
   @Test
+  void testIsVideo() {
+    assertTrue(MediaFileType.isVideo("mp4"));
+    assertTrue(MediaFileType.isVideo("mpeg"));
+    assertTrue(MediaFileType.isVideo("MPG"));
+    assertTrue(MediaFileType.isVideo("avi"));
+    assertTrue(MediaFileType.isVideo("m4v"));
+    assertTrue(MediaFileType.isVideo("mkv"));
+    assertTrue(MediaFileType.isVideo("wmv"));
+    assertTrue(MediaFileType.isVideo("webm"));
+    assertTrue(MediaFileType.isVideo("MOV"));
+    assertTrue(MediaFileType.isVideo("qt"));
+    assertFalse(MediaFileType.isVideo("pdf"));
+    assertFalse(MediaFileType.isVideo(null));
+  }
+
+  @Test
+  void testGetVideoFileExtensions() {
+    assertEquals(Set.of("mp4", "mpeg", "mpg", "avi", "m4v", "mkv", "wmv", "webm", "mov", "qt"),
+        MediaFileType.getVideoFileExtensions());
+  }
+
+  @Test
   void testGetByContentType() {
     assertEquals(MediaFileType.JPEG, MediaFileType.getByContentType("image/jpeg"));
     assertEquals(MediaFileType.JPEG, MediaFileType.getByContentType("IMAGE/JPEG"));
