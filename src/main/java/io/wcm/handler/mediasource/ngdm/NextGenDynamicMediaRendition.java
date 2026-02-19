@@ -228,7 +228,8 @@ final class NextGenDynamicMediaRendition implements Rendition {
   }
 
   /**
-   * Build video URL based on mediaArgs settings.
+   * Build video URL based on mediaArgs settings. As a side effect, also sets {@link #videoManifestFormat}
+   * and {@link #fileExtension} based on the resolved delivery mode.
    * <ul>
    *   <li>If hostedVideoPlayer is true: returns hosted player URL (iframe)</li>
    *   <li>Otherwise: returns streaming manifest URL (HLS/DASH)</li>
