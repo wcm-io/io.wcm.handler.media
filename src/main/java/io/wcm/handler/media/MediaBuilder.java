@@ -342,6 +342,22 @@ public interface MediaBuilder {
   MediaBuilder pictureSource(@NotNull PictureSource pictureSource);
 
   /**
+   * Set whether to accept only download media formats.
+   * @param value Accept only media formats that have the download flag set.
+   * @return this
+   */
+  @NotNull
+  MediaBuilder download(boolean value);
+
+  /**
+   * Set the preferred video manifest format.
+   * @param value Preferred video manifest format
+   * @return this
+   */
+  @NotNull
+  MediaBuilder videoManifestFormat(@Nullable String value);
+
+  /**
    * Disable dynamic media support.
    * @param value If set to true, dynamic media support is disabled even when enabled on the instance.
    * @return this
@@ -356,6 +372,15 @@ public interface MediaBuilder {
    */
   @NotNull
   MediaBuilder webOptimizedImageDeliveryDisabled(boolean value);
+
+  /**
+   * Use hosted video player.
+   * @param value Whether to use Adobe's hosted video player instead of a streaming manifest,
+   *          affecting both URL generation and markup (iframe vs. HTML5 video element).
+   * @return this
+   */
+  @NotNull
+  MediaBuilder hostedVideoPlayer(boolean value);
 
   /**
    * Sets the name of the property from which the media reference path is read, or node name for inline media.

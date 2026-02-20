@@ -20,6 +20,7 @@
 package io.wcm.handler.mediasource.ngdm.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -31,10 +32,12 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.osgi.service.metatype.annotations.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.adobe.cq.ui.wcm.commons.config.NextGenDynamicMediaConfig;
+
 
 /**
  * Wraps access to NextGenDynamicMediaConfig - which is deployed but not accessible on AEM 6.5.
@@ -72,6 +75,20 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
         + PLACEHOLDER_SEO_NAME + "." + PLACEHOLDER_FORMAT;
 
     @AttributeDefinition(
+        name = "Video Delivery Path",
+        description = "Base path with placeholders to deliver adaptive video manifests. "
+            + "Placeholders: " + PLACEHOLDER_ASSET_ID + ", " + PLACEHOLDER_FORMAT + ". "
+            + "If not set, the default value from the NextGenDynamicMediaConfig service will be used.")
+    String videoDeliveryPath() default ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/manifest." + PLACEHOLDER_FORMAT;
+
+    @AttributeDefinition(
+        name = "Video Player Path",
+        description = "Base path of the hosted video player experience. "
+            + "Placeholder: " + PLACEHOLDER_ASSET_ID + ". "
+            + "If not set, the default " + DEFAULT_VIDEO_PLAYER_PATH + " will be used.")
+    String videoPlayerPath() default DEFAULT_VIDEO_PLAYER_PATH;
+
+    @AttributeDefinition(
         name = "Asset Original Binary Delivery Path",
         description = "Base path with placeholders to deliver asset original binaries. "
             + "Placeholders: " + PLACEHOLDER_ASSET_ID + ", " + PLACEHOLDER_SEO_NAME + ". "
@@ -91,18 +108,31 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
         description = "Default width/height (longest edge) when requesting image renditions without explicit dimension.")
     long imageWidthHeightDefault() default 2048;
 
+    @AttributeDefinition(
+        name = "Default video manifest format",
+        description = "Default adaptive streaming manifest format used when no per-request override is given.",
+        options = {
+            @Option(label = "HLS (m3u8)", value = "m3u8"),
+            @Option(label = "DASH (mpd)", value = "mpd")
+        })
+    String defaultVideoManifestFormat() default DEFAULT_VIDEO_MANIFEST_FORMAT;
   }
 
   private static final String ADOBE_ASSETS_PREFIX = "/adobe/assets/";
+  private static final String DEFAULT_VIDEO_PLAYER_PATH = ADOBE_ASSETS_PREFIX + PLACEHOLDER_ASSET_ID + "/play";
+  private static final String DEFAULT_VIDEO_MANIFEST_FORMAT = "m3u8";
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaConfigServiceImpl.class);
 
   private boolean enabledRemoteAssets;
   private boolean enabledLocalAssets;
   private String localAssetsRepositoryId;
   private String imageDeliveryBasePath;
+  private String videoDeliveryPath;
+  private String videoPlayerPath;
   private String assetOriginalBinaryDeliveryPath;
   private String assetMetadataPath;
   private long imageWidthHeightDefault;
+  private String defaultVideoManifestFormat = DEFAULT_VIDEO_MANIFEST_FORMAT;
 
   @Reference(policy = ReferencePolicy.STATIC, policyOption = ReferencePolicyOption.GREEDY, cardinality = ReferenceCardinality.OPTIONAL)
   private NextGenDynamicMediaConfig nextGenDynamicMediaConfig;
@@ -124,6 +154,9 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
     imageDeliveryBasePath = StringUtils.defaultIfBlank(config.imageDeliveryBasePath(),
         nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getImageDeliveryBasePath() : null);
+    videoDeliveryPath = StringUtils.defaultIfBlank(config.videoDeliveryPath(),
+        nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getVideoDeliveryPath() : null);
+    videoPlayerPath = StringUtils.defaultIfBlank(config.videoPlayerPath(), DEFAULT_VIDEO_PLAYER_PATH);
     assetOriginalBinaryDeliveryPath = StringUtils.defaultIfBlank(config.assetOriginalBinaryDeliveryPath(),
         nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getAssetOriginalBinaryDeliveryPath() : null);
     assetMetadataPath = StringUtils.defaultIfBlank(config.assetMetadataPath(),
@@ -137,6 +170,8 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
     }
 
     imageWidthHeightDefault = config.imageWidthHeightDefault();
+
+    defaultVideoManifestFormat = StringUtils.defaultIfBlank(config.defaultVideoManifestFormat(), DEFAULT_VIDEO_MANIFEST_FORMAT);
   }
 
   @Override
@@ -161,7 +196,17 @@ public class NextGenDynamicMediaConfigServiceImpl implements NextGenDynamicMedia
 
   @Override
   public @Nullable String getVideoDeliveryPath() {
-    return nextGenDynamicMediaConfig != null ? nextGenDynamicMediaConfig.getVideoDeliveryPath() : null;
+    return videoDeliveryPath;
+  }
+
+  @Override
+  public @Nullable String getVideoPlayerPath() {
+    return videoPlayerPath;
+  }
+
+  @Override
+  public @NotNull String getDefaultVideoManifestFormat() {
+    return defaultVideoManifestFormat;
   }
 
   @Override

@@ -130,7 +130,8 @@ public final class AppAemContext {
       context.addModelsForPackage(
           "io.wcm.handler.media",
           "io.wcm.handler.mediasource.dam",
-          "io.wcm.handler.mediasource.inline");
+          "io.wcm.handler.mediasource.inline",
+          "io.wcm.handler.mediasource.ngdm");
 
       // create current page in site context
       context.currentPage(context.create().page(ROOTPATH_CONTENT,

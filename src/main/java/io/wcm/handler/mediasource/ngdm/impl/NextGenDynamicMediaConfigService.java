@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.mediasource.ngdm.impl;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -77,19 +78,35 @@ public interface NextGenDynamicMediaConfigService {
   String getImageDeliveryBasePath();
 
   /**
-   * Gets the path expression for the adaptive video manifest/player path. The
-   * following placeholders with the below meaning are contained
-   * within that path:
+   * Gets the path expression for the adaptive video manifest delivery path. The following placeholders with the below
+   * meaning are contained within that path:
    * <ul>
-   * <li><code>{asset-id}</code> - the uuid of the asset in the format 'urn:aaid:aem:UUID'
-   * along with optional format
-   * e.g. urn:aaid:aem:1a034bee-ebda-4787-bad3-f924d0772b75 OR
-   * urn:aaid:aem:1a034bee-ebda-4787-bad3-f924d0772b75.mp4</li>
+   * <li><code>{asset-id}</code> - the uuid of the asset in the format 'urn:aaid:aem:UUID', e.g.
+   * urn:aaid:aem:1a034bee-ebda-4787-bad3-f924d0772b75</li>
+   * <li><code>{format}</code> - manifest file extension (for example <code>m3u8</code> or <code>mpd</code>)</li>
    * </ul>
    * @return the path expression for the video delivery path
    */
   @Nullable
   String getVideoDeliveryPath();
+
+  /**
+   * Gets the path expression for the hosted player experience.
+   * The following placeholders with the below meaning are contained within that path:
+   * <ul>
+   * <li><code>{asset-id}</code> - the uuid of the asset in the format 'urn:aaid:aem:UUID'</li>
+   * </ul>
+   * @return the path expression for the video player path
+   */
+  @Nullable
+  String getVideoPlayerPath();
+
+  /**
+   * Gets the default video manifest format.
+   * @return Default manifest format as string ("HLS" or "DASH")
+   */
+  @NotNull
+  String getDefaultVideoManifestFormat();
 
   /**
    * Gets the path expression for the the Original Asset Delivery which delivers

@@ -28,6 +28,7 @@ import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceS
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_IMAGE;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_PDF;
 import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_SVG;
+import static io.wcm.handler.mediasource.ngdm.impl.metadata.MetadataSample.METADATA_JSON_VIDEO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -303,6 +304,174 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
     assertEquals(600, rendition.getHeight());
     assertEquals("https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID + "/original/as/myfile.svg",
         rendition.getUrl());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testVideoStreamingDefault() {
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(METADATA_JSON_VIDEO)));
+
+    Resource videoResource = context.create().resource(context.currentPage(), "video",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
+
+    Media media = mediaHandler.get(videoResource)
+        .build();
+    assertTrue(media.isValid());
+
+    String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
+    assertEquals(expectedBaseUrl + "/manifest.m3u8", media.getUrl());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertTrue(rendition.isVideo());
+    assertFalse(rendition.isDownload());
+    assertEquals("m3u8", rendition.getFileExtension());
+    assertEquals("application/vnd.apple.mpegurl", rendition.getMimeType());
+    assertEquals(1920, rendition.getWidth());
+    assertEquals(1080, rendition.getHeight());
+
+    assertEquals(expectedBaseUrl + "/as/video.jpg", rendition.getProperties().get("posterUrl", String.class));
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testVideoStreamingDashOverride() {
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(METADATA_JSON_VIDEO)));
+
+    Resource videoResource = context.create().resource(context.currentPage(), "videoDash",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
+
+    Media media = mediaHandler.get(videoResource)
+        .videoManifestFormat("mpd")
+        .build();
+    assertTrue(media.isValid());
+
+    String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
+    assertEquals(expectedBaseUrl + "/manifest.mpd", media.getUrl());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals("mpd", rendition.getFileExtension());
+    assertEquals("application/dash+xml", rendition.getMimeType());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testVideoDownloadFallback() {
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(METADATA_JSON_VIDEO)));
+
+    Resource videoResource = context.create().resource(context.currentPage(), "videoDownload",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
+
+    Media media = mediaHandler.get(videoResource)
+        .args(new MediaArgs().download(true))
+        .build();
+    assertTrue(media.isValid());
+
+    String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
+    assertEquals(expectedBaseUrl + "/original/as/video.mp4", media.getUrl());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertTrue(rendition.isVideo());
+    assertFalse(rendition.isDownload());
+    assertEquals("mp4", rendition.getFileExtension());
+    assertEquals("video/mp4", rendition.getMimeType());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testVideoHostedPlayer() {
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(METADATA_JSON_VIDEO)));
+
+    Resource videoResource = context.create().resource(context.currentPage(), "videoHosted",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
+
+    Media media = mediaHandler.get(videoResource)
+        .hostedVideoPlayer(true)
+        .build();
+    assertTrue(media.isValid());
+
+    String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
+    assertEquals(expectedBaseUrl + "/play", media.getUrl());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertTrue(rendition.isVideo());
+    assertFalse(rendition.isDownload());
+    assertEquals("html", rendition.getFileExtension());
+    assertEquals(1920, rendition.getWidth());
+    assertEquals(1080, rendition.getHeight());
+
+    assertEquals(expectedBaseUrl + "/as/video.jpg", rendition.getProperties().get("posterUrl", String.class));
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testVideoHostedPlayerViaMediaArgs() {
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(METADATA_JSON_VIDEO)));
+
+    Resource videoResource = context.create().resource(context.currentPage(), "videoHostedArgs",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
+
+    Media media = mediaHandler.get(videoResource)
+        .args(new MediaArgs().hostedVideoPlayer(true))
+        .build();
+    assertTrue(media.isValid());
+
+    String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
+    assertEquals(expectedBaseUrl + "/play", media.getUrl());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals("html", rendition.getFileExtension());
+  }
+
+  @Test
+  @SuppressWarnings("null")
+  void testVideoDownloadTakesPrecedenceOverHostedPlayer() {
+    stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.SC_OK)
+            .withHeader("Content-Type", ContentType.JSON)
+            .withBody(METADATA_JSON_VIDEO)));
+
+    Resource videoResource = context.create().resource(context.currentPage(), "videoDownloadPrecedence",
+        MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
+
+    // download=true should take precedence over hostedVideoPlayer=true
+    Media media = mediaHandler.get(videoResource)
+        .args(new MediaArgs().download(true).hostedVideoPlayer(true))
+        .build();
+    assertTrue(media.isValid());
+
+    String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
+    // Should be binary URL, not player URL
+    assertEquals(expectedBaseUrl + "/original/as/video.mp4", media.getUrl());
+
+    Rendition rendition = media.getRendition();
+    assertNotNull(rendition);
+    assertEquals("mp4", rendition.getFileExtension());
   }
 
   private void assertUrl(Media media, String urlParams, String extension) {

@@ -19,12 +19,14 @@
  */
 package io.wcm.handler.mediasource.ngdm;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -45,6 +47,7 @@ import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaContext;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageDeliveryParams;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaImageUrlBuilder;
 import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReference;
+import io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaVideoUrlBuilder;
 import io.wcm.handler.mediasource.ngdm.impl.metadata.NextGenDynamicMediaMetadata;
 
 /**
@@ -64,6 +67,8 @@ final class NextGenDynamicMediaRendition implements Rendition {
   private long width;
   private long height;
   private String fileExtension;
+  private final String originalFileExtension;
+  private String videoManifestFormat;
 
   private static final Logger log = LoggerFactory.getLogger(NextGenDynamicMediaRendition.class);
 
@@ -91,13 +96,23 @@ final class NextGenDynamicMediaRendition implements Rendition {
       }
     }
 
+    this.originalFileExtension = FilenameUtils.getExtension(reference.getFileName());
     this.fileExtension = mediaArgs.getEnforceOutputFileExtension();
     if (StringUtils.isEmpty(this.fileExtension)) {
-      this.fileExtension = FilenameUtils.getExtension(reference.getFileName());
+      this.fileExtension = this.originalFileExtension;
     }
 
-    if (!isImage() || mediaArgs.isDownload()) {
-      // deliver as binary
+    if (mediaArgs.isDownload()) {
+      // force binary download regardless of type
+      this.url = buildBinaryUrl();
+    }
+    else if (isVideo()) {
+      // video handling with adaptive streaming
+      setVideoDimensionsFromMetadata();
+      this.url = buildVideoUrl();
+    }
+    else if (!isImage()) {
+      // generic binary (PDF, etc.)
       this.url = buildBinaryUrl();
     }
     else if (isVectorImage()) {
@@ -179,6 +194,18 @@ final class NextGenDynamicMediaRendition implements Rendition {
   }
 
   /**
+   * Set width/height from metadata for videos.
+   * Video dimensions reflect the original asset size and are not used for URL building
+   * (videos use adaptive streaming, not server-side scaling).
+   */
+  private void setVideoDimensionsFromMetadata() {
+    if (this.originalDimension != null) {
+      this.width = this.originalDimension.getWidth();
+      this.height = this.originalDimension.getHeight();
+    }
+  }
+
+  /**
    * Build image rendition URL which is dynamically scaled and/or cropped.
    */
   private String buildImageRenditionUrl() {
@@ -198,6 +225,49 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
     return new NextGenDynamicMediaImageUrlBuilder(context).build(params);
   }
+
+  /**
+   * Build video URL based on mediaArgs settings. As a side effect, also sets {@link #videoManifestFormat}
+   * and {@link #fileExtension} based on the resolved delivery mode.
+   * <ul>
+   *   <li>If hostedVideoPlayer is true: returns hosted player URL (iframe)</li>
+   *   <li>Otherwise: returns streaming manifest URL (HLS/DASH)</li>
+   *   <li>Falls back to binary download if configuration is incomplete</li>
+   * </ul>
+   * @return Video URL
+   */
+  private String buildVideoUrl() {
+    NextGenDynamicMediaVideoUrlBuilder builder = new NextGenDynamicMediaVideoUrlBuilder(context);
+
+    // check if hosted video player is requested
+    if (mediaArgs.isHostedVideoPlayer()) {
+      String playerUrl = builder.buildPlayerUrl();
+      if (playerUrl != null) {
+        this.videoManifestFormat = null;
+        this.fileExtension = "html";
+        return playerUrl;
+      }
+      // fall through to streaming if player URL unavailable
+    }
+
+    // default: streaming manifest URL (HLS/DASH)
+    String format = mediaArgs.getVideoManifestFormat();
+    if (StringUtils.isBlank(format)) {
+      format = context.getNextGenDynamicMediaConfig().getDefaultVideoManifestFormat();
+    }
+    String manifestUrl = builder.buildManifestUrl(format);
+    if (manifestUrl != null) {
+      this.videoManifestFormat = format;
+      this.fileExtension = format;
+      return manifestUrl;
+    }
+
+    // fallback: binary download
+    this.videoManifestFormat = null;
+    this.fileExtension = this.originalFileExtension;
+    return buildBinaryUrl();
+  }
+
 
   /**
    * Checks if the original dimension is available in remote asset metadata, and if that dimension
@@ -258,6 +328,12 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @Nullable String getMimeType() {
+    if (this.videoManifestFormat != null) {
+      MediaFileType fileType = MediaFileType.getByFileExtensions(this.videoManifestFormat);
+      if (fileType != null) {
+        return fileType.getContentTypes().iterator().next();
+      }
+    }
     if (this.metadata != null) {
       return this.metadata.getMimeType();
     }
@@ -271,8 +347,19 @@ final class NextGenDynamicMediaRendition implements Rendition {
     return this.resolvedMediaFormat;
   }
 
+  /**
+   * For video renditions, provides a "posterUrl" property with the auto-generated thumbnail URL.
+   * This is used by {@link io.wcm.handler.mediasource.ngdm.markup.NextGenDynamicMediaVideoMarkupBuilder}
+   * to set the poster attribute on the HTML5 video element.
+   */
   @Override
   public @NotNull ValueMap getProperties() {
+    if (isVideo()) {
+      String posterUrl = new NextGenDynamicMediaVideoUrlBuilder(context).buildThumbnailUrl();
+      if (posterUrl != null) {
+        return new ValueMapDecorator(Collections.singletonMap("posterUrl", posterUrl));
+      }
+    }
     return ValueMap.EMPTY;
   }
 
@@ -292,8 +379,13 @@ final class NextGenDynamicMediaRendition implements Rendition {
   }
 
   @Override
+  public boolean isVideo() {
+    return MediaFileType.isVideo(this.originalFileExtension);
+  }
+
+  @Override
   public boolean isDownload() {
-    return !isImage();
+    return !isImage() && !isVideo();
   }
 
   @Override
@@ -320,7 +412,8 @@ final class NextGenDynamicMediaRendition implements Rendition {
 
   @Override
   public @NotNull UriTemplate getUriTemplate(@NotNull UriTemplateType type) {
-    if (!isImage() || isVectorImage()) {
+    // URI templates are only supported for dynamically scaled raster images
+    if (!isImage() || isVectorImage() || isVideo()) {
       throw new UnsupportedOperationException("Unable to build URI template for " + reference.toReference());
     }
     return new NextGenDynamicMediaUriTemplate(context, type);
