@@ -25,7 +25,7 @@
   <body>
 
     <release version="2.8.0" date="not released">
-      <action type="add" dev="mwehner"><![CDATA[
+      <action type="add" dev="mwehner" issue="136"><![CDATA[
         Dynamic Media with Open API: Add video support. Support adaptive streaming (HLS/DASH), hosted player URLs, and automated poster image generation for NGDM video assets.<br/>
         <b>Breaking change:</b> With Dynamic Media with Open API, video URLs are now generated for streaming manifests by default. You can restore the previous behavior with <code>MediaArgs.download(true)</code>.
       ]]></action>
