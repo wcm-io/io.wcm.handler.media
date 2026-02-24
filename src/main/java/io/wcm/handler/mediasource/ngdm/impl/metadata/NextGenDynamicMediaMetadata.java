@@ -160,6 +160,13 @@ public final class NextGenDynamicMediaMetadata {
       properties = new ValueMapDecorator(assetMetadata);
       width = properties.get(TIFF_IMAGEWIDTH, 0L);
       height = properties.get(TIFF_IMAGELENGTH, 0L);
+      // fallback to video-specific dimension properties
+      if (width == 0) {
+        width = properties.get("xmpDM:videoFrameSize_stDim:w", 0L);
+      }
+      if (height == 0) {
+        height = properties.get("xmpDM:videoFrameSize_stDim:h", 0L);
+      }
       assetStatus = properties.get("dam:assetStatus", String.class);
     }
     Dimension dimension = toDimension(width, height);

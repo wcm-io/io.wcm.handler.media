@@ -47,6 +47,37 @@ If you want to give the business users more control about the actual cropping ar
 During the media resolution process, when the media handler has detected the required renditions with their sizes and cropping to fit the output media format/ratio, it checks if named smart crops exist in the asset metadata matching for the requested aspect ratio. If this is the case, the manual adjusted cropping area is used instead of the automatic detected one (if present). To support this for remote assets, the metadata service needs to be enabled (see system configuration).
 
 
+### Video Support
+
+Video assets are delivered via adaptive streaming by default. The supported video file formats are listed in [File Format Support][file-format-support].
+
+#### Delivery Modes
+
+You can control how videos are delivered using the following options in `MediaArgs`:
+
+* **Adaptive Streaming (Default)**: Returns a manifest URL for adaptive bitrate streaming. By default, HLS (`.m3u8`) is used. You can switch to DASH (`.mpd`) using the `videoManifestFormat` option:
+  ```java
+  mediaHandler.get(resource)
+      .videoManifestFormat(MediaFileType.MPD.getExtension())
+      .build();
+  ```
+* **Hosted Player**: Returns the URL to Adobe's hosted video player (intended for use in an `<iframe>`). This is enabled via the `hostedVideoPlayer` flag:
+  ```java
+  mediaHandler.get(resource)
+      .hostedVideoPlayer(true)
+      .build();
+  ```
+* **Binary Download**: Returns the URL to the original video binary (e.g., MP4). This is triggered by the standard `download` flag:
+  ```java
+  mediaHandler.get(resource)
+      .download(true)
+      .build();
+  ```
+
+#### Video Poster Image
+
+When a video asset is resolved, the `Rendition` provides a `posterUrl` property (via `rendition.getProperties()`) containing the URL to an auto-generated thumbnail image. This is used by the default video markup builder to set the `poster` attribute on the HTML5 `<video>` element.
+
 ### Validating Assets
 
 When rendering local assets, the existence and approval state is checked within the local content repository when resolving the media. For this reason, local assets have to be published in AEM after setting the Approval state.

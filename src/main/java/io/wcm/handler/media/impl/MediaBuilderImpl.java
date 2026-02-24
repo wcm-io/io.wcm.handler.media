@@ -327,6 +327,24 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
+  public @NotNull MediaBuilder download(boolean value) {
+    this.mediaArgs.download(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder videoManifestFormat(@Nullable String value) {
+    this.mediaArgs.videoManifestFormat(value);
+    return this;
+  }
+
+  @Override
+  public @NotNull MediaBuilder hostedVideoPlayer(boolean value) {
+    this.mediaArgs.hostedVideoPlayer(value);
+    return this;
+  }
+
+  @Override
   public @NotNull MediaBuilder refProperty(@NotNull String value) {
     this.mediaPropertyNames.refProperty(value);
     return this;

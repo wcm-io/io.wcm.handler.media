@@ -125,6 +125,13 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
   boolean isVectorImage();
 
   /**
+   * Check if rendition is a video.
+   * @return true if the rendition represents a video asset (independent of delivery format such as streaming manifests).
+   */
+  @JsonIgnore
+  boolean isVideo();
+
+  /**
    * Check if rendition should be downloaded.
    * @return true if the rendition is not and image nor a flash movie.
    */

@@ -61,10 +61,61 @@ public enum MediaFileType {
   /**
    * SVG
    */
-  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG }, false);
+  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG }, false),
+
+  /**
+   * MP4
+   */
+  MP4(new String[] { "video/mp4" }, new String[] { "mp4" }, false),
+
+  /**
+   * MPEG/MPG
+   */
+  MPEG(new String[] { "video/mpeg" }, new String[] { "mpeg", "mpg" }, false),
+
+  /**
+   * AVI
+   */
+  AVI(new String[] { "video/x-msvideo" }, new String[] { "avi" }, false),
+
+  /**
+   * M4V
+   */
+  M4V(new String[] { "video/x-m4v" }, new String[] { "m4v" }, false),
+
+  /**
+   * MKV
+   */
+  MKV(new String[] { "video/x-matroska" }, new String[] { "mkv" }, false),
+
+  /**
+   * WMV
+   */
+  WMV(new String[] { "video/x-ms-wmv" }, new String[] { "wmv" }, false),
+
+  /**
+   * WebM
+   */
+  WEBM(new String[] { "video/webm" }, new String[] { "webm" }, false),
+
+  /**
+   * QuickTime (MOV/QT)
+   */
+  MOV(new String[] { "video/quicktime" }, new String[] { "mov", "qt" }, false),
+
+  /**
+   * HLS adaptive streaming manifest
+   */
+  M3U8(new String[] { "application/vnd.apple.mpegurl" }, new String[] { "m3u8" }, false),
+
+  /**
+   * MPEG-DASH adaptive streaming manifest
+   */
+  MPD(new String[] { "application/dash+xml" }, new String[] { "mpd" }, false);
 
 
   private final Set<String> contentTypes;
+  private final String extension;
   private final Set<String> extensions;
   private final boolean imageQualityPercentage;
 
@@ -73,6 +124,7 @@ public enum MediaFileType {
       @NotNull String @NotNull [] extensions,
       boolean imageQualityPercentage) {
     this.contentTypes = Set.of(contentTypes);
+    this.extension = extensions[0];
     this.extensions = Set.of(extensions);
     this.imageQualityPercentage = imageQualityPercentage;
   }
@@ -83,6 +135,14 @@ public enum MediaFileType {
    */
   public Set<String> getContentTypes() {
     return this.contentTypes;
+  }
+
+  /**
+   * Get primary file extension for this media file type.
+   * @return Primary file extension (without leading dot)
+   */
+  public @NotNull String getExtension() {
+    return extension;
   }
 
   /**
@@ -125,6 +185,19 @@ public enum MediaFileType {
    */
   private static final EnumSet<MediaFileType> VECTOR_IMAGE_FILE_TYPES = EnumSet.of(
       SVG);
+
+  /**
+   * All file types that are supported by the Media Handler for video delivery.
+   */
+  private static final EnumSet<MediaFileType> VIDEO_FILE_TYPES = EnumSet.of(
+      MP4,
+      MPEG,
+      AVI,
+      M4V,
+      MKV,
+      WMV,
+      WEBM,
+      MOV);
 
   /**
    * Check if the given file extension is supported by the Media Handler for rendering as image.
@@ -199,6 +272,31 @@ public enum MediaFileType {
    */
   public static @NotNull Set<String> getVectorImageContentTypes() {
     return getContentTypes(VECTOR_IMAGE_FILE_TYPES);
+  }
+
+  /**
+   * Check if the given file extension is supported by the Media Handler for video delivery.
+   * @param fileExtension File extension
+   * @return true if video
+   */
+  public static boolean isVideo(@Nullable String fileExtension) {
+    return isExtension(VIDEO_FILE_TYPES, fileExtension);
+  }
+
+  /**
+   * Get video file extensions supported by the Media Handler.
+   * @return Video file extensions supported by the Media Handler for video delivery.
+   */
+  public static @NotNull Set<String> getVideoFileExtensions() {
+    return getFileExtensions(VIDEO_FILE_TYPES);
+  }
+
+  /**
+   * Get video content types supported by the Media Handler.
+   * @return Video content types supported by the Media Handler for video delivery.
+   */
+  public static @NotNull Set<String> getVideoContentTypes() {
+    return getContentTypes(VIDEO_FILE_TYPES);
   }
 
   private static Set<String> getContentTypes(@NotNull EnumSet<MediaFileType> fileTypes) {

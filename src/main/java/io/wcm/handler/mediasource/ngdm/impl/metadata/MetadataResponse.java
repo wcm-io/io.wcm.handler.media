@@ -30,11 +30,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * Used for Jackson Object mapping of JSON response from NGDM HTTP API.
  */
 @SuppressWarnings({ "checkstyle:VisibilityModifierCheck", "checkstyle:JavadocVariable", "java:S1104" })
-@SuppressFBWarnings("UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD")
 @JsonIgnoreProperties(ignoreUnknown = true)
 final class MetadataResponse {
 
+  @SuppressFBWarnings("UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD")
   public RepositoryMetadata repositoryMetadata;
+  @SuppressFBWarnings("UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD")
   public Map<String, Object> assetMetadata;
 
   @JsonIgnoreProperties(ignoreUnknown = true)
@@ -48,6 +49,7 @@ final class MetadataResponse {
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
+  @SuppressFBWarnings("UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD")
   static final class SmartCrop {
     public double left;
     public double top;

@@ -538,8 +538,13 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
   }
 
   @Override
+  public boolean isVideo() {
+    return MediaFileType.isVideo(getFileExtension());
+  }
+
+  @Override
   public boolean isDownload() {
-    return !isImage();
+    return !isImage() && !isVideo();
   }
 
   @Override

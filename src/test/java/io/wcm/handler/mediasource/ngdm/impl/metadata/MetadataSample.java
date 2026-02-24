@@ -21,14 +21,11 @@ package io.wcm.handler.mediasource.ngdm.impl.metadata;
 
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaReferenceSample.SAMPLE_ASSET_ID;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 /**
  * Next Gen Dynamic Media Metadata samples.
  */
 public final class MetadataSample {
 
-  @SuppressFBWarnings("HSC_HUGE_SHARED_STRING_CONSTANT")
   public static final String METADATA_JSON_IMAGE = "{"
       + "  \"assetId\": \"" + SAMPLE_ASSET_ID + "\","
       + "  \"repositoryMetadata\": {"
@@ -111,6 +108,21 @@ public final class MetadataSample {
       + "  },"
       + "  \"assetMetadata\": {"
       + "    \"dam:assetStatus\": \"approved\""
+      + "  }"
+      + "}";
+
+  public static final String METADATA_JSON_VIDEO = "{"
+      + "  \"assetId\": \"" + SAMPLE_ASSET_ID + "\","
+      + "  \"repositoryMetadata\": {"
+      + "    \"repo:name\": \"test.mp4\","
+      + "    \"dc:format\": \"video/mp4\","
+      + "    \"repo:size\": \"9123456\""
+      + "  },"
+      + "  \"assetMetadata\": {"
+      + "    \"dam:assetStatus\": \"approved\","
+      + "    \"duration\": \"43\","
+      + "    \"xmpDM:videoFrameSize_stDim:w\": \"1920\","
+      + "    \"xmpDM:videoFrameSize_stDim:h\": \"1080\""
       + "  }"
       + "}";
 
