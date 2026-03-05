@@ -61,6 +61,7 @@ public final class DamContext implements Adaptable {
   private ImageProfile imageProfile;
 
   private static final ImageProfile NO_IMAGE_PROFILE = new ImageProfile() {
+
     @Override
     public @NotNull List<NamedDimension> getSmartCropDefinitions() {
       return Collections.emptyList();

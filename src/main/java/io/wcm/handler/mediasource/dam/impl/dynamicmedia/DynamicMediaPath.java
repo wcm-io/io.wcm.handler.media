@@ -148,9 +148,9 @@ public final class DynamicMediaPath {
 
   private static void appendWidthHeigtFormatQuality(@NotNull StringBuilder result, @NotNull Dimension dimension, @NotNull DamContext damContext) {
     result.append("wid=").append(dimension.getWidth())
-        .append("&hei=").append(dimension.getHeight())
-        // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
-        .append("&fit=stretch");
+      .append("&hei=").append(dimension.getHeight())
+      // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
+      .append("&fit=stretch");
     // if original image may have an alpha channel, make sure it's preserved in the output format
     if (mayHaveAlphaChannel(damContext)) {
       applyFmt(result, damContext.getDynamicMediaDefaultFmtAlpha());

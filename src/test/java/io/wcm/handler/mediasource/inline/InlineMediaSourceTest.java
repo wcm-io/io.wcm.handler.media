@@ -96,7 +96,7 @@ class InlineMediaSourceTest {
   final AemContext context = AppAemContext.newAemContext();
 
   private static final byte[] DUMMY_BINARY = new byte[] {
-    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10
+      0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10
   };
 
   private static final String PAR_INLINEIMAGE_PATH = ROOTPATH_CONTENT + "/_jcr_content/resourceMediaInlineSampleImage";
@@ -128,34 +128,34 @@ class InlineMediaSourceTest {
     // prepare inline media object: node with mediaInline subnode (only nt:resource) and with filename
     Resource unstructuredNodeMediaInline = context.resourceResolver().create(contentNode, "resourceMediaInline",
         ImmutableValueMap.builder()
-            .put(NN_MEDIA_INLINE + "Name", "mediainlinedata.bin")
-            .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text")
-        .build());
+          .put(NN_MEDIA_INLINE + "Name", "mediainlinedata.bin")
+          .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text")
+          .build());
     context.load().binaryResource(new ByteArrayInputStream(DUMMY_BINARY), unstructuredNodeMediaInline, NN_MEDIA_INLINE);
 
     // prepare inline media object: node with mediaInline subnode (nt:file and nt:resource) and with filename
     Resource unstructuredNodeMediaInlineWithFile = context.resourceResolver().create(contentNode, "resourceMediaInlineWithFile",
         ImmutableValueMap.builder()
-            .put(NN_MEDIA_INLINE + "Name", "mediainlinedata2.bin")
-            .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 2")
-        .build());
+          .put(NN_MEDIA_INLINE + "Name", "mediainlinedata2.bin")
+          .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 2")
+          .build());
     context.load().binaryFile(new ByteArrayInputStream(DUMMY_BINARY), unstructuredNodeMediaInlineWithFile, NN_MEDIA_INLINE);
 
     // prepare inline media object with real image binary data to test scaling
     Resource unstructuredNodeMediaInlineSampleImage = context.resourceResolver().create(contentNode, "resourceMediaInlineSampleImage",
         ImmutableValueMap.builder()
-            .put(NN_MEDIA_INLINE + "Name", "sample_image_215x102.jpg")
-        .build());
+          .put(NN_MEDIA_INLINE + "Name", "sample_image_215x102.jpg")
+          .build());
     context.load().binaryResource("/sample_image_215x102.jpg",
         unstructuredNodeMediaInlineSampleImage.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
 
     // prepare inline media object with real image binary data to test scaling in 16:10 format
     Resource unstructuredNodeMediaInlineSampleImage_16_10 = context.resourceResolver().create(contentNode, "resourceMediaInlineSampleImage16_10",
         ImmutableValueMap.builder()
-            .put(NN_MEDIA_INLINE + "Name", "sample_image_400x250.jpg")
-            .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 16:9")
-            .put(PN_MEDIA_IS_DECORATIVE, true)
-        .build());
+          .put(NN_MEDIA_INLINE + "Name", "sample_image_400x250.jpg")
+          .put(PN_MEDIA_ALTTEXT, "Inline Media Alt. Text 16:9")
+          .put(PN_MEDIA_IS_DECORATIVE, true)
+          .build());
     context.load().binaryResource("/sample_image_400x250.jpg",
         unstructuredNodeMediaInlineSampleImage_16_10.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
 
@@ -468,7 +468,7 @@ class InlineMediaSourceTest {
 
     // test with force download
     rendition = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs().fixedDimension(0, 20).contentDispositionAttachment(true))
-        .refProperty("mediaInline").build().getRendition();
+      .refProperty("mediaInline").build().getRendition();
     assertEquals(42, rendition.getWidth(), "width");
     assertEquals(20, rendition.getHeight(), "height");
     assertEquals(PAR_INLINEIMAGE_PATH + "/mediaInline." + ImageFileServlet.SELECTOR + ".42.20.download_attachment.file/sample_image_215x102.jpg",
@@ -551,7 +551,7 @@ class InlineMediaSourceTest {
 
     // test image resource with dimensions only width
     media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH)).refProperty("mediaInline")
-        .build();
+      .build();
     rendition = media.getRendition();
     assertTrue(media.isValid(), "media valid");
     assertNull(media.getMediaInvalidReason(), "no invalid reason");
@@ -562,7 +562,7 @@ class InlineMediaSourceTest {
 
     // test image resource with dimensions only height
     media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYHEIGHT)).refProperty("mediaInline")
-        .build();
+      .build();
     rendition = media.getRendition();
     assertTrue(media.isValid(), "media valid");
     assertNull(media.getMediaInvalidReason(), "no invalid reason");
@@ -573,7 +573,7 @@ class InlineMediaSourceTest {
 
     // test image resource with dimensions only width, fitting ratio
     media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO1))
-        .refProperty("mediaInline").build();
+      .refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertTrue(media.isValid(), "media valid");
     assertNull(media.getMediaInvalidReason(), "no invalid reason");
@@ -584,7 +584,7 @@ class InlineMediaSourceTest {
 
     // test image resource with dimensions only width, invalid ratio
     media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2))
-        .refProperty("mediaInline").build();
+      .refProperty("mediaInline").build();
     rendition = media.getRendition();
     assertFalse(media.isValid(), "media invalid");
     assertEquals(MediaInvalidReason.NO_MATCHING_RENDITION, media.getMediaInvalidReason(), "invalid reason");
@@ -596,6 +596,7 @@ class InlineMediaSourceTest {
   void testWithMediaFormats_enforceVirtualRendition() {
     // enfore virtual renditions
     context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
+
       @Override
       public boolean enforceVirtualRenditions() {
         return true;
@@ -621,9 +622,9 @@ class InlineMediaSourceTest {
 
     // test image resource with media format exact fit
     Media media = mediaHandler.get(mediaInlineSampleImageResource, new MediaArgs(EDITORIAL_1COL))
-        .refProperty("mediaInline")
-        .enforceOutputFileExtension(FileExtension.PNG)
-        .build();
+      .refProperty("mediaInline")
+      .enforceOutputFileExtension(FileExtension.PNG)
+      .build();
     Rendition rendition = media.getRendition();
     assertTrue(media.isValid(), "media valid");
     assertNull(media.getMediaInvalidReason(), "no invalid reason");
@@ -677,7 +678,7 @@ class InlineMediaSourceTest {
   void testWithAutoCroppping() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     MediaArgs mediaArgs = new MediaArgs(SHOWROOM_CONTROLS_SCALE1_ONLYWIDTH_RATIO2)
-        .autoCrop(true);
+      .autoCrop(true);
     Media media = mediaHandler.get(mediaInlineSampleImageResource, mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -780,7 +781,7 @@ class InlineMediaSourceTest {
     props.put(PN_MEDIA_CROP, "0,0,320,152");
 
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO_16_10, RATIO_4_3, EDITORIAL_1COL)
-        .autoCrop(true);
+      .autoCrop(true);
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
@@ -908,10 +909,10 @@ class InlineMediaSourceTest {
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     MediaHandler mediaHandler = AdaptTo.notNull(adaptable(), MediaHandler.class);
     Media media = mediaHandler.get(mediaInlineSampleImageResource_16_10)
-        .mediaFormat(RATIO_16_10)
-        .pictureSource(new PictureSource(RATIO_16_10).media("media1").widths(160))
-        .pictureSource(new PictureSource(RATIO_16_10).media("media2").widths(320))
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .pictureSource(new PictureSource(RATIO_16_10).media("media1").widths(160))
+      .pictureSource(new PictureSource(RATIO_16_10).media("media2").widths(320))
+      .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -980,8 +981,8 @@ class InlineMediaSourceTest {
     props.put("customMapProperty", ImageMapParserImplTest.MAP_STRING);
 
     Media media = mediaHandler.get(mediaInlineResource)
-        .mapProperty("customMapProperty")
-        .build();
+      .mapProperty("customMapProperty")
+      .build();
     assertTrue(media.isValid(), "valid");
 
     // assert map

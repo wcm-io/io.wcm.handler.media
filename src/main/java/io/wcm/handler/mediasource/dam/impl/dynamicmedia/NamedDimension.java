@@ -56,10 +56,10 @@ public final class NamedDimension extends Dimension {
   @Override
   public String toString() {
     return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
-        .append("name", getName())
-        .append("width", getWidth())
-        .append("height", getHeight())
-        .build();
+      .append("name", getName())
+      .append("width", getWidth())
+      .append("height", getHeight())
+      .build();
   }
 
 }

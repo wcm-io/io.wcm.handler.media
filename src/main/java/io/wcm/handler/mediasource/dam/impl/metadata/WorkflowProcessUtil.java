@@ -97,7 +97,9 @@ final class WorkflowProcessUtil {
         if (isWorkflowPackagePage(node, resourceResolver)) {
           List<ResourceCollection> resourceCollections = resourceCollectionManager.getCollectionsForNode(node);
           for (ResourceCollection resourceCollection : resourceCollections) {
-            for (Node memberNode : resourceCollection.list(new String[] { primaryTypeResourceType })) {
+            for (Node memberNode : resourceCollection.list(new String[] {
+                primaryTypeResourceType
+            })) {
               assetPaths.add(memberNode.getPath());
             }
           }

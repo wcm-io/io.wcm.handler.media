@@ -44,16 +44,16 @@ class NextGenDynamicMediaImageDeliveryParamsTest {
   @Test
   void testWithProps() {
     NextGenDynamicMediaImageDeliveryParams underTest = new NextGenDynamicMediaImageDeliveryParams()
-        .width(100L)
-        .widthPlaceholder("{width}")
-        .height(50L)
-        .heightPlaceholder("{height}")
-        .ratio(new Dimension(16, 9))
-        .rotation(90)
-        .quality(70);
+      .width(100L)
+      .widthPlaceholder("{width}")
+      .height(50L)
+      .heightPlaceholder("{height}")
+      .ratio(new Dimension(16, 9))
+      .rotation(90)
+      .quality(70);
 
     assertEquals(100L, underTest.getWidth());
-    assertEquals("{width}",underTest.getWidthPlaceholder());
+    assertEquals("{width}", underTest.getWidthPlaceholder());
     assertEquals(50L, underTest.getHeight());
     assertEquals("{height}", underTest.getHeightPlaceholder());
     assertEquals(new Dimension(16, 9), underTest.getRatio());

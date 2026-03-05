@@ -65,6 +65,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     resourceTypes = "sling/servlet/default",
     methods = HttpConstants.METHOD_GET)
 public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
+
   private static final long serialVersionUID = 1L;
 
   static final String SELECTOR = "wcm-io-handler-media-mediaformat-validate";
@@ -109,9 +110,9 @@ public final class MediaFormatValidateServlet extends SlingSafeMethodsServlet {
     // try to resolve media
     MediaHandler mediaHandler = AdaptTo.notNull(request, MediaHandler.class);
     Media media = mediaHandler.get(mediaRef)
-        .mediaFormatOptions(mediaFormatOptions)
-        .autoCrop(mediaCropAuto)
-        .build();
+      .mediaFormatOptions(mediaFormatOptions)
+      .autoCrop(mediaCropAuto)
+      .build();
 
     // response
     ResultResponse result = new ResultResponse();

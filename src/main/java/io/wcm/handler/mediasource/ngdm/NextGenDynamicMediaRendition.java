@@ -210,8 +210,8 @@ final class NextGenDynamicMediaRendition implements Rendition {
    */
   private String buildImageRenditionUrl() {
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .rotation(context.getMedia().getRotation())
-        .quality(ImageQualityPercentage.getAsInteger(mediaArgs, context.getMediaHandlerConfig()));
+      .rotation(context.getMedia().getRotation())
+      .quality(ImageQualityPercentage.getAsInteger(mediaArgs, context.getMediaHandlerConfig()));
     if (this.requestedWidth > 0) {
       params.width(this.requestedWidth);
     }
@@ -230,9 +230,9 @@ final class NextGenDynamicMediaRendition implements Rendition {
    * Build video URL based on mediaArgs settings. As a side effect, also sets {@link #videoManifestFormat}
    * and {@link #fileExtension} based on the resolved delivery mode.
    * <ul>
-   *   <li>If hostedVideoPlayer is true: returns hosted player URL (iframe)</li>
-   *   <li>Otherwise: returns streaming manifest URL (HLS/DASH)</li>
-   *   <li>Falls back to binary download if configuration is incomplete</li>
+   * <li>If hostedVideoPlayer is true: returns hosted player URL (iframe)</li>
+   * <li>Otherwise: returns streaming manifest URL (HLS/DASH)</li>
+   * <li>Falls back to binary download if configuration is incomplete</li>
    * </ul>
    * @return Video URL
    */

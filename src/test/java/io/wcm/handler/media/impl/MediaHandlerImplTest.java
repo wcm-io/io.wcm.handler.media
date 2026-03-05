@@ -70,6 +70,7 @@ import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 class MediaHandlerImplTest {
 
   final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
+
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(MediaHandlerConfig.class, new TestMediaHandlerConfig(),
@@ -114,8 +115,8 @@ class MediaHandlerImplTest {
 
     // test pipelining and resolve link
     MediaRequest mediaRequest = new MediaRequest("/content/dummymedia/item1", new MediaArgs()
-        .download(true)
-        .urlMode(UrlModes.DEFAULT));
+      .download(true)
+      .urlMode(UrlModes.DEFAULT));
     Media media = mediaHandler.get(mediaRequest).build();
 
     // make sure initial media request is unmodified
@@ -132,7 +133,9 @@ class MediaHandlerImplTest {
     assertNull(media.getElement());
 
     // check resolved media format list
-    assertArrayEquals(new MediaFormat[] { DummyMediaFormats.DOWNLOAD }, media.getMediaRequest().getMediaArgs().getMediaFormats());
+    assertArrayEquals(new MediaFormat[] {
+        DummyMediaFormats.DOWNLOAD
+    }, media.getMediaRequest().getMediaArgs().getMediaFormats());
   }
 
   @Test
@@ -176,14 +179,14 @@ class MediaHandlerImplTest {
     };
 
     Media media = mediaHandler.get("/content/dummymedia/item1")
-        .mandatoryMediaFormats(mediaFormats)
-        .fileExtensions(fileExtensions)
-        .fixedDimension(200, 100)
-        .contentDispositionAttachment(true)
-        .altText("alt")
-        .dummyImage(false)
-        .dummyImageUrl("/dummy/url")
-        .build();
+      .mandatoryMediaFormats(mediaFormats)
+      .fileExtensions(fileExtensions)
+      .fixedDimension(200, 100)
+      .contentDispositionAttachment(true)
+      .altText("alt")
+      .dummyImage(false)
+      .dummyImageUrl("/dummy/url")
+      .build();
 
     MediaArgs args = media.getMediaRequest().getMediaArgs();
     assertArrayEquals(mediaFormats, args.getMediaFormats());
@@ -198,8 +201,12 @@ class MediaHandlerImplTest {
   @Test
   void testComponentProperties() {
     Resource component = context.create().resource("/apps/app1/components/comp1",
-        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
-        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, new Boolean[] { true, false },
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] {
+            "home_stage", "home_teaser"
+        },
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, new Boolean[] {
+            true, false
+        },
         MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, true);
 
     Resource resource = context.create().resource("/content/test",
@@ -223,8 +230,12 @@ class MediaHandlerImplTest {
   @Test
   void shouldResolveComponentPropertiesFromContextResourceWhenBuildingFromMediaRef() {
     Resource component = context.create().resource("/apps/app1/components/comp1",
-        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
-        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, new Boolean[] { true, false },
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] {
+            "home_stage", "home_teaser"
+        },
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, new Boolean[] {
+            true, false
+        },
         MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, true);
 
     Resource resource = context.create().resource("/content/test",
@@ -249,7 +260,9 @@ class MediaHandlerImplTest {
   @Test
   void testComponentProperties_Legacy_SingleMandatoryFlag() {
     Resource component = context.create().resource("/apps/app1/components/comp1",
-        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
+        MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS, new String[] {
+            "home_stage", "home_teaser"
+        },
         MediaNameConstants.PN_COMPONENT_MEDIA_FORMATS_MANDATORY, true,
         MediaNameConstants.PN_COMPONENT_MEDIA_AUTOCROP, true);
 
@@ -362,7 +375,8 @@ class MediaHandlerImplTest {
   })
   public static class TestMediaSource extends MediaSource {
 
-    @Override @NotNull
+    @Override
+    @NotNull
     public String getId() {
       return "dummy";
     }
@@ -377,7 +391,8 @@ class MediaHandlerImplTest {
       return MediaNameConstants.PN_MEDIA_REF;
     }
 
-    @Override @NotNull
+    @Override
+    @NotNull
     public Media resolveMedia(@NotNull Media media) {
       if (media.getMediaRequest().getMediaArgs().isDownload()) {
         String mediaUrl = media.getMediaRequest().getMediaRef();
@@ -424,6 +439,7 @@ class MediaHandlerImplTest {
       SlingHttpServletRequest.class, Resource.class
   })
   public static class TestPostProcessor implements MediaProcessor {
+
     @Override
     public Media process(Media media) {
       MediaRequest request = media.getMediaRequest();
@@ -449,24 +465,25 @@ class MediaHandlerImplTest {
 
     /* home_stage */
     static final MediaFormat HOME_STAGE = create("home_stage")
-        .label("Home Stage")
-        .width(960)
-        .height(485)
-        .extensions("gif", "jpg", "png", "swf")
-        .build();
+      .label("Home Stage")
+      .width(960)
+      .height(485)
+      .extensions("gif", "jpg", "png", "swf")
+      .build();
 
     /* home_teaser */
     static final MediaFormat HOME_TEASER = create("home_teaser")
-        .label("Home Teaser")
-        .width(206)
-        .height(104)
-        .extensions("gif", "jpg", "png")
-        .renditionGroup("/apps/test/renditiongroup/home_teaser")
-        .build();
+      .label("Home Teaser")
+      .width(206)
+      .height(104)
+      .extensions("gif", "jpg", "png")
+      .renditionGroup("/apps/test/renditiongroup/home_teaser")
+      .build();
 
   }
 
   public static class TestMediaFormatProvider extends MediaFormatProvider {
+
     TestMediaFormatProvider() {
       super(TestMediaFormats.class);
     }

@@ -150,7 +150,9 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetMediaFormatOptions_Multi() throws Exception {
     context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" });
+        PN_COMPONENT_MEDIA_FORMATS, new String[] {
+            "home_stage", "home_teaser"
+        });
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
@@ -172,7 +174,9 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetMediaFormatOptions_Multi_MandatoryLegacy() throws Exception {
     context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
+        PN_COMPONENT_MEDIA_FORMATS, new String[] {
+            "home_stage", "home_teaser"
+        },
         PN_COMPONENT_MEDIA_FORMATS_MANDATORY, true);
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
@@ -198,8 +202,12 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetMediaFormatOptions_Multi_Mandatory() throws Exception {
     context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
-        PN_COMPONENT_MEDIA_FORMATS_MANDATORY, new Boolean[] { true, false });
+        PN_COMPONENT_MEDIA_FORMATS, new String[] {
+            "home_stage", "home_teaser"
+        },
+        PN_COMPONENT_MEDIA_FORMATS_MANDATORY, new Boolean[] {
+            true, false
+        });
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
@@ -223,8 +231,12 @@ class MediaComponentPropertyResolverTest {
   @Test
   void testGetMediaFormatOptions_Multi_Mandatory_Names() throws Exception {
     context.create().resource(RESOURCE_TYPE,
-        PN_COMPONENT_MEDIA_FORMATS, new String[] { "home_stage", "home_teaser" },
-        PN_COMPONENT_MEDIA_FORMATS_MANDATORY_NAMES, new String[] { "home_stage", "product_banner" });
+        PN_COMPONENT_MEDIA_FORMATS, new String[] {
+            "home_stage", "home_teaser"
+        },
+        PN_COMPONENT_MEDIA_FORMATS_MANDATORY_NAMES, new String[] {
+            "home_stage", "product_banner"
+        });
     Resource resource = context.create().resource("/content/r1",
         PROPERTY_RESOURCE_TYPE, RESOURCE_TYPE);
     context.resourceResolver().commit();
@@ -268,15 +280,15 @@ class MediaComponentPropertyResolverTest {
     }, parseWidths(" 100  , 200? , 500?,400,300  "));
 
     assertArrayEquals(new WidthOption[] {
-            new WidthOption(100, "2x", true)
+        new WidthOption(100, "2x", true)
     }, parseWidths("100:2x"));
 
     assertArrayEquals(new WidthOption[] {
-            new WidthOption(100, null, true),
-            new WidthOption(200, "0.33x", false),
-            new WidthOption(500, "1.5x", false),
-            new WidthOption(400, "2x", true),
-            new WidthOption(300, "3.12x", true),
+        new WidthOption(100, null, true),
+        new WidthOption(200, "0.33x", false),
+        new WidthOption(500, "1.5x", false),
+        new WidthOption(400, "2x", true),
+        new WidthOption(300, "3.12x", true),
     }, parseWidths(" 100  , 200:0.33x? , 500:1.5x?,400:2x,300:3.12x  "));
   }
 
@@ -415,14 +427,14 @@ class MediaComponentPropertyResolverTest {
     try (MediaComponentPropertyResolver underTest = AdaptTo.notNull(resource, MediaComponentPropertyResolver.class)) {
       assertArrayEquals(new PictureSource[] {
           new PictureSource("home_stage")
-              .media("media1")
-              .sizes("sizes1")
-              .widthOptions(new WidthOption[] {
-                  new WidthOption(200, true),
-                  new WidthOption(400, false)
-              }),
+            .media("media1")
+            .sizes("sizes1")
+            .widthOptions(new WidthOption[] {
+                new WidthOption(200, true),
+                new WidthOption(400, false)
+            }),
           new PictureSource("home_teaser")
-              .widths(200, 300)
+            .widths(200, 300)
       }, underTest.getPictureSources());
     }
   }

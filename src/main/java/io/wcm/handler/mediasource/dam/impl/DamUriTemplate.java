@@ -104,7 +104,7 @@ final class DamUriTemplate implements UriTemplate {
         ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
     UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
     String url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())
-        .buildExternalResourceUrl(damContext.getAsset().adaptTo(Resource.class));
+      .buildExternalResourceUrl(damContext.getAsset().adaptTo(Resource.class));
 
     // replace dummy width/height parameters with actual placeholders
     switch (type) {
@@ -135,7 +135,7 @@ final class DamUriTemplate implements UriTemplate {
 
     // build rendition URL with dummy width/height parameters (otherwise API call will fail)
     String url = damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams()
-        .width(DUMMY_WIDTH).cropDimension(cropDimension).rotation(rotation));
+      .width(DUMMY_WIDTH).cropDimension(cropDimension).rotation(rotation));
     if (url == null) {
       return null;
     }
@@ -167,8 +167,8 @@ final class DamUriTemplate implements UriTemplate {
     // build DM URL with smart cropping
     if (smartCropDef != null) {
       result.append("%3A").append(smartCropDef.getName()).append("?")
-          .append(getDynamicMediaWidthHeightParameters(type))
-          .append("&fit=constrain");
+        .append(getDynamicMediaWidthHeightParameters(type))
+        .append("&fit=constrain");
       appendDynamicMediaQuality(result, damContext);
       return result.toString();
     }

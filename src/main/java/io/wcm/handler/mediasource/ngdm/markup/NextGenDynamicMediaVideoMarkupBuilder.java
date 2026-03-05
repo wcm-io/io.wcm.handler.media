@@ -73,8 +73,8 @@ public class NextGenDynamicMediaVideoMarkupBuilder implements MediaMarkupBuilder
 
     // add source
     video.createSource()
-        .setType(rendition.getMimeType())
-        .setSrc(rendition.getUrl());
+      .setType(rendition.getMimeType())
+      .setSrc(rendition.getUrl());
 
     return video;
   }

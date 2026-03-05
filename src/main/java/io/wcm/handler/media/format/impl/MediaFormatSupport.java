@@ -59,6 +59,7 @@ public final class MediaFormatSupport {
     // get file extensions from media formats
     final Set<String> mediaFormatFileExtensions = new HashSet<>();
     visitMediaFormats(mediaArgs, new MediaFormatVisitor<Object>() {
+
       @Override
       public @Nullable Object visit(@NotNull MediaFormat mediaFormat) {
         if (mediaFormat.getExtensions() != null && mediaFormat.getExtensions().length > 0) {

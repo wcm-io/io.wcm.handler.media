@@ -76,7 +76,7 @@ class NextGenDynamicMediaMetadataServiceImpl_ImsAccessTokenTest {
   @BeforeEach
   void setUp(WireMockRuntimeInfo wmRuntimeInfo) {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
-        .setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
+      .setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
     context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
     underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
         "enabled", true,
@@ -87,31 +87,31 @@ class NextGenDynamicMediaMetadataServiceImpl_ImsAccessTokenTest {
 
     // without auth
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_IMAGE)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_IMAGE)));
 
     // with auth
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .withHeader("Authorization", equalTo("Bearer " + ACCESS_TOKEN))
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_IMAGE_FULL)));
+      .withHeader("Authorization", equalTo("Bearer " + ACCESS_TOKEN))
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_IMAGE_FULL)));
   }
 
   @Test
   void testValidToken() {
     stubFor(post("/ims/token/v3")
-        .withFormParam("grant_type", equalTo("client_credentials"))
-        .withFormParam("client_id", equalTo(AUTHENTICATION_CLIENT_ID))
-        .withFormParam("client_secret", equalTo(AUTHENTICATION_CLIENT_SECRET))
-        .withFormParam("scope", equalTo(AUTHENTICATION_SCOPE))
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(ACCESS_TOKEN_RESPONSE)));
+      .withFormParam("grant_type", equalTo("client_credentials"))
+      .withFormParam("client_id", equalTo(AUTHENTICATION_CLIENT_ID))
+      .withFormParam("client_secret", equalTo(AUTHENTICATION_CLIENT_SECRET))
+      .withFormParam("scope", equalTo(AUTHENTICATION_SCOPE))
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(ACCESS_TOKEN_RESPONSE)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNotNull(metadata);
@@ -127,12 +127,12 @@ class NextGenDynamicMediaMetadataServiceImpl_ImsAccessTokenTest {
   @Test
   void testInvalidToken_FallbackNoAuth() {
     stubFor(post("/ims/token/v3")
-        .withFormParam("grant_type", equalTo("client_credentials"))
-        .withFormParam("client_id", equalTo(AUTHENTICATION_CLIENT_ID))
-        .withFormParam("client_secret", equalTo(AUTHENTICATION_CLIENT_SECRET))
-        .withFormParam("scope", equalTo(AUTHENTICATION_SCOPE))
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_UNAUTHORIZED)));
+      .withFormParam("grant_type", equalTo("client_credentials"))
+      .withFormParam("client_id", equalTo(AUTHENTICATION_CLIENT_ID))
+      .withFormParam("client_secret", equalTo(AUTHENTICATION_CLIENT_SECRET))
+      .withFormParam("scope", equalTo(AUTHENTICATION_SCOPE))
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_UNAUTHORIZED)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNotNull(metadata);

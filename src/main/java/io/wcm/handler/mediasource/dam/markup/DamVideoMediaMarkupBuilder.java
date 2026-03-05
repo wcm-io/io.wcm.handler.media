@@ -172,8 +172,8 @@ public class DamVideoMediaMarkupBuilder implements MediaMarkupBuilder {
       com.day.cq.dam.api.Rendition rendition = profile.getRendition(asset);
       if (rendition != null) {
         video.createSource()
-        .setType(profile.getHtmlType())
-        .setSrc(urlHandler.get(rendition.getPath()).buildExternalResourceUrl(rendition.adaptTo(Resource.class)));
+          .setType(profile.getHtmlType())
+          .setSrc(urlHandler.get(rendition.getPath()).buildExternalResourceUrl(rendition.adaptTo(Resource.class)));
       }
     }
   }

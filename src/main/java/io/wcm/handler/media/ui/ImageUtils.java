@@ -47,10 +47,10 @@ final class ImageUtils {
    * Applies picture sources to the given {@link MediaBuilder}.
    *
    * @param mediaFormatHandler {@link MediaFormatHandler} to fetch media formats from
-   * @param builder            {@link MediaBuilder} to apply the picture sources to
-   * @param mediaFormatNames   media formats for the picture source elements
-   * @param medias             media expressions for the picture source elements
-   * @param widths             widths for the picture source elements
+   * @param builder {@link MediaBuilder} to apply the picture sources to
+   * @param mediaFormatNames media formats for the picture source elements
+   * @param medias media expressions for the picture source elements
+   * @param widths widths for the picture source elements
    */
   public static void applyPictureSources(@NotNull MediaFormatHandler mediaFormatHandler, @NotNull MediaBuilder builder,
       String @NotNull [] mediaFormatNames, String @NotNull [] medias, String @NotNull [] widths) {
@@ -81,16 +81,16 @@ final class ImageUtils {
    * @param widths Widths string
    * @return Widths array
    */
-  public static long @NotNull[] toWidthsArray(@NotNull String widths) {
+  public static long @NotNull [] toWidthsArray(@NotNull String widths) {
     if (StringUtils.isBlank(widths)) {
       return new long[0];
     }
     return Arrays.stream(StringUtils.split(widths, ","))
-        .map(NumberUtils::toLong)
-        .filter(width -> width > 0)
-        .sorted((l1, l2) -> Long.compare(l2, l1))
-        .mapToLong(Long::longValue)
-        .toArray();
+      .map(NumberUtils::toLong)
+      .filter(width -> width > 0)
+      .sorted((l1, l2) -> Long.compare(l2, l1))
+      .mapToLong(Long::longValue)
+      .toArray();
   }
 
   /**
@@ -99,9 +99,9 @@ final class ImageUtils {
    * @return Widths array which is empty in case given widthOptions is blank
    */
   @SuppressWarnings("null")
-  public static @NotNull WidthOption @NotNull[] toWidthOptionArray(@NotNull String widthOptions) {
+  public static @NotNull WidthOption @NotNull [] toWidthOptionArray(@NotNull String widthOptions) {
     return Optional.ofNullable(WidthUtils.parseWidths(widthOptions))
-            .orElse(new WidthOption[0]);
+      .orElse(new WidthOption[0]);
   }
 
 }

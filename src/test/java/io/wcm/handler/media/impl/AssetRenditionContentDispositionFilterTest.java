@@ -60,7 +60,9 @@ class AssetRenditionContentDispositionFilterTest {
   void setUp() {
     // setup filter with JPEG on the blacklist
     underTest = context.registerInjectActivateService(new AssetRenditionContentDispositionFilter(),
-        BLACK_LIST_MIME_TYPE_CONFIG, new String[] { ContentType.JPEG },
+        BLACK_LIST_MIME_TYPE_CONFIG, new String[] {
+            ContentType.JPEG
+        },
         ALLOW_EMPTY_MIME, false);
 
     asset = context.create().asset("/content/dam/test/asset1.png", 10, 10, ContentType.PNG);

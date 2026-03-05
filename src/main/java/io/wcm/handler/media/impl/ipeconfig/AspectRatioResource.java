@@ -104,7 +104,9 @@ class AspectRatioResource extends AbstractResource {
   }
 
   @Override
-  @SuppressWarnings({ "unchecked", "null" })
+  @SuppressWarnings({
+      "unchecked", "null"
+  })
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (type == ValueMap.class) {
       return (AdapterType)properties;

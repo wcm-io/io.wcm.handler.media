@@ -80,20 +80,21 @@ class IPEConfigResourceProviderTest {
     context.registerInjectActivateService(IPEConfigResourceProvider.class);
 
     context.build().resource("/apps/app1/components/comp1")
-        .resource("cq:editConfig/cq:inplaceEditing",
-            "editorType", "image",
-            "active", true)
-        .resource("config/plugins/crop",
-            "features", "*")
-        .resource("aspectRatios/ratio1",
-            "name", "Ratio 1",
-            "ratio", "0.5")
-        .commit();
+      .resource("cq:editConfig/cq:inplaceEditing",
+          "editorType", "image",
+          "active", true)
+      .resource("config/plugins/crop",
+          "features", "*")
+      .resource("aspectRatios/ratio1",
+          "name", "Ratio 1",
+          "ratio", "0.5")
+      .commit();
 
     componentContentResource = context.create().resource("/content/myresource",
         "sling:resourceType", "/apps/app1/components/comp1");
 
     when(componentManager.getComponentOfResource(any(Resource.class))).thenAnswer(new Answer<Component>() {
+
       @Override
       @SuppressWarnings("null")
       @SuppressFBWarnings("STYLE")

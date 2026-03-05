@@ -47,7 +47,9 @@ public class MediaHandlerAdapterFactory implements AdapterFactory {
   @Reference
   private ComponentPropertyResolverFactory componentPropertyResolverFactory;
 
-  @SuppressWarnings({ "unchecked", "null" })
+  @SuppressWarnings({
+      "unchecked", "null"
+  })
   @Override
   public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {
     if (type == MediaHandlerConfig.class) {

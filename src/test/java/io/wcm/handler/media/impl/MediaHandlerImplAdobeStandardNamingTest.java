@@ -53,6 +53,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 class MediaHandlerImplAdobeStandardNamingTest {
 
   private final AemContext context = AppAemContext.newAemContext(new AemContextCallback() {
+
     @Override
     public void execute(AemContext callbackContext) {
       callbackContext.registerService(MediaHandlerConfig.class, new TestMediaHandlerConfig(),
@@ -89,6 +90,7 @@ class MediaHandlerImplAdobeStandardNamingTest {
 
 
   static class TestMediaHandlerConfig extends MediaHandlerConfig {
+
     @Override
     public boolean useAdobeStandardNames() {
       // switch to adobe standard naming

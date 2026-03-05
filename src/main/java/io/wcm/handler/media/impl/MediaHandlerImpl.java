@@ -121,7 +121,9 @@ public final class MediaHandlerImpl implements MediaHandler {
       "java:S112", // allow runtime exception
       "java:S1192" // multiple strings
   })
-  @SuppressFBWarnings({ "STYLE" })
+  @SuppressFBWarnings({
+      "STYLE"
+  })
   Media processRequest(@NotNull final MediaRequest mediaRequest) {
 
     // detect media source
@@ -230,7 +232,9 @@ public final class MediaHandlerImpl implements MediaHandler {
   }
 
   @Override
-  @SuppressWarnings({ "null", "java:S2589" })
+  @SuppressWarnings({
+      "null", "java:S2589"
+  })
   public boolean isValidElement(HtmlElement element) {
 
     // if it is null it is always invalid
@@ -277,8 +281,8 @@ public final class MediaHandlerImpl implements MediaHandler {
       fallbackToAllMediaFormats = true;
     }
     MediaFormat[] result = candidates.stream()
-        .filter(MediaFormat::isDownload)
-        .toArray(size -> new MediaFormat[size]);
+      .filter(MediaFormat::isDownload)
+      .toArray(size -> new MediaFormat[size]);
     if (result.length > 0) {
       mediaArgs.mediaFormats(result);
       return true;

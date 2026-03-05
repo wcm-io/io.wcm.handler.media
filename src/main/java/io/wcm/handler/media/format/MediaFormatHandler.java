@@ -97,6 +97,7 @@ public interface MediaFormatHandler {
    */
   @Nullable
   MediaFormat detectMediaFormat(@Nullable String extension, long fileSize, long width, long height);
+
   /**
    * Detect all matching media formats.
    * @param extension File extension

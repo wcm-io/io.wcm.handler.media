@@ -126,9 +126,9 @@ final class MediaFormatResolver {
         }
         else {
           pictureSources[i] = new PictureSource(mediaFormat)
-              .media(pictureSource.getMedia())
-              .sizes(pictureSource.getSizes())
-              .widthOptions(pictureSource.getWidthOptions());
+            .media(pictureSource.getMedia())
+            .sizes(pictureSource.getSizes())
+            .widthOptions(pictureSource.getWidthOptions());
         }
       }
     }
@@ -179,8 +179,8 @@ final class MediaFormatResolver {
     }
 
     Arrays.stream(mediaFormats)
-        .filter(Objects::nonNull)
-        .forEach(mediaFormat -> generateMediaFormatsForWidths(additionalMediaFormats, mediaFormat, true, imageSizes.getWidthOptions()));
+      .filter(Objects::nonNull)
+      .forEach(mediaFormat -> generateMediaFormatsForWidths(additionalMediaFormats, mediaFormat, true, imageSizes.getWidthOptions()));
     return true;
   }
 
@@ -202,12 +202,12 @@ final class MediaFormatResolver {
     for (WidthOption widthOption : widthOptions) {
       MediaFormat widthMediaFormat = MediaFormatBuilder.create(
           mediaFormat.getName() + MEDIAFORMAT_NAME_SEPARATOR + widthOption.getWidth())
-          .label(mediaFormat.getLabel())
-          .extensions(mediaFormat.getExtensions())
-          .ratio(mediaFormat.getRatio())
-          .width(widthOption.getWidth())
-          .property(MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT, setParent ? mediaFormat : null)
-          .build();
+        .label(mediaFormat.getLabel())
+        .extensions(mediaFormat.getExtensions())
+        .ratio(mediaFormat.getRatio())
+        .width(widthOption.getWidth())
+        .property(MEDIAFORMAT_PROP_PARENT_MEDIA_FORMAT, setParent ? mediaFormat : null)
+        .build();
       additionalMediaFormats.put(widthMediaFormat.getName(), new MediaFormatOption(widthMediaFormat, widthOption.isMandatory()));
     }
   }

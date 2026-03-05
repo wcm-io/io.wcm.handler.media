@@ -120,11 +120,11 @@ public final class CropDimension extends Dimension {
   @Override
   public String toString() {
     return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
-        .append("left", getLeft())
-        .append("top", getTop())
-        .append("width", getWidth())
-        .append("height", getHeight())
-        .build();
+      .append("left", getLeft())
+      .append("top", getTop())
+      .append("width", getWidth())
+      .append("height", getHeight())
+      .build();
   }
 
   /**

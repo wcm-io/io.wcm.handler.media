@@ -73,8 +73,8 @@ class NextGenDynamicMediaVideoMarkupBuilderTest extends AbstractNextGenDynamicMe
     NextGenDynamicMediaVideoMarkupBuilder underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaVideoMarkupBuilder.class);
 
     Media media = mediaHandler.get(resource)
-        .mediaFormat(DummyMediaFormats.EDITORIAL_1COL)
-        .build();
+      .mediaFormat(DummyMediaFormats.EDITORIAL_1COL)
+      .build();
     HtmlElement element = underTest.build(media);
 
     assertTrue(element instanceof Video);

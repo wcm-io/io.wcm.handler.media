@@ -183,7 +183,9 @@ public final class DamMediaSource extends MediaSource {
   }
 
   @Override
-  @SuppressWarnings({ "null", "java:S2589" })
+  @SuppressWarnings({
+      "null", "java:S2589"
+  })
   public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
@@ -207,10 +209,10 @@ public final class DamMediaSource extends MediaSource {
       if (!dropTargetCssClass.isPresent()) {
         // otherwise add a new drop target and get it's id
         MediaPropertyNames mediaPropertyNames = new MediaPropertyNames()
-            .refProperty(refProperty)
-            .cropProperty(cropProperty)
-            .rotationProperty(rotationProperty)
-            .mapProperty(mapProperty);
+          .refProperty(refProperty)
+          .cropProperty(cropProperty)
+          .rotationProperty(rotationProperty)
+          .mapProperty(mapProperty);
         dropTargetCssClass = addMediaDroptarget(refProperty, mediaPropertyNames, name);
       }
 
@@ -221,7 +223,9 @@ public final class DamMediaSource extends MediaSource {
   }
 
   @Override
-  @SuppressWarnings({ "PMD.AvoidAccessibilityAlteration", "java:S3011" })
+  @SuppressWarnings({
+      "PMD.AvoidAccessibilityAlteration", "java:S3011"
+  })
   public void setCustomIPECropRatios(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
@@ -239,7 +243,7 @@ public final class DamMediaSource extends MediaSource {
         String ipeConfigPath = IPEConfigResourceProvider.buildPath(componentContext.getResource().getPath(), mediaFormatNames);
         // clone IPE config and overwrite config path via reflection (no API available for this)
         InplaceEditingConfig customIpeConfig = new InplaceEditingConfig(componentContext
-            .getEditContext().getEditConfig().getInplaceEditingConfig());
+          .getEditContext().getEditConfig().getInplaceEditingConfig());
         try {
           Field configPathField = InplaceEditingConfig.class.getDeclaredField("configPath");
           configPathField.setAccessible(true);
@@ -265,9 +269,9 @@ public final class DamMediaSource extends MediaSource {
 
   private Optional<String> getMediaDropTargetID() {
     return componentContext.getEditContext().getEditConfig().getDropTargets().values().stream()
-        .filter(item -> ArrayUtils.contains(item.getGroups(), "media"))
-        .map(DropTarget::getId)
-        .findFirst();
+      .filter(item -> ArrayUtils.contains(item.getGroups(), "media"))
+      .map(DropTarget::getId)
+      .findFirst();
   }
 
   private Optional<String> addMediaDroptarget(String refProperty, MediaPropertyNames mediaPropertyNames, String name) {

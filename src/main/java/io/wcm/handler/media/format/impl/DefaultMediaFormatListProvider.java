@@ -55,6 +55,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     "sling.servlet.methods=" + HttpConstants.METHOD_GET
 })
 public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServlet {
+
   private static final long serialVersionUID = 1L;
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -103,6 +104,7 @@ public final class DefaultMediaFormatListProvider extends SlingSafeMethodsServle
 
   @JsonInclude(Include.NON_NULL)
   static class MediaFormatItem {
+
     private String name;
     private String text;
     private long width;

@@ -70,49 +70,57 @@ class MediaFormatResolverTest {
   @Test
   void testMediaFormats() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
+      .mediaFormats(EDITORIAL_1COL, EDITORIAL_2COL);
 
     assertTrue(underTest.resolve(mediaArgs));
 
-    assertArrayEquals(new MediaFormat[] { EDITORIAL_1COL, EDITORIAL_2COL }, mediaArgs.getMediaFormats());
+    assertArrayEquals(new MediaFormat[] {
+        EDITORIAL_1COL, EDITORIAL_2COL
+    }, mediaArgs.getMediaFormats());
   }
 
   @Test
   void testMediaFormatNamesAllValid() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormatNames(EDITORIAL_1COL.getName(), EDITORIAL_2COL.getName());
+      .mediaFormatNames(EDITORIAL_1COL.getName(), EDITORIAL_2COL.getName());
 
     assertTrue(underTest.resolve(mediaArgs));
 
-    assertArrayEquals(new MediaFormat[] { EDITORIAL_1COL, EDITORIAL_2COL }, mediaArgs.getMediaFormats());
+    assertArrayEquals(new MediaFormat[] {
+        EDITORIAL_1COL, EDITORIAL_2COL
+    }, mediaArgs.getMediaFormats());
   }
 
   @Test
   void testMediaFormatNamesSomeInvalid() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormatNames(EDITORIAL_1COL.getName(), "invalid", EDITORIAL_2COL.getName());
+      .mediaFormatNames(EDITORIAL_1COL.getName(), "invalid", EDITORIAL_2COL.getName());
 
     assertFalse(underTest.resolve(mediaArgs));
 
-    assertArrayEquals(new MediaFormat[] { EDITORIAL_1COL, null, EDITORIAL_2COL }, mediaArgs.getMediaFormats());
+    assertArrayEquals(new MediaFormat[] {
+        EDITORIAL_1COL, null, EDITORIAL_2COL
+    }, mediaArgs.getMediaFormats());
   }
 
   @Test
   void testMediaFormatNamesAllInvalid() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormatNames("invalid1", "invalid2");
+      .mediaFormatNames("invalid1", "invalid2");
 
     assertFalse(underTest.resolve(mediaArgs));
 
-    assertArrayEquals(new MediaFormat[] { null, null }, mediaArgs.getMediaFormats());
+    assertArrayEquals(new MediaFormat[] {
+        null, null
+    }, mediaArgs.getMediaFormats());
   }
 
   @Test
   @SuppressWarnings("null")
   void testImageSizes() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(RATIO_16_10)
-        .imageSizes(new ImageSizes("size1", 10, 20));
+      .mediaFormat(RATIO_16_10)
+      .imageSizes(new ImageSizes("size1", 10, 20));
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -127,8 +135,8 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testImageSizes_MixedMandatory() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(RATIO_16_10)
-        .imageSizes(new ImageSizes("size1", new WidthOption(10, true), new WidthOption(20, false)));
+      .mediaFormat(RATIO_16_10)
+      .imageSizes(new ImageSizes("size1", new WidthOption(10, true), new WidthOption(20, false)));
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -143,8 +151,8 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testImageSizes_MultipleMediaFormats() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormats(RATIO_16_10, RATIO_4_3)
-        .imageSizes(new ImageSizes("size1", 10, 20));
+      .mediaFormats(RATIO_16_10, RATIO_4_3)
+      .imageSizes(new ImageSizes("size1", 10, 20));
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -162,8 +170,8 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testImageSizes_MultipleMediaFormats_MixedMandatory() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormats(RATIO_16_10, RATIO_4_3)
-        .imageSizes(new ImageSizes("size1", new WidthOption(10, true), new WidthOption(20, false)));
+      .mediaFormats(RATIO_16_10, RATIO_4_3)
+      .imageSizes(new ImageSizes("size1", new WidthOption(10, true), new WidthOption(20, false)));
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -181,8 +189,8 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testImageSizes_NoRatioMediaFormat() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(IMAGE_UNCONSTRAINED)
-        .imageSizes(new ImageSizes("size1", 10, 20));
+      .mediaFormat(IMAGE_UNCONSTRAINED)
+      .imageSizes(new ImageSizes("size1", 10, 20));
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -196,7 +204,7 @@ class MediaFormatResolverTest {
   @Test
   void testImageSizes_NoMediaFormat() {
     MediaArgs mediaArgs = new MediaArgs()
-        .imageSizes(new ImageSizes("sizes", 10, 20));
+      .imageSizes(new ImageSizes("sizes", 10, 20));
 
     assertFalse(underTest.resolve(mediaArgs));
   }
@@ -205,11 +213,11 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testPictureSources_DifferentRatio() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(RATIO_16_10)
-        .pictureSources(new PictureSource[] {
-            new PictureSource(RATIO_16_10).media("media1").widths(20, 30),
-            new PictureSource(RATIO_4_3).widths(10, 20)
-        });
+      .mediaFormat(RATIO_16_10)
+      .pictureSources(new PictureSource[] {
+          new PictureSource(RATIO_16_10).media("media1").widths(20, 30),
+          new PictureSource(RATIO_4_3).widths(10, 20)
+      });
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -226,11 +234,11 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testPictureSources_DifferentRatio_MediaFormatNames() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(RATIO_16_10)
-        .pictureSources(new PictureSource[] {
-            new PictureSource(RATIO_16_10.getName()).media("media1").widths(20, 30),
-            new PictureSource(RATIO_4_3.getName()).widths(10, 20)
-        });
+      .mediaFormat(RATIO_16_10)
+      .pictureSources(new PictureSource[] {
+          new PictureSource(RATIO_16_10.getName()).media("media1").widths(20, 30),
+          new PictureSource(RATIO_4_3.getName()).widths(10, 20)
+      });
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -247,11 +255,11 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testPictureSources_DifferentRatio_MixedMandatory() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(RATIO_16_10)
-        .pictureSources(new PictureSource[] {
-            new PictureSource(RATIO_16_10).media("media1").widthOptions(new WidthOption(20, true), new WidthOption(30, false)),
-            new PictureSource(RATIO_4_3).widthOptions(new WidthOption(10, false), new WidthOption(20, true))
-        });
+      .mediaFormat(RATIO_16_10)
+      .pictureSources(new PictureSource[] {
+          new PictureSource(RATIO_16_10).media("media1").widthOptions(new WidthOption(20, true), new WidthOption(30, false)),
+          new PictureSource(RATIO_4_3).widthOptions(new WidthOption(10, false), new WidthOption(20, true))
+      });
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -268,11 +276,11 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testPictureSources_SameRatio() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(RATIO_16_10)
-        .pictureSources(new PictureSource[] {
-            new PictureSource(RATIO_16_10).media("media1").widths(20, 30),
-            new PictureSource(RATIO_16_10).widths(10, 20)
-        });
+      .mediaFormat(RATIO_16_10)
+      .pictureSources(new PictureSource[] {
+          new PictureSource(RATIO_16_10).media("media1").widths(20, 30),
+          new PictureSource(RATIO_16_10).widths(10, 20)
+      });
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -288,10 +296,10 @@ class MediaFormatResolverTest {
   @SuppressWarnings("null")
   void testPictureSources_NoWidths() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(RATIO_16_10)
-        .pictureSources(new PictureSource[] {
-            new PictureSource(RATIO_16_10).media("media1")
-        });
+      .mediaFormat(RATIO_16_10)
+      .pictureSources(new PictureSource[] {
+          new PictureSource(RATIO_16_10).media("media1")
+      });
 
     assertTrue(underTest.resolve(mediaArgs));
 
@@ -303,10 +311,10 @@ class MediaFormatResolverTest {
   @Test
   void testPictureSources_InvalidMediaFormatName() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(RATIO_16_10)
-        .pictureSources(new PictureSource[] {
-            new PictureSource("invalid-format-name").media("media1")
-        });
+      .mediaFormat(RATIO_16_10)
+      .pictureSources(new PictureSource[] {
+          new PictureSource("invalid-format-name").media("media1")
+      });
 
     assertFalse(underTest.resolve(mediaArgs));
   }

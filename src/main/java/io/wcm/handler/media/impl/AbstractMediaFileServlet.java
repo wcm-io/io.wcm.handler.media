@@ -48,6 +48,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * Optional support for Content-Disposition header ("download_attachment").
  */
 abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
+
   private static final long serialVersionUID = 1L;
 
   @Override
@@ -107,7 +108,9 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return Binary data or null if not binary data found
    */
   protected byte @Nullable [] getBinaryData(@NotNull Resource resource,
-      @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) throws IOException {
+      @SuppressWarnings({
+          "unused", "java:S1172"
+      }) @NotNull SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {
       return null;
@@ -126,7 +129,9 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return Content type (never null)
    */
   protected @NotNull String getContentType(@NotNull Resource resource,
-      @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) {
+      @SuppressWarnings({
+          "unused", "java:S1172"
+      }) @NotNull SlingHttpServletRequest request) {
     String mimeType = JcrBinary.getMimeType(resource);
     if (StringUtils.isEmpty(mimeType)) {
       mimeType = ContentType.OCTET_STREAM;

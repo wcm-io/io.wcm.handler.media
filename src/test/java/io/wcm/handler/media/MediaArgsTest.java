@@ -129,9 +129,9 @@ class MediaArgsTest {
     Map<String, Object> props = Map.of("prop1", "value1");
 
     MediaArgs mediaArgs = new MediaArgs()
-    .property("prop3", "value3")
-    .properties(props)
-    .property("prop2", "value2");
+      .property("prop3", "value3")
+      .properties(props)
+      .property("prop2", "value2");
 
     assertEquals(3, mediaArgs.getProperties().size());
     assertEquals("value1", mediaArgs.getProperties().get("prop1", String.class));
@@ -168,8 +168,8 @@ class MediaArgsTest {
     assertNull(mediaArgs.getImageSizes().getWidthOptions()[0].getDensity());
 
     mediaArgs.imageSizes(new ImageSizes("",
-            new WidthOption(5, "1x"),
-            new WidthOption(15, "2x", false)));
+        new WidthOption(5, "1x"),
+        new WidthOption(15, "2x", false)));
     assertNotNull(mediaArgs.getImageSizes());
     assertNotNull(mediaArgs.getImageSizes().getWidthOptions());
     assertEquals("", mediaArgs.getImageSizes().getSizes());
@@ -187,10 +187,10 @@ class MediaArgsTest {
   void testPictureSourcesWidthOptions() {
     MediaArgs mediaArgs = new MediaArgs();
     mediaArgs.pictureSources(
-            new PictureSource(EDITORIAL_1COL).widths(10, 20, 30),
-            new PictureSource(EDITORIAL_2COL).widthOptions(
-                    new WidthOption(5),
-                    new WidthOption(15, "2x", false)));
+        new PictureSource(EDITORIAL_1COL).widths(10, 20, 30),
+        new PictureSource(EDITORIAL_2COL).widthOptions(
+            new WidthOption(5),
+            new WidthOption(15, "2x", false)));
 
     assertNotNull(mediaArgs.getPictureSources());
     assertEquals(2, mediaArgs.getPictureSources().length);
@@ -225,11 +225,13 @@ class MediaArgsTest {
         "ext1",
         "ext2"
     };
-    Map<String,Object> props = ImmutableValueMap.of("prop1", "value1", "prop2", "value2");
+    Map<String, Object> props = ImmutableValueMap.of("prop1", "value1", "prop2", "value2");
 
-    ImageSizes imageSizes = new ImageSizes("sizes1", new long[] { 1, 2, 3 });
+    ImageSizes imageSizes = new ImageSizes("sizes1", new long[] {
+        1, 2, 3
+    });
     PictureSource[] pictureSourceSets = new PictureSource[] {
-        new PictureSource(EDITORIAL_1COL).media("media1").widths(1,2,3),
+        new PictureSource(EDITORIAL_1COL).media("media1").widths(1, 2, 3),
         new PictureSource(EDITORIAL_2COL).widths(4),
         new PictureSource(EDITORIAL_3COL).widthOptions(
             new WidthOption(5, "1x", true),

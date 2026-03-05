@@ -30,6 +30,7 @@ import io.wcm.handler.media.format.Ratio;
  * Named smart cropping definition.
  */
 public class SmartCrop {
+
   private final String name;
   private final CropDimension cropDimension;
   private final double ratio;

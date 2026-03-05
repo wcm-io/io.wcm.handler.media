@@ -68,7 +68,7 @@ import org.osgi.service.component.annotations.Component;
         "sling.filter.scope=request",
         "sling.filter.pattern=/content/dam/.*/(jcr:content|_jcr_content)/renditions/.*",
         "service.ranking=-25001"
-})
+    })
 public final class AssetRenditionContentDispositionFilter implements Filter {
 
   static final String BLACK_LIST_MIME_TYPE_CONFIG = "cq.mime.type.blacklist";
@@ -82,8 +82,8 @@ public final class AssetRenditionContentDispositionFilter implements Filter {
     String[] mimetypeBlacklistArray = PropertiesUtil.toStringArray(config.get(BLACK_LIST_MIME_TYPE_CONFIG));
     if (mimetypeBlacklistArray != null) {
       mimetypeBlacklist = Arrays.stream(mimetypeBlacklistArray)
-          .map(StringUtils::lowerCase)
-          .collect(Collectors.toSet());
+        .map(StringUtils::lowerCase)
+        .collect(Collectors.toSet());
     }
     else {
       mimetypeBlacklist = Collections.emptySet();

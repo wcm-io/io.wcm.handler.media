@@ -218,7 +218,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
       try {
         // open service user session for reading/writing rendition metadata
         serviceResourceResolver = resourceResolverFactory
-            .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE));
+          .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE));
 
         // make sure asset resource exists
         Resource assetResource = serviceResourceResolver.getResource(assetPath);

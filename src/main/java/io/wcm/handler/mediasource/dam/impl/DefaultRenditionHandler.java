@@ -99,10 +99,10 @@ class DefaultRenditionHandler implements RenditionHandler {
           List<CropDimension> cropDimensions = getDynamicMediaCropDimensions(mediaArgs);
           if (!cropDimensions.isEmpty()) {
             candidates.addAll(cropDimensions.stream()
-                .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
-                    cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension,
-                    null, mediaArgs.getImageQualityPercentage()))
-                .collect(Collectors.toList()));
+              .map(cropDimension -> new VirtualTransformedRenditionMetadata(originalRendition.getRendition(),
+                  cropDimension.getWidth(), cropDimension.getHeight(), mediaArgs.getEnforceOutputFileExtension(), cropDimension,
+                  null, mediaArgs.getImageQualityPercentage()))
+              .collect(Collectors.toList()));
           }
         }
       }
@@ -327,6 +327,7 @@ class DefaultRenditionHandler implements RenditionHandler {
       return true;
     }
     Boolean isSizeMatchingMediaFormat = visitMediaFormats(mediaArgs, new MediaFormatVisitor<Boolean>() {
+
       @Override
       public @Nullable Boolean visit(@NotNull MediaFormat mediaFormat) {
         // check if any width or ratio restrictions are defined for the media format
@@ -369,6 +370,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     // otherwise check for media format restriction
     else if (mediaFormats != null && mediaFormats.length > 0) {
       return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
+
         @Override
         public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
           for (RenditionMetadata candidate : candidates) {
@@ -437,6 +439,7 @@ class DefaultRenditionHandler implements RenditionHandler {
 
     // or from any media format
     return visitMediaFormats(mediaArgs, new MediaFormatVisitor<RenditionMetadata>() {
+
       @Override
       public @Nullable RenditionMetadata visit(@NotNull MediaFormat mediaFormat) {
         long destWidth = mediaFormat.getEffectiveMinWidth();

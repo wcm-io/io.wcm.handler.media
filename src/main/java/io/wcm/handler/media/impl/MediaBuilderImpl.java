@@ -115,7 +115,9 @@ final class MediaBuilderImpl implements MediaBuilder {
   }
 
   @Override
-  @SuppressWarnings({ "null", "unused" })
+  @SuppressWarnings({
+      "null", "unused"
+  })
   public @NotNull MediaBuilder args(@NotNull MediaArgs value) {
     if (value == null) {
       throw new IllegalArgumentException("MediaArgs is null.");

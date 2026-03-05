@@ -62,9 +62,9 @@ class DummyImageServletTest {
   @Test
   void testGet_WidthHeight() throws Exception {
     context.requestPathInfo().setSuffix(new SuffixBuilder()
-    .put(DummyImageServlet.SUFFIX_WIDTH, 100)
-    .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
-    .build());
+      .put(DummyImageServlet.SUFFIX_WIDTH, 100)
+      .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
+      .build());
 
     underTest.service(context.request(), context.response());
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());
@@ -74,10 +74,10 @@ class DummyImageServletTest {
   @Test
   void testGet_WidthHeightName() throws Exception {
     context.requestPathInfo().setSuffix(new SuffixBuilder()
-    .put(DummyImageServlet.SUFFIX_WIDTH, 100)
-    .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
-    .put(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME, "myName")
-    .build());
+      .put(DummyImageServlet.SUFFIX_WIDTH, 100)
+      .put(DummyImageServlet.SUFFIX_HEIGHT, 50)
+      .put(DummyImageServlet.SUFFIX_MEDIA_FORMAT_NAME, "myName")
+      .build());
 
     underTest.service(context.request(), context.response());
     assertEquals(HttpServletResponse.SC_OK, context.response().getStatus());

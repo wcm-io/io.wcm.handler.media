@@ -56,6 +56,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     "sling.servlet.methods=" + HttpConstants.METHOD_GET
 })
 public final class ImageFileServlet extends AbstractMediaFileServlet {
+
   private static final long serialVersionUID = 1L;
 
   /**

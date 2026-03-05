@@ -92,16 +92,17 @@ public final class AppAemContext {
       builder.afterSetUp(callback);
     }
     return builder
-        .plugin(CACONFIG)
-        .plugin(WCMIO_SLING, WCMIO_WCM, WCMIO_CACONFIG)
-        .afterSetUp(SETUP_CALLBACK)
-        .build();
+      .plugin(CACONFIG)
+      .plugin(WCMIO_SLING, WCMIO_WCM, WCMIO_CACONFIG)
+      .afterSetUp(SETUP_CALLBACK)
+      .build();
   }
 
   /**
    * Custom set up rules required in all unit tests.
    */
   private static final AemContextCallback SETUP_CALLBACK = new AemContextCallback() {
+
     @Override
     public void execute(@NotNull AemContext context) throws Exception {
 

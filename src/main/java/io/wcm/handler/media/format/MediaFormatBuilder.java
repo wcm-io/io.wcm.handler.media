@@ -334,7 +334,7 @@ public final class MediaFormatBuilder {
       throw new IllegalArgumentException("Name is missing.");
     }
     if (this.minWidthHeight != 0 && (this.width != 0 || this.minWidth != 0 || this.maxWidth != 0
-            || this.height != 0 || this.minHeight != 0 || this.maxHeight != 0)) {
+        || this.height != 0 || this.minHeight != 0 || this.maxHeight != 0)) {
       throw new IllegalArgumentException("minWithHeight cannot be combined with any other width/height restriction.");
     }
     return new MediaFormat(

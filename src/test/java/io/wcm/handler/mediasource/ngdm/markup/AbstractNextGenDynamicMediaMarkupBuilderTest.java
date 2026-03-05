@@ -72,10 +72,10 @@ abstract class AbstractNextGenDynamicMediaMarkupBuilderTest {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_VIDEO)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_VIDEO)));
 
     expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
   }

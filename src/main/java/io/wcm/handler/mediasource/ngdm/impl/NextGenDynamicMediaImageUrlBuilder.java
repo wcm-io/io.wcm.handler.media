@@ -130,11 +130,11 @@ public final class NextGenDynamicMediaImageUrlBuilder {
       @NotNull SortedMap<String, String> urlParamMap) {
     StringBuilder url = new StringBuilder();
     url.append("https://")
-        .append(repositoryId)
-        .append(imageDeliveryPath);
+      .append(repositoryId)
+      .append(imageDeliveryPath);
     String urlParams = urlParamMap.entrySet().stream()
-        .map(entry -> toUrlParam(entry.getKey(), entry.getValue()))
-        .collect(Collectors.joining("&"));
+      .map(entry -> toUrlParam(entry.getKey(), entry.getValue()))
+      .collect(Collectors.joining("&"));
     if (StringUtils.isNotEmpty(urlParams)) {
       if (url.indexOf("?") < 0) {
         url.append("?");
@@ -235,9 +235,9 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     }
     double requestedRatio = Ratio.get(cropSmartRatio);
     return metadata.getSmartCrops().stream()
-        .filter(smartCrop -> Ratio.matches(smartCrop.getRatio(), requestedRatio))
-        .findFirst()
-        .orElse(null);
+      .filter(smartCrop -> Ratio.matches(smartCrop.getRatio(), requestedRatio))
+      .findFirst()
+      .orElse(null);
   }
 
   /**
