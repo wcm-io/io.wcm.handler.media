@@ -52,24 +52,27 @@ class ImsAccessTokenCache {
 
   // cache IMS access tokens until they expire
   private final Cache<String, AccessTokenResponse> tokenCache = Caffeine.newBuilder()
-      .expireAfter(new Expiry<String, AccessTokenResponse>() {
-        @Override
-        public long expireAfterCreate(String key, AccessTokenResponse value, long currentTime) {
-          // substract a few secs from expiration time to be on the safe side
-          return TimeUnit.SECONDS.toNanos(value.expiresInSec - EXPERIATION_BUFFER_SEC);
-        }
-        @Override
-        public long expireAfterUpdate(String key, AccessTokenResponse value, long currentTime, long currentDuration) {
-          // not used
-          return Long.MAX_VALUE;
-        }
-        @Override
-        public long expireAfterRead(String key, AccessTokenResponse value, long currentTime, long currentDuration) {
-          // not used
-          return Long.MAX_VALUE;
-        }
-      })
-      .build();
+    .expireAfter(new Expiry<String, AccessTokenResponse>() {
+
+      @Override
+      public long expireAfterCreate(String key, AccessTokenResponse value, long currentTime) {
+        // substract a few secs from expiration time to be on the safe side
+        return TimeUnit.SECONDS.toNanos(value.expiresInSec - EXPERIATION_BUFFER_SEC);
+      }
+
+      @Override
+      public long expireAfterUpdate(String key, AccessTokenResponse value, long currentTime, long currentDuration) {
+        // not used
+        return Long.MAX_VALUE;
+      }
+
+      @Override
+      public long expireAfterRead(String key, AccessTokenResponse value, long currentTime, long currentDuration) {
+        // not used
+        return Long.MAX_VALUE;
+      }
+    })
+    .build();
 
   private static final JsonMapper OBJECT_MAPPER = new JsonMapper();
   private static final Logger log = LoggerFactory.getLogger(ImsAccessTokenCache.class);

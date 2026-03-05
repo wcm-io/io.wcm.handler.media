@@ -82,7 +82,7 @@ class CroppingRatiosTest {
   @Test
   void testGetMediaFormatsForCropping_MediaArgsWithMediaFormats() {
     MediaRequest mediaRequest = new MediaRequest("/content/dam/test.jpg", new MediaArgs()
-        .mediaFormats(ratio16_9, ratio32_10, ratio2_1a));
+      .mediaFormats(ratio16_9, ratio32_10, ratio2_1a));
 
     Set<String> result = underTest.getMediaFormatsForCropping(mediaRequest);
 

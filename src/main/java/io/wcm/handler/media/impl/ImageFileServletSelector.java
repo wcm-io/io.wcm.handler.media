@@ -136,9 +136,9 @@ public final class ImageFileServletSelector {
       @Nullable CropDimension cropDimension, @Nullable Integer rotation, @Nullable Double imageQualityPercentage,
       boolean contentDispositionAttachment) {
     StringBuilder result = new StringBuilder()
-        .append(ImageFileServlet.SELECTOR)
-        .append(".").append(Long.toString(width))
-        .append(".").append(Long.toString(height));
+      .append(ImageFileServlet.SELECTOR)
+      .append(".").append(Long.toString(width))
+      .append(".").append(Long.toString(height));
 
     if (cropDimension != null) {
       result.append(".").append(cropDimension.getCropString());

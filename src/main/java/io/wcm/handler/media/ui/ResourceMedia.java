@@ -243,25 +243,27 @@ public class ResourceMedia {
   }
 
   /**
-   * Puts all request attributes that their name starts with the prefix {@value #RA_PROPERTY_PREFIX} into the properties of the media builder
+   * Puts all request attributes that their name starts with the prefix {@value #RA_PROPERTY_PREFIX} into the properties
+   * of the media builder
    * @param builder Media builder
    */
   private void setCustomProperties(MediaBuilder builder) {
     getCustomPropertiesFromRequestAttributes()
-        .forEach(builder::property);
+      .forEach(builder::property);
   }
 
   /**
-   * Gathers all request attributes whose name begins with the prefix {@value #RA_PROPERTY_PREFIX}, strips the prefix to get the property name
+   * Gathers all request attributes whose name begins with the prefix {@value #RA_PROPERTY_PREFIX}, strips the prefix to
+   * get the property name
    * and returns a map of property name to request attribute value
    * @return map of custom properties
    */
   @NotNull
   private Map<String, Object> getCustomPropertiesFromRequestAttributes() {
     return enumToList(request.getAttributeNames()).stream()
-        .filter(this::isMediaPropAttribute)
-        .filter(this::attributeValueIsNotNull)
-        .collect(Collectors.toMap(this::toPropertyName, request::getAttribute));
+      .filter(this::isMediaPropAttribute)
+      .filter(this::attributeValueIsNotNull)
+      .collect(Collectors.toMap(this::toPropertyName, request::getAttribute));
   }
 
   @NotNull
@@ -299,8 +301,8 @@ public class ResourceMedia {
    */
   private static String[] toStringArray(Object... objectArray) {
     return Arrays.stream(objectArray)
-        .map(obj -> obj == null ? "" : obj.toString())
-        .toArray(String[]::new);
+      .map(obj -> obj == null ? "" : obj.toString())
+      .toArray(String[]::new);
   }
 
   /**

@@ -113,9 +113,9 @@ public final class MediaArgs implements Cloneable {
   public MediaFormat @Nullable [] getMediaFormats() {
     if (this.mediaFormatOptions != null) {
       MediaFormat[] result = Arrays.stream(this.mediaFormatOptions)
-          .filter(option -> option.getMediaFormatName() == null)
-          .map(MediaFormatOption::getMediaFormat)
-          .toArray(size -> new MediaFormat[size]);
+        .filter(option -> option.getMediaFormatName() == null)
+        .map(MediaFormatOption::getMediaFormat)
+        .toArray(size -> new MediaFormat[size]);
       if (result.length > 0) {
         return result;
       }
@@ -134,8 +134,8 @@ public final class MediaArgs implements Cloneable {
     }
     else {
       this.mediaFormatOptions = Arrays.stream(values)
-          .map(mediaFormat -> new MediaFormatOption(mediaFormat, false))
-          .toArray(size -> new MediaFormatOption[size]);
+        .map(mediaFormat -> new MediaFormatOption(mediaFormat, false))
+        .toArray(size -> new MediaFormatOption[size]);
     }
     return this;
   }
@@ -151,8 +151,8 @@ public final class MediaArgs implements Cloneable {
     }
     else {
       this.mediaFormatOptions = Arrays.stream(values)
-          .map(mediaFormat -> new MediaFormatOption(mediaFormat, true))
-          .toArray(size -> new MediaFormatOption[size]);
+        .map(mediaFormat -> new MediaFormatOption(mediaFormat, true))
+        .toArray(size -> new MediaFormatOption[size]);
     }
     return this;
   }
@@ -182,8 +182,8 @@ public final class MediaArgs implements Cloneable {
   public @NotNull MediaArgs mediaFormatsMandatory(boolean value) {
     if (this.mediaFormatOptions != null) {
       this.mediaFormatOptions = Arrays.stream(this.mediaFormatOptions)
-          .map(option -> option.withMandatory(value))
-          .toArray(size -> new MediaFormatOption[size]);
+        .map(option -> option.withMandatory(value))
+        .toArray(size -> new MediaFormatOption[size]);
     }
     return this;
   }
@@ -195,9 +195,9 @@ public final class MediaArgs implements Cloneable {
   public String @Nullable [] getMediaFormatNames() {
     if (this.mediaFormatOptions != null) {
       String[] result = Arrays.stream(this.mediaFormatOptions)
-          .filter(option -> option.getMediaFormatName() != null)
-          .map(MediaFormatOption::getMediaFormatName)
-          .toArray(size -> new String[size]);
+        .filter(option -> option.getMediaFormatName() != null)
+        .map(MediaFormatOption::getMediaFormatName)
+        .toArray(size -> new String[size]);
       if (result.length > 0) {
         return result;
       }
@@ -216,8 +216,8 @@ public final class MediaArgs implements Cloneable {
     }
     else {
       this.mediaFormatOptions = Arrays.stream(names)
-          .map(name -> new MediaFormatOption(name, false))
-          .toArray(size -> new MediaFormatOption[size]);
+        .map(name -> new MediaFormatOption(name, false))
+        .toArray(size -> new MediaFormatOption[size]);
     }
     return this;
   }
@@ -233,8 +233,8 @@ public final class MediaArgs implements Cloneable {
     }
     else {
       this.mediaFormatOptions = Arrays.stream(names)
-          .map(name -> new MediaFormatOption(name, true))
-          .toArray(size -> new MediaFormatOption[size]);
+        .map(name -> new MediaFormatOption(name, true))
+        .toArray(size -> new MediaFormatOption[size]);
     }
     return this;
   }
@@ -943,7 +943,9 @@ public final class MediaArgs implements Cloneable {
    * @return the cloned {@link MediaArgs}
    */
   @Override
-  @SuppressWarnings({ "java:S2975", "java:S1182", "checkstyle:SuperCloneCheck" }) // ignore clone warnings
+  @SuppressWarnings({
+      "java:S2975", "java:S1182", "checkstyle:SuperCloneCheck"
+  }) // ignore clone warnings
   public MediaArgs clone() { //NOPMD
     MediaArgs clone = new MediaArgs();
 
@@ -1095,9 +1097,9 @@ public final class MediaArgs implements Cloneable {
     public ImageSizes(@NotNull String sizes, long @NotNull... widths) {
       this.sizes = sizes;
       this.widthOptions = Arrays.stream(widths)
-          .distinct()
-          .mapToObj(width -> new WidthOption(width, true))
-          .toArray(WidthOption[]::new);
+        .distinct()
+        .mapToObj(width -> new WidthOption(width, true))
+        .toArray(WidthOption[]::new);
     }
 
     /**
@@ -1134,7 +1136,7 @@ public final class MediaArgs implements Cloneable {
      */
     public boolean hasDensityDescriptors() {
       return StringUtils.isEmpty(this.sizes) &&
-              Arrays.stream(this.widthOptions).map(WidthOption::getDensity).anyMatch(Objects::nonNull);
+          Arrays.stream(this.widthOptions).map(WidthOption::getDensity).anyMatch(Objects::nonNull);
     }
 
     @Override
@@ -1190,9 +1192,9 @@ public final class MediaArgs implements Cloneable {
 
     private static @NotNull WidthOption @NotNull [] toWidthOptions(long @NotNull... widths) {
       return Arrays.stream(widths)
-          .distinct()
-          .mapToObj(width -> new WidthOption(width, true))
-          .toArray(WidthOption[]::new);
+        .distinct()
+        .mapToObj(width -> new WidthOption(width, true))
+        .toArray(WidthOption[]::new);
     }
 
     /**

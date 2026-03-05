@@ -83,8 +83,8 @@ class AutoCroppingMediaHandlerTest {
   @SuppressWarnings("null")
   void testMediaFormatWithRatio() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(320, rendition.getWidth());
@@ -96,8 +96,8 @@ class AutoCroppingMediaHandlerTest {
   @SuppressWarnings("null")
   void testMediaFormatFixedDimension() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(EDITORIAL_1COL)
-        .build();
+      .mediaFormat(EDITORIAL_1COL)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(215, rendition.getWidth());
@@ -109,8 +109,8 @@ class AutoCroppingMediaHandlerTest {
   @SuppressWarnings("null")
   void testMultipleMediaFormatsFixedDimension() {
     Media media = mediaHandler.get(resource)
-        .mediaFormats(EDITORIAL_2COL, EDITORIAL_1COL)
-        .build();
+      .mediaFormats(EDITORIAL_2COL, EDITORIAL_1COL)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(215, rendition.getWidth());
@@ -121,8 +121,8 @@ class AutoCroppingMediaHandlerTest {
   @Test
   void testMediaFormatFixedDimension_NoMatch() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(EDITORIAL_2COL)
-        .build();
+      .mediaFormat(EDITORIAL_2COL)
+      .build();
     assertFalse(media.isValid());
   }
 
@@ -137,8 +137,8 @@ class AutoCroppingMediaHandlerTest {
         MediaNameConstants.PN_MEDIA_CROP, new CropDimension(0, 0, 120, 75).getCropString());
 
     Media media = mediaHandler.get(resource2)
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(160, rendition.getWidth());
@@ -157,8 +157,8 @@ class AutoCroppingMediaHandlerTest {
         MediaNameConstants.PN_MEDIA_CROP, new CropDimension(20, 20, 50, 50).getCropString());
 
     Media media = mediaHandler.get(resource2)
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(320, rendition.getWidth());
@@ -168,12 +168,14 @@ class AutoCroppingMediaHandlerTest {
   }
 
   @Test
-  @SuppressWarnings({ "deprecation", "null" })
+  @SuppressWarnings({
+      "deprecation", "null"
+  })
   void testMediaFormatWithRatio_WebRenditionsExcludedFromMediaHandling() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(RATIO_16_10)
-        .includeAssetWebRenditions(false)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .includeAssetWebRenditions(false)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(320, rendition.getWidth());

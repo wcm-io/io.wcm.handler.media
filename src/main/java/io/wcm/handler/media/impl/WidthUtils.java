@@ -59,8 +59,8 @@ public final class WidthUtils {
    * Whitespaces between options are tolerated.<br>
    * Examples:
    * <ul>
-   *   <li>{@literal 100, 200? , 300?} returns three width options, the last two ones are optional</li>
-   *   <li>{@literal 100, 200:1.5x, 300:2x?} returns three options with pixel densities, last options is optional</li>
+   * <li>{@literal 100, 200? , 300?} returns three width options, the last two ones are optional</li>
+   * <li>{@literal 100, 200:1.5x, 300:2x?} returns three options with pixel densities, last options is optional</li>
    * </ul>
    * @param widths Widths string
    * @return Width options
@@ -74,10 +74,10 @@ public final class WidthUtils {
     }
     String[] widthItems = StringUtils.split(widths, ",");
     return Arrays.stream(widthItems)
-        .map(StringUtils::trim)
-        .map(WidthUtils::toWidthOption)
-        .filter(Objects::nonNull)
-        .toArray(WidthOption[]::new);
+      .map(StringUtils::trim)
+      .map(WidthUtils::toWidthOption)
+      .filter(Objects::nonNull)
+      .toArray(WidthOption[]::new);
   }
 
   private static @Nullable WidthOption toWidthOption(@NotNull String widthOptionString) {

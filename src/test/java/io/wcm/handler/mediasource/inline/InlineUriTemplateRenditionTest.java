@@ -76,8 +76,8 @@ class InlineUriTemplateRenditionTest {
   @SuppressWarnings("null")
   void testOriginal_CropCenter() {
     Media media = mediaHandler.get(inlineImage)
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
     Rendition rendition = media.getRendition();
 
     // CROP_CENTER not supported for renditions
@@ -89,8 +89,8 @@ class InlineUriTemplateRenditionTest {
   @Test
   void testOriginal() {
     Media media = mediaHandler.get(inlineImage)
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 400, 250,
         "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.file/sample.jpg");
@@ -101,9 +101,9 @@ class InlineUriTemplateRenditionTest {
   @Test
   void test4_3() {
     Media media = mediaHandler.get(inlineImage)
-        .mediaFormat(RATIO_4_3)
-        .autoCrop(true)
-        .build();
+      .mediaFormat(RATIO_4_3)
+      .autoCrop(true)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 333, 250,
         "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.0.34,0,367,250.file/sample.jpg");
@@ -114,11 +114,11 @@ class InlineUriTemplateRenditionTest {
   @Test
   void testMultiple() {
     Media media = mediaHandler.get(inlineImage)
-        .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
-        .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
-        .pictureSource(new PictureSource(RATIO_4_3).widths(144))
-        .autoCrop(true)
-        .build();
+      .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
+      .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
+      .pictureSource(new PictureSource(RATIO_4_3).widths(144))
+      .autoCrop(true)
+      .build();
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(4, renditions.size());
@@ -153,7 +153,7 @@ class InlineUriTemplateRenditionTest {
         inlineImage.getPath() + "/" + NN_MEDIA_INLINE, ContentType.JPEG);
 
     Media media = mediaHandler.get(inlineImage)
-        .build();
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 50, 75,
         "/content/unittest/de_test/brand/de/_jcr_content/inlineImageCropping/mediaInline.image_file.{width}.0.5,5,80,55.90.file/sample.jpg");

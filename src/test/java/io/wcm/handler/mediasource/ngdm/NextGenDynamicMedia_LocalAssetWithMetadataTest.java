@@ -94,20 +94,20 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_IMAGE)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_IMAGE)));
     stubFor(get("/adobe/assets/urn:aaid:aem:" + NOT_FOUND_ASSET_UUID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_NOT_FOUND)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_NOT_FOUND)));
   }
 
   @Test
   @SuppressWarnings("null")
   void testLocalAsset() {
     Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
-        .build();
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "quality=85", "jpg");
 
@@ -134,8 +134,8 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   @Test
   void testRendition_SetWidth() {
     Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
-        .fixedWidth(120)
-        .build();
+      .fixedWidth(120)
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "quality=85&width=120", "jpg");
 
@@ -148,8 +148,8 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   @Test
   void testRendition_SetHeight() {
     Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
-        .fixedHeight(80)
-        .build();
+      .fixedHeight(80)
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "height=80&quality=85", "jpg");
 
@@ -162,9 +162,9 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
   @Test
   void testRendition_16_9() {
     Media media = mediaHandler.get(prepareResourceWithApprovedLocalAsset())
-        .mediaFormat(DummyMediaFormats.RATIO_16_9)
-        .fixedWidth(1024)
-        .build();
+      .mediaFormat(DummyMediaFormats.RATIO_16_9)
+      .fixedWidth(1024)
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "quality=85&smartcrop=Landscape&width=1024", "jpg");
 
@@ -201,7 +201,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
         MediaNameConstants.PN_MEDIA_REF, asset.getPath());
 
     Media media = mediaHandler.get(resource)
-        .build();
+      .build();
     assertFalse(media.isValid());
     assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
   }
@@ -216,7 +216,7 @@ class NextGenDynamicMedia_LocalAssetWithMetadataTest {
         MediaNameConstants.PN_MEDIA_REF, asset.getPath());
 
     Media media = mediaHandler.get(resource)
-        .build();
+      .build();
     assertFalse(media.isValid());
     assertEquals(MediaInvalidReason.MEDIA_REFERENCE_INVALID, media.getMediaInvalidReason());
   }

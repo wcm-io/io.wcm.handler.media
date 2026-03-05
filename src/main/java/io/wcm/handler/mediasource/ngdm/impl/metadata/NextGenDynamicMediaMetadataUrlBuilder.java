@@ -79,8 +79,8 @@ final class NextGenDynamicMediaMetadataUrlBuilder {
       url.append("https");
     }
     url.append("://")
-        .append(repositoryId)
-        .append(metadataPath);
+      .append(repositoryId)
+      .append(metadataPath);
     return url.toString();
   }
 

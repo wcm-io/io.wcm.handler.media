@@ -51,6 +51,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     "sling.servlet.methods=" + HttpConstants.METHOD_GET
 })
 public final class InlineImageAuthorPreviewServlet extends AbstractMediaFileServlet {
+
   private static final long serialVersionUID = 1L;
 
   @ObjectClassDefinition(
@@ -72,7 +73,9 @@ public final class InlineImageAuthorPreviewServlet extends AbstractMediaFileServ
   public static final String SELECTOR = "img";
 
   @Override
-  @SuppressWarnings({ "null", "unused" })
+  @SuppressWarnings({
+      "null", "unused"
+  })
   protected Resource getBinaryDataResource(SlingHttpServletRequest request) {
     // get node that stores the inline media (if available)
     MediaHandlerConfig config = AdaptTo.notNull(request, MediaHandlerConfig.class);

@@ -67,7 +67,9 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   private String ratioDisplayString;
   private String combinedTitle;
 
-  @SuppressWarnings({ "java:S107", "checkstyle:ParameterNumberCheck" }) // ignore parameter count
+  @SuppressWarnings({
+      "java:S107", "checkstyle:ParameterNumberCheck"
+  }) // ignore parameter count
   MediaFormat(String name, String label, String description,
       long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight, long minWidthHeight,
       double ratio, double ratioWidth, double ratioHeight, long fileSizeMax, String[] extensions,
@@ -502,7 +504,9 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * @return User-friendly combined title of current media format name and dimension.
    */
   @JsonIgnore
-  @SuppressWarnings({ "java:S3776", "java:S6541" }) // ignore complexity
+  @SuppressWarnings({
+      "java:S3776", "java:S6541"
+  }) // ignore complexity
   String getCombinedTitle() {
     if (combinedTitle == null) {
       StringBuilder sb = new StringBuilder();
@@ -592,8 +596,8 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       // add extended display parts
       if (!extParts.isEmpty()) {
         sb.append(" (")
-            .append(StringUtils.join(extParts, "; "))
-            .append(')');
+          .append(StringUtils.join(extParts, "; "))
+          .append(')');
       }
 
       combinedTitle = sb.toString();

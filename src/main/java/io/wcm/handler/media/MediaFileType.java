@@ -41,77 +41,137 @@ public enum MediaFileType {
   /**
    * JPEG
    */
-  JPEG(new String[] { ContentType.JPEG }, new String[] { FileExtension.JPEG, "jpeg" }, true),
+  JPEG(new String[] {
+      ContentType.JPEG
+  }, new String[] {
+      FileExtension.JPEG, "jpeg"
+  }, true),
 
   /**
    * PNG
    */
-  PNG(new String[] { ContentType.PNG }, new String[] { FileExtension.PNG }, false),
+  PNG(new String[] {
+      ContentType.PNG
+  }, new String[] {
+      FileExtension.PNG
+  }, false),
 
   /**
    * GIF
    */
-  GIF(new String[] { ContentType.GIF }, new String[] { FileExtension.GIF }, false),
+  GIF(new String[] {
+      ContentType.GIF
+  }, new String[] {
+      FileExtension.GIF
+  }, false),
 
   /**
    * TIFF
    */
-  TIFF(new String[] { ContentType.TIFF }, new String[] { FileExtension.TIFF, "tiff" }, false),
+  TIFF(new String[] {
+      ContentType.TIFF
+  }, new String[] {
+      FileExtension.TIFF, "tiff"
+  }, false),
 
   /**
    * SVG
    */
-  SVG(new String[] { ContentType.SVG }, new String[] { FileExtension.SVG }, false),
+  SVG(new String[] {
+      ContentType.SVG
+  }, new String[] {
+      FileExtension.SVG
+  }, false),
 
   /**
    * MP4
    */
-  MP4(new String[] { "video/mp4" }, new String[] { "mp4" }, false),
+  MP4(new String[] {
+      "video/mp4"
+  }, new String[] {
+      "mp4"
+  }, false),
 
   /**
    * MPEG/MPG
    */
-  MPEG(new String[] { "video/mpeg" }, new String[] { "mpeg", "mpg" }, false),
+  MPEG(new String[] {
+      "video/mpeg"
+  }, new String[] {
+      "mpeg", "mpg"
+  }, false),
 
   /**
    * AVI
    */
-  AVI(new String[] { "video/x-msvideo" }, new String[] { "avi" }, false),
+  AVI(new String[] {
+      "video/x-msvideo"
+  }, new String[] {
+      "avi"
+  }, false),
 
   /**
    * M4V
    */
-  M4V(new String[] { "video/x-m4v" }, new String[] { "m4v" }, false),
+  M4V(new String[] {
+      "video/x-m4v"
+  }, new String[] {
+      "m4v"
+  }, false),
 
   /**
    * MKV
    */
-  MKV(new String[] { "video/x-matroska" }, new String[] { "mkv" }, false),
+  MKV(new String[] {
+      "video/x-matroska"
+  }, new String[] {
+      "mkv"
+  }, false),
 
   /**
    * WMV
    */
-  WMV(new String[] { "video/x-ms-wmv" }, new String[] { "wmv" }, false),
+  WMV(new String[] {
+      "video/x-ms-wmv"
+  }, new String[] {
+      "wmv"
+  }, false),
 
   /**
    * WebM
    */
-  WEBM(new String[] { "video/webm" }, new String[] { "webm" }, false),
+  WEBM(new String[] {
+      "video/webm"
+  }, new String[] {
+      "webm"
+  }, false),
 
   /**
    * QuickTime (MOV/QT)
    */
-  MOV(new String[] { "video/quicktime" }, new String[] { "mov", "qt" }, false),
+  MOV(new String[] {
+      "video/quicktime"
+  }, new String[] {
+      "mov", "qt"
+  }, false),
 
   /**
    * HLS adaptive streaming manifest
    */
-  M3U8(new String[] { "application/vnd.apple.mpegurl" }, new String[] { "m3u8" }, false),
+  M3U8(new String[] {
+      "application/vnd.apple.mpegurl"
+  }, new String[] {
+      "m3u8"
+  }, false),
 
   /**
    * MPEG-DASH adaptive streaming manifest
    */
-  MPD(new String[] { "application/dash+xml" }, new String[] { "mpd" }, false);
+  MPD(new String[] {
+      "application/dash+xml"
+  }, new String[] {
+      "mpd"
+  }, false);
 
 
   private final Set<String> contentTypes;
@@ -301,8 +361,8 @@ public enum MediaFileType {
 
   private static Set<String> getContentTypes(@NotNull EnumSet<MediaFileType> fileTypes) {
     return fileTypes.stream()
-        .flatMap(type -> type.getContentTypes().stream())
-        .collect(Collectors.toSet());
+      .flatMap(type -> type.getContentTypes().stream())
+      .collect(Collectors.toSet());
   }
 
   private static boolean isExtension(@NotNull EnumSet<MediaFileType> fileTypes, @Nullable String fileExtension) {
@@ -310,13 +370,13 @@ public enum MediaFileType {
       return false;
     }
     return fileTypes.stream()
-        .anyMatch(type -> type.getExtensions().contains(StringUtils.lowerCase(fileExtension)));
+      .anyMatch(type -> type.getExtensions().contains(StringUtils.lowerCase(fileExtension)));
   }
 
   private static Set<String> getFileExtensions(@NotNull EnumSet<MediaFileType> fileTypes) {
     return fileTypes.stream()
-        .flatMap(type -> type.getExtensions().stream())
-        .collect(Collectors.toSet());
+      .flatMap(type -> type.getExtensions().stream())
+      .collect(Collectors.toSet());
   }
 
   /**
@@ -331,9 +391,9 @@ public enum MediaFileType {
     }
     String contentTypeLowerCase = StringUtils.toRootLowerCase(contentType);
     return Stream.of(values())
-        .filter(type -> type.getContentTypes().contains(contentTypeLowerCase))
-        .findFirst()
-        .orElse(null);
+      .filter(type -> type.getContentTypes().contains(contentTypeLowerCase))
+      .findFirst()
+      .orElse(null);
   }
 
   /**
@@ -348,9 +408,9 @@ public enum MediaFileType {
     }
     String extensionLowerCase = StringUtils.toRootLowerCase(extension);
     return Stream.of(values())
-        .filter(type -> type.getExtensions().contains(extensionLowerCase))
-        .findFirst()
-        .orElse(null);
+      .filter(type -> type.getExtensions().contains(extensionLowerCase))
+      .findFirst()
+      .orElse(null);
   }
 
 }

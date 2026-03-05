@@ -54,8 +54,8 @@ final class NextGenDynamicMediaUriTemplate implements UriTemplate {
     }
 
     NextGenDynamicMediaImageDeliveryParams params = new NextGenDynamicMediaImageDeliveryParams()
-        .rotation(context.getMedia().getRotation())
-        .quality(ImageQualityPercentage.getAsInteger(context.getDefaultMediaArgs(), context.getMediaHandlerConfig()));
+      .rotation(context.getMedia().getRotation())
+      .quality(ImageQualityPercentage.getAsInteger(context.getDefaultMediaArgs(), context.getMediaHandlerConfig()));
 
     if (type == UriTemplateType.SCALE_HEIGHT) {
       params.heightPlaceholder(MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_HEIGHT);

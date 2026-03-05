@@ -76,6 +76,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     // read dimensions on demand, as it can be expensive.
     // if dimension cannot be obtained use a dimension with width/height=0
     this.dimensionLazyValue = new LazyValue<>() {
+
       @Override
       protected Dimension createValue() {
         Dimension result = AssetRendition.getDimension(rendition);
@@ -293,8 +294,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
   @Override
   public int hashCode() {
     return new HashCodeBuilder()
-        .append(this.rendition.getPath())
-        .hashCode();
+      .append(this.rendition.getPath())
+      .hashCode();
   }
 
   @Override
@@ -304,8 +305,8 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
     }
     RenditionMetadata other = (RenditionMetadata)obj;
     return new EqualsBuilder()
-        .append(this.rendition.getPath(), other.rendition.getPath())
-        .build();
+      .append(this.rendition.getPath(), other.rendition.getPath())
+      .build();
   }
 
   @Override
@@ -427,7 +428,9 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
    * @deprecated Prevent finalize attack (PMD CT_CONSTRUCTOR_THROW / SEI CERT Rule OBJ-11)
    */
   @Override
-  @SuppressWarnings({ "PMD.EmptyFinalizer", "checkstyle:SuperFinalize", "checkstyle:NoFinalizerCheck", "java:S1113" })
+  @SuppressWarnings({
+      "PMD.EmptyFinalizer", "checkstyle:SuperFinalize", "checkstyle:NoFinalizerCheck", "java:S1113"
+  })
   @Deprecated(since = "2.0.0")
   protected final void finalize() {
     // do nothing

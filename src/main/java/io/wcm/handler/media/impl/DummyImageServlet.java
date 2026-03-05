@@ -49,6 +49,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     "sling.servlet.resourceTypes=/apps/wcm-io/handler/media/components/dummyImage"
 })
 public final class DummyImageServlet extends AbstractImageServlet {
+
   private static final long serialVersionUID = 1L;
 
   /**

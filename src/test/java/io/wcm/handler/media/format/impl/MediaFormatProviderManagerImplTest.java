@@ -121,8 +121,8 @@ class MediaFormatProviderManagerImplTest {
    */
   private SortedSet<MediaFormat> filterMediaFormats(SortedSet<MediaFormat> mediaFormats) {
     return mediaFormats.stream()
-        .filter(mf -> StringUtils.startsWith(mf.getName(), "mf"))
-        .collect(Collectors.toCollection(TreeSet::new));
+      .filter(mf -> StringUtils.startsWith(mf.getName(), "mf"))
+      .collect(Collectors.toCollection(TreeSet::new));
   }
 
 }

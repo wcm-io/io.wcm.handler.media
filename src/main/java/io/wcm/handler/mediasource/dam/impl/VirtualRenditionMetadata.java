@@ -110,7 +110,7 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   @Override
   public @Nullable String getWebOptimizedImageDeliveryPath(DamContext damContext) {
     return damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams()
-        .width(getWidth()));
+      .width(getWidth()));
   }
 
   @Override
@@ -131,10 +131,10 @@ class VirtualRenditionMetadata extends RenditionMetadata {
   @Override
   public int hashCode() {
     return new HashCodeBuilder()
-        .append(this.getRendition().getPath())
-        .append(width)
-        .append(height)
-        .hashCode();
+      .append(this.getRendition().getPath())
+      .append(width)
+      .append(height)
+      .hashCode();
   }
 
   @Override
@@ -144,10 +144,10 @@ class VirtualRenditionMetadata extends RenditionMetadata {
     }
     VirtualRenditionMetadata other = (VirtualRenditionMetadata)obj;
     return new EqualsBuilder()
-        .append(this.getRendition().getPath(), other.getRendition().getPath())
-        .append(this.width, other.width)
-        .append(this.height, other.height)
-        .build();
+      .append(this.getRendition().getPath(), other.getRendition().getPath())
+      .append(this.width, other.width)
+      .append(this.height, other.height)
+      .build();
   }
 
   @Override

@@ -74,8 +74,8 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
     // build URL
     StringBuilder url = new StringBuilder();
     url.append("https://")
-        .append(repositoryId)
-        .append(binaryDeliveryPath);
+      .append(repositoryId)
+      .append(binaryDeliveryPath);
     if (contentDispositionAttachment) {
       url.append("?").append(PARAM_ATTACHMENT).append("=true");
     }

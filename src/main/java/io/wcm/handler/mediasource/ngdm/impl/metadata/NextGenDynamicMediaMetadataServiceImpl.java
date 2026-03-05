@@ -164,13 +164,13 @@ public class NextGenDynamicMediaMetadataServiceImpl implements NextGenDynamicMed
 
   private static CloseableHttpClient createHttpClient(Config config) {
     RequestConfig requestConfig = RequestConfig.custom()
-        .setConnectTimeout(config.connectTimeout())
-        .setConnectionRequestTimeout(config.connectionRequestTimeout())
-        .setSocketTimeout(config.socketTimeout())
-        .build();
+      .setConnectTimeout(config.connectTimeout())
+      .setConnectionRequestTimeout(config.connectionRequestTimeout())
+      .setSocketTimeout(config.socketTimeout())
+      .build();
     HttpClientBuilder builder = HttpClientBuilder.create()
-        .setDefaultRequestConfig(requestConfig)
-        .setDefaultHeaders(convertHeaders(config.httpHeaders()));
+      .setDefaultRequestConfig(requestConfig)
+      .setDefaultHeaders(convertHeaders(config.httpHeaders()));
     if (StringUtils.isNotBlank(config.proxyHost()) && config.proxyPort() > 0) {
       builder.setProxy(new HttpHost(config.proxyHost(), config.proxyPort()));
     }

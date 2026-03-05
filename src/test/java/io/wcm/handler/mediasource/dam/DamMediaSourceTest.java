@@ -266,8 +266,8 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testGetMediaElementImageAltTextFromAssetDecorative() {
     HtmlElement img = mediaHandler().get(parSixteenTenMediaRefCrop)
-        .decorative(true)
-        .buildElement();
+      .decorative(true)
+      .buildElement();
     assertNotNull(img, "returned html element?");
     assertEquals("img", img.getName(), "is img?");
     assertEquals("", img.getAttributeValue("alt"), "alt text from medialib?");
@@ -295,9 +295,9 @@ class DamMediaSourceTest extends AbstractDamTest {
   void testGetMediaElementImageAltTextForceFromAsset() {
     // define alt-text-override via MediaArgs and check if it is appears in the img-tag
     HtmlElement img = mediaHandler().get(parStandardMediaRef)
-        .altText("Alt. Text Override!")
-        .forceAltValueFromAsset(true)
-        .buildElement();
+      .altText("Alt. Text Override!")
+      .forceAltValueFromAsset(true)
+      .buildElement();
     assertNotNull(img, "returned html element?");
     assertEquals("Editorial Standard 1", img.getAttributeValue("alt"), "alt text from asset?");
   }
@@ -450,6 +450,7 @@ class DamMediaSourceTest extends AbstractDamTest {
   void testGetMediaUrlStandard_enforceVirtualRendition() {
     // enfore virtual renditions
     context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
+
       @Override
       public boolean enforceVirtualRenditions() {
         return true;
@@ -466,8 +467,8 @@ class DamMediaSourceTest extends AbstractDamTest {
   void testGetMediaUrlStandard_enforceOutputFileExtensions() {
     // construct url to an existing media item - should resolve to the first rendition
     String url = mediaHandler().get(MEDIAITEM_PATH_STANDARD, EDITORIAL_1COL)
-        .enforceOutputFileExtension(FileExtension.PNG)
-        .buildUrl();
+      .enforceOutputFileExtension(FileExtension.PNG)
+      .buildUrl();
     assertNotNull(url, "returned url?");
     assertEquals("/content/dam/test/standard.jpg/_jcr_content/renditions/original.image_file.215.102.file/standard.png", url, "url as expected?");
   }
@@ -678,7 +679,7 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMultipleMandatoryMediaFormatsWithCropping_AlsoMatchOriginal_AutoCrop() {
     MediaArgs mediaArgs = new MediaArgs().mandatoryMediaFormats(SHOWROOM_CONTROLS, RATIO_16_10, RATIO_4_3, EDITORIAL_STAGE_SMALL)
-        .autoCrop(true);
+      .autoCrop(true);
     Media media = mediaHandler().get(parSixteenTenMediaRefCrop).args(mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -701,7 +702,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     assertFalse(renditions.get(2).isFallback());
 
     assertEquals("/content/dam/test/sixteen-ten.jpg/_jcr_content/renditions/original./sixteen-ten.jpg",
-            renditions.get(3).getUrl(), "rendition.mediaUrl.2");
+        renditions.get(3).getUrl(), "rendition.mediaUrl.2");
     assertEquals(RATIO_16_10, renditions.get(3).getMediaFormat());
     assertTrue(renditions.get(3).isFallback());
   }
@@ -772,11 +773,11 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testOptionalMediaFormatNotMatch_ResponsiveChildFormatsMatch() {
     MediaArgs mediaArgs = new MediaArgs()
-        .mediaFormat(NORATIO_LARGE_MINWIDTH) // does not match any rendition: too wide
-        .imageSizes(new MediaArgs.ImageSizes("sizes",
-            new MediaArgs.WidthOption(2000, false), // does not match any rendition: too wide
-            new MediaArgs.WidthOption(500, false), // matches the rendition 685x325
-            new MediaArgs.WidthOption(300, false))); // matches the rendition 450x213
+      .mediaFormat(NORATIO_LARGE_MINWIDTH) // does not match any rendition: too wide
+      .imageSizes(new MediaArgs.ImageSizes("sizes",
+          new MediaArgs.WidthOption(2000, false), // does not match any rendition: too wide
+          new MediaArgs.WidthOption(500, false), // matches the rendition 685x325
+          new MediaArgs.WidthOption(300, false))); // matches the rendition 450x213
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -837,6 +838,7 @@ class DamMediaSourceTest extends AbstractDamTest {
     String expectedPath = IPEConfigResourceProvider.buildPath(parStandardMediaRef.getPath(),
         Set.of("editorial_1col"));
     doAnswer(new Answer<Object>() {
+
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
         InplaceEditingConfig customIpeConfig = invocation.getArgument(0);
@@ -851,10 +853,10 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormat(RATIO_16_10)
-        .pictureSource(new PictureSource(RATIO_16_10).media("media1").widths(160))
-        .pictureSource(new PictureSource(RATIO_16_10).media("media2").widths(320))
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .pictureSource(new PictureSource(RATIO_16_10).media("media1").widths(160))
+      .pictureSource(new PictureSource(RATIO_16_10).media("media2").widths(320))
+      .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -898,10 +900,10 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMultipleMandatoryMediaFormats_OnThyFlyMediaFormats_PictureSources_NoRatio() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormat(FIXEDHEIGHT_UNCONSTRAINED)
-        .pictureSource(new PictureSource(FIXEDHEIGHT_UNCONSTRAINED).media("media1").widths(160))
-        .pictureSource(new PictureSource(FIXEDHEIGHT_UNCONSTRAINED).media("media2").widths(320))
-        .build();
+      .mediaFormat(FIXEDHEIGHT_UNCONSTRAINED)
+      .pictureSource(new PictureSource(FIXEDHEIGHT_UNCONSTRAINED).media("media1").widths(160))
+      .pictureSource(new PictureSource(FIXEDHEIGHT_UNCONSTRAINED).media("media2").widths(320))
+      .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -940,9 +942,9 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMultipleMediaFormats_ImageSizes() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormats(RATIO_4_3, RATIO_16_10) // <- only second media format matches
-        .imageSizes("sizes", 160, 320)
-        .build();
+      .mediaFormats(RATIO_4_3, RATIO_16_10) // <- only second media format matches
+      .imageSizes("sizes", 160, 320)
+      .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -986,9 +988,9 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testImageSizes_UnconstrainedMediaFormatWithoutRatioOrMinSizes() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormats(IMAGE_UNCONSTRAINED)
-        .imageSizes("sizes", 160, 320)
-        .build();
+      .mediaFormats(IMAGE_UNCONSTRAINED)
+      .imageSizes("sizes", 160, 320)
+      .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -1030,10 +1032,10 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testPictureSources_UnconstrainedMediaFormatWithoutRatioOrMinSizes() {
     Media media = mediaHandler().get(MEDIAITEM_PATH_16_10)
-        .mediaFormat(IMAGE_UNCONSTRAINED)
-        .pictureSource(new PictureSource(IMAGE_UNCONSTRAINED).media("media1").widths(160))
-        .pictureSource(new PictureSource(IMAGE_UNCONSTRAINED).media("media2").widths(320))
-        .build();
+      .mediaFormat(IMAGE_UNCONSTRAINED)
+      .pictureSource(new PictureSource(IMAGE_UNCONSTRAINED).media("media1").widths(160))
+      .pictureSource(new PictureSource(IMAGE_UNCONSTRAINED).media("media2").widths(320))
+      .build();
 
     assertTrue(media.isValid(), "valid?");
     assertNotNull(media.getAsset(), "asset?");
@@ -1095,8 +1097,8 @@ class DamMediaSourceTest extends AbstractDamTest {
     props.put("customMapProperty", ImageMapParserImplTest.MAP_STRING);
 
     Media media = mediaHandler().get(parStandardMediaRef)
-        .mapProperty("customMapProperty")
-        .build();
+      .mapProperty("customMapProperty")
+      .build();
     assertTrue(media.isValid(), "valid");
 
     // assert map
@@ -1108,9 +1110,9 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMinWidthHeight_1() {
     MediaArgs mediaArgs = new MediaArgs(MediaFormatBuilder.create("medium_minWithHeight_1")
-        .extensions("gif", "jpg", "png")
-        .minWidthHeight(1000)
-        .build());
+      .extensions("gif", "jpg", "png")
+      .minWidthHeight(1000)
+      .build());
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
   }
@@ -1118,9 +1120,9 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMinWidthHeight_2() {
     MediaArgs mediaArgs = new MediaArgs(MediaFormatBuilder.create("medium_minWithHeight_2")
-        .extensions("gif", "jpg", "png")
-        .minWidthHeight(1200)
-        .build());
+      .extensions("gif", "jpg", "png")
+      .minWidthHeight(1200)
+      .build());
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertTrue(media.isValid(), "valid?");
   }
@@ -1128,9 +1130,9 @@ class DamMediaSourceTest extends AbstractDamTest {
   @Test
   void testMinWidthHeight_NotFulfilled() {
     MediaArgs mediaArgs = new MediaArgs(MediaFormatBuilder.create("large_minWithHeight")
-        .extensions("gif", "jpg", "png")
-        .minWidthHeight(2000)
-        .build());
+      .extensions("gif", "jpg", "png")
+      .minWidthHeight(2000)
+      .build());
     Media media = mediaHandler().get(MEDIAITEM_PATH_STANDARD, mediaArgs).build();
     assertFalse(media.isValid(), "valid?");
   }

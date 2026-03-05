@@ -67,8 +67,8 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
 
   // cache resolving of media formats per combined cache key of context-aware services
   private final Cache<String, SortedSet<MediaFormat>> cache = Caffeine.newBuilder()
-      .expireAfterWrite(1, TimeUnit.HOURS)
-      .build();
+    .expireAfterWrite(1, TimeUnit.HOURS)
+    .build();
 
   @Activate
   private void activate(BundleContext bc) {
@@ -80,8 +80,8 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
     ResolveAllResult<MediaFormatProvider> result = serviceResolver.resolveAll(MediaFormatProvider.class, contextResource);
     String key = result.getCombinedKey();
     return cache.get(key, theKey -> result.getServices()
-        .flatMap(provider -> provider.getMediaFormats().stream())
-        .collect(Collectors.toCollection(TreeSet::new)));
+      .flatMap(provider -> provider.getMediaFormats().stream())
+      .collect(Collectors.toCollection(TreeSet::new)));
   }
 
   @Override

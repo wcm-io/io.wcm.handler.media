@@ -25,7 +25,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Used for Jackson Object mapping of JSON response from IMS Token v3 API.
  */
-@SuppressWarnings({ "checkstyle:VisibilityModifierCheck", "checkstyle:JavadocVariable", "java:S1104" })
+@SuppressWarnings({
+    "checkstyle:VisibilityModifierCheck", "checkstyle:JavadocVariable", "java:S1104"
+})
 @JsonIgnoreProperties(ignoreUnknown = true)
 final class AccessTokenResponse {
 
