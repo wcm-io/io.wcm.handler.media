@@ -30,3 +30,10 @@ jobs:
           sonar-run-on-java-version: 21
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-log-java${{ matrix.java }}
+          path: target/test.log
