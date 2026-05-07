@@ -19,7 +19,8 @@
  */
 package io.wcm.handler.media.markup;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Objects;
+
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -84,7 +85,7 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // create dummy image
-    String dummyImageUrl = StringUtils.defaultString(mediaArgs.getDummyImageUrl(), DUMMY_IMAGE);
+    String dummyImageUrl = Objects.toString(mediaArgs.getDummyImageUrl(), DUMMY_IMAGE);
     dummyImageUrl = urlHandler.get(dummyImageUrl)
       .urlMode(media.getMediaRequest().getMediaArgs().getUrlMode())
       .buildExternalResourceUrl();

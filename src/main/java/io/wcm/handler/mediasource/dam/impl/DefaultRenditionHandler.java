@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -231,7 +232,7 @@ class DefaultRenditionHandler implements RenditionHandler {
     Set<RenditionMetadata> matchingRenditions = new TreeSet<>();
     for (RenditionMetadata rendition : allRenditions) {
       for (String fileExtension : fileExtensions) {
-        if (StringUtils.equalsIgnoreCase(fileExtension, rendition.getFileExtension())) {
+        if (Strings.CI.equals(fileExtension, rendition.getFileExtension())) {
           matchingRenditions.add(rendition);
           break;
         }
@@ -295,7 +296,7 @@ class DefaultRenditionHandler implements RenditionHandler {
         return true;
       }
       if (mediaArgs.getEnforceOutputFileExtension() != null) {
-        return !StringUtils.equalsIgnoreCase(rendition.getFileExtension(), mediaArgs.getEnforceOutputFileExtension());
+        return !Strings.CI.equals(rendition.getFileExtension(), mediaArgs.getEnforceOutputFileExtension());
       }
     }
     return false;

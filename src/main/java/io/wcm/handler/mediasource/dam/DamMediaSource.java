@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -113,7 +114,7 @@ public final class DamMediaSource extends MediaSource {
 
   @Override
   public boolean accepts(@Nullable String mediaRef) {
-    return StringUtils.startsWith(mediaRef, "/content/dam/");
+    return Strings.CS.startsWith(mediaRef, "/content/dam/");
   }
 
   @Override
@@ -200,7 +201,7 @@ public final class DamMediaSource extends MediaSource {
       String mapProperty = prependDotSlash(getMediaMapProperty(mediaRequest, mediaHandlerConfig));
 
       String name = refProperty;
-      if (StringUtils.contains(name, "/")) {
+      if (Strings.CS.contains(name, "/")) {
         name = Text.getName(name);
       }
 
@@ -259,7 +260,7 @@ public final class DamMediaSource extends MediaSource {
   }
 
   private String prependDotSlash(String property) {
-    if (!StringUtils.startsWith(property, "./")) {
+    if (!Strings.CS.startsWith(property, "./")) {
       return "./" + property;
     }
     else {

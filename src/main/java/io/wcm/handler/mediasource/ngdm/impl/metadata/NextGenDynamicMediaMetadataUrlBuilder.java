@@ -22,6 +22,7 @@ package io.wcm.handler.mediasource.ngdm.impl.metadata;
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_ASSET_ID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,11 +68,11 @@ final class NextGenDynamicMediaMetadataUrlBuilder {
     }
 
     // replace placeholders in delivery path
-    metadataPath = StringUtils.replace(metadataPath, PLACEHOLDER_ASSET_ID, reference.getAssetId());
+    metadataPath = Strings.CS.replace(metadataPath, PLACEHOLDER_ASSET_ID, reference.getAssetId());
 
     // build URL
     StringBuilder url = new StringBuilder();
-    if (StringUtils.startsWith(repositoryId, "localhost:")) {
+    if (Strings.CS.startsWith(repositoryId, "localhost:")) {
       // switch to HTTP for unit tests/local testing
       url.append("http");
     }

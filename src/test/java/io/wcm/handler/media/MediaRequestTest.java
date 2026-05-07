@@ -21,7 +21,7 @@ package io.wcm.handler.media;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -37,13 +37,13 @@ class MediaRequestTest {
   @Test
   void testToString() {
     MediaRequest request = new MediaRequest("/path", null);
-    assertTrue(StringUtils.contains(request.toString(), "/path"));
+    assertTrue(Strings.CS.contains(request.toString(), "/path"));
   }
 
   @Test
   void testToString_Resource() {
     MediaRequest request = new MediaRequest(context.create().resource("/content/test"), null);
-    assertTrue(StringUtils.contains(request.toString(), "/content/test"));
+    assertTrue(Strings.CS.contains(request.toString(), "/content/test"));
   }
 
 }

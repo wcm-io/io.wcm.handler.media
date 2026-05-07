@@ -22,6 +22,7 @@ package io.wcm.handler.media.markup;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -99,7 +100,7 @@ public final class MediaMarkupBuilderUtil {
 
         String currentMediaRef = currentProperties.get(refProperty, String.class);
         String oldMediaRef = oldProperties.get(refProperty, String.class);
-        if (!StringUtils.equals(currentMediaRef, oldMediaRef)) {
+        if (!Strings.CS.equals(currentMediaRef, oldMediaRef)) {
           if (StringUtils.isEmpty(currentMediaRef)) {
             mediaElement.addCssClass(MediaNameConstants.CSS_DIFF_REMOVED);
           }
@@ -122,7 +123,7 @@ public final class MediaMarkupBuilderUtil {
           // If the mediaRef itself hasn't changed, check the cropping coordinates
           String currentMediaCrop = currentProperties.get(cropProperty, String.class);
           String oldMediaCrop = oldProperties.get(cropProperty, String.class);
-          if (!StringUtils.equals(currentMediaCrop, oldMediaCrop)) {
+          if (!Strings.CS.equals(currentMediaCrop, oldMediaCrop)) {
             mediaElement.addCssClass(MediaNameConstants.CSS_DIFF_UPDATED);
           }
 
@@ -195,7 +196,7 @@ public final class MediaMarkupBuilderUtil {
         if (wcmComponentContext != null && wcmComponentContext.getResource() != null) {
           componentResourcePath = wcmComponentContext.getResource().getPath();
         }
-        return resourcePath != null && StringUtils.equals(resourcePath, componentResourcePath);
+        return resourcePath != null && Strings.CS.equals(resourcePath, componentResourcePath);
       default:
         throw new IllegalArgumentException("Unsupported drag&drop support mode: "
             + mediaRequest.getMediaArgs().getDragDropSupport());

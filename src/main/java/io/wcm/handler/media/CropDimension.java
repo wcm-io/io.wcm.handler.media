@@ -23,6 +23,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -166,7 +167,7 @@ public final class CropDimension extends Dimension {
 
     // strip off optional size parameter after "/"
     String crop = cropString;
-    if (StringUtils.contains(crop, "/")) {
+    if (Strings.CS.contains(crop, "/")) {
       crop = StringUtils.substringBefore(crop, "/");
     }
 

@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
@@ -164,7 +165,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
 
     // special handling for SVG images which are not treated as download:
     // set content security policy to prevent stored XSS attack with malicious JavaScript in SVG file
-    if (StringUtils.equals(contentType, ContentType.SVG)) {
+    if (Strings.CS.equals(contentType, ContentType.SVG)) {
       setSVGContentSecurityPolicy(response);
     }
 

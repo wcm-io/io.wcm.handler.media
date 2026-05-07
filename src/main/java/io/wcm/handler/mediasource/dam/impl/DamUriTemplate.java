@@ -22,7 +22,7 @@ package io.wcm.handler.mediasource.dam.impl;
 import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_HEIGHT;
 import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -109,16 +109,16 @@ final class DamUriTemplate implements UriTemplate {
     // replace dummy width/height parameters with actual placeholders
     switch (type) {
       case CROP_CENTER:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
-        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
         break;
       case SCALE_WIDTH:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
-        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), "0");
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_HEIGHT), "0");
         break;
       case SCALE_HEIGHT:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), "0");
-        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), "0");
+        url = Strings.CS.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
         break;
       default:
         throw new IllegalArgumentException("Unsupported type: " + type);
@@ -143,10 +143,10 @@ final class DamUriTemplate implements UriTemplate {
     // replace dummy width/height parameters with actual placeholders
     switch (type) {
       case CROP_CENTER:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
         break;
       case SCALE_WIDTH:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
         break;
       default:
         throw new IllegalArgumentException("Unsupported type for Web-optimized image delivery: " + type);

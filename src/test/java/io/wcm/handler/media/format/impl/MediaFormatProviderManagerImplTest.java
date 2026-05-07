@@ -30,7 +30,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -121,7 +121,7 @@ class MediaFormatProviderManagerImplTest {
    */
   private SortedSet<MediaFormat> filterMediaFormats(SortedSet<MediaFormat> mediaFormats) {
     return mediaFormats.stream()
-      .filter(mf -> StringUtils.startsWith(mf.getName(), "mf"))
+      .filter(mf -> Strings.CS.startsWith(mf.getName(), "mf"))
       .collect(Collectors.toCollection(TreeSet::new));
   }
 

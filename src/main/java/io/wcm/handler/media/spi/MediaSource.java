@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -94,11 +95,11 @@ public abstract class MediaSource {
     // check for matching media source ID in media resource
     String mediaSourceId = props.get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
     if (StringUtils.isNotEmpty(mediaSourceId)) {
-      return StringUtils.equals(mediaSourceId, getId());
+      return Strings.CS.equals(mediaSourceId, getId());
     }
     // if no media source ID is set at all check if media ref attribute contains a valid reference
     else {
-      String refProperty = StringUtils.defaultString(mediaRequest.getMediaPropertyNames().getRefProperty(),
+      String refProperty = Objects.toString(mediaRequest.getMediaPropertyNames().getRefProperty(),
           getPrimaryMediaRefProperty());
       String mediaRef = props.get(refProperty, String.class);
       return accepts(mediaRef);

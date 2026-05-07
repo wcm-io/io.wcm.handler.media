@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +64,7 @@ public final class NextGenDynamicMediaReference {
    * @param fileName File name
    */
   public NextGenDynamicMediaReference(@NotNull String assetId, @NotNull String fileName, @Nullable Asset asset) {
-    if (!StringUtils.startsWith(assetId, ASSET_ID_PREFIX)) {
+    if (!Strings.CS.startsWith(assetId, ASSET_ID_PREFIX)) {
       throw new IllegalArgumentException("Asset ID must start with '" + ASSET_ID_PREFIX + "'");
     }
     this.assetId = assetId;

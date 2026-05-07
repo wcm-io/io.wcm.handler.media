@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.junit.jupiter.api.Test;
 
 import io.wcm.handler.media.MediaArgs.ImageSizes;
@@ -315,7 +315,7 @@ class MediaArgsTest {
   @Test
   void testToString() {
     MediaArgs mediaArgs = new MediaArgs().altText("abc");
-    assertTrue(StringUtils.contains(mediaArgs.toString(), "abc"));
+    assertTrue(Strings.CS.contains(mediaArgs.toString(), "abc"));
   }
 
 }

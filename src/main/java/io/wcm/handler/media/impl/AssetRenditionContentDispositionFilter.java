@@ -41,6 +41,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
@@ -127,9 +128,9 @@ public final class AssetRenditionContentDispositionFilter implements Filter {
    */
   @SuppressWarnings("null")
   private boolean accepts(SlingHttpServletRequest request) {
-    return StringUtils.equalsIgnoreCase(request.getMethod(), METHOD_GET)
+    return Strings.CI.equals(request.getMethod(), METHOD_GET)
         && request.getResource() != null
-        && StringUtils.equals(request.getResource().getValueMap().get(JCR_PRIMARYTYPE, String.class), NT_FILE);
+        && Strings.CS.equals(request.getResource().getValueMap().get(JCR_PRIMARYTYPE, String.class), NT_FILE);
   }
 
   @Override

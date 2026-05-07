@@ -20,8 +20,9 @@
 package io.wcm.handler.media.markup;
 
 import java.util.Map.Entry;
+import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.injectorspecific.InjectionStrategy;
@@ -79,7 +80,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
           media.getMediaSource().enableMediaDrop(mediaElement, media.getMediaRequest());
           // add diff decoration
           if (request != null) {
-            String refProperty = StringUtils.defaultString(media.getMediaRequest().getMediaPropertyNames().getRefProperty(),
+            String refProperty = Objects.toString(media.getMediaRequest().getMediaPropertyNames().getRefProperty(),
                 mediaHandlerConfig.getMediaRefProperty());
             MediaMarkupBuilderUtil.addDiffDecoration(mediaElement, resource, refProperty, request, mediaHandlerConfig);
           }
@@ -106,7 +107,7 @@ public abstract class AbstractImageMediaMarkupBuilder implements MediaMarkupBuil
     }
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
     for (Entry<String, Object> entry : mediaArgs.getProperties().entrySet()) {
-      if (StringUtils.equals(entry.getKey(), MediaNameConstants.PROP_CSS_CLASS)) {
+      if (Strings.CS.equals(entry.getKey(), MediaNameConstants.PROP_CSS_CLASS)) {
         mediaElement.addCssClass(entry.getValue().toString());
       }
       else {

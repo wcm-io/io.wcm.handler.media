@@ -43,13 +43,13 @@ class StripeIndexTest {
   @Test
   void testIndexFor() {
     final int STRIPES = 256;
-    assertStripeIndexes(STRIPES, Range.between(0, STRIPES - 1));
+    assertStripeIndexes(STRIPES, Range.of(0, STRIPES - 1));
   }
 
   @Test
   void testIndexFor_MaxSize() {
     final int STRIPES = Integer.MAX_VALUE;
-    assertStripeIndexes(STRIPES, Range.between(0, STRIPES));
+    assertStripeIndexes(STRIPES, Range.of(0, STRIPES));
   }
 
   private static void assertStripeIndexes(int stripes, Range<Integer> validIndexes) {

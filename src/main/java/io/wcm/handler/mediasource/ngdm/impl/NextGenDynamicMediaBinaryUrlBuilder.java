@@ -23,6 +23,7 @@ import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServ
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_SEO_NAME;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,8 +69,8 @@ public final class NextGenDynamicMediaBinaryUrlBuilder {
 
     // replace placeholders in delivery path
     String seoName = context.getReference().getFileName();
-    binaryDeliveryPath = StringUtils.replace(binaryDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
-    binaryDeliveryPath = StringUtils.replace(binaryDeliveryPath, PLACEHOLDER_SEO_NAME, seoName);
+    binaryDeliveryPath = Strings.CS.replace(binaryDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
+    binaryDeliveryPath = Strings.CS.replace(binaryDeliveryPath, PLACEHOLDER_SEO_NAME, seoName);
 
     // build URL
     StringBuilder url = new StringBuilder();

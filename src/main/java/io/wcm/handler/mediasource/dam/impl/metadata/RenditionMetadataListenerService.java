@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.PersistenceException;
@@ -146,7 +146,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
 
   @Override
   public void handleEvent(Event event) {
-    if (!enabled || !StringUtils.equals(event.getTopic(), DamEvent.EVENT_TOPIC)) {
+    if (!enabled || !Strings.CS.equals(event.getTopic(), DamEvent.EVENT_TOPIC)) {
       return;
     }
     DamEvent damEvent = DamEvent.fromEvent(event);
@@ -164,7 +164,7 @@ public final class RenditionMetadataListenerService implements EventHandler {
     // make sure rendition file extension is an image extensions
     String renditionPath = event.getAdditionalInfo();
     String renditionNodeName = Text.getName(renditionPath);
-    boolean isOriginal = StringUtils.equals(renditionNodeName, ORIGINAL_FILE);
+    boolean isOriginal = Strings.CS.equals(renditionNodeName, ORIGINAL_FILE);
     String fileExtension = FilenameUtils.getExtension(renditionNodeName);
     if (!(isOriginal || MediaFileType.isImage(fileExtension))) {
       return;

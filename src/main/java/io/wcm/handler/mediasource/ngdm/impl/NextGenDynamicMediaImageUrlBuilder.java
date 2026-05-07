@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -100,9 +101,9 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     // replace placeholders in delivery path
     String seoName = FilenameUtils.getBaseName(context.getReference().getFileName());
     String format = getFileExtension();
-    imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
-    imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_SEO_NAME, seoName);
-    imageDeliveryPath = StringUtils.replace(imageDeliveryPath, PLACEHOLDER_FORMAT, format);
+    imageDeliveryPath = Strings.CS.replace(imageDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
+    imageDeliveryPath = Strings.CS.replace(imageDeliveryPath, PLACEHOLDER_SEO_NAME, seoName);
+    imageDeliveryPath = Strings.CS.replace(imageDeliveryPath, PLACEHOLDER_FORMAT, format);
 
     // prepare URL params
     SortedMap<String, String> urlParamMap = new TreeMap<>();
@@ -154,7 +155,7 @@ public final class NextGenDynamicMediaImageUrlBuilder {
     StringBuilder sb = new StringBuilder();
     sb.append(key).append("=");
     // we only need to encode crop, all other parameters are numbers only
-    if (StringUtils.equalsAny(key, PARAM_CROP, PARAM_SMARTCROP)) {
+    if (Strings.CS.equalsAny(key, PARAM_CROP, PARAM_SMARTCROP)) {
       sb.append(URLEncoder.encode(value, StandardCharsets.UTF_8));
     }
     else {

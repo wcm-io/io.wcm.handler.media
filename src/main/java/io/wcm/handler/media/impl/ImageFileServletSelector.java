@@ -21,7 +21,7 @@ package io.wcm.handler.media.impl;
 
 import static io.wcm.handler.media.impl.ImageTransformation.isValidRotation;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +60,7 @@ public final class ImageFileServletSelector {
     // cropping parameter
     if (selectors.length >= 4) {
       String cropString = selectors[3];
-      if (!StringUtils.equals(cropString, "-")) {
+      if (!Strings.CS.equals(cropString, "-")) {
         try {
           cropDimension = CropDimension.fromCropString(cropString);
         }

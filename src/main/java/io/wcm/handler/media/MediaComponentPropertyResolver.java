@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
@@ -202,7 +203,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   @SuppressWarnings("null")
   public @Nullable ImageSizes getImageSizes() {
     String responsiveType = getResponsiveType();
-    if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {
+    if (responsiveType != null && !Strings.CS.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {
       return null;
     }
 
@@ -222,7 +223,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   @SuppressWarnings("null")
   public @NotNull PictureSource @Nullable [] getPictureSources() {
     String responsiveType = getResponsiveType();
-    if (resolver == null || responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
+    if (resolver == null || responsiveType != null && !Strings.CS.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
       return null;
     }
 

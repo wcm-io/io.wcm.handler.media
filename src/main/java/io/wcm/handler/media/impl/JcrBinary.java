@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.media.impl;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jackrabbit.oak.spi.nodetype.NodeTypeConstants;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.annotation.versioning.ProviderType;
@@ -88,7 +88,7 @@ public final class JcrBinary {
    */
   private static boolean isNt(Resource resource, String nodeTypeName) {
     if (resource != null) {
-      return StringUtils.equals(resource.getResourceType(), nodeTypeName);
+      return Strings.CS.equals(resource.getResourceType(), nodeTypeName);
     }
     return false;
   }

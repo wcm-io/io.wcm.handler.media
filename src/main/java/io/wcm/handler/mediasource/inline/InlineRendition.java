@@ -32,7 +32,7 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.adapter.SlingAdaptable;
 import org.apache.sling.api.resource.Resource;
@@ -335,7 +335,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
         return true;
       }
       if (mediaArgs.getEnforceOutputFileExtension() != null) {
-        return !StringUtils.equalsIgnoreCase(getFileExtension(), mediaArgs.getEnforceOutputFileExtension());
+        return !Strings.CI.equals(getFileExtension(), mediaArgs.getEnforceOutputFileExtension());
       }
     }
     return false;
@@ -351,7 +351,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
     Resource parentResource = this.resource.getParent();
     if (parentResource != null && JcrBinary.isNtFile(parentResource)) {
       // if parent resource is nt:file and its node name equals the detected filename, directly use the nt:file node path
-      if (StringUtils.equals(parentResource.getName(), getFileName())) {
+      if (Strings.CS.equals(parentResource.getName(), getFileName())) {
         path = parentResource.getPath();
       }
       // otherwise use nt:file node path with custom filename
@@ -443,7 +443,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
       return true;
     }
     for (String extension : extensions) {
-      if (StringUtils.equalsIgnoreCase(extension, this.originalFileExtension)) {
+      if (Strings.CI.equals(extension, this.originalFileExtension)) {
         return true;
       }
     }
@@ -473,7 +473,7 @@ final class InlineRendition extends SlingAdaptable implements Rendition {
     if (this.url != null) {
       return FilenameUtils.getExtension(this.url);
     }
-    return StringUtils.defaultString(this.fileExtension, this.originalFileExtension);
+    return Objects.toString(this.fileExtension, this.originalFileExtension);
   }
 
   @Override

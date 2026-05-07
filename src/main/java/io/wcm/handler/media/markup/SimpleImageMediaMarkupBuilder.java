@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -422,14 +423,14 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     if (element instanceof Image) {
       Image img = (Image)element;
       return StringUtils.isNotEmpty(img.getSrc())
-          && !StringUtils.contains(img.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
+          && !Strings.CS.contains(img.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
     }
     if (element instanceof Picture) {
       Element imgChild = element.getChild("img");
       if (imgChild instanceof Image) {
         Image img = (Image)imgChild;
         return StringUtils.isNotEmpty(img.getSrc())
-            && !StringUtils.contains(element.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
+            && !Strings.CS.contains(element.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
       }
     }
     if (element instanceof Span) {

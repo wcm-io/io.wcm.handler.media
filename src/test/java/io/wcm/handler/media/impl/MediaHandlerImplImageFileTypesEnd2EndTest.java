@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.Nullable;
@@ -476,16 +477,16 @@ class MediaHandlerImplImageFileTypesEnd2EndTest {
       assertEquals(height, layer.getHeight(), "rendition layer height");
     }
 
-    if (!StringUtils.contains(mediaUrl, ".download_attachment.")
-        && !StringUtils.contains(mediaUrl, "/is/image/")
-        && !StringUtils.contains(mediaUrl, "/adobe/dynamicmedia/deliver/")
-        && !StringUtils.contains(mediaUrl, "/adobe/assets/")) {
-      String strippedMediaUrl = StringUtils.removeEnd(mediaUrl, DynamicMediaPath.DOWNLOAD_SUFFIX);
+    if (!Strings.CS.contains(mediaUrl, ".download_attachment.")
+        && !Strings.CS.contains(mediaUrl, "/is/image/")
+        && !Strings.CS.contains(mediaUrl, "/adobe/dynamicmedia/deliver/")
+        && !Strings.CS.contains(mediaUrl, "/adobe/assets/")) {
+      String strippedMediaUrl = Strings.CS.removeEnd(mediaUrl, DynamicMediaPath.DOWNLOAD_SUFFIX);
       assertEquals(FilenameUtils.getName(strippedMediaUrl), rendition.getFileName());
       assertEquals(FilenameUtils.getExtension(strippedMediaUrl), rendition.getFileExtension());
     }
 
-    if (resource != null && StringUtils.contains(mediaUrl, ".image_file.")) {
+    if (resource != null && Strings.CS.contains(mediaUrl, ".image_file.")) {
       // extract selector string from media url
       String selectors = "image_file." + StringUtils.substringBefore(StringUtils.substringAfter(mediaUrl, ".image_file."), ".file/");
 

@@ -20,6 +20,7 @@
 package io.wcm.handler.media.format.impl;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -27,7 +28,6 @@ import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -90,7 +90,7 @@ public final class MediaFormatProviderManagerImpl implements MediaFormatProvider
 
     for (ServiceReference<MediaFormatProvider> serviceReference : mediaFormatProviderServiceReferences) {
       Bundle bundle = serviceReference.getBundle();
-      String bundleName = StringUtils.defaultString(bundle.getHeaders().get(Constants.BUNDLE_NAME), bundle.getSymbolicName());
+      String bundleName = Objects.toString(bundle.getHeaders().get(Constants.BUNDLE_NAME), bundle.getSymbolicName());
       SortedSet<MediaFormat> mediaFormats = result.getOrDefault(bundleName, new TreeSet<>());
       result.putIfAbsent(bundleName, mediaFormats);
       MediaFormatProvider mediaFormatProvider = bundleContext.getService(serviceReference);

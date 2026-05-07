@@ -22,6 +22,8 @@ package io.wcm.handler.mediasource.ngdm;
 import static com.day.cq.dam.api.DamConstants.DC_DESCRIPTION;
 import static com.day.cq.dam.api.DamConstants.DC_TITLE;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.sling.api.resource.Resource;
@@ -61,7 +63,7 @@ final class NextGenDynamicMediaAsset implements Asset {
 
   @Override
   public @Nullable String getTitle() {
-    return StringUtils.defaultString(properties.get(DC_TITLE, String.class),
+    return Objects.toString(properties.get(DC_TITLE, String.class),
         context.getReference().getFileName());
   }
 
@@ -73,7 +75,7 @@ final class NextGenDynamicMediaAsset implements Asset {
     if (!defaultMediaArgs.isForceAltValueFromAsset() && StringUtils.isNotEmpty(defaultMediaArgs.getAltText())) {
       return defaultMediaArgs.getAltText();
     }
-    return StringUtils.defaultString(getDescription(), getTitle());
+    return Objects.toString(getDescription(), getTitle());
   }
 
   @Override

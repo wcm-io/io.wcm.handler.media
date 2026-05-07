@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -352,7 +352,7 @@ class MediaHandlerImplTest {
       MediaRequest request = media.getMediaRequest();
 
       // simulate validation of media references in a pre-processor. do not accept a media reference with "invalid-pre" in the string
-      if (StringUtils.contains(request.getMediaRef(), "invalid-pre")) {
+      if (Strings.CS.contains(request.getMediaRef(), "invalid-pre")) {
         media.setMediaInvalidReason(MediaInvalidReason.CUSTOM);
         media.setMediaInvalidReasonCustomMessage("Invalid via TestPreProcessor");
         return media;
@@ -383,7 +383,7 @@ class MediaHandlerImplTest {
 
     @Override
     public boolean accepts(String mediaRef) {
-      return StringUtils.startsWith(mediaRef, "/content/dummymedia/");
+      return Strings.CS.startsWith(mediaRef, "/content/dummymedia/");
     }
 
     @Override
@@ -420,7 +420,7 @@ class MediaHandlerImplTest {
 
     @Override
     public boolean accepts(Media media) {
-      return StringUtils.endsWith(media.getUrl(), ".gif");
+      return Strings.CS.endsWith(media.getUrl(), ".gif");
     }
 
     @Override
@@ -445,13 +445,13 @@ class MediaHandlerImplTest {
       MediaRequest request = media.getMediaRequest();
 
       // simulate validation of media references in a post-processor. do not accept a media reference with "invalid-post" in the string
-      if (StringUtils.contains(request.getMediaRef(), "invalid-post")) {
+      if (Strings.CS.contains(request.getMediaRef(), "invalid-post")) {
         media.setMediaInvalidReason(MediaInvalidReason.CUSTOM);
         media.setMediaInvalidReasonCustomMessage("Invalid via TestPostProcessor");
         return media;
       }
 
-      String mediaUrl = StringUtils.replace(media.getUrl(), "/dummymedia/", "/dummymedia.post1/");
+      String mediaUrl = Strings.CS.replace(media.getUrl(), "/dummymedia/", "/dummymedia.post1/");
       media.setUrl(mediaUrl);
       return media;
     }

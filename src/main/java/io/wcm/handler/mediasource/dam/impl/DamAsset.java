@@ -19,6 +19,8 @@
  */
 package io.wcm.handler.mediasource.dam.impl;
 
+import java.util.Objects;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.adapter.Adaptable;
@@ -96,7 +98,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
   public String getTitle() {
     String title = getPropertyAwareOfArray(DamConstants.DC_TITLE);
     // fallback to asset name if title is empty
-    return StringUtils.defaultString(title, damContext.getAsset().getName());
+    return Objects.toString(title, damContext.getAsset().getName());
   }
 
   /**
@@ -130,7 +132,7 @@ public final class DamAsset extends SlingAdaptable implements Asset {
     if (!defaultMediaArgs.isForceAltValueFromAsset() && StringUtils.isNotEmpty(defaultMediaArgs.getAltText())) {
       return defaultMediaArgs.getAltText();
     }
-    return StringUtils.defaultString(getDescription(), getTitle());
+    return Objects.toString(getDescription(), getTitle());
   }
 
   @Override

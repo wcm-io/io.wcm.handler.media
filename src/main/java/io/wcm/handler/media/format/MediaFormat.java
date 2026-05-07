@@ -25,8 +25,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -111,7 +113,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    */
   @JsonIgnore
   public @NotNull String getLabel() {
-    return StringUtils.defaultString(this.label, this.name);
+    return Objects.toString(this.label, this.name);
   }
 
   /**
@@ -567,7 +569,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       }
 
       // ratio (if label contains a ":" it is assumed a ratio is already contained in the label)
-      if (hasRatio() && !StringUtils.contains(getLabel(), ":")) {
+      if (hasRatio() && !Strings.CS.contains(getLabel(), ":")) {
         String ratioString = getRatioDisplayString();
         if (StringUtils.isNotEmpty(ratioString)) {
           extParts.add(ratioString);

@@ -32,6 +32,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.SyntheticResource;
@@ -188,7 +189,7 @@ public class IPEConfigResourceProvider extends ResourceProvider<Void> {
   }
 
   private MediaFormat getMediaFormat(String mediaFormatName, MediaFormatHandler mediaFormatHandler) {
-    if (StringUtils.equals(mediaFormatName, MEDIAFORMAT_FREE_CROP.getName())) {
+    if (Strings.CS.equals(mediaFormatName, MEDIAFORMAT_FREE_CROP.getName())) {
       return MEDIAFORMAT_FREE_CROP;
     }
     else {

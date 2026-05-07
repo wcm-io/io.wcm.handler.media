@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,7 +105,7 @@ public final class WidthUtils {
       return false;
     }
     // now check if the valid string contains a density separator
-    return StringUtils.contains(widths, ":");
+    return Strings.CS.contains(widths, ":");
   }
 
 }

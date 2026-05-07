@@ -22,7 +22,7 @@ package io.wcm.handler.mediasource.dam.impl;
 import java.io.InputStream;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.jackrabbit.oak.commons.LazyValue;
@@ -213,7 +213,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       return DynamicMediaPath.buildContent(damContext, true);
     }
     else if ((MediaFileType.isBrowserImage(getFileExtension())
-        && (MediaFileType.isVectorImage(getFileExtension()) || StringUtils.equals(getFileExtension(), FileExtension.GIF)))
+        && (MediaFileType.isVectorImage(getFileExtension()) || Strings.CS.equals(getFileExtension(), FileExtension.GIF)))
         || !MediaFileType.isImage(getFileExtension())) {
       // serve non-image requests or Vector/GIF images as static content from dynamic media
       // (vector can be scaled in browser directly, GIF may be animated which is not supported by dynamic media)
@@ -341,7 +341,7 @@ class RenditionMetadata extends SlingAdaptable implements Comparable<RenditionMe
       if (thisHeight.equals(otherHeight)) {
         String thisPath = getRendition().getPath();
         String otherPath = obj.getRendition().getPath();
-        if (!StringUtils.equals(thisPath, otherPath)) {
+        if (!Strings.CS.equals(thisPath, otherPath)) {
           // same width/height - compare paths as last resort
           return thisPath.compareTo(otherPath);
         }

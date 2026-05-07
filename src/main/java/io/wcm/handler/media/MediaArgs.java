@@ -22,11 +22,12 @@ package io.wcm.handler.media;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -1403,7 +1404,7 @@ public final class MediaArgs implements Cloneable {
      * @return density descriptor if it is not null and is not "1x", otherwise an empty string is returned
      */
     public @NotNull String getDensityDescriptor() {
-      if (StringUtils.isEmpty(this.density) || StringUtils.equalsIgnoreCase(this.density, "1x")) {
+      if (StringUtils.isEmpty(this.density) || Strings.CI.equals(this.density, "1x")) {
         return StringUtils.EMPTY;
       }
       return this.density;
