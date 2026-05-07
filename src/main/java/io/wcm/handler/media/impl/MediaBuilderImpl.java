@@ -78,6 +78,7 @@ final class MediaBuilderImpl implements MediaBuilder {
    * @param contextResource context resource
    * @param componentPropertyResolverFactory factory to create a component property resolver
    */
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private void resolveDefaultSettingsFromPolicyAndComponent(@NotNull Resource contextResource,
       @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
     try (MediaComponentPropertyResolver resolver = new MediaComponentPropertyResolver(contextResource, componentPropertyResolverFactory)) {

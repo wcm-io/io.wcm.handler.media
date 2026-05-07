@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl.ipeconfig;
 
+import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.handler.media.impl.ipeconfig.CroppingRatios.MEDIAFORMAT_FREE_CROP;
 import static io.wcm.handler.media.impl.ipeconfig.PathParser.NN_ASPECT_RATIOS;
 import static io.wcm.handler.media.impl.ipeconfig.PathParser.NN_CONFIG;
@@ -164,7 +165,7 @@ public class IPEConfigResourceProvider extends ResourceProvider<Void> {
    * @return Resource
    */
   private Resource buildAspectRatiosResource(ResourceResolver resolver, String path) {
-    return new SyntheticResource(resolver, path, null);
+    return new SyntheticResource(resolver, path, NT_UNSTRUCTURED);
   }
 
   /**
