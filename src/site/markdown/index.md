@@ -46,8 +46,8 @@ Read the [general concepts][general-concepts] to get an overview of the function
 
 |Media Handler version |AEM version supported
 |----------------------|----------------------
-|2.8.2 or higher       |AEM 6.5.24+, AEM 6.6.2+, AEMaaCS
-|2.0.0 - 2.8.0         |AEM 6.5.17+, AEM 6.6.0+, AEMaaCS
+|2.9.0 or higher       |AEM 6.5.24+, AEM 6.6.2+, AEMaaCS
+|2.0.0 - 2.8.x         |AEM 6.5.17+, AEM 6.6.0+, AEMaaCS
 |1.14.4 - 1.16.0       |AEM 6.5.7+, AEMaaCS
 |1.14.0 - 1.14.2       |AEM 6.5+, AEMaaCS
 |1.10.x - 1.13.x       |AEM 6.4.5+, AEMaaCS
