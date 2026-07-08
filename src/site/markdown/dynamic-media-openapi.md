@@ -189,11 +189,14 @@ Example:
 
 ### Known Limitations
 
-Known Limitations as of October 2025:
+Known Limitations of wcm.io Media Handler:
 
 * Dynamic Media with OpenAPI is not supported in Media Handler for AEM 6.x, only for AEMaaCS
-* Same as with the Adobe AEM WCM Core Components, currently only a single remote AEM Asset instance is supported, which is configured centrally as described in [Support for Remote Assets ][aem-remote-assets]. The media handler uses the same convention for referencing remote assets (using strings starting with `/urn:aaid:aem:...`). This convention also does not support multiple remote AEM Asset instances, as it does not include a pointer to the Repository ID.
-* The Dynamic Media with OpenAPI remote asset picker currently ignores any folder structures for assets on the remote AEM Asset instance.
+
+Known Limitations of AEM and Dynamic Media with OpenAPI:
+
+* AEMaaCS and the Adobe AEM WCM Core Components currently support only a single remote AEM Asset instance, which is configured centrally as described in [Support for Remote Assets][aem-remote-assets]. The media handler uses the same convention for referencing remote assets (using strings starting with `/urn:aaid:aem:...`). This convention also does not support multiple remote AEM Asset instances, as it does not include a pointer to the Repository ID. This is a limitation in AEM itself, and as such also applies to the media handler.
+* The Dynamic Media with OpenAPI remote asset picker currently ignores any folder structures for assets on the remote AEM Asset instance. This is a limitation in AEM itself, the media handler uses the built-in and preconfigured asset picker.
 
 
 [aem-remote-assets]: https://experienceleague.adobe.com/en/docs/experience-manager-core-components/using/developing/remote-assets
