@@ -84,6 +84,13 @@ class DummyImageServletTest {
     assertResponseLayerDimension(100, 50);
   }
 
+  @Test
+  void testGet_InvalidExtension() throws Exception {
+    context.requestPathInfo().setExtension(FileExtension.CSS);
+    underTest.service(context.request(), context.response());
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, context.response().getStatus());
+  }
+
   private void assertResponseLayerDimension(int width, int height) throws IOException {
     try (InputStream is = new ByteArrayInputStream(context.response().getOutput())) {
       Layer layer = new Layer(is);
