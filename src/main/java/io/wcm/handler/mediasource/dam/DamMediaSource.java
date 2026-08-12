@@ -47,9 +47,9 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
+import com.day.cq.wcm.api.components.ComponentManager;
 import com.day.cq.wcm.api.components.DropTarget;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
-import com.day.cq.wcm.commons.WCMUtils;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -276,7 +276,7 @@ public final class DamMediaSource extends MediaSource {
   }
 
   private Optional<String> addMediaDroptarget(String refProperty, MediaPropertyNames mediaPropertyNames, String name) {
-    Component componentDefinition = WCMUtils.getComponent(resource);
+    Component componentDefinition = getComponentDefinition();
 
     // set drop target - with path of current component as default resource type
     Map<String, String> params = new HashMap<>();
@@ -298,6 +298,14 @@ public final class DamMediaSource extends MediaSource {
     componentContext.getEditContext().getEditConfig().getDropTargets().put(dropTarget.getId(), dropTarget);
 
     return Optional.of(dropTarget.getId());
+  }
+
+  private @Nullable Component getComponentDefinition() {
+    ComponentManager componentManager = resourceResolver.adaptTo(ComponentManager.class);
+    if (componentManager == null) {
+      return null;
+    }
+    return componentManager.getComponentOfResource(resource);
   }
 
   @Override
