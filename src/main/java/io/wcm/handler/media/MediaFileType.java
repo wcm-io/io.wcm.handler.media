@@ -20,6 +20,7 @@
 package io.wcm.handler.media;
 
 import java.util.EnumSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -370,7 +371,7 @@ public enum MediaFileType {
       return false;
     }
     return fileTypes.stream()
-      .anyMatch(type -> type.getExtensions().contains(StringUtils.lowerCase(fileExtension)));
+      .anyMatch(type -> type.getExtensions().contains(StringUtils.lowerCase(fileExtension, Locale.ROOT)));
   }
 
   private static Set<String> getFileExtensions(@NotNull EnumSet<MediaFileType> fileTypes) {
