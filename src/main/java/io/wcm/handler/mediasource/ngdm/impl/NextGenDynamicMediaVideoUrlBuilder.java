@@ -23,6 +23,7 @@ import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigServ
 import static io.wcm.handler.mediasource.ngdm.impl.NextGenDynamicMediaConfigService.PLACEHOLDER_FORMAT;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,8 +59,8 @@ public final class NextGenDynamicMediaVideoUrlBuilder {
     String targetFormat = StringUtils.defaultIfBlank(requestedFormat,
         context.getNextGenDynamicMediaConfig().getDefaultVideoManifestFormat());
 
-    String resolvedPath = StringUtils.replace(videoDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
-    resolvedPath = StringUtils.replace(resolvedPath, PLACEHOLDER_FORMAT, targetFormat);
+    String resolvedPath = Strings.CS.replace(videoDeliveryPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
+    resolvedPath = Strings.CS.replace(resolvedPath, PLACEHOLDER_FORMAT, targetFormat);
 
     return buildBaseUrl(repositoryId, resolvedPath);
   }
@@ -85,7 +86,7 @@ public final class NextGenDynamicMediaVideoUrlBuilder {
     if (StringUtils.isAnyBlank(repositoryId, videoPlayerPath)) {
       return null;
     }
-    String resolvedPath = StringUtils.replace(videoPlayerPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
+    String resolvedPath = Strings.CS.replace(videoPlayerPath, PLACEHOLDER_ASSET_ID, context.getReference().getAssetId());
     return buildBaseUrl(repositoryId, resolvedPath);
   }
 

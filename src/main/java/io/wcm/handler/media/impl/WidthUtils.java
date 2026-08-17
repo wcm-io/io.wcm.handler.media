@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,8 +60,8 @@ public final class WidthUtils {
    * Whitespaces between options are tolerated.<br>
    * Examples:
    * <ul>
-   *   <li>{@literal 100, 200? , 300?} returns three width options, the last two ones are optional</li>
-   *   <li>{@literal 100, 200:1.5x, 300:2x?} returns three options with pixel densities, last options is optional</li>
+   * <li>{@literal 100, 200? , 300?} returns three width options, the last two ones are optional</li>
+   * <li>{@literal 100, 200:1.5x, 300:2x?} returns three options with pixel densities, last options is optional</li>
    * </ul>
    * @param widths Widths string
    * @return Width options
@@ -74,10 +75,10 @@ public final class WidthUtils {
     }
     String[] widthItems = StringUtils.split(widths, ",");
     return Arrays.stream(widthItems)
-        .map(StringUtils::trim)
-        .map(WidthUtils::toWidthOption)
-        .filter(Objects::nonNull)
-        .toArray(WidthOption[]::new);
+      .map(StringUtils::trim)
+      .map(WidthUtils::toWidthOption)
+      .filter(Objects::nonNull)
+      .toArray(WidthOption[]::new);
   }
 
   private static @Nullable WidthOption toWidthOption(@NotNull String widthOptionString) {
@@ -104,7 +105,7 @@ public final class WidthUtils {
       return false;
     }
     // now check if the valid string contains a density separator
-    return StringUtils.contains(widths, ":");
+    return Strings.CS.contains(widths, ":");
   }
 
 }

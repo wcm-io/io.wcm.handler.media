@@ -94,8 +94,8 @@ class DamUriTemplateRenditionTest {
   void testOriginal_CropCenter() {
     Asset asset = createSampleAsset();
     Media media = mediaHandler.get(asset.getPath())
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
     Rendition rendition = media.getRendition();
 
     // CROP_CENTER not supported for renditions
@@ -108,8 +108,8 @@ class DamUriTemplateRenditionTest {
   void testOriginal() {
     Asset asset = createSampleAsset();
     Media media = mediaHandler.get(asset.getPath())
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
         "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.file/sample.jpg");
@@ -121,9 +121,9 @@ class DamUriTemplateRenditionTest {
   void testOriginal_DynamicMedia() {
     Asset asset = createSampleAssetWithDynamicMedia();
     Media media = mediaHandler.get(asset.getPath())
-        .mediaFormat(RATIO_16_10)
-        .imageQualityPercentage(0.95)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .imageQualityPercentage(0.95)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}&qlt=95");
@@ -143,8 +143,8 @@ class DamUriTemplateRenditionTest {
 
     Asset asset = createSampleAssetWithDynamicMedia();
     Media media = mediaHandler.get(asset.getPath())
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?wid={width}");
@@ -159,8 +159,8 @@ class DamUriTemplateRenditionTest {
     Asset asset = createSampleAsset();
     String assetId = MockAssetDelivery.getAssetId(asset);
     Media media = mediaHandler.get(asset.getPath())
-        .mediaFormat(RATIO_16_10)
-        .build();
+      .mediaFormat(RATIO_16_10)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 192, 120,
         "/adobe/dynamicmedia/deliver/" + assetId + "/sample.jpg?preferwebp=true&quality=85&width={width}");
@@ -172,9 +172,9 @@ class DamUriTemplateRenditionTest {
   void test4_3() {
     Asset asset = createSampleAsset();
     Media media = mediaHandler.get(asset.getPath())
-        .mediaFormat(RATIO_4_3)
-        .autoCrop(true)
-        .build();
+      .mediaFormat(RATIO_4_3)
+      .autoCrop(true)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 120, 90,
         "/content/dam/folder1/sample.jpg/_jcr_content/renditions/rendition43.jpg.image_file.{width}.0.file/sample.jpg");
@@ -186,9 +186,9 @@ class DamUriTemplateRenditionTest {
   void test4_3_DynamicMedia() {
     Asset asset = createSampleAssetWithDynamicMedia();
     Media media = mediaHandler.get(asset.getPath())
-        .mediaFormat(RATIO_4_3)
-        .autoCrop(true)
-        .build();
+      .mediaFormat(RATIO_4_3)
+      .autoCrop(true)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 160, 120,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=16,0,160,120&wid={width}&qlt=85");
@@ -203,9 +203,9 @@ class DamUriTemplateRenditionTest {
     Asset asset = createSampleAsset();
     String assetId = MockAssetDelivery.getAssetId(asset);
     Media media = mediaHandler.get(asset.getPath())
-        .mediaFormat(RATIO_4_3)
-        .autoCrop(true)
-        .build();
+      .mediaFormat(RATIO_4_3)
+      .autoCrop(true)
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 160, 120,
         "/adobe/dynamicmedia/deliver/" + assetId + "/sample.jpg?c=8.3p%2C0.0p%2C83.3p%2C100.0p&preferwebp=true&quality=85&width={width}");
@@ -217,11 +217,11 @@ class DamUriTemplateRenditionTest {
   void testMultiple() {
     Asset asset = createSampleAsset();
     Media media = mediaHandler.get(asset.getPath())
-        .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
-        .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
-        .pictureSource(new PictureSource(RATIO_4_3).widths(144))
-        .autoCrop(true)
-        .build();
+      .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
+      .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
+      .pictureSource(new PictureSource(RATIO_4_3).widths(144))
+      .autoCrop(true)
+      .build();
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(4, renditions.size());
@@ -249,11 +249,11 @@ class DamUriTemplateRenditionTest {
   void testMultiple_DynamicMedia() {
     Asset asset = createSampleAssetWithDynamicMedia();
     Media media = mediaHandler.get(asset.getPath())
-        .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
-        .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
-        .pictureSource(new PictureSource(RATIO_4_3).widths(144))
-        .autoCrop(true)
-        .build();
+      .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
+      .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
+      .pictureSource(new PictureSource(RATIO_4_3).widths(144))
+      .autoCrop(true)
+      .build();
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(4, renditions.size());
@@ -296,11 +296,11 @@ class DamUriTemplateRenditionTest {
         PN_NORMALIZED_HEIGHT, 0.72d); // 86px
 
     Media media = mediaHandler.get(asset.getPath())
-        .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
-        .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
-        .pictureSource(new PictureSource(RATIO_4_3).widths(60))
-        .autoCrop(true)
-        .build();
+      .pictureSource(new PictureSource(RATIO_16_10).widths(120, 96))
+      .pictureSource(new PictureSource(RATIO_SQUARE).widths(100))
+      .pictureSource(new PictureSource(RATIO_4_3).widths(60))
+      .autoCrop(true)
+      .build();
 
     List<Rendition> renditions = List.copyOf(media.getRenditions());
     assertEquals(4, renditions.size());
@@ -333,7 +333,7 @@ class DamUriTemplateRenditionTest {
         PN_MEDIA_CROP, "5,5,80,55",
         PN_MEDIA_ROTATION, 90);
     Media media = mediaHandler.get(content)
-        .build();
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 50, 75,
         "/content/dam/folder1/sample.jpg/_jcr_content/renditions/original.image_file.{width}.0.5,5,80,55.90.file/sample.jpg");
@@ -350,7 +350,7 @@ class DamUriTemplateRenditionTest {
         PN_MEDIA_CROP, "5,5,80,55",
         PN_MEDIA_ROTATION, 90);
     Media media = mediaHandler.get(content)
-        .build();
+      .build();
 
     assertUriTemplate(media.getRendition(), SCALE_WIDTH, 50, 75,
         "https://dummy.scene7.com/is/image/DummyFolder/sample.jpg?crop=5,5,75,50&rotate=90&wid={width}&qlt=85");

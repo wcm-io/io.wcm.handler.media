@@ -19,7 +19,7 @@
  */
 package io.wcm.handler.media.impl.ipeconfig;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.AbstractResource;
 import org.apache.sling.api.resource.ResourceMetadata;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -58,7 +58,7 @@ class AspectRatioResource extends AbstractResource {
   }
 
   private static String getDisplayString(MediaFormat mf) {
-    if (StringUtils.contains(mf.getName(), ":")) {
+    if (Strings.CS.contains(mf.getName(), ":")) {
       return mf.getName();
     }
     else {
@@ -104,7 +104,9 @@ class AspectRatioResource extends AbstractResource {
   }
 
   @Override
-  @SuppressWarnings({ "unchecked", "null" })
+  @SuppressWarnings({
+      "unchecked", "null"
+  })
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (type == ValueMap.class) {
       return (AdapterType)properties;

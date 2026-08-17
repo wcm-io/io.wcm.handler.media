@@ -45,6 +45,7 @@ import com.day.cq.commons.jcr.JcrConstants;
 })
 @Designate(ocd = MediaFileServlet.Config.class)
 public final class MediaFileServlet extends AbstractMediaFileServlet {
+
   private static final long serialVersionUID = 1L;
 
   private boolean svgContentSecurityPolicy;

@@ -95,8 +95,8 @@ public final class SmartCrop {
       return null;
     }
     return imageProfile.getSmartCropDefinitions().stream()
-        .filter(def -> Ratio.matches(Ratio.get(def), requestedRatio))
-        .findFirst().orElse(null);
+      .filter(def -> Ratio.matches(Ratio.get(def), requestedRatio))
+      .findFirst().orElse(null);
   }
 
   /**

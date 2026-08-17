@@ -23,6 +23,7 @@ import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_APPROVED;
 import static com.day.cq.dam.api.DamConstants.ASSET_STATUS_PROPERTY;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -107,7 +108,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
   }
 
   private boolean isDamAssetReference(@Nullable String mediaRef) {
-    return StringUtils.startsWith(mediaRef, "/content/dam/");
+    return Strings.CS.startsWith(mediaRef, "/content/dam/");
   }
 
   @Override
@@ -144,7 +145,7 @@ public final class NextGenDynamicMediaMediaSource extends MediaSource {
     }
 
     // Do not accept assets that are not approved
-    if (metadata != null && !StringUtils.equals(metadata.getAssetStatus(), ASSET_STATUS_APPROVED)) {
+    if (metadata != null && !Strings.CS.equals(metadata.getAssetStatus(), ASSET_STATUS_APPROVED)) {
       log.trace("Reject asset with {}={} (expected: {})", ASSET_STATUS_PROPERTY, metadata.getAssetStatus(), ASSET_STATUS_APPROVED);
       media.setMediaInvalidReason(MediaInvalidReason.NOT_APPROVED);
       return media;

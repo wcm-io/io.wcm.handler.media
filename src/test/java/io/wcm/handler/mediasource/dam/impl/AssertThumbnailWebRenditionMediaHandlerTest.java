@@ -72,14 +72,16 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
-  @SuppressWarnings({ "deprecation", "null" })
+  @SuppressWarnings({
+      "deprecation", "null"
+  })
   void testWithAllowWebRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     Media media = mediaHandler.get(asset.getPath())
-        .fixedDimension(30, 15)
-        .includeAssetWebRenditions(true)
-        .build();
+      .fixedDimension(30, 15)
+      .includeAssetWebRenditions(true)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(30, rendition.getWidth());
@@ -89,14 +91,16 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
-  @SuppressWarnings({ "deprecation", "null" })
+  @SuppressWarnings({
+      "deprecation", "null"
+  })
   void testWithDisallowWebRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     Media media = mediaHandler.get(asset.getPath())
-        .fixedDimension(30, 15)
-        .includeAssetWebRenditions(false)
-        .build();
+      .fixedDimension(30, 15)
+      .includeAssetWebRenditions(false)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(30, rendition.getWidth());
@@ -106,14 +110,16 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   }
 
   @Test
-  @SuppressWarnings({ "deprecation", "null" })
+  @SuppressWarnings({
+      "deprecation", "null"
+  })
   void testWithAllowThumbnailRenditions() {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     Media media = mediaHandler.get(asset.getPath())
-        .fixedDimension(30, 15)
-        .includeAssetThumbnails(true)
-        .build();
+      .fixedDimension(30, 15)
+      .includeAssetThumbnails(true)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(30, rendition.getWidth());
@@ -128,9 +134,9 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     Media media = mediaHandler.get(asset.getPath())
-        .fixedDimension(30, 15)
-        .includeAssetAemRenditions(Set.of(AemRenditionType.WEB_RENDITION, AemRenditionType.THUMBNAIL_RENDITION))
-        .build();
+      .fixedDimension(30, 15)
+      .includeAssetAemRenditions(Set.of(AemRenditionType.WEB_RENDITION, AemRenditionType.THUMBNAIL_RENDITION))
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(30, rendition.getWidth());
@@ -143,6 +149,7 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
   @SuppressWarnings("null")
   void testWithDisallowWebRenditionsViaMediaHandlerConfig() {
     context.registerService(MediaHandlerConfig.class, new MediaHandlerConfig() {
+
       @Override
       @Deprecated
       public boolean includeAssetWebRenditionsByDefault() {
@@ -153,8 +160,8 @@ class AssertThumbnailWebRenditionMediaHandlerTest {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     Media media = mediaHandler.get(asset.getPath())
-        .fixedDimension(30, 15)
-        .build();
+      .fixedDimension(30, 15)
+      .build();
     assertTrue(media.isValid());
     Rendition rendition = media.getRendition();
     assertEquals(30, rendition.getWidth());

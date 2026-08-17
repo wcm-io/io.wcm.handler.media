@@ -58,7 +58,7 @@ class NextGenDynamicMediaMetadataServiceImplTest {
   @BeforeEach
   void setUp(WireMockRuntimeInfo wmRuntimeInfo) {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
-        .setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
+      .setRepositoryId("localhost:" + wmRuntimeInfo.getHttpPort());
     context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
   }
 
@@ -74,14 +74,16 @@ class NextGenDynamicMediaMetadataServiceImplTest {
   void testValidResponse() {
     NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
         "enabled", true,
-        "httpHeaders", new String[] { "header1:1", "header2:2" });
+        "httpHeaders", new String[] {
+            "header1:1", "header2:2"
+        });
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .withHeader("header1", equalTo("1"))
-        .withHeader("header2", equalTo("2"))
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_IMAGE)));
+      .withHeader("header1", equalTo("1"))
+      .withHeader("header2", equalTo("2"))
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_IMAGE)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNotNull(metadata);
@@ -97,10 +99,10 @@ class NextGenDynamicMediaMetadataServiceImplTest {
     NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
         "enabled", false);
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_IMAGE)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_IMAGE)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNull(metadata);
@@ -111,10 +113,10 @@ class NextGenDynamicMediaMetadataServiceImplTest {
     NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
         "enabled", true);
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody("{}")));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody("{}")));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNull(metadata);
@@ -125,10 +127,10 @@ class NextGenDynamicMediaMetadataServiceImplTest {
     NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
         "enabled", true);
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody("no json")));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody("no json")));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNull(metadata);
@@ -139,8 +141,8 @@ class NextGenDynamicMediaMetadataServiceImplTest {
     NextGenDynamicMediaMetadataService underTest = context.registerInjectActivateService(NextGenDynamicMediaMetadataServiceImpl.class,
         "enabled", true);
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_FORBIDDEN)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_FORBIDDEN)));
 
     NextGenDynamicMediaMetadata metadata = underTest.fetchMetadata(REFERENCE);
     assertNull(metadata);

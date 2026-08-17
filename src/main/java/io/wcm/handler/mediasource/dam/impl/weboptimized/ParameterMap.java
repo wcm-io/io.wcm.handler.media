@@ -111,9 +111,9 @@ final class ParameterMap {
 
   private static @Nullable Dimension loadImageDimension(@NotNull Asset asset) {
     Rendition originalRendition = asset.getOriginal();
-      return originalRendition == null
-            ? null
-            : AssetRendition.getDimension(originalRendition);
+    return originalRendition == null
+        ? null
+        : AssetRendition.getDimension(originalRendition);
   }
 
 }

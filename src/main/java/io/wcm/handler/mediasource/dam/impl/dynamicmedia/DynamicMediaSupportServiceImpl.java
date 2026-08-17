@@ -233,7 +233,7 @@ public class DynamicMediaSupportServiceImpl implements DynamicMediaSupportServic
   @Override
   public @Nullable ImageProfile getImageProfile(@NotNull String profilePath) {
     try (ResourceResolver resourceResolver = resourceResolverFactory
-        .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
+      .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, SERVICEUSER_SUBSERVICE))) {
       Resource profileResource = resourceResolver.getResource(profilePath);
       if (profileResource != null) {
         log.debug("Loaded image profile: {}", profilePath);

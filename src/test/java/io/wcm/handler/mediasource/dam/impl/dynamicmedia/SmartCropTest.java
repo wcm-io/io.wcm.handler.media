@@ -85,8 +85,8 @@ class SmartCropTest {
   void testGetDimension() {
     ImageProfile profile1 = new ImageProfileImpl(
         context.create().resource("/conf/global/settings/dam/adminui-extension/imageprofile/profile1",
-        PN_CROP_TYPE, CROP_TYPE_SMART,
-        PN_BANNER, "16-10,160,100|4-3,40,30"));
+            PN_CROP_TYPE, CROP_TYPE_SMART,
+            PN_BANNER, "16-10,160,100|4-3,40,30"));
 
     assertNull(getDimensionForRatio(profile1, 1d));
     assertNull(getDimensionForWidthHeight(profile1, 500, 500));

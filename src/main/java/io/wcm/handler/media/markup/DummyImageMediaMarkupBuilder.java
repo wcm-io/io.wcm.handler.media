@@ -19,7 +19,8 @@
  */
 package io.wcm.handler.media.markup;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Objects;
+
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -72,7 +73,9 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
         && mediaArgs.isDummyImage();
   }
 
-  @SuppressWarnings({ "null", "unused", "java:S2589" })
+  @SuppressWarnings({
+      "null", "unused", "java:S2589"
+  })
   @SuppressFBWarnings("STYLE")
   @Override
   public HtmlElement build(@NotNull Media media) {
@@ -82,12 +85,12 @@ public final class DummyImageMediaMarkupBuilder extends AbstractImageMediaMarkup
     MediaArgs mediaArgs = media.getMediaRequest().getMediaArgs();
 
     // create dummy image
-    String dummyImageUrl = StringUtils.defaultString(mediaArgs.getDummyImageUrl(), DUMMY_IMAGE);
+    String dummyImageUrl = Objects.toString(mediaArgs.getDummyImageUrl(), DUMMY_IMAGE);
     dummyImageUrl = urlHandler.get(dummyImageUrl)
-        .urlMode(media.getMediaRequest().getMediaArgs().getUrlMode())
-        .buildExternalResourceUrl();
+      .urlMode(media.getMediaRequest().getMediaArgs().getUrlMode())
+      .buildExternalResourceUrl();
     Image image = new Image(dummyImageUrl, dimension.getWidth(), dimension.getHeight())
-    .addCssClass(MediaNameConstants.CSS_DUMMYIMAGE);
+      .addCssClass(MediaNameConstants.CSS_DUMMYIMAGE);
 
     // set additional attributes
     setAdditionalAttributes(image, media);

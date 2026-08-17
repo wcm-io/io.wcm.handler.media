@@ -44,8 +44,8 @@ public class CroppingRatios {
    * Special media format name to also allow "free cropping" without constraints.
    */
   public static final MediaFormat MEDIAFORMAT_FREE_CROP = MediaFormatBuilder.create("__FREE_CROP__")
-      .label("Free Hand")
-      .build();
+    .label("Free Hand")
+    .build();
 
   private final MediaFormatHandler mediaFormatHandler;
 
@@ -110,8 +110,8 @@ public class CroppingRatios {
 
   private @Nullable MediaFormat getExistingMediaFormatWithRatio(Set<MediaFormat> all, double ratio) {
     return all.stream()
-        .filter(mediaFormat -> Ratio.matches(mediaFormat.getRatio(), ratio))
-        .findFirst().orElse(null);
+      .filter(mediaFormat -> Ratio.matches(mediaFormat.getRatio(), ratio))
+      .findFirst().orElse(null);
   }
 
   private boolean isBigger(@NotNull MediaFormat mediaFormat1, @NotNull MediaFormat mediaFormat2) {
@@ -127,8 +127,8 @@ public class CroppingRatios {
   @SuppressWarnings("null")
   private @NotNull Set<String> toNameSet(@NotNull Stream<MediaFormat> mediaFormats) {
     return mediaFormats
-        .map(MediaFormat::getName)
-        .collect(Collectors.toSet());
+      .map(MediaFormat::getName)
+      .collect(Collectors.toSet());
   }
 
 }

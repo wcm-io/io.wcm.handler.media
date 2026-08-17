@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
@@ -46,9 +47,9 @@ import org.slf4j.LoggerFactory;
 import com.day.cq.wcm.api.WCMMode;
 import com.day.cq.wcm.api.components.Component;
 import com.day.cq.wcm.api.components.ComponentContext;
+import com.day.cq.wcm.api.components.ComponentManager;
 import com.day.cq.wcm.api.components.DropTarget;
 import com.day.cq.wcm.api.components.InplaceEditingConfig;
-import com.day.cq.wcm.commons.WCMUtils;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.handler.commons.dom.HtmlElement;
@@ -113,7 +114,7 @@ public final class DamMediaSource extends MediaSource {
 
   @Override
   public boolean accepts(@Nullable String mediaRef) {
-    return StringUtils.startsWith(mediaRef, "/content/dam/");
+    return Strings.CS.startsWith(mediaRef, "/content/dam/");
   }
 
   @Override
@@ -183,7 +184,9 @@ public final class DamMediaSource extends MediaSource {
   }
 
   @Override
-  @SuppressWarnings({ "null", "java:S2589" })
+  @SuppressWarnings({
+      "null", "java:S2589"
+  })
   public void enableMediaDrop(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
@@ -198,7 +201,7 @@ public final class DamMediaSource extends MediaSource {
       String mapProperty = prependDotSlash(getMediaMapProperty(mediaRequest, mediaHandlerConfig));
 
       String name = refProperty;
-      if (StringUtils.contains(name, "/")) {
+      if (Strings.CS.contains(name, "/")) {
         name = Text.getName(name);
       }
 
@@ -207,10 +210,10 @@ public final class DamMediaSource extends MediaSource {
       if (!dropTargetCssClass.isPresent()) {
         // otherwise add a new drop target and get it's id
         MediaPropertyNames mediaPropertyNames = new MediaPropertyNames()
-            .refProperty(refProperty)
-            .cropProperty(cropProperty)
-            .rotationProperty(rotationProperty)
-            .mapProperty(mapProperty);
+          .refProperty(refProperty)
+          .cropProperty(cropProperty)
+          .rotationProperty(rotationProperty)
+          .mapProperty(mapProperty);
         dropTargetCssClass = addMediaDroptarget(refProperty, mediaPropertyNames, name);
       }
 
@@ -221,7 +224,9 @@ public final class DamMediaSource extends MediaSource {
   }
 
   @Override
-  @SuppressWarnings({ "PMD.AvoidAccessibilityAlteration", "java:S3011" })
+  @SuppressWarnings({
+      "PMD.AvoidAccessibilityAlteration", "java:S3011"
+  })
   public void setCustomIPECropRatios(@NotNull HtmlElement element, @NotNull MediaRequest mediaRequest) {
     if (wcmMode == WCMMode.DISABLED || wcmMode == null) {
       return;
@@ -239,7 +244,7 @@ public final class DamMediaSource extends MediaSource {
         String ipeConfigPath = IPEConfigResourceProvider.buildPath(componentContext.getResource().getPath(), mediaFormatNames);
         // clone IPE config and overwrite config path via reflection (no API available for this)
         InplaceEditingConfig customIpeConfig = new InplaceEditingConfig(componentContext
-            .getEditContext().getEditConfig().getInplaceEditingConfig());
+          .getEditContext().getEditConfig().getInplaceEditingConfig());
         try {
           Field configPathField = InplaceEditingConfig.class.getDeclaredField("configPath");
           configPathField.setAccessible(true);
@@ -255,7 +260,7 @@ public final class DamMediaSource extends MediaSource {
   }
 
   private String prependDotSlash(String property) {
-    if (!StringUtils.startsWith(property, "./")) {
+    if (!Strings.CS.startsWith(property, "./")) {
       return "./" + property;
     }
     else {
@@ -265,13 +270,13 @@ public final class DamMediaSource extends MediaSource {
 
   private Optional<String> getMediaDropTargetID() {
     return componentContext.getEditContext().getEditConfig().getDropTargets().values().stream()
-        .filter(item -> ArrayUtils.contains(item.getGroups(), "media"))
-        .map(DropTarget::getId)
-        .findFirst();
+      .filter(item -> ArrayUtils.contains(item.getGroups(), "media"))
+      .map(DropTarget::getId)
+      .findFirst();
   }
 
   private Optional<String> addMediaDroptarget(String refProperty, MediaPropertyNames mediaPropertyNames, String name) {
-    Component componentDefinition = WCMUtils.getComponent(resource);
+    Component componentDefinition = getComponentDefinition();
 
     // set drop target - with path of current component as default resource type
     Map<String, String> params = new HashMap<>();
@@ -293,6 +298,14 @@ public final class DamMediaSource extends MediaSource {
     componentContext.getEditContext().getEditConfig().getDropTargets().put(dropTarget.getId(), dropTarget);
 
     return Optional.of(dropTarget.getId());
+  }
+
+  private @Nullable Component getComponentDefinition() {
+    ComponentManager componentManager = resourceResolver.adaptTo(ComponentManager.class);
+    if (componentManager == null) {
+      return null;
+    }
+    return componentManager.getComponentOfResource(resource);
   }
 
   @Override

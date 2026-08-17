@@ -20,6 +20,7 @@
 package io.wcm.handler.media.testcontext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +37,7 @@ public final class DummyImageMapLinkResolver implements ImageMapLinkResolver<Str
   }
 
   private @Nullable String resolve(@NotNull String linkUrl) {
-    if (StringUtils.startsWith(linkUrl, "/content/")) {
+    if (Strings.CS.startsWith(linkUrl, "/content/")) {
       if (context.pageManager().getPage(linkUrl) != null) {
         return linkUrl + ".html";
       }

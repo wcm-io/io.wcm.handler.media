@@ -44,6 +44,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
@@ -169,10 +170,10 @@ public final class RenditionMetadataGenerator {
     }
 
     // check if rendition is original
-    boolean isOriginal = StringUtils.equals(ResourceUtil.getName(renditionPath), ORIGINAL_FILE);
+    boolean isOriginal = Strings.CS.equals(ResourceUtil.getName(renditionPath), ORIGINAL_FILE);
     if (isOriginal) {
       // skip original unless it is an SVG file (for which AEM does not generated width/height metadata properties)
-      boolean isSVG = StringUtils.equals(getContentType(renditionResource), ContentType.SVG);
+      boolean isSVG = Strings.CS.equals(getContentType(renditionResource), ContentType.SVG);
       if (!isSVG) {
         log.debug("Skip original rendition {}", renditionPath);
         return false;

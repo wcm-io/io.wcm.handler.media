@@ -22,7 +22,7 @@ package io.wcm.handler.mediasource.dam.impl;
 import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_HEIGHT;
 import static io.wcm.handler.media.MediaNameConstants.URI_TEMPLATE_PLACEHOLDER_WIDTH;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,21 +104,21 @@ final class DamUriTemplate implements UriTemplate {
         ImageFileServlet.getImageFileName(damContext.getAsset().getName(), mediaArgs.getEnforceOutputFileExtension()));
     UrlHandler urlHandler = AdaptTo.notNull(damContext, UrlHandler.class);
     String url = urlHandler.get(mediaPath).urlMode(mediaArgs.getUrlMode())
-        .buildExternalResourceUrl(damContext.getAsset().adaptTo(Resource.class));
+      .buildExternalResourceUrl(damContext.getAsset().adaptTo(Resource.class));
 
     // replace dummy width/height parameters with actual placeholders
     switch (type) {
       case CROP_CENTER:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
-        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
         break;
       case SCALE_WIDTH:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
-        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), "0");
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_HEIGHT), "0");
         break;
       case SCALE_HEIGHT:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), "0");
-        url = StringUtils.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), "0");
+        url = Strings.CS.replace(url, Long.toString(DUMMY_HEIGHT), URI_TEMPLATE_PLACEHOLDER_HEIGHT);
         break;
       default:
         throw new IllegalArgumentException("Unsupported type: " + type);
@@ -135,7 +135,7 @@ final class DamUriTemplate implements UriTemplate {
 
     // build rendition URL with dummy width/height parameters (otherwise API call will fail)
     String url = damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams()
-        .width(DUMMY_WIDTH).cropDimension(cropDimension).rotation(rotation));
+      .width(DUMMY_WIDTH).cropDimension(cropDimension).rotation(rotation));
     if (url == null) {
       return null;
     }
@@ -143,10 +143,10 @@ final class DamUriTemplate implements UriTemplate {
     // replace dummy width/height parameters with actual placeholders
     switch (type) {
       case CROP_CENTER:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
         break;
       case SCALE_WIDTH:
-        url = StringUtils.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
+        url = Strings.CS.replace(url, Long.toString(DUMMY_WIDTH), URI_TEMPLATE_PLACEHOLDER_WIDTH);
         break;
       default:
         throw new IllegalArgumentException("Unsupported type for Web-optimized image delivery: " + type);
@@ -167,8 +167,8 @@ final class DamUriTemplate implements UriTemplate {
     // build DM URL with smart cropping
     if (smartCropDef != null) {
       result.append("%3A").append(smartCropDef.getName()).append("?")
-          .append(getDynamicMediaWidthHeightParameters(type))
-          .append("&fit=constrain");
+        .append(getDynamicMediaWidthHeightParameters(type))
+        .append("&fit=constrain");
       appendDynamicMediaQuality(result, damContext);
       return result.toString();
     }

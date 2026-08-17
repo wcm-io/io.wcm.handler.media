@@ -22,22 +22,27 @@ package io.wcm.handler.media.impl;
 import java.awt.Color;
 import java.io.IOException;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
+import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 
-import com.day.cq.wcm.commons.AbstractImageServlet;
 import com.day.image.Font;
 import com.day.image.Layer;
 import com.day.image.font.AbstractFont;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.wcm.handler.media.MediaFileType;
+import io.wcm.handler.media.spi.MediaHandlerConfig;
 import io.wcm.handler.url.suffix.SuffixParser;
+import io.wcm.sling.commons.adapter.AdaptTo;
+import io.wcm.wcm.commons.contenttype.ContentType;
 import io.wcm.wcm.commons.contenttype.FileExtension;
 
 /**
@@ -48,7 +53,8 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     "sling.servlet.extensions=" + FileExtension.PNG,
     "sling.servlet.resourceTypes=/apps/wcm-io/handler/media/components/dummyImage"
 })
-public final class DummyImageServlet extends AbstractImageServlet {
+public final class DummyImageServlet extends SlingSafeMethodsServlet {
+
   private static final long serialVersionUID = 1L;
 
   /**
@@ -72,11 +78,32 @@ public final class DummyImageServlet extends AbstractImageServlet {
    */
   public static final @NotNull String SUFFIX_MEDIA_FORMAT_NAME = "mf";
 
+
+  @Override
+  protected void doGet(@NotNull SlingHttpServletRequest request, @NotNull SlingHttpServletResponse response)
+      throws ServletException, IOException {
+
+    // detect image type from extension
+    MediaFileType type = MediaFileType.getByFileExtensions(request.getRequestPathInfo().getExtension());
+    if (type == null || !MediaFileType.isBrowserImage(type.getExtension())) {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image type not supported");
+      return;
+    }
+
+    // generate dummy image
+    Layer layer = createLayer(request);
+
+    // output image binary
+    String contentType = type.getContentTypes().stream().findFirst().orElse(ContentType.OCTET_STREAM);
+    response.setContentType(contentType);
+    MediaHandlerConfig config = AdaptTo.notNull(request, MediaHandlerConfig.class);
+    layer.write(type.getExtension(), config.getDefaultImageQuality(contentType), response.getOutputStream());
+  }
+
   @SuppressWarnings("null")
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
-  @Override
-  protected Layer createLayer(ImageContext ctx) throws RepositoryException, IOException {
-    SuffixParser parser = new SuffixParser(ctx.request);
+  protected Layer createLayer(SlingHttpServletRequest request) {
+    SuffixParser parser = new SuffixParser(request);
     int width = parser.get(SUFFIX_WIDTH, 0);
     int height = parser.get(SUFFIX_HEIGHT, 0);
     String name = parser.get(SUFFIX_MEDIA_FORMAT_NAME, String.class);
@@ -112,11 +139,6 @@ public final class DummyImageServlet extends AbstractImageServlet {
     ret.setPaint(Color.WHITE);
     ret.drawText(0, 0, 0, 0, text, font, align, 0, 0);
     return ret;
-  }
-
-  @Override
-  protected boolean checkModifiedSince(SlingHttpServletRequest pReq, SlingHttpServletResponse pResp) {
-    return false;
   }
 
 }

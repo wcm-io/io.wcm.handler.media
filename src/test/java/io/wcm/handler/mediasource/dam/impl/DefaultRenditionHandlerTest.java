@@ -62,15 +62,15 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
   @Test
   void testInvalidRatio() {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
-        .fixedWidth(100)
-        .fixedHeight(100));
+      .fixedWidth(100)
+      .fixedHeight(100));
     assertNull(rendition);
   }
 
   @Test
   void testFixedWith() {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
-        .fixedWidth(160));
+      .fixedWidth(160));
     assertEquals(160, rendition.getWidth());
     assertEquals(100, rendition.getHeight());
   }
@@ -78,7 +78,7 @@ class DefaultRenditionHandlerTest extends AbstractDamTest {
   @Test
   void testFixedHeight() {
     RenditionMetadata rendition = underTest.getRendition(new MediaArgs()
-        .fixedHeight(100));
+      .fixedHeight(100));
     assertEquals(160, rendition.getWidth());
     assertEquals(100, rendition.getHeight());
   }

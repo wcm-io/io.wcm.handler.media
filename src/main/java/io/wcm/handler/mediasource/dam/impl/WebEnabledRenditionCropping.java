@@ -84,10 +84,10 @@ final class WebEnabledRenditionCropping {
    */
   private static @Nullable RenditionMetadata getWebEnabledRendition(@NotNull Asset asset) {
     return asset.getRenditions().stream()
-        .filter(AssetRendition::isWebRendition)
-        .findFirst()
-        .map(RenditionMetadata::new)
-        .orElse(null);
+      .filter(AssetRendition::isWebRendition)
+      .findFirst()
+      .map(RenditionMetadata::new)
+      .orElse(null);
   }
 
 }

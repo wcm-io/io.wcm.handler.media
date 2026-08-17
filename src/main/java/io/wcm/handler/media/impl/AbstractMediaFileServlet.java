@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
@@ -48,6 +49,7 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * Optional support for Content-Disposition header ("download_attachment").
  */
 abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
+
   private static final long serialVersionUID = 1L;
 
   @Override
@@ -107,7 +109,9 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return Binary data or null if not binary data found
    */
   protected byte @Nullable [] getBinaryData(@NotNull Resource resource,
-      @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) throws IOException {
+      @SuppressWarnings({
+          "unused", "java:S1172"
+      }) @NotNull SlingHttpServletRequest request) throws IOException {
     InputStream is = resource.adaptTo(InputStream.class);
     if (is == null) {
       return null;
@@ -126,7 +130,9 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
    * @return Content type (never null)
    */
   protected @NotNull String getContentType(@NotNull Resource resource,
-      @SuppressWarnings({ "unused", "java:S1172" }) @NotNull SlingHttpServletRequest request) {
+      @SuppressWarnings({
+          "unused", "java:S1172"
+      }) @NotNull SlingHttpServletRequest request) {
     String mimeType = JcrBinary.getMimeType(resource);
     if (StringUtils.isEmpty(mimeType)) {
       mimeType = ContentType.OCTET_STREAM;
@@ -159,7 +165,7 @@ abstract class AbstractMediaFileServlet extends SlingSafeMethodsServlet {
 
     // special handling for SVG images which are not treated as download:
     // set content security policy to prevent stored XSS attack with malicious JavaScript in SVG file
-    if (StringUtils.equals(contentType, ContentType.SVG)) {
+    if (Strings.CS.equals(contentType, ContentType.SVG)) {
       setSVGContentSecurityPolicy(response);
     }
 

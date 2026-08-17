@@ -24,6 +24,18 @@
     xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
 
+    <release version="2.9.0" date="2026-08-17">
+      <action type="update" dev="sseifert">
+        Switch to AEM 6.5.24 as minimum version (also compatible with AEM 6.6.2 / AEM 6.5 LTS SP2 and AEMaaCS).
+      </action>
+      <action type="update" dev="sseifert" issue="153">
+        Eliminate usage of com.day.cq.wcm.commons which is deprecated in AEMaaCS since 2026-07-01.
+      </action>
+      <action type="update" dev="sseifert" issue="154">
+        MediaFileType: Ensure StringUtils.lowerCase is used with Locale.ROOT to avoid locale-specific behavior.
+      </action>
+    </release>
+
     <release version="2.8.0" date="2026-02-24">
       <action type="add" dev="mwehner" issue="136"><![CDATA[
         Dynamic Media with Open API: Add video support. Support adaptive streaming (HLS/DASH), hosted player URLs, and automated poster image generation for NGDM video assets.<br/>

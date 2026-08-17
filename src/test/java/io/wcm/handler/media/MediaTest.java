@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -122,7 +122,7 @@ class MediaTest {
 
   @Test
   void testToString() {
-    assertTrue(StringUtils.contains(underTest.toString(), "/media/ref"));
+    assertTrue(Strings.CS.contains(underTest.toString(), "/media/ref"));
   }
 
 }

@@ -25,8 +25,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +69,9 @@ public final class MediaFormat implements Comparable<MediaFormat> {
   private String ratioDisplayString;
   private String combinedTitle;
 
-  @SuppressWarnings({ "java:S107", "checkstyle:ParameterNumberCheck" }) // ignore parameter count
+  @SuppressWarnings({
+      "java:S107", "checkstyle:ParameterNumberCheck"
+  }) // ignore parameter count
   MediaFormat(String name, String label, String description,
       long width, long minWidth, long maxWidth, long height, long minHeight, long maxHeight, long minWidthHeight,
       double ratio, double ratioWidth, double ratioHeight, long fileSizeMax, String[] extensions,
@@ -109,7 +113,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    */
   @JsonIgnore
   public @NotNull String getLabel() {
-    return StringUtils.defaultString(this.label, this.name);
+    return Objects.toString(this.label, this.name);
   }
 
   /**
@@ -502,7 +506,9 @@ public final class MediaFormat implements Comparable<MediaFormat> {
    * @return User-friendly combined title of current media format name and dimension.
    */
   @JsonIgnore
-  @SuppressWarnings({ "java:S3776", "java:S6541" }) // ignore complexity
+  @SuppressWarnings({
+      "java:S3776", "java:S6541"
+  }) // ignore complexity
   String getCombinedTitle() {
     if (combinedTitle == null) {
       StringBuilder sb = new StringBuilder();
@@ -563,7 +569,7 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       }
 
       // ratio (if label contains a ":" it is assumed a ratio is already contained in the label)
-      if (hasRatio() && !StringUtils.contains(getLabel(), ":")) {
+      if (hasRatio() && !Strings.CS.contains(getLabel(), ":")) {
         String ratioString = getRatioDisplayString();
         if (StringUtils.isNotEmpty(ratioString)) {
           extParts.add(ratioString);
@@ -592,8 +598,8 @@ public final class MediaFormat implements Comparable<MediaFormat> {
       // add extended display parts
       if (!extParts.isEmpty()) {
         sb.append(" (")
-            .append(StringUtils.join(extParts, "; "))
-            .append(')');
+          .append(StringUtils.join(extParts, "; "))
+          .append(')');
       }
 
       combinedTitle = sb.toString();

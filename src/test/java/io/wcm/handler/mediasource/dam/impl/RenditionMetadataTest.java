@@ -188,7 +188,7 @@ class RenditionMetadataTest extends AbstractDamTest {
 
   @Test
   void testEquals() {
-    assertEquals(smallestRendition,smallestRendition);
+    assertEquals(smallestRendition, smallestRendition);
     assertNotEquals(smallestRendition, biggestRendition);
   }
 

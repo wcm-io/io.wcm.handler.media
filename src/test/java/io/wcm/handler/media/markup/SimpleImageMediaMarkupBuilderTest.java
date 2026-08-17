@@ -285,9 +285,9 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     mediaRequest.getMediaArgs().mediaFormat(RATIO_16_10);
     mediaRequest.getMediaArgs().imageSizes(new ImageSizes("",
-            new WidthOption(64, "2x"),
-            new WidthOption(32, "1.5x", false),
-            new WidthOption(16, "1x")));
+        new WidthOption(64, "2x"),
+        new WidthOption(32, "1.5x", false),
+        new WidthOption(16, "1x")));
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
@@ -310,9 +310,9 @@ class SimpleImageMediaMarkupBuilderTest {
     MediaRequest mediaRequest = new MediaRequest("/media/dummy", new MediaArgs());
     mediaRequest.getMediaArgs().mediaFormat(RATIO_16_10);
     mediaRequest.getMediaArgs().imageSizes(new ImageSizes("sizes1",
-            new WidthOption(64, "2x"),
-            new WidthOption(32, "1.5x", false),
-            new WidthOption(16, "1x")));
+        new WidthOption(64, "2x"),
+        new WidthOption(32, "1.5x", false),
+        new WidthOption(16, "1x")));
     mediaRequest.getMediaArgs().property("custom-property", "value1");
     Media media = new Media(mediaSource, mediaRequest);
     media.setAsset(asset);
@@ -491,7 +491,7 @@ class SimpleImageMediaMarkupBuilderTest {
   void testIsValidMedia_Picture() {
     MediaMarkupBuilder builder = AdaptTo.notNull(context.request(), SimpleImageMediaMarkupBuilder.class);
 
-    assertFalse(builder.isValidMedia(null));  // backward compatibility null check
+    assertFalse(builder.isValidMedia(null)); // backward compatibility null check
     assertFalse(builder.isValidMedia(new Picture()));
 
     Picture picture = new Picture();

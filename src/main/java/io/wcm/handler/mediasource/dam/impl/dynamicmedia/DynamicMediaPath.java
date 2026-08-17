@@ -23,6 +23,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -148,9 +149,9 @@ public final class DynamicMediaPath {
 
   private static void appendWidthHeigtFormatQuality(@NotNull StringBuilder result, @NotNull Dimension dimension, @NotNull DamContext damContext) {
     result.append("wid=").append(dimension.getWidth())
-        .append("&hei=").append(dimension.getHeight())
-        // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
-        .append("&fit=stretch");
+      .append("&hei=").append(dimension.getHeight())
+      // cropping/width/height is pre-calculated to fit with original ratio, make sure there are no 1px background lines visible
+      .append("&fit=stretch");
     // if original image may have an alpha channel, make sure it's preserved in the output format
     if (mayHaveAlphaChannel(damContext)) {
       applyFmt(result, damContext.getDynamicMediaDefaultFmtAlpha());
@@ -210,7 +211,7 @@ public final class DynamicMediaPath {
     for (int i = 0; i < pathParts.length; i++) {
       pathParts[i] = URLEncoder.encode(pathParts[i], StandardCharsets.UTF_8);
       // replace "+" with %20 in URL paths
-      pathParts[i] = StringUtils.replace(pathParts[i], "+", "%20");
+      pathParts[i] = Strings.CS.replace(pathParts[i], "+", "%20");
     }
     return StringUtils.join(pathParts, "/");
   }
@@ -222,7 +223,7 @@ public final class DynamicMediaPath {
    */
   private static boolean mayHaveAlphaChannel(@NotNull DamContext damContext) {
     String mimeType = damContext.getAsset().getMimeType();
-    return StringUtils.equalsAny(mimeType, ContentType.PNG, ContentType.WEBP);
+    return Strings.CS.equalsAny(mimeType, ContentType.PNG, ContentType.WEBP);
   }
 
   /**
@@ -232,7 +233,7 @@ public final class DynamicMediaPath {
    */
   public static boolean isLosslessImageFormat(@NotNull DamContext damContext) {
     String mimeType = damContext.getAsset().getMimeType();
-    return StringUtils.equals(mimeType, ContentType.PNG);
+    return Strings.CS.equals(mimeType, ContentType.PNG);
   }
 
 }

@@ -25,6 +25,7 @@ import java.io.IOException;
 import javax.servlet.Servlet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.HttpConstants;
@@ -56,6 +57,7 @@ import io.wcm.wcm.commons.contenttype.FileExtension;
     "sling.servlet.methods=" + HttpConstants.METHOD_GET
 })
 public final class ImageFileServlet extends AbstractMediaFileServlet {
+
   private static final long serialVersionUID = 1L;
 
   /**
@@ -153,7 +155,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     if (StringUtils.isNotEmpty(fileName)) {
       // if extension is PNG use PNG content type, otherwise fallback to JPEG
       String fileExtension = StringUtils.substringAfterLast(fileName, ".");
-      if (StringUtils.equalsIgnoreCase(fileExtension, FileExtension.PNG)) {
+      if (Strings.CI.equals(fileExtension, FileExtension.PNG)) {
         return ContentType.PNG;
       }
     }
@@ -188,7 +190,7 @@ public final class ImageFileServlet extends AbstractMediaFileServlet {
     }
 
     // use PNG format if requested format is PNG, otherwise always use JPEG
-    if (StringUtils.equalsIgnoreCase(extensionPart, FileExtension.PNG)) {
+    if (Strings.CI.equals(extensionPart, FileExtension.PNG)) {
       extensionPart = FileExtension.PNG;
     }
     else {

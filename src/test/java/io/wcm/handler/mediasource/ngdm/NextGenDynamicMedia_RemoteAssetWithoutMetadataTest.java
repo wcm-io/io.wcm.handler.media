@@ -77,7 +77,7 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
   @Test
   void testAsset() {
     Media media = mediaHandler.get(resource)
-        .build();
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "quality=85", "jpg");
 
@@ -118,8 +118,8 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
   @Test
   void testRendition_SetWidth() {
     Media media = mediaHandler.get(resource)
-        .fixedWidth(120)
-        .build();
+      .fixedWidth(120)
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "quality=85&width=120", "jpg");
 
@@ -132,8 +132,8 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
   @Test
   void testRendition_SetHeight() {
     Media media = mediaHandler.get(resource)
-        .fixedHeight(80)
-        .build();
+      .fixedHeight(80)
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "height=80&quality=85", "jpg");
 
@@ -146,9 +146,9 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
   @Test
   void testRendition_16_9() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(DummyMediaFormats.RATIO_16_9)
-        .fixedWidth(1024)
-        .build();
+      .mediaFormat(DummyMediaFormats.RATIO_16_9)
+      .fixedWidth(1024)
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -181,8 +181,8 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.pdf");
 
     Media media = mediaHandler.get(downloadResource)
-        .args(new MediaArgs().download(true))
-        .build();
+      .args(new MediaArgs().download(true))
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -194,8 +194,8 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
   @Test
   void testImageDownload() {
     Media media = mediaHandler.get(resource)
-        .args(new MediaArgs().download(true))
-        .build();
+      .args(new MediaArgs().download(true))
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -211,9 +211,9 @@ class NextGenDynamicMedia_RemoteAssetWithoutMetadataTest {
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.svg");
 
     Media media = mediaHandler.get(downloadResource)
-        .fixedWidth(1200)
-        .fixedHeight(800)
-        .build();
+      .fixedWidth(1200)
+      .fixedHeight(800)
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();

@@ -131,13 +131,13 @@ public final class NextGenDynamicMediaMetadata {
   @Override
   public String toString() {
     return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_OMIT_NULL_STYLE)
-        .append("mimeType", mimeType)
-        .append("fileSize", fileSize)
-        .append("dimension", dimension)
-        .append("assetStatus", assetStatus)
-        .append("properties", properties.isEmpty() ? null : new TreeMap<String, Object>(properties))
-        .append("smartCrops", smartCrops.isEmpty() ? null : smartCrops)
-        .toString();
+      .append("mimeType", mimeType)
+      .append("fileSize", fileSize)
+      .append("dimension", dimension)
+      .append("assetStatus", assetStatus)
+      .append("properties", properties.isEmpty() ? null : new TreeMap<String, Object>(properties))
+      .append("smartCrops", smartCrops.isEmpty() ? null : smartCrops)
+      .toString();
   }
 
   /**
@@ -179,9 +179,9 @@ public final class NextGenDynamicMediaMetadata {
       fileSize = respositoryMetadata.repoSize;
       if (respositoryMetadata.smartCrops != null && dimension != null) {
         smartCrops = respositoryMetadata.smartCrops.entrySet().stream()
-            .filter(entry -> isSmartCropDefinitionValid(entry.getKey(), entry.getValue()))
-            .map(entry -> new SmartCrop(entry.getKey(), entry.getValue(), dimension))
-            .collect(Collectors.toList());
+          .filter(entry -> isSmartCropDefinitionValid(entry.getKey(), entry.getValue()))
+          .map(entry -> new SmartCrop(entry.getKey(), entry.getValue(), dimension))
+          .collect(Collectors.toList());
       }
     }
 

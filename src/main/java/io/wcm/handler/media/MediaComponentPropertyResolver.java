@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
@@ -87,8 +88,8 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
       @NotNull ComponentPropertyResolverFactory componentPropertyResolverFactory) {
     // resolve media component properties 1. from policies and 2. from component definition
     resolver = componentPropertyResolverFactory.get(resource, true)
-        .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
-        .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
+      .contentPolicyResolution(ComponentPropertyResolution.RESOLVE)
+      .componentPropertiesResolution(ComponentPropertyResolution.RESOLVE_INHERIT);
     propertyAccessor = new ComponentPropertyResolverPropertyAccessor(resolver);
   }
 
@@ -165,9 +166,9 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
     MediaFormatOption[] mediaFormatOptions = getMediaFormatOptions();
     if (mediaFormatOptions != null) {
       String[] result = Arrays.stream(mediaFormatOptions)
-          .map(MediaFormatOption::getMediaFormatName)
-          .filter(Objects::nonNull)
-          .toArray(size -> new String[size]);
+        .map(MediaFormatOption::getMediaFormatName)
+        .filter(Objects::nonNull)
+        .toArray(size -> new String[size]);
       if (result.length > 0) {
         return result;
       }
@@ -184,10 +185,10 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
     MediaFormatOption[] mediaFormatOptions = getMediaFormatOptions();
     if (mediaFormatOptions != null) {
       String[] result = Arrays.stream(mediaFormatOptions)
-          .filter(MediaFormatOption::isMandatory)
-          .map(MediaFormatOption::getMediaFormatName)
-          .filter(Objects::nonNull)
-          .toArray(size -> new String[size]);
+        .filter(MediaFormatOption::isMandatory)
+        .map(MediaFormatOption::getMediaFormatName)
+        .filter(Objects::nonNull)
+        .toArray(size -> new String[size]);
       if (result.length > 0) {
         return result;
       }
@@ -202,7 +203,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   @SuppressWarnings("null")
   public @Nullable ImageSizes getImageSizes() {
     String responsiveType = getResponsiveType();
-    if (responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {
+    if (responsiveType != null && !Strings.CS.equals(responsiveType, RESPONSIVE_TYPE_IMAGE_SIZES)) {
       return null;
     }
 
@@ -222,7 +223,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   @SuppressWarnings("null")
   public @NotNull PictureSource @Nullable [] getPictureSources() {
     String responsiveType = getResponsiveType();
-    if (resolver == null || responsiveType != null && !StringUtils.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
+    if (resolver == null || responsiveType != null && !Strings.CS.equals(responsiveType, RESPONSIVE_TYPE_PICTURE_SOURCES)) {
       return null;
     }
 
@@ -240,9 +241,9 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
       WidthOption[] widths = WidthUtils.parseWidths(props.get(PN_PICTURE_SOURCES_WIDTHS, String.class));
       if (mediaFormatName != null && widths != null) {
         sources.add(new PictureSource(mediaFormatName)
-            .media(media)
-            .sizes(sizes)
-            .widthOptions(widths));
+          .media(media)
+          .sizes(sizes)
+          .widthOptions(widths));
       }
     }
 
@@ -267,6 +268,7 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   private interface PropertyAccessor {
+
     @Nullable
     <T> T get(@NotNull String name, @NotNull Class<T> type);
 
@@ -274,14 +276,18 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   private static class ComponentPropertyResolverPropertyAccessor implements PropertyAccessor {
+
     private final ComponentPropertyResolver componentPropertyResolver;
+
     ComponentPropertyResolverPropertyAccessor(ComponentPropertyResolver componentPropertyResolver) {
       this.componentPropertyResolver = componentPropertyResolver;
     }
+
     @Override
     public <T> @Nullable T get(@NotNull String name, @NotNull Class<T> type) {
       return componentPropertyResolver.get(name, type);
     }
+
     @Override
     public <T> T get(@NotNull String name, @NotNull T defaultValue) {
       return componentPropertyResolver.get(name, defaultValue);
@@ -289,14 +295,18 @@ public final class MediaComponentPropertyResolver implements AutoCloseable {
   }
 
   private static class ValueMapPropertyAccessor implements PropertyAccessor {
+
     private final ValueMap valueMap;
+
     ValueMapPropertyAccessor(ValueMap valueMap) {
       this.valueMap = valueMap;
     }
+
     @Override
     public <T> @Nullable T get(@NotNull String name, @NotNull Class<T> type) {
       return valueMap.get(name, type);
     }
+
     @Override
     public <T> T get(@NotNull String name, @NotNull T defaultValue) {
       return valueMap.get(name, defaultValue);

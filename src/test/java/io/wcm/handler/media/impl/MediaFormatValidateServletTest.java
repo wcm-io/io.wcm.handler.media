@@ -142,6 +142,7 @@ class MediaFormatValidateServletTest {
   @SuppressWarnings("null")
   void testInvalid_CustomMessageKey() throws Exception {
     context.registerService(MediaHandlerConfig.class, new DummyMediaHandlerConfig() {
+
       @Override
       public @NotNull List<Class<? extends MediaProcessor>> getPreProcessors() {
         return List.of(AllInvalidMediaPreProcessor.class);
@@ -168,8 +169,11 @@ class MediaFormatValidateServletTest {
     JSONAssert.assertEquals(expectedJson, context.response().getOutputAsString(), true);
   }
 
-  @Model(adaptables = { SlingHttpServletRequest.class, Resource.class })
+  @Model(adaptables = {
+      SlingHttpServletRequest.class, Resource.class
+  })
   public static class AllInvalidMediaPreProcessor implements MediaProcessor {
+
     @Override
     public @NotNull Media process(@NotNull Media media) {
       // mark all assets as invalid with custom message

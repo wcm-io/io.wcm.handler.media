@@ -302,7 +302,9 @@ class ResourceMediaTest {
   void testWithCustomProperties() {
     context.request().setAttribute("property:prop1", true);
     context.request().setAttribute("property:prop2", "value2");
-    context.request().setAttribute("property:prop3", new String[]{"array-item1", "array-item2"});
+    context.request().setAttribute("property:prop3", new String[] {
+        "array-item1", "array-item2"
+    });
     context.request().setAttribute("property:prop4", null);
     context.request().setAttribute("property:prop5", new HashMap<>());
     context.request().setAttribute("property:", "invalid-prop--no-name");

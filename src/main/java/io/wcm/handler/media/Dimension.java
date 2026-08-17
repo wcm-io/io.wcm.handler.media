@@ -74,9 +74,9 @@ public class Dimension {
   @Override
   public String toString() {
     return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
-        .append("width", getWidth())
-        .append("height", getHeight())
-        .build();
+      .append("width", getWidth())
+      .append("height", getHeight())
+      .build();
   }
 
 }

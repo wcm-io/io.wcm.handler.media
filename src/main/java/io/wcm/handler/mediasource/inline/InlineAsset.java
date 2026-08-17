@@ -146,7 +146,9 @@ class InlineAsset extends SlingAdaptable implements Asset {
   }
 
   @Override
-  @SuppressWarnings({ "unchecked", "null" })
+  @SuppressWarnings({
+      "unchecked", "null"
+  })
   public <AdapterType> AdapterType adaptTo(Class<AdapterType> type) {
     if (type == Resource.class) {
       return (AdapterType)this.resource;

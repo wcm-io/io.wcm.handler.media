@@ -126,7 +126,8 @@ public interface Rendition extends Adaptable, ModificationDateProvider {
 
   /**
    * Check if rendition is a video.
-   * @return true if the rendition represents a video asset (independent of delivery format such as streaming manifests).
+   * @return true if the rendition represents a video asset (independent of delivery format such as streaming
+   *         manifests).
    */
   @JsonIgnore
   boolean isVideo();

@@ -45,7 +45,7 @@ class NextGenDynamicMediaMetadataUrlBuilderTest {
   @BeforeEach
   void setUp() {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
-        .setRepositoryId("repo1");
+      .setRepositoryId("repo1");
     nextGenDynamicMediaConfig = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
   }
 

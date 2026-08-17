@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
@@ -169,7 +170,9 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param media Media metadata
    * @return <code>img</code> element with properties or null if media metadata is invalid
    */
-  @SuppressWarnings({ "java:S3776", "java:S2589" }) // ignore complexity
+  @SuppressWarnings({
+      "java:S3776", "java:S2589"
+  }) // ignore complexity
   protected @Nullable HtmlElement getImageElement(@NotNull Media media) {
     Image img = null;
 
@@ -247,9 +250,9 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     }
 
     String srcset = Arrays.stream(widthOptions)
-        .map(widthOption -> getSrcSetRenditionUrl(media, mediaFormat, widthOption, hasDensityDescriptors))
-        .filter(Objects::nonNull)
-        .collect(Collectors.joining(", "));
+      .map(widthOption -> getSrcSetRenditionUrl(media, mediaFormat, widthOption, hasDensityDescriptors))
+      .filter(Objects::nonNull)
+      .collect(Collectors.joining(", "));
 
     return !srcset.isEmpty() ? srcset : null;
   }
@@ -262,16 +265,17 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
    * @param hasDensityDescriptors render density descriptors instead of width descriptors
    * @return a media URL with descriptor, or null if no matching renditions found
    */
-  protected @Nullable String getSrcSetRenditionUrl(@NotNull Media media, @NotNull MediaFormat mediaFormat, @NotNull WidthOption widthOption, boolean hasDensityDescriptors) {
+  protected @Nullable String getSrcSetRenditionUrl(@NotNull Media media, @NotNull MediaFormat mediaFormat, @NotNull WidthOption widthOption,
+      boolean hasDensityDescriptors) {
     String descriptor = hasDensityDescriptors ? widthOption.getDensityDescriptor() : widthOption.getWidthDescriptor();
     return media.getRenditions().stream()
-        .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
-            || Ratio.matches(mediaFormat.getRatio(), 0d))
-            && rendition.getWidth() == widthOption.getWidth())
-        .map(Rendition::getUrl)
-        .findFirst()
-        .map(url -> url + (!descriptor.isEmpty() ? " " + descriptor : ""))
-        .orElse(null);
+      .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
+          || Ratio.matches(mediaFormat.getRatio(), 0d))
+          && rendition.getWidth() == widthOption.getWidth())
+      .map(Rendition::getUrl)
+      .findFirst()
+      .map(url -> url + (!descriptor.isEmpty() ? " " + descriptor : ""))
+      .orElse(null);
   }
 
   /**
@@ -288,8 +292,8 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
       return null;
     }
     return getSrcSetRenditions(media, mediaFormat, Arrays.stream(widths)
-        .mapToLong(WidthOption::getWidth)
-        .toArray());
+      .mapToLong(WidthOption::getWidth)
+      .toArray());
   }
 
   /**
@@ -306,11 +310,11 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
 
     for (long width : widths) {
       Optional<String> url = media.getRenditions().stream()
-          .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
-              || Ratio.matches(mediaFormat.getRatio(), 0d))
-              && rendition.getWidth() == width)
-          .map(Rendition::getUrl)
-          .findFirst();
+        .filter(rendition -> (Ratio.matches(rendition.getRatio(), mediaFormat.getRatio())
+            || Ratio.matches(mediaFormat.getRatio(), 0d))
+            && rendition.getWidth() == width)
+        .map(Rendition::getUrl)
+        .findFirst();
       if (url.isPresent()) {
         if (srcset.length() > 0) {
           srcset.append(", ");
@@ -352,10 +356,10 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
   @SuppressWarnings("null")
   protected final @Nullable MediaFormat getFirstMediaFormat(@NotNull Media media) {
     return media.getRenditions().stream()
-        .map(Rendition::getMediaFormat)
-        .filter(Objects::nonNull)
-        .findFirst()
-        .orElse(null);
+      .map(Rendition::getMediaFormat)
+      .filter(Objects::nonNull)
+      .findFirst()
+      .orElse(null);
   }
 
   /**
@@ -419,14 +423,14 @@ public class SimpleImageMediaMarkupBuilder extends AbstractImageMediaMarkupBuild
     if (element instanceof Image) {
       Image img = (Image)element;
       return StringUtils.isNotEmpty(img.getSrc())
-          && !StringUtils.contains(img.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
+          && !Strings.CS.contains(img.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
     }
     if (element instanceof Picture) {
       Element imgChild = element.getChild("img");
       if (imgChild instanceof Image) {
         Image img = (Image)imgChild;
         return StringUtils.isNotEmpty(img.getSrc())
-            && !StringUtils.contains(element.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
+            && !Strings.CS.contains(element.getCssClass(), MediaNameConstants.CSS_DUMMYIMAGE);
       }
     }
     if (element instanceof Span) {

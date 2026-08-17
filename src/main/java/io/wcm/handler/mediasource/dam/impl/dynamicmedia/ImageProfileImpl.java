@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +69,7 @@ public final class ImageProfileImpl implements ImageProfile {
     ValueMap props = profileResource.getValueMap();
     String cropType = props.get(PN_CROP_TYPE, String.class);
     String cropDefs = props.get(PN_BANNER, String.class);
-    if (StringUtils.equals(cropType, CROP_TYPE_SMART) && cropDefs != null) {
+    if (Strings.CS.equals(cropType, CROP_TYPE_SMART) && cropDefs != null) {
       String[] defs = StringUtils.split(cropDefs, "|");
       for (String def : defs) {
         String[] parts = StringUtils.split(def, ",");

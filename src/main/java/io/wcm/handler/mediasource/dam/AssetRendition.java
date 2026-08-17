@@ -32,9 +32,10 @@ import static io.wcm.handler.mediasource.dam.impl.metadata.RenditionMetadataName
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -144,7 +145,7 @@ public final class AssetRendition {
 
   private static long getAssetMetadataValueAsLong(Asset asset, String... propertyNames) {
     for (String propertyName : propertyNames) {
-      long value = NumberUtils.toLong(StringUtils.defaultString(asset.getMetadataValueFromJcr(propertyName), "0"));
+      long value = NumberUtils.toLong(Objects.toString(asset.getMetadataValueFromJcr(propertyName), "0"));
       if (value > 0L) {
         return value;
       }
@@ -242,7 +243,7 @@ public final class AssetRendition {
    * @return true if rendition is the original
    */
   public static boolean isOriginal(@NotNull Rendition rendition) {
-    return StringUtils.equals(rendition.getName(), ORIGINAL_FILE);
+    return Strings.CS.equals(rendition.getName(), ORIGINAL_FILE);
   }
 
   /**

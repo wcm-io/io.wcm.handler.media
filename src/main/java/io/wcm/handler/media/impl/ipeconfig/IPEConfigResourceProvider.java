@@ -19,6 +19,7 @@
  */
 package io.wcm.handler.media.impl.ipeconfig;
 
+import static com.day.cq.commons.jcr.JcrConstants.NT_UNSTRUCTURED;
 import static io.wcm.handler.media.impl.ipeconfig.CroppingRatios.MEDIAFORMAT_FREE_CROP;
 import static io.wcm.handler.media.impl.ipeconfig.PathParser.NN_ASPECT_RATIOS;
 import static io.wcm.handler.media.impl.ipeconfig.PathParser.NN_CONFIG;
@@ -32,6 +33,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.SyntheticResource;
@@ -163,7 +165,7 @@ public class IPEConfigResourceProvider extends ResourceProvider<Void> {
    * @return Resource
    */
   private Resource buildAspectRatiosResource(ResourceResolver resolver, String path) {
-    return new SyntheticResource(resolver, path, null);
+    return new SyntheticResource(resolver, path, NT_UNSTRUCTURED);
   }
 
   /**
@@ -188,7 +190,7 @@ public class IPEConfigResourceProvider extends ResourceProvider<Void> {
   }
 
   private MediaFormat getMediaFormat(String mediaFormatName, MediaFormatHandler mediaFormatHandler) {
-    if (StringUtils.equals(mediaFormatName, MEDIAFORMAT_FREE_CROP.getName())) {
+    if (Strings.CS.equals(mediaFormatName, MEDIAFORMAT_FREE_CROP.getName())) {
       return MEDIAFORMAT_FREE_CROP;
     }
     else {

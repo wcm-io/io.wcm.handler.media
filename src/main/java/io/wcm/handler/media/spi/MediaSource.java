@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -94,11 +95,11 @@ public abstract class MediaSource {
     // check for matching media source ID in media resource
     String mediaSourceId = props.get(MediaNameConstants.PN_MEDIA_SOURCE, String.class);
     if (StringUtils.isNotEmpty(mediaSourceId)) {
-      return StringUtils.equals(mediaSourceId, getId());
+      return Strings.CS.equals(mediaSourceId, getId());
     }
     // if no media source ID is set at all check if media ref attribute contains a valid reference
     else {
-      String refProperty = StringUtils.defaultString(mediaRequest.getMediaPropertyNames().getRefProperty(),
+      String refProperty = Objects.toString(mediaRequest.getMediaPropertyNames().getRefProperty(),
           getPrimaryMediaRefProperty());
       String mediaRef = props.get(refProperty, String.class);
       return accepts(mediaRef);
@@ -270,7 +271,9 @@ public abstract class MediaSource {
    * @param mediaHandlerConfig Media handler config
    * @return Rotation value or null if not set or invalid
    */
-  @SuppressWarnings({ "null", "PMD.ReturnEmptyCollectionRatherThanNull" })
+  @SuppressWarnings({
+      "null", "PMD.ReturnEmptyCollectionRatherThanNull"
+  })
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   protected final @Nullable List<ImageMapArea> getMediaMap(@NotNull MediaRequest mediaRequest,
       @NotNull MediaHandlerConfig mediaHandlerConfig) {
@@ -338,7 +341,7 @@ public abstract class MediaSource {
   protected final boolean resolveRenditions(Media media, Asset asset, MediaArgs mediaArgs) {
     boolean anyMandatory = mediaArgs.getMediaFormatOptions() != null
         && Arrays.stream(mediaArgs.getMediaFormatOptions())
-        .anyMatch(MediaFormatOption::isMandatory);
+          .anyMatch(MediaFormatOption::isMandatory);
     MediaFormat[] mediaFormats = mediaArgs.getMediaFormats();
     if (mediaFormats != null && mediaFormats.length > 1
         && (anyMandatory || mediaArgs.getImageSizes() != null || mediaArgs.getPictureSources() != null)) {
@@ -391,17 +394,17 @@ public abstract class MediaSource {
 
       if (!resolvedRenditions.isEmpty()) {
         resolvedMediaFormats = resolvedRenditions.stream()
-            .map(Rendition::getMediaFormat)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+          .map(Rendition::getMediaFormat)
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
       }
       else {
         // parent formats didn't match any rendition, but they are all optional.
         // try to resolve their child formats
         resolvedMediaFormats = parentMediaFormatOptions.stream()
-            .map(MediaFormatOption::getMediaFormat)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+          .map(MediaFormatOption::getMediaFormat)
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
       }
 
       for (MediaFormat mediaFormat : resolvedMediaFormats) {
@@ -451,16 +454,16 @@ public abstract class MediaSource {
   @NotNull
   private List<MediaFormatOption> getParentMediaFormats(@NotNull MediaArgs mediaArgs) {
     return Arrays.stream(mediaArgs.getMediaFormatOptions())
-        .filter(this::isParentMediaFormat)
-        .collect(Collectors.toList());
+      .filter(this::isParentMediaFormat)
+      .collect(Collectors.toList());
   }
 
   @NotNull
   private List<MediaFormatOption> getChildMediaFormats(@NotNull MediaArgs mediaArgs, @NotNull final MediaFormat parentMediaFormat) {
     return Arrays.stream(mediaArgs.getMediaFormatOptions())
-        .filter(this::isChildMediaFormat)
-        .filter(childMediaFormat -> hasParent(childMediaFormat, parentMediaFormat))
-        .collect(Collectors.toList());
+      .filter(this::isChildMediaFormat)
+      .filter(childMediaFormat -> hasParent(childMediaFormat, parentMediaFormat))
+      .collect(Collectors.toList());
   }
 
   private boolean isParentMediaFormat(@NotNull MediaFormatOption mediaFormatOption) {

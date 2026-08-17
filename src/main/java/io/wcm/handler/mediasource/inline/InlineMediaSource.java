@@ -19,7 +19,10 @@
  */
 package io.wcm.handler.mediasource.inline;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.apache.sling.api.resource.Resource;
@@ -191,7 +194,7 @@ public final class InlineMediaSource extends MediaSource {
       fileName = ntFileResource.getName();
     }
     // make sure filename has an extension, otherwise build virtual file name
-    if (!StringUtils.contains(fileName, ".")) {
+    if (!Strings.CS.contains(fileName, ".")) {
       fileName = null;
     }
 
@@ -222,10 +225,10 @@ public final class InlineMediaSource extends MediaSource {
     String processedFileName = fileName;
 
     // strip off path parts
-    if (StringUtils.contains(processedFileName, "/")) {
+    if (Strings.CS.contains(processedFileName, "/")) {
       processedFileName = StringUtils.substringAfterLast(processedFileName, "/");
     }
-    if (StringUtils.contains(processedFileName, "\\")) {
+    if (Strings.CS.contains(processedFileName, "\\")) {
       processedFileName = StringUtils.substringAfterLast(processedFileName, "\\");
     }
 
@@ -252,7 +255,7 @@ public final class InlineMediaSource extends MediaSource {
     }
 
     // check if child node exists which is a nt:file node
-    String refProperty = StringUtils.defaultString(mediaRequest.getMediaPropertyNames().getRefProperty(),
+    String refProperty = Objects.toString(mediaRequest.getMediaPropertyNames().getRefProperty(),
         mediaHandlerConfig.getMediaInlineNodeName());
     Resource mediaInlineResource = resource.getChild(refProperty);
     if (JcrBinary.isNtFileOrResource(mediaInlineResource)) {

@@ -83,12 +83,12 @@ public class TransformedRenditionHandler extends DefaultRenditionHandler {
       return new TreeSet<>(candidates);
     }
     return candidates.stream()
-        .filter(rendition -> !rendition.isVectorImage())
-        .map(rendition -> new VirtualTransformedRenditionMetadata(rendition.getRendition(),
-            rotateMapWidth(rendition.getWidth(), rendition.getHeight(), rotation),
-            rotateMapHeight(rendition.getWidth(), rendition.getHeight(), rotation),
-            mediaArgs.getEnforceOutputFileExtension(), null, rotation, mediaArgs.getImageQualityPercentage()))
-        .collect(Collectors.toCollection(TreeSet::new));
+      .filter(rendition -> !rendition.isVectorImage())
+      .map(rendition -> new VirtualTransformedRenditionMetadata(rendition.getRendition(),
+          rotateMapWidth(rendition.getWidth(), rendition.getHeight(), rotation),
+          rotateMapHeight(rendition.getWidth(), rendition.getHeight(), rotation),
+          mediaArgs.getEnforceOutputFileExtension(), null, rotation, mediaArgs.getImageQualityPercentage()))
+      .collect(Collectors.toCollection(TreeSet::new));
   }
 
   /**

@@ -49,8 +49,8 @@ class NextGenDynamicMediaHostedPlayerMarkupBuilderTest extends AbstractNextGenDy
     NextGenDynamicMediaHostedPlayerMarkupBuilder underTest = AdaptTo.notNull(context.request(), NextGenDynamicMediaHostedPlayerMarkupBuilder.class);
 
     Media media = mediaHandler.get(resource)
-        .hostedVideoPlayer(true)
-        .build();
+      .hostedVideoPlayer(true)
+      .build();
     HtmlElement element = underTest.build(media);
 
     assertNotNull(element);

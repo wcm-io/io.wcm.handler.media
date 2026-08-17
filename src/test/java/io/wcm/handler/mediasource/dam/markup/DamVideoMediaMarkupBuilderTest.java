@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jdom2.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,11 +80,11 @@ class DamVideoMediaMarkupBuilderTest extends AbstractDamTest {
     assertEquals(2, sources.size());
 
     Source source1 = (Source)sources.get(0);
-    assertTrue(StringUtils.startsWith(source1.getType(), "video/mp4"));
+    assertTrue(Strings.CS.startsWith(source1.getType(), "video/mp4"));
     assertEquals(MEDIAITEM_VIDEO + "/_jcr_content/renditions/cq5dam.video.hq.m4v", source1.getSrc());
 
     Source source2 = (Source)sources.get(1);
-    assertTrue(StringUtils.startsWith(source2.getType(), "video/ogg"));
+    assertTrue(Strings.CS.startsWith(source2.getType(), "video/ogg"));
     assertEquals(MEDIAITEM_VIDEO + "/_jcr_content/renditions/cq5dam.video.firefoxhq.ogg", source2.getSrc());
   }
 

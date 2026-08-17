@@ -88,16 +88,16 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
     mediaHandler = AdaptTo.notNull(context.request(), MediaHandler.class);
 
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_IMAGE)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_IMAGE)));
   }
 
   @Test
   void testAsset() {
     Media media = mediaHandler.get(resource)
-        .build();
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "quality=85", "jpg");
 
@@ -137,8 +137,8 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @Test
   void testRendition_SetWidth() {
     Media media = mediaHandler.get(resource)
-        .fixedWidth(120)
-        .build();
+      .fixedWidth(120)
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "quality=85&width=120", "jpg");
 
@@ -151,8 +151,8 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @Test
   void testRendition_SetHeight() {
     Media media = mediaHandler.get(resource)
-        .fixedHeight(80)
-        .build();
+      .fixedHeight(80)
+      .build();
     assertTrue(media.isValid());
     assertUrl(media, "height=80&quality=85", "jpg");
 
@@ -165,9 +165,9 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @Test
   void testRendition_16_9() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(DummyMediaFormats.RATIO_16_9)
-        .fixedWidth(1024)
-        .build();
+      .mediaFormat(DummyMediaFormats.RATIO_16_9)
+      .fixedWidth(1024)
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -196,9 +196,9 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @Test
   void testRendition_16_9_PNG() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(DummyMediaFormats.RATIO_16_9)
-        .enforceOutputFileExtension("png")
-        .build();
+      .mediaFormat(DummyMediaFormats.RATIO_16_9)
+      .enforceOutputFileExtension("png")
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -211,8 +211,8 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @Test
   void testRendition_FixedDimension() {
     Media media = mediaHandler.get(resource)
-        .fixedDimension(100, 50)
-        .build();
+      .fixedDimension(100, 50)
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -223,8 +223,8 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @Test
   void testRendition_FixedMediaFormat() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(DummyMediaFormats.EDITORIAL_1COL)
-        .build();
+      .mediaFormat(DummyMediaFormats.EDITORIAL_1COL)
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -235,8 +235,8 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @Test
   void testRendition_NonFixedSmallMediaFormat() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(DummyMediaFormats.NONFIXED_SMALL)
-        .build();
+      .mediaFormat(DummyMediaFormats.NONFIXED_SMALL)
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -247,8 +247,8 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @Test
   void testRendition_NonFixedMinWidthHeightMediaFormat() {
     Media media = mediaHandler.get(resource)
-        .mediaFormat(DummyMediaFormats.NONFIXED_MINWIDTHHEIGHT)
-        .build();
+      .mediaFormat(DummyMediaFormats.NONFIXED_MINWIDTHHEIGHT)
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -260,17 +260,17 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testPDFDownload() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_PDF)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_PDF)));
 
     Resource downloadResource = context.create().resource(context.currentPage(), "download",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.pdf");
 
     Media media = mediaHandler.get(downloadResource)
-        .args(new MediaArgs().download(true))
-        .build();
+      .args(new MediaArgs().download(true))
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -284,17 +284,17 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testSVG() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_SVG)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_SVG)));
 
     Resource downloadResource = context.create().resource(context.currentPage(), "image",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/myfile.svg");
 
     Media media = mediaHandler.get(downloadResource)
-        .fixedWidth(1200)
-        .build();
+      .fixedWidth(1200)
+      .build();
     assertTrue(media.isValid());
 
     Rendition rendition = media.getRendition();
@@ -310,16 +310,16 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testVideoStreamingDefault() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_VIDEO)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_VIDEO)));
 
     Resource videoResource = context.create().resource(context.currentPage(), "video",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
 
     Media media = mediaHandler.get(videoResource)
-        .build();
+      .build();
     assertTrue(media.isValid());
 
     String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
@@ -341,17 +341,17 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testVideoStreamingDashOverride() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_VIDEO)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_VIDEO)));
 
     Resource videoResource = context.create().resource(context.currentPage(), "videoDash",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
 
     Media media = mediaHandler.get(videoResource)
-        .videoManifestFormat("mpd")
-        .build();
+      .videoManifestFormat("mpd")
+      .build();
     assertTrue(media.isValid());
 
     String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
@@ -367,17 +367,17 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testVideoDownloadFallback() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_VIDEO)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_VIDEO)));
 
     Resource videoResource = context.create().resource(context.currentPage(), "videoDownload",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
 
     Media media = mediaHandler.get(videoResource)
-        .args(new MediaArgs().download(true))
-        .build();
+      .args(new MediaArgs().download(true))
+      .build();
     assertTrue(media.isValid());
 
     String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
@@ -395,17 +395,17 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testVideoHostedPlayer() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_VIDEO)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_VIDEO)));
 
     Resource videoResource = context.create().resource(context.currentPage(), "videoHosted",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
 
     Media media = mediaHandler.get(videoResource)
-        .hostedVideoPlayer(true)
-        .build();
+      .hostedVideoPlayer(true)
+      .build();
     assertTrue(media.isValid());
 
     String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
@@ -426,17 +426,17 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testVideoHostedPlayerViaMediaArgs() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_VIDEO)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_VIDEO)));
 
     Resource videoResource = context.create().resource(context.currentPage(), "videoHostedArgs",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
 
     Media media = mediaHandler.get(videoResource)
-        .args(new MediaArgs().hostedVideoPlayer(true))
-        .build();
+      .args(new MediaArgs().hostedVideoPlayer(true))
+      .build();
     assertTrue(media.isValid());
 
     String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;
@@ -451,18 +451,18 @@ class NextGenDynamicMedia_RemoteAssetWithMetadataTest {
   @SuppressWarnings("null")
   void testVideoDownloadTakesPrecedenceOverHostedPlayer() {
     stubFor(get("/adobe/assets/" + SAMPLE_ASSET_ID + "/metadata")
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.SC_OK)
-            .withHeader("Content-Type", ContentType.JSON)
-            .withBody(METADATA_JSON_VIDEO)));
+      .willReturn(aResponse()
+        .withStatus(HttpStatus.SC_OK)
+        .withHeader("Content-Type", ContentType.JSON)
+        .withBody(METADATA_JSON_VIDEO)));
 
     Resource videoResource = context.create().resource(context.currentPage(), "videoDownloadPrecedence",
         MediaNameConstants.PN_MEDIA_REF, "/" + SAMPLE_ASSET_ID + "/video.mp4");
 
     // download=true should take precedence over hostedVideoPlayer=true
     Media media = mediaHandler.get(videoResource)
-        .args(new MediaArgs().download(true).hostedVideoPlayer(true))
-        .build();
+      .args(new MediaArgs().download(true).hostedVideoPlayer(true))
+      .build();
     assertTrue(media.isValid());
 
     String expectedBaseUrl = "https://" + nextGenDynamicMediaConfig.getRepositoryId() + "/adobe/assets/" + SAMPLE_ASSET_ID;

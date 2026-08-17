@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
@@ -77,9 +78,9 @@ public class ImageMapParserImpl implements ImageMapParser {
         continue;
       }
       if (remainingTokens.length > 0) {
-        String linkUrl = StringUtils.remove(remainingTokens[0], "\"");
-        String linkWindowTarget = remainingTokens.length > 1 ? StringUtils.remove(remainingTokens[1], "\"") : "";
-        String altText = remainingTokens.length > 2 ? StringUtils.remove(remainingTokens[2], "\"") : "";
+        String linkUrl = Strings.CS.remove(remainingTokens[0], "\"");
+        String linkWindowTarget = remainingTokens.length > 1 ? Strings.CS.remove(remainingTokens[1], "\"") : "";
+        String altText = remainingTokens.length > 2 ? Strings.CS.remove(remainingTokens[2], "\"") : "";
         String relativeCoordinates = remainingTokens.length > 3 ? remainingTokens[3] : "";
         relativeCoordinates = StringUtils.substringBetween(relativeCoordinates, "(", ")");
 

@@ -78,8 +78,8 @@ class DamUriTemplateTest {
   void testGetUriTemplate_CropCenter_EnforceOutputFileExtension() {
     Asset asset = createSampleAsset("/filetype/sample.jpg", ContentType.JPEG);
     Media media = mediaHandler.get(asset.getPath())
-        .enforceOutputFileExtension(FileExtension.PNG)
-        .build();
+      .enforceOutputFileExtension(FileExtension.PNG)
+      .build();
 
     assertUriTemplate(media, CROP_CENTER, 100, 50,
         "/content/dam/sample.jpg/_jcr_content/renditions/original.image_file.{width}.{height}.file/sample.png");

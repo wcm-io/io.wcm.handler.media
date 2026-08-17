@@ -113,7 +113,7 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   @Override
   public @Nullable String getWebOptimizedImageDeliveryPath(DamContext damContext) {
     return damContext.getWebOptimizedImageDeliveryUrl(new WebOptimizedImageDeliveryParams()
-        .width(getWidth()).cropDimension(this.cropDimension).rotation(this.rotation));
+      .width(getWidth()).cropDimension(this.cropDimension).rotation(this.rotation));
   }
 
   @Override
@@ -158,12 +158,12 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
   @Override
   public int hashCode() {
     return new HashCodeBuilder()
-        .append(this.getRendition().getPath())
-        .append(width)
-        .append(height)
-        .append(cropDimension)
-        .append(rotation)
-        .hashCode();
+      .append(this.getRendition().getPath())
+      .append(width)
+      .append(height)
+      .append(cropDimension)
+      .append(rotation)
+      .hashCode();
   }
 
   @Override
@@ -173,12 +173,12 @@ class VirtualTransformedRenditionMetadata extends RenditionMetadata {
     }
     VirtualTransformedRenditionMetadata other = (VirtualTransformedRenditionMetadata)obj;
     return new EqualsBuilder()
-        .append(this.getRendition().getPath(), other.getRendition().getPath())
-        .append(this.width, other.width)
-        .append(this.height, other.height)
-        .append(this.cropDimension, other.cropDimension)
-        .append(this.rotation, other.rotation)
-        .build();
+      .append(this.getRendition().getPath(), other.getRendition().getPath())
+      .append(this.width, other.width)
+      .append(this.height, other.height)
+      .append(this.cropDimension, other.cropDimension)
+      .append(this.rotation, other.rotation)
+      .build();
   }
 
   @Override

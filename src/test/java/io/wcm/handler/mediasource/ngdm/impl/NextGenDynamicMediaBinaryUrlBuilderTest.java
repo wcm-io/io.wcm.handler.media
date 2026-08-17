@@ -47,7 +47,7 @@ class NextGenDynamicMediaBinaryUrlBuilderTest {
   @BeforeEach
   void setUp() {
     context.registerInjectActivateService(MockNextGenDynamicMediaConfig.class)
-        .setRepositoryId("repo1");
+      .setRepositoryId("repo1");
     nextGenDynamicMediaConfig = context.registerInjectActivateService(NextGenDynamicMediaConfigServiceImpl.class);
 
     mediaHandlerConfig = AdaptTo.notNull(context.request(), MediaHandlerConfig.class);

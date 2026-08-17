@@ -49,11 +49,11 @@ class InlineAutoCropping {
 
   public List<CropDimension> calculateAutoCropDimensions() {
     Stream<MediaFormat> mediaFormats = Arrays.stream(
-        ObjectUtils.defaultIfNull(mediaArgs.getMediaFormats(), new MediaFormat[0]));
+        ObjectUtils.getIfNull(mediaArgs.getMediaFormats(), new MediaFormat[0]));
     return mediaFormats
-        .map(this::calculateAutoCropDimension)
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
+      .map(this::calculateAutoCropDimension)
+      .filter(Objects::nonNull)
+      .collect(Collectors.toList());
   }
 
   private CropDimension calculateAutoCropDimension(@NotNull MediaFormat mediaFormat) {

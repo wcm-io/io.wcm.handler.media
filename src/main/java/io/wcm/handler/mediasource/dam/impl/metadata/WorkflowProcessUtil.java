@@ -28,7 +28,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +65,7 @@ final class WorkflowProcessUtil {
    */
   public static @Nullable String getPayloadResourcePath(@NotNull WorkItem workItem) {
     WorkflowData data = workItem.getWorkflowData();
-    if (StringUtils.equals(data.getPayloadType(), PayloadMap.TYPE_JCR_PATH)) {
+    if (Strings.CS.equals(data.getPayloadType(), PayloadMap.TYPE_JCR_PATH)) {
       return data.getPayload().toString();
     }
     else {
@@ -97,7 +97,9 @@ final class WorkflowProcessUtil {
         if (isWorkflowPackagePage(node, resourceResolver)) {
           List<ResourceCollection> resourceCollections = resourceCollectionManager.getCollectionsForNode(node);
           for (ResourceCollection resourceCollection : resourceCollections) {
-            for (Node memberNode : resourceCollection.list(new String[] { primaryTypeResourceType })) {
+            for (Node memberNode : resourceCollection.list(new String[] {
+                primaryTypeResourceType
+            })) {
               assetPaths.add(memberNode.getPath());
             }
           }

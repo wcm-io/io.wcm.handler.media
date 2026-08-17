@@ -77,8 +77,8 @@ class InlineUriTemplateTest {
   @Test
   void testGetUriTemplate_EnforceOutputFileExtension() {
     Media media = mediaHandler.get(inlineImage)
-        .enforceOutputFileExtension(FileExtension.PNG)
-        .build();
+      .enforceOutputFileExtension(FileExtension.PNG)
+      .build();
 
     assertUriTemplate(media, CROP_CENTER, 215, 102,
         "/content/unittest/de_test/brand/de/_jcr_content/inlineImage/mediaInline.image_file.{width}.{height}.file/sample.png");

@@ -27,6 +27,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
@@ -116,7 +117,9 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Matching media formats, sorted by size (biggest first), ranking, name
    */
   @Override
-  @SuppressWarnings({ "java:S3776", "java:S1066" }) //ignore complexity
+  @SuppressWarnings({
+      "java:S3776", "java:S1066"
+  }) //ignore complexity
   public @NotNull SortedSet<MediaFormat> getSameBiggerMediaFormats(@NotNull MediaFormat mediaFormatRequested, boolean filterRenditionGroup) {
     SortedSet<MediaFormat> matchingFormats = new TreeSet<>(new MediaFormatSizeRankingComparator());
 
@@ -130,7 +133,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
 
         // if filter by rendition group is enabled, check only media formats of same rendition group
         if (!filterRenditionGroup
-            || StringUtils.equals(mediaFormat.getRenditionGroup(), mediaFormatRequested.getRenditionGroup())) {
+            || Strings.CS.equals(mediaFormat.getRenditionGroup(), mediaFormatRequested.getRenditionGroup())) {
 
           // check if size matched (image size is same or bigger)
           if (isRenditionMatchSizeSameBigger(mediaFormat, mediaFormatRequested)) { //NOPMD
@@ -164,7 +167,9 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
    * @return Matching media formats, sorted by size (biggest first), ranking, name
    */
   @Override
-  @SuppressWarnings({ "java:S3776", "java:S1066" }) //ignore complexity
+  @SuppressWarnings({
+      "java:S3776", "java:S1066"
+  }) //ignore complexity
   public @NotNull SortedSet<MediaFormat> getSameSmallerMediaFormats(@NotNull MediaFormat mediaFormatRequested, boolean filterRenditionGroup) {
     SortedSet<MediaFormat> matchingFormats = new TreeSet<>(new MediaFormatSizeRankingComparator());
 
@@ -178,7 +183,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
 
         // if filter by rendition group is enabled, check only media formats of same rendition group
         if (!filterRenditionGroup
-            || StringUtils.equals(mediaFormat.getRenditionGroup(), mediaFormatRequested.getRenditionGroup())) {
+            || Strings.CS.equals(mediaFormat.getRenditionGroup(), mediaFormatRequested.getRenditionGroup())) {
 
           // check if size matched (image size is same or smaller)
           if (isRenditionMatchSizeSameSmaller(mediaFormat, mediaFormatRequested)) { //NOPMD
@@ -309,7 +314,7 @@ public final class MediaFormatHandlerImpl implements MediaFormatHandler {
       boolean extensionMatch = false;
       if (mediaFormat.getExtensions() != null) {
         for (String ext : mediaFormat.getExtensions()) {
-          if (StringUtils.equalsIgnoreCase(ext, extension)) {
+          if (Strings.CI.equals(ext, extension)) {
             extensionMatch = true;
             break;
           }

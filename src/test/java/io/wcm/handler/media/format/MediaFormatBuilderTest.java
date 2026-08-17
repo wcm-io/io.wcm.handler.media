@@ -36,18 +36,18 @@ class MediaFormatBuilderTest {
   @Test
   void testBuilder_variant1() {
     MediaFormat mf = MediaFormatBuilder.create("name1")
-        .label("label1")
-        .description("description1")
-        .width(800)
-        .height(600)
-        .ratio(1.333d)
-        .fileSizeMax(10000L)
-        .extensions("gif", "png")
-        .renditionGroup("group1")
-        .download(true)
-        .internal(true)
-        .ranking(500)
-        .build();
+      .label("label1")
+      .description("description1")
+      .width(800)
+      .height(600)
+      .ratio(1.333d)
+      .fileSizeMax(10000L)
+      .extensions("gif", "png")
+      .renditionGroup("group1")
+      .download(true)
+      .internal(true)
+      .ranking(500)
+      .build();
 
     assertEquals("name1", mf.getName());
     assertEquals("label1", mf.getLabel());
@@ -68,10 +68,10 @@ class MediaFormatBuilderTest {
   @Test
   void testBuilder_variant2() {
     MediaFormat mf = MediaFormatBuilder.create("name2")
-        .width(400, 800)
-        .height(300, 600)
-        .ratio(100, 50)
-        .build();
+      .width(400, 800)
+      .height(300, 600)
+      .ratio(100, 50)
+      .build();
 
     assertEquals("name2", mf.getName());
     assertEquals("name2", mf.getLabel());
@@ -96,11 +96,11 @@ class MediaFormatBuilderTest {
   @Test
   void testBuilder_variant3() {
     MediaFormat mf = MediaFormatBuilder.create("name2")
-        .minWidth(400)
-        .maxWidth(800)
-        .minHeight(300)
-        .maxHeight(600)
-        .build();
+      .minWidth(400)
+      .maxWidth(800)
+      .minHeight(300)
+      .maxHeight(600)
+      .build();
 
     assertEquals(0, mf.getWidth());
     assertEquals(400, mf.getMinWidth());
@@ -113,8 +113,8 @@ class MediaFormatBuilderTest {
   @Test
   void testBuilder_variant4() {
     MediaFormat mf = MediaFormatBuilder.create("name3")
-        .fixedDimension(1000, 500)
-        .build();
+      .fixedDimension(1000, 500)
+      .build();
 
     assertEquals("name3", mf.getName());
     assertEquals(1000, mf.getWidth());
@@ -124,9 +124,9 @@ class MediaFormatBuilderTest {
   @Test
   void testBuilder_MinWidthHeight() {
     MediaFormat mf = MediaFormatBuilder.create("name4_minWidthHeight")
-        .minWidthHeight(500)
-        .ratio(2, 1)
-        .build();
+      .minWidthHeight(500)
+      .ratio(2, 1)
+      .build();
 
     assertEquals("name4_minWidthHeight", mf.getName());
     assertEquals(500, mf.getMinWidthHeight());
@@ -154,10 +154,10 @@ class MediaFormatBuilderTest {
   void testMinWidthHeight_withOtherWidthHeightRestrictions() {
     assertThrows(IllegalArgumentException.class, () -> {
       MediaFormatBuilder.create("name")
-          .minWidth(500)
-          .minHeight(500)
-          .minWidthHeight(500)
-          .build();
+        .minWidth(500)
+        .minHeight(500)
+        .minWidthHeight(500)
+        .build();
     });
   }
 
@@ -166,10 +166,10 @@ class MediaFormatBuilderTest {
     Map<String, Object> props = Map.of("prop1", "value1");
 
     MediaFormat mf = MediaFormatBuilder.create("name1")
-        .property("prop3", "value3")
-        .properties(props)
-        .property("prop2", "value2")
-        .build();
+      .property("prop3", "value3")
+      .properties(props)
+      .property("prop2", "value2")
+      .build();
 
     assertEquals(3, mf.getProperties().size());
     assertEquals("value1", mf.getProperties().get("prop1", String.class));
@@ -188,8 +188,8 @@ class MediaFormatBuilderTest {
     };
 
     MediaFormat mf = MediaFormatBuilder.create("name")
-        .extensions(extensionsSource)
-        .build();
+      .extensions(extensionsSource)
+      .build();
 
     // source modification should have no effect
     extensionsSource[0] = "ThisModificationShouldHaveNoEffect";

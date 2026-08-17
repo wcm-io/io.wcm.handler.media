@@ -29,7 +29,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * Used for Jackson Object mapping of JSON response from NGDM HTTP API.
  */
-@SuppressWarnings({ "checkstyle:VisibilityModifierCheck", "checkstyle:JavadocVariable", "java:S1104" })
+@SuppressWarnings({
+    "checkstyle:VisibilityModifierCheck", "checkstyle:JavadocVariable", "java:S1104"
+})
 @JsonIgnoreProperties(ignoreUnknown = true)
 final class MetadataResponse {
 
@@ -40,6 +42,7 @@ final class MetadataResponse {
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   static final class RepositoryMetadata {
+
     @JsonProperty("dc:format")
     public String dcFormat;
     @JsonProperty("repo:size")
@@ -51,6 +54,7 @@ final class MetadataResponse {
   @JsonIgnoreProperties(ignoreUnknown = true)
   @SuppressFBWarnings("UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD")
   static final class SmartCrop {
+
     public double left;
     public double top;
     public double normalizedWidth;
